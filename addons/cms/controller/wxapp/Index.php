@@ -6,6 +6,7 @@ use addons\cms\model\Archives;
 use addons\cms\model\Block;
 use addons\cms\model\Channel;
 use app\common\model\Addon;
+use addons\cms\model\Config as ConfigModel;
 
 /**
  * 首页
@@ -51,6 +52,11 @@ class Index extends Base
         ];
         $this->success('', $data);
 
+    }
+
+    public function test()
+    {
+        $this->success(ConfigModel::getByName('picture')->value);
     }
 
 
