@@ -702,6 +702,42 @@ if (!function_exists('var_export_short')) {
         }
     }
 
+
+}
+
+/**
+ * 推广到内勤分配客户
+ */
+if (!function_exists('dstribution_inform')) {
+
+
+    function dstribution_inform()
+    {
+        $arr = [
+            'subject' => "新客户通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你有推广分配过来的新客户，请及时登录后台进行处理 . '</div>'
+        ];
+
+        return $arr;
+    }
+}
+/**
+ * 内勤到销售分配客户
+ */
+if (!function_exists('sales_inform')) {
+
+
+    function sales_inform()
+    {
+        $arr = [
+            'subject' => "新客户通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你有内勤分配过来的新客户，请及时登录后台进行处理 . '</div>'
+        ];
+
+        return $arr;
+    }
+}
+
     /**
      * 得到字符串中的数字
      */
@@ -977,3 +1013,4 @@ if (!function_exists('var_export_short')) {
         }
     }
 }
+
