@@ -29,6 +29,7 @@ return array (
     'example' => 'Example',
     'test' => 'test',
     'message' => '员工权限配置',
+
   ),
   'mail_type' => '1',
   'mail_smtp_host' => 'smtp.qq.com',
@@ -38,6 +39,7 @@ return array (
   'mail_verify_type' => '2',
   'mail_from' => '10000@qq.com',
   'picture' => '/jyzj.junyiqiche.com/uploads/20190329/313ec1a8bfd03f1f8edcaa5ccdc60663.jpg',
+
   'pushMessage' => 
   array (
     'message1' => '总经理',
@@ -49,4 +51,5 @@ return array (
     'message7' => '超级管理员',
     'message8' => '推广',
   ),
+
 );

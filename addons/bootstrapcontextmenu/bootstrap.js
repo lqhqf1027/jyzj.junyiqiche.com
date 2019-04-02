@@ -1,5 +1,4 @@
-define([], function () {
-    require(['../addons/bootstrapcontextmenu/js/bootstrap-contextmenu'], function (undefined) {
+require(['../addons/bootstrapcontextmenu/js/bootstrap-contextmenu'], function (undefined) {
     if (Config.controllername == 'index' && Config.actionname == 'index') {
         $("body").append(
             '<div id="context-menu">' +
@@ -71,26 +70,4 @@ define([], function () {
         }
     });
 
-});
-//修改上传的接口调用
-require(['upload'], function (Upload) {
-    var _onUploadResponse = Upload.events.onUploadResponse;
-    Upload.events.onUploadResponse = function (response) {
-        try {
-            var ret = typeof response === 'object' ? response : JSON.parse(response);
-            if (ret.hasOwnProperty("code") && ret.hasOwnProperty("data")) {
-                return _onUploadResponse.call(this, response);
-            } else if (ret.hasOwnProperty("code") && ret.hasOwnProperty("url")) {
-                ret.code = ret.code === 200 ? 1 : ret.code;
-                ret.data = {
-                    url: ret.url
-                };
-                return _onUploadResponse.call(this, JSON.stringify(ret));
-            }
-        } catch (e) {
-        }
-        return _onUploadResponse.call(this, response);
-
-    };
-});
 });
