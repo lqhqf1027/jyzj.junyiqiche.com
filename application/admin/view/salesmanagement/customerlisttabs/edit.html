@@ -1,0 +1,117 @@
+<style>
+    .content{
+        min-height:700px;
+    }
+</style>
+
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">客户等级</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[level]" >
+                {foreach name="costomlevelList" item="vo"}
+                {if condition="$row.customerlevel eq null"}
+                <option value="" style="display: none"></option>
+
+                {/if}
+                <option value="{$key}" {in name="key" value="$row.customerlevel"}selected{/in}>{$vo}</option>
+                {/foreach}
+
+
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group" id="checks">
+        <label class="control-label col-xs-12 col-sm-2">下次跟进时间</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-followupdate" class="form-control datetimepicker" data-rule="required" data-date-format="YYYY-MM-DD " placeholder="" data-use-current="true" name="row[followupdate]" type="text" onblur="remind()">
+
+
+
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('反馈内容')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-feedback" data-rule="required" class="form-control" rows="5" name="row[feedback]" cols="50" placeholder="请填写你的反馈内容">{$row.feedback}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('常用快捷反馈')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:Form::radios('row[radio]',
+            ['电话关机'=>'电话关机', '暂时/无法接通'=>'暂时/无法接通', '无人接听 等哈再打'=>'无人接听 等哈再打','拨打的电话是空号'=>'拨打的电话是空号',
+            '拨打的电话已过期'=>'拨打的电话已过期', '没有意向'=>'没有意向','拨打的电话已过期'=>'拨打的电话已过期','挂断电话'=>'挂断电话',
+            '不考虑跑网约车'=>'不考虑跑网约车','客户在忙'=>'客户在忙','已找到工作'=>'已找到工作','考虑一下,后面再说'=>'考虑一下,后面再说',
+            '对网约车无兴趣'=>'对网约车无兴趣','已加微信'=>'已加微信','暗中观察'=>'暗中观察'], '')}
+
+            <p class="text-gray text-right">如需添加更多常用反馈内容，请联系@<u>我换头像了</u></p>
+        </div>
+
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+<script>
+
+//设置时间提示
+
+$('input[type="radio"]').change(function (e) {
+
+    $(this).prop('checked',true)?$('#c-feedback').val(e.target.value):'';
+})
+$('#c-followupdate').attr('placeholder','请选择大于'+getNowFormatDate()+'的日期').val(getNowFormatDate(1));
+//错误时间提醒
+    function remind() {
+
+        var now = new Date(getNowFormatDate(-1)).getTime();
+
+        var choose = $("#c-followupdate").val();
+
+        choose = new Date(choose).getTime();
+
+
+        if(choose<now){
+            // 您选择的时间无效，请重新选择
+           var index =  layer.alert('您选择的时间无效，请重新选择', {
+                icon: 5,
+                skin: 'layer-ext-moon'
+            },function () {
+               layer.close(index);
+                $('#c-followupdate').val(getNowFormatDate(1));
+            })
+
+        }
+    }
+    function getNowFormatDate(date1= null) {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate()+ parseInt(date1) ?  date.getDate()+ parseInt(date1): date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+</script>
+
+
