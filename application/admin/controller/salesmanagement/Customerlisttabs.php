@@ -37,7 +37,7 @@ class Customerlisttabs extends Backend
     public function getUserId()
     {
         $this->model = model("Admin");
-        $back = $this->model->where("rule_message", 'in', ["message8", 'message9', 'message23'])
+        $back = $this->model->where("rule_message", '=', "message5")
             ->field("id")
             ->select();
 
@@ -49,11 +49,11 @@ class Customerlisttabs extends Backend
             array_push($backArray['sale'], $value['id']);
         }
 
-        $superAdmin = $this->model->where("rule_message", 'in', ['message1', 'message21','message6'])
+        $superAdmin = $this->model->where("rule_message", 'in', ['message1', 'message7','message8'])
             ->field("id")
             ->select();
 
-        $backoffice = $this->model->where("rule_message", 'in', ['message13', 'message20','message24'])
+        $backoffice = $this->model->where("rule_message", '=', 'message6')
             ->field("id")
             ->select();
 
@@ -151,7 +151,6 @@ class Customerlisttabs extends Backend
         if ($this->request->isAjax()) {
 
             $result = $this->encapsulationSelect();
-
 
             return json($result);
         }
@@ -309,9 +308,7 @@ class Customerlisttabs extends Backend
             ->select();
         foreach ($list as $k => $row) {
 
-            $row->visible(['id', 'username', 'jobs','phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason', 'giveup_time','invalidtime']);
-            $row->visible(['platform']);
-            $row->getRelation('platform')->visible(['name']);
+            $row->visible(['id', 'status', 'username', 'jobs','phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason', 'giveup_time','invalidtime']);
             $row->visible(['admin']);
             $row->getRelation('admin')->visible(['id','nickname', 'avatar']);
             //转化头像
@@ -477,8 +474,7 @@ class Customerlisttabs extends Backend
 
         $this->model = model('CustomerResource');
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        $platform = collection(model('Platform')->all(['id' => array('in', '5,6,7')]))->toArray();
-
+        $this->view->assign("platformList", $this->model->getPlatformList());
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
@@ -517,11 +513,6 @@ class Customerlisttabs extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
 
-        $arr = array();
-        foreach ($platform as $value) {
-            $arr[$value['id']] = $value['name'];
-        }
-        $this->assign('platform', $arr);
         return $this->view->fetch();
     }
 
@@ -587,7 +578,7 @@ class Customerlisttabs extends Backend
                     'customerlevel' => $cnlevel,
                     'followupdate' => $params['followupdate']
                 ];
-                $sql2 = Db::table("crm_feedback_info")->insert($data);
+                $sql2 = Db::table("jyzj_feedback_info")->insert($data);
 
 
                 if ($sql1 && $sql2) {
@@ -666,13 +657,40 @@ class Customerlisttabs extends Backend
             foreach ($ids as $value) {
                 $params_new[] = ['id' => $value, 'customerlevel' => $params['customerlevel'], 'followupdate' => $params['followupdate'], 'feedback' => $params['feedback']];
 
+                $cnlevel = "";
+                switch ($params['customerlevel']) {
+                    case "relation":
+                        $cnlevel = "待联系";
+                        break;
+                    case "intention":
+                        $cnlevel = "有意向";
+                        break;
+                    case "nointention":
+                        $cnlevel = "暂无意向";
+                        break;
+                    case "giveup":
+                        $cnlevel = "已放弃";
+                        break;
+                }
+
+                $data = [
+                    'feedbackcontent' => $params['feedback'],
+                    'feedbacktime' => time(),
+                    'customer_id' => $value,
+                    'customerlevel' => $cnlevel,
+                    'followupdate' => $params['followupdate']
+                ];
+
+                $sql2 = Db::table("jyzj_feedback_info")->insert($data);
+
             }
 
             if ($params_new) {
                 try {
                     //是否采用模型验证
                     $result = $this->model->isUpdate()->saveAll($params_new);
-                    if ($result !== false) {
+
+                    if ($result) {
                         $this->success();
                     } else {
                         $this->error($row->getError());
@@ -747,7 +765,7 @@ class Customerlisttabs extends Backend
     public function showFeedback($ids = NULL)
     {
 
-        $data = Db::table("crm_feedback_info")
+        $data = Db::table("jyzj_feedback_info")
             ->where("customer_id", $ids)
             ->order("feedbacktime")
             ->select();

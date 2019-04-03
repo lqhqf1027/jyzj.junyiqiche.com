@@ -85,7 +85,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
@@ -113,13 +113,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
-                                    {
-                                        name: 'detail',
-                                        text: '新增销售单',
-                                        title: '新增销售单',
-                                        icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
-                                    },
                                     {
 
                                         name: 'edit',
@@ -177,21 +170,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
 
                 })
 
-                //实时消息
-                //内勤分配给销售
-                // goeasy.subscribe({
-                //     channel: 'demo-internal',
-                //     onMessage: function (message) {
-                //         messageCont = split('|',message.content);
-                //         if(Config.ADMIN_JS.id==messageCont[1]){
-                //             Layer.alert('新消息：' + messageCont[0], {icon: 0}, function (index) {
-                //                 Layer.close(index);
-                //                 $(".btn-refresh").trigger("click");
-                //             });
-                //         }
-                //     }
-                // });
-
             },
             /**
              * 待联系
@@ -227,7 +205,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
@@ -260,13 +238,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {
                                 field: 'operate', title: __('Operate'), table: relations,
                                 buttons: [
-                                    {
-                                        name: 'detail',
-                                        text: '新增销售单',
-                                        title: '新增销售单',
-                                        icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
-                                    },
                                     {
 
                                         name: 'edit',
@@ -362,7 +333,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
@@ -395,13 +366,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {
                                 field: 'operate', title: __('Operate'), table: intentions,
                                 buttons: [
-                                    {
-                                        name: 'detail',
-                                        text: '新增销售单',
-                                        title: '新增销售单',
-                                        icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
-                                    },
                                     {
 
                                         name: 'edit',
@@ -492,7 +456,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
@@ -529,13 +493,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {
                                 field: 'operate', title: __('Operate'), table: nointentions,
                                 buttons: [
-                                    {
-                                        name: 'detail',
-                                        text: '新增销售单',
-                                        title: '新增销售单',
-                                        icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
-                                    },
                                     {
 
                                         name: 'edit',
@@ -628,7 +585,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
 
 
                             {field: 'username', title: __('客户姓名')},
@@ -692,7 +649,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
@@ -732,13 +689,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                                         title: '跟进过期',
                                         icon: 'fa fa-times',
                                         classname: 'text-danger'
-                                    },
-                                    {
-                                        name: 'detail',
-                                        text: '新增销售单',
-                                        title: '新增销售单',
-                                        icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
                                     },
                                     {
 
@@ -1053,39 +1003,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
 
                     },
 
-                    /**
-                     * 新增销售单
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-newSalesList': function (e, value, row, index) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var table = $(this).closest('table');
-                        var options = table.bootstrapTable('getOptions');
-                        var ids = row[options.pk];
-                        // alert(row[options.pk]);
-                        //第三方扩展皮肤
-
-                        layer.alert('请前往订单列表,选择对应的方案进行新增销售单', {
-                            // icon: 1,
-                            skin: 'layer-ext-moon', //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                            // content: "<h4>请前往订单列表,选择对应的方案进行新增销售单</h4>",
-                            btn: ['前往'],
-                            btn1: function () {
-
-                                window.top.location.href = "orderlisttabs?ref=addtabs";
-
-                            }
-
-                        });
-                        $(".layui-layer-btn0").css({"margin-right": "132px"});
-                        $(".la").css({"margin-left": "10px"});
-
-
-                    }
                 }
             },
 

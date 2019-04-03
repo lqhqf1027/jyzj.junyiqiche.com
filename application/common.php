@@ -1012,5 +1012,5 @@ if (!function_exists('sales_inform')) {
             }
         }
     }
-}
+
 
