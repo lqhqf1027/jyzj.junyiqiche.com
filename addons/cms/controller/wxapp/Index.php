@@ -11,6 +11,7 @@ use addons\cms\model\PastInformation;
 use addons\cms\model\Config as ConfigModel;
 use think\Exception;
 use Endroid\QrCode\QrCode;
+use fast\Http;
 
 /**
  * 首页
@@ -165,7 +166,7 @@ class Index extends Base
             ->setErrorCorrection('high')
             ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
             ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
-            ->setLabel(' ')
+            ->setLabel('')
             ->setLabelFontSize(10)
             ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
         $fileName = DS . 'uploads' . DS .'qrcode'.DS. $time . '_' . 2 . '.png';
@@ -176,5 +177,21 @@ class Index extends Base
         $this->error('未知错误');
     }
 
+
+    public  function  setQrcodeSide(){
+
+        $url="https://api.weixin.qq.com/wxa/getwxacode?access_token=".getWxAccessToken();
+        $param = json_encode(array("path"=>"pages/index/index?id=123","width"=> 150));
+        //POST参数
+        $result =  Http::sendRequest( $url, $param,"POST");
+//        dump( $result);die;
+//        pr($result);die;
+        header('Content-type: image/jpg');
+        echo $result ['msg'];die;
+        $base64_image ="data:image/jpeg;base64,".base64_encode( $result ['msg']);
+        echo $base64_image;
+
+//            $res = Http::sendRequest('')
+    }
 
 }

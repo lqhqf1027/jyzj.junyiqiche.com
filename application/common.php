@@ -347,8 +347,8 @@ if (!function_exists('getWxAccessToken')) {
 
         $config = get_addon_config('cms');
 
-        $appid = $config['wxappid'];
-        $secret = $config['wxappsecret'];
+        $appid = \think\Env::get('wxpay.appid');
+        $secret =\think\Env::get('wxpay.appsecret');
         //我们将access_token全局缓存在文件中,每次获取的时候,先判断是否过期,如果过期重新获取再全局缓存
         //我们缓存的在文件中的数据，包括access_token和该access_token的过期时间戳.
         //获取缓存的access_token
@@ -1011,6 +1011,6 @@ if (!function_exists('sales_inform')) {
                 return 'false';
             }
         }
-    }
+//    }
 }
 
