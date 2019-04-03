@@ -738,279 +738,315 @@ if (!function_exists('sales_inform')) {
     }
 }
 
-    /**
-     * 得到字符串中的数字
-     */
-    if (!function_exists('findNum')) {
-        function findNum($str = '')
-        {
+/**
+ * 得到字符串中的数字
+ */
+if (!function_exists('findNum')) {
+    function findNum($str = '')
+    {
 
-            $str = trim($str);
+        $str = trim($str);
 
-            if (empty($str)) {
-                return '';
-            }
-
-            $result = '';
-
-            for ($i = 0; $i < strlen($str); $i++) {
-
-                if (is_numeric($str[$i])) {
-
-                    $result .= $str[$i];
-
-                }
-
-            }
-
-            return $result;
+        if (empty($str)) {
+            return '';
         }
-    }
 
-    /**
-     * 检查是否为手机号
-     */
-    if (!function_exists('checkPhoneNumberValidate')) {
-        function checkPhoneNumberValidate($phone_number)
-        {
-            //@2017-11-25 14:25:45 https://zhidao.baidu.com/question/1822455991691849548.html
-            //中国联通号码：130、131、132、145（无线上网卡）、155、156、185（iPhone5上市后开放）、186、176（4G号段）、175（2015年9月10日正式启用，暂只对北京、上海和广东投放办理）,166,146
-            //中国移动号码：134、135、136、137、138、139、147（无线上网卡）、148、150、151、152、157、158、159、178、182、183、184、187、188、198
-            //中国电信号码：133、153、180、181、189、177、173、149、199
-            $g = "/^1[34578]\d{9}$/";
-            $g2 = "/^19[89]\d{8}$/";
-            $g3 = "/^166\d{8}$/";
-            if (preg_match($g, $phone_number)) {
-                return true;
-            } else if (preg_match($g2, $phone_number)) {
-                return true;
-            } else if (preg_match($g3, $phone_number)) {
-                return true;
+        $result = '';
+
+        for ($i = 0; $i < strlen($str); $i++) {
+
+            if (is_numeric($str[$i])) {
+
+                $result .= $str[$i];
+
             }
-
-            return false;
 
         }
-    }
 
-    /**
-     * 某个时间戳在当前时间的多久前
-     */
-    if (!function_exists('format_date')) {
-        function format_date($time)
-        {
-            $nowtime = time();
-            $difference = $nowtime - $time;
-            switch ($difference) {
-                case $difference <= '60' :
-                    $msg = '刚刚';
-                    break;
-                case $difference > '60' && $difference <= '3600' :
-                    $msg = floor($difference / 60) . '分钟前';
-                    break;
-                case $difference > '3600' && $difference <= '86400' :
-                    $msg = floor($difference / 3600) . '小时前';
-                    break;
-                case $difference > '86400' && $difference <= '2592000' :
-                    $msg = floor($difference / 86400) . '天前';
-                    break;
-                case $difference > '2592000' && $difference <= '31536000':
-                    $msg = floor($difference / 2592000) . '个月前';
-                    break;
-                case $difference > '31536000':
-                    $msg = floor($difference / 31104000) . '年前';
-                    break;
-            }
-            return $msg;
+        return $result;
+    }
+}
+
+/**
+ * 检查是否为手机号
+ */
+if (!function_exists('checkPhoneNumberValidate')) {
+    function checkPhoneNumberValidate($phone_number)
+    {
+        //@2017-11-25 14:25:45 https://zhidao.baidu.com/question/1822455991691849548.html
+        //中国联通号码：130、131、132、145（无线上网卡）、155、156、185（iPhone5上市后开放）、186、176（4G号段）、175（2015年9月10日正式启用，暂只对北京、上海和广东投放办理）,166,146
+        //中国移动号码：134、135、136、137、138、139、147（无线上网卡）、148、150、151、152、157、158、159、178、182、183、184、187、188、198
+        //中国电信号码：133、153、180、181、189、177、173、149、199
+        $g = "/^1[34578]\d{9}$/";
+        $g2 = "/^19[89]\d{8}$/";
+        $g3 = "/^166\d{8}$/";
+        if (preg_match($g, $phone_number)) {
+            return true;
+        } else if (preg_match($g2, $phone_number)) {
+            return true;
+        } else if (preg_match($g3, $phone_number)) {
+            return true;
         }
+
+        return false;
+
     }
+}
 
-    /**
-     * 发送验证码
-     * @param $mobile
-     * @param $template_id
-     * @param null $user_id
-     * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     * @throws \think\exception\PDOException
-     */
-    if (!function_exists('message_send')) {
-        function message_send($mobile, $template_id, $user_id = null)
-        {
-            if (!$mobile) return ['error', 'msg' => '参数缺失或格式错误'];
-            if (!checkPhoneNumberValidate($mobile)) return ['error', 'msg' => '手机号格式错误'];
-            $authnum = '';
-            //随机生成四位数验证码
-            $list = explode(",", "0,1,2,3,4,5,6,7,8,9");
-            for ($i = 0; $i < 4; $i++) {
-                $randnum = rand(0, 9);
-                $authnum .= $list[$randnum];
-            }
+/**
+ * 某个时间戳在当前时间的多久前
+ */
+if (!function_exists('format_date')) {
+    function format_date($time)
+    {
+        $nowtime = time();
+        $difference = $nowtime - $time;
+        switch ($difference) {
+            case $difference <= '60' :
+                $msg = '刚刚';
+                break;
+            case $difference > '60' && $difference <= '3600' :
+                $msg = floor($difference / 60) . '分钟前';
+                break;
+            case $difference > '3600' && $difference <= '86400' :
+                $msg = floor($difference / 3600) . '小时前';
+                break;
+            case $difference > '86400' && $difference <= '2592000' :
+                $msg = floor($difference / 86400) . '天前';
+                break;
+            case $difference > '2592000' && $difference <= '31536000':
+                $msg = floor($difference / 2592000) . '个月前';
+                break;
+            case $difference > '31536000':
+                $msg = floor($difference / 31104000) . '年前';
+                break;
+        }
+        return $msg;
+    }
+}
 
-            $Ucpass = [
-                'accountsid' => Env::get('sms.accountsid'),
-                'token' => Env::get('sms.token'),
-                'appid' => Env::get('sms.appid'),
-                'templateid' => $template_id,
-            ];
+/**
+ * 发送验证码
+ * @param $mobile
+ * @param $template_id
+ * @param null $user_id
+ * @return array
+ * @throws \GuzzleHttp\Exception\GuzzleException
+ * @throws \think\Exception
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\ModelNotFoundException
+ * @throws \think\exception\DbException
+ * @throws \think\exception\PDOException
+ */
+if (!function_exists('message_send')) {
+    function message_send($mobile, $template_id, $user_id = null)
+    {
+        if (!$mobile) return ['error', 'msg' => '参数缺失或格式错误'];
+        if (!checkPhoneNumberValidate($mobile)) return ['error', 'msg' => '手机号格式错误'];
+        $authnum = '';
+        //随机生成四位数验证码
+        $list = explode(",", "0,1,2,3,4,5,6,7,8,9");
+        for ($i = 0; $i < 4; $i++) {
+            $randnum = rand(0, 9);
+            $authnum .= $list[$randnum];
+        }
 
-            $url = 'http://open.ucpaas.com/ol/sms/sendsms';
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', $url, [
-                'json' => [
-                    'sid' => $Ucpass['accountsid'],
-                    'token' => $Ucpass['token'],
-                    'appid' => $Ucpass['appid'],
-                    'templateid' => $Ucpass['templateid'],
-                    'param' => $authnum,
-                    'mobile' => $mobile,
-                    'uid' => $user_id
-                ]
-            ]);
-            if ($response) {
-                $result = json_decode($response->getBody(), true);
-                $num = '';
-                if ($result['code'] == '000000') {
-                    //查询当前手机号，如果存在更新他的的请求次数与 请求时间
-                    $getPhone = think\Db::name('cms_login_info')->where(['login_phone' => $mobile])->find();
-                    if ($getPhone) {
-                        $num = $getPhone['login_num'];
-                        ++$num;
-                        return think\Db::name('cms_login_info')->update([
-                            'login_time' => strtotime($result['create_date']),
-                            'login_code' => $authnum,
-                            'login_num' => $num,
-                            'login_phone' => $mobile,
-                            'id' => $getPhone['id'],
-                            'login_state' => 0,
-                            'user_id' => $user_id
-                        ]) ? ['success', 'msg' => '发送成功'] : ['error', 'msg' => '发送失败'];
+        $Ucpass = [
+            'accountsid' => Env::get('sms.accountsid'),
+            'token' => Env::get('sms.token'),
+            'appid' => Env::get('sms.appid'),
+            'templateid' => $template_id,
+        ];
 
-                    } else {
-                        //否则新增当前用户到登陆表
-                        think\Db::name('cms_login_info')->insert([
-                            'login_time' => strtotime($result['create_date']),
-                            'login_code' => $authnum,
-                            'login_num' => 1,
-                            'login_phone' => $mobile,
-                            'login_state' => 0,
-                            'user_id' => $user_id
-                        ]) ? ['success', 'msg' => '发送成功'] : ['error', 'msg' => '发送失败'];
-                    }
+        $url = 'http://open.ucpaas.com/ol/sms/sendsms';
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('POST', $url, [
+            'json' => [
+                'sid' => $Ucpass['accountsid'],
+                'token' => $Ucpass['token'],
+                'appid' => $Ucpass['appid'],
+                'templateid' => $Ucpass['templateid'],
+                'param' => $authnum,
+                'mobile' => $mobile,
+                'uid' => $user_id
+            ]
+        ]);
+        if ($response) {
+            $result = json_decode($response->getBody(), true);
+            $num = '';
+            if ($result['code'] == '000000') {
+                //查询当前手机号，如果存在更新他的的请求次数与 请求时间
+                $getPhone = think\Db::name('cms_login_info')->where(['login_phone' => $mobile])->find();
+                if ($getPhone) {
+                    $num = $getPhone['login_num'];
+                    ++$num;
+                    return think\Db::name('cms_login_info')->update([
+                        'login_time' => strtotime($result['create_date']),
+                        'login_code' => $authnum,
+                        'login_num' => $num,
+                        'login_phone' => $mobile,
+                        'id' => $getPhone['id'],
+                        'login_state' => 0,
+                        'user_id' => $user_id
+                    ]) ? ['success', 'msg' => '发送成功'] : ['error', 'msg' => '发送失败'];
+
                 } else {
-                    return ['error', 'msg' => $result['msg']];
+                    //否则新增当前用户到登陆表
+                    think\Db::name('cms_login_info')->insert([
+                        'login_time' => strtotime($result['create_date']),
+                        'login_code' => $authnum,
+                        'login_num' => 1,
+                        'login_phone' => $mobile,
+                        'login_state' => 0,
+                        'user_id' => $user_id
+                    ]) ? ['success', 'msg' => '发送成功'] : ['error', 'msg' => '发送失败'];
+                }
+            } else {
+                return ['error', 'msg' => $result['msg']];
 //                $this->error($result['msg'], $result);
-                }
-            } else {
-                $err = json_decode($response->getBody(), true);
-                return ['error', 'msg' => $err['msg']];
+            }
+        } else {
+            $err = json_decode($response->getBody(), true);
+            return ['error', 'msg' => $err['msg']];
 //            $this->error($err['msg'], $err);
-            }
-        }
-    }
-
-    /**
-     * 报价
-     * @param int $user_id
-     * @param $phone
-     * @param $money
-     * @param $models_id
-     * @param $type
-     * @param $templateid
-     * @param $param
-     * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    if (!function_exists('sendOffers')) {
-
-        function sendOffers($user_id, $by_user_id, $phone, $money, $models_id, $type, $templateid, $param)
-        {
-
-            $typeModels = $type == 'buy' ? new \addons\cms\model\BuycarModel : new \addons\cms\model\ModelsInfo; //转换表名
-            if (!(int)$user_id || !(int)$by_user_id|| !(float)$money || !(string)$type || !(int)$models_id || !(string)$param || !checkPhoneNumberValidate($phone)) {
-//            $this->error('缺少参数或参数格式错误');
-                return ['error', 'msg' => '缺少参数或参数格式错误'];
-            }
-            try {
-                $merchantsPhone = trim($typeModels->get(['id' => $models_id])->phone);//商户的手机号
-//            $modelsInfo = collection($typeModels->with(['brand'])->select(['id' => $models_id]))->toArray();
-//            $modelsInfo = $modelsInfo[0]['brand']['name'] . ' ' . $modelsInfo[0]['models_name'];  //拼接品牌、车型
-                if ($phone) {
-                    think\Db::name('user')->where(['id' => $user_id])->setField('mobile', $phone);  //每次执行一次更新手机号操作
-                }
-//            $newPone = substr($user_id, 7);//手机尾号4位数
-                $url = 'http://open.ucpaas.com/ol/sms/sendsms';
-
-                $client = new \GuzzleHttp\Client();
-                $response = $client->request('POST', $url, [
-                    'json' => [
-                        'sid' => Env::get('sms.accountsid'),
-                        'token' => Env::get('sms.token'),
-                        'appid' => Env::get('sms.appid'),
-                        'templateid' => $templateid,
-                        'param' => $param,  //参数
-                        'mobile' => $merchantsPhone,
-                        'uid' => $user_id
-                    ]
-                ]);
-
-                if ($response) {
-                    $result = json_decode($response->getBody(), true);
-                    if ($result['code'] == '000000') { //发送成功
-                        $field = $type == 'buy' ? 'buy_car_id' : 'models_info_id';
-                        return \addons\cms\model\QuotedPrice::create(
-                            ['user_ids' => $user_id, 'by_user_ids' => $by_user_id, 'money' => $money, $field => $models_id, 'type' => $type, 'quotationtime' => time(), 'is_see' => 2]
-                        ) ? ['success', 'msg' => '报价成功'] : ['error', 'msg' => '报价失败'];
-                    }
-                    return ['error', 'msg' => $result['msg']];
-                }
-                return ['error', 'msg' => '短信通知失败'];
-            } catch (\think\Exception $e) {
-                return ['error', 'msg' => $e->getMessage()];
-            }
-        }
-
-    }
-
-    /**
-     * 检查是否为银行卡号
-     * @param $card_number
-     * @return string
-     */
-    if (!function_exists('check_bankCard')) {
-        function check_bankCard($card_number)
-        {
-            $arr_no = str_split($card_number);
-            $last_n = $arr_no[count($arr_no) - 1];
-            krsort($arr_no);
-            $i = 1;
-            $total = 0;
-            foreach ($arr_no as $n) {
-                if ($i % 2 == 0) {
-                    $ix = $n * 2;
-                    if ($ix >= 10) {
-                        $nx = 1 + ($ix % 10);
-                        $total += $nx;
-                    } else {
-                        $total += $ix;
-                    }
-                } else {
-                    $total += $n;
-                }
-                $i++;
-            }
-            $total -= $last_n;
-            $x = 10 - ($total % 10);
-            if ($x == $last_n) {
-                return 'true';
-            } else {
-                return 'false';
-            }
         }
     }
 }
+
+/**
+ * 报价
+ * @param int $user_id
+ * @param $phone
+ * @param $money
+ * @param $models_id
+ * @param $type
+ * @param $templateid
+ * @param $param
+ * @return array
+ * @throws \GuzzleHttp\Exception\GuzzleException
+ */
+if (!function_exists('sendOffers')) {
+
+    function sendOffers($user_id, $by_user_id, $phone, $money, $models_id, $type, $templateid, $param)
+    {
+
+        $typeModels = $type == 'buy' ? new \addons\cms\model\BuycarModel : new \addons\cms\model\ModelsInfo; //转换表名
+        if (!(int)$user_id || !(int)$by_user_id || !(float)$money || !(string)$type || !(int)$models_id || !(string)$param || !checkPhoneNumberValidate($phone)) {
+//            $this->error('缺少参数或参数格式错误');
+            return ['error', 'msg' => '缺少参数或参数格式错误'];
+        }
+        try {
+            $merchantsPhone = trim($typeModels->get(['id' => $models_id])->phone);//商户的手机号
+//            $modelsInfo = collection($typeModels->with(['brand'])->select(['id' => $models_id]))->toArray();
+//            $modelsInfo = $modelsInfo[0]['brand']['name'] . ' ' . $modelsInfo[0]['models_name'];  //拼接品牌、车型
+            if ($phone) {
+                think\Db::name('user')->where(['id' => $user_id])->setField('mobile', $phone);  //每次执行一次更新手机号操作
+            }
+//            $newPone = substr($user_id, 7);//手机尾号4位数
+            $url = 'http://open.ucpaas.com/ol/sms/sendsms';
+
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', $url, [
+                'json' => [
+                    'sid' => Env::get('sms.accountsid'),
+                    'token' => Env::get('sms.token'),
+                    'appid' => Env::get('sms.appid'),
+                    'templateid' => $templateid,
+                    'param' => $param,  //参数
+                    'mobile' => $merchantsPhone,
+                    'uid' => $user_id
+                ]
+            ]);
+
+            if ($response) {
+                $result = json_decode($response->getBody(), true);
+                if ($result['code'] == '000000') { //发送成功
+                    $field = $type == 'buy' ? 'buy_car_id' : 'models_info_id';
+                    return \addons\cms\model\QuotedPrice::create(
+                        ['user_ids' => $user_id, 'by_user_ids' => $by_user_id, 'money' => $money, $field => $models_id, 'type' => $type, 'quotationtime' => time(), 'is_see' => 2]
+                    ) ? ['success', 'msg' => '报价成功'] : ['error', 'msg' => '报价失败'];
+                }
+                return ['error', 'msg' => $result['msg']];
+            }
+            return ['error', 'msg' => '短信通知失败'];
+        } catch (\think\Exception $e) {
+            return ['error', 'msg' => $e->getMessage()];
+        }
+    }
+
+}
+
+/**
+ * 检查是否为银行卡号
+ * @param $card_number
+ * @return string
+ */
+if (!function_exists('check_bankCard')) {
+    function check_bankCard($card_number)
+    {
+        $arr_no = str_split($card_number);
+        $last_n = $arr_no[count($arr_no) - 1];
+        krsort($arr_no);
+        $i = 1;
+        $total = 0;
+        foreach ($arr_no as $n) {
+            if ($i % 2 == 0) {
+                $ix = $n * 2;
+                if ($ix >= 10) {
+                    $nx = 1 + ($ix % 10);
+                    $total += $nx;
+                } else {
+                    $total += $ix;
+                }
+            } else {
+                $total += $n;
+            }
+            $i++;
+        }
+        $total -= $last_n;
+        $x = 10 - ($total % 10);
+        if ($x == $last_n) {
+            return 'true';
+        } else {
+            return 'false';
+        }
+    }
+
+    /**
+     * 生成二维码
+     * @throws \Endroid\QrCode\Exceptions\ImageTypeInvalidException
+     */
+    function setQrcode($type='', $models_id='', $name = null)
+    {
+//        $user_id = $this->request->post('user_id');
+//        if (!(int)$user_id) $this->error('参数错误');
+        $text = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?';
+
+//        $text .= 'type=' . $type . '&models_id=' . $models_id;
+                $text .= 'type=new';
+
+        $setLabel = $name == null ? '' : '需由客户' . $name . '扫码授权';
+        $time = date('Ymd');
+        $qrCode = new \Endroid\QrCode\QrCode();
+        $qrCode->setText($text)
+            ->setSize(150)
+            ->setPadding(10)
+            ->setErrorCorrection('high')
+            ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+            ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+            ->setLabelFontPath(ROOT_PATH . DS . 'vendor/endroid/qr-code/assets/font/simhei.ttf')
+            ->setLabel($setLabel)
+            ->setLabelFontSize(10)
+            ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
+        $fileName = DS . 'uploads' . DS . 'qrcode' . DS . $time . '_' . $models_id . '_' . $type . '.png';
+        $qrCode->save(ROOT_PATH . 'public' . $fileName);
+        if ($qrCode) {
+            return \app\admin\model\PastInformation::update(['id' => $models_id, 'qr_code' => $fileName]) ? $fileName : false;
+        }
+        return false;
+    }
+}
+
+
+
 

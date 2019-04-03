@@ -4,19 +4,23 @@ namespace app\admin\controller\pastcustomers;
 
 use app\common\controller\Backend;
 
+use app\admin\model\PastInformation as PastInformationModel;
+
 /**
- * 
+ *
  *
  * @icon fa fa-circle-o
  */
 class Pastinformation extends Backend
 {
-    
+
     /**
      * PastInformation模型对象
      * @var \app\admin\model\PastInformation
      */
     protected $model = null;
+
+    protected $noNeedLogin = '*';
 
     public function _initialize()
     {
@@ -25,12 +29,20 @@ class Pastinformation extends Backend
         $this->view->assign("typesList", $this->model->getTypesList());
 
     }
-    
-    /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
-    
+
+    public function grant_authorization($ids = null)
+    {
+        $models = PastInformationModel::get($ids)->visible(['username', 'qr_code']);
+
+        if (!$models['qr_code']) {
+
+           $result = setQrcode('new', $ids, $models['username']);
+        };
+
+        $this->view->assign('qrcode',!empty($result)?$result:$models['qr_code']);
+
+        return $this->view->fetch();
+    }
+
 
 }

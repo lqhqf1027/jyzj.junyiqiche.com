@@ -60,9 +60,20 @@ class Index extends Base
 
     }
 
+    /**
+     * 进入小程序调用接口
+     */
     public function past_information()
     {
         $user_id = $this->request->post('user_id');
+
+        $pastInformation = $this->request->post('pastInformation_id');
+
+        if(!$user_id || !$pastInformation){
+            $this->error('缺少参数');
+        }
+
+        PastInformation::where('id',$pastInformation)->setField('user_ud',$user_id);
 
         $this->success('请求成功', PastInformation::getByUser_id($user_id));
 

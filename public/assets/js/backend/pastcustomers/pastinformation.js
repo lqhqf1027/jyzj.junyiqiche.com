@@ -69,7 +69,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'types', title: __('Types'), searchList: {"full":__('Full'),"rent":__('Rent'),"mortgage":__('Mortgage')}, formatter: Table.api.formatter.normal},
                         {field: 'admin_id', title: __('Admin_id')},
                         {field: 'user_id', title: __('User_id')},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'),
+                            table: table,
+                            events: Controller.api.events.operate,
+                            formatter: Controller.api.formatter.operate,
+                            buttons: [
+                                {
+                                    name:'unauthorized',
+                                    text:'未授权',
+                                    title:'未授权',
+                                    icon: 'fa fa-address-card',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-info btn-unauthorized',
+                                    visible:function (row) {
+                                        if(!row.user_id){
+                                           return true;
+                                        }
+                                        return false;
+                                    }
+                                },
+                                {
+                                    name:'authorized',
+                                    text:'已授权',
+                                    title:'已授权',
+                                    icon: 'fa fa-address-card',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-danger btn-unauthorized',
+                                    visible:function (row) {
+                                        if(row.user_id){
+                                            return true;
+                                        }
+                                        return false;
+                                    }
+                                }
+                            ]
+                        }
                     ]
                 ]
             });
@@ -86,6 +120,98 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
+            },
+            // 单元格元素事件
+            events: {
+                operate: {
+                    'click .btn-unauthorized': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'pastcustomers/pastinformation/grant_authorization';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    'click .btn-delone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('Are you sure you want to delete this item?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Table.api.multi("del", row[options.pk], table, that);
+                                Layer.close(index);
+                            }
+                        );
+                    }
+                }
+            },
+            formatter:{
+                operate: function (value, row, index) {
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+                    // 所有按钮名称
+                    var names = [];
+                    buttons.forEach(function (item) {
+                        names.push(item.name);
+                    });
+
+                    if (options.extend.dragsort_url !== '' && names.indexOf('dragsort') === -1) {
+                        buttons.push({
+                            name: 'dragsort',
+                            icon: 'fa fa-arrows',
+                            title: __('Drag to sort'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-primary btn-dragsort'
+                        });
+                    }
+                    if (options.extend.edit_url !== '' && names.indexOf('edit') === -1) {
+                        buttons.push({
+                            name: 'edit',
+                            icon: 'fa fa-pencil',
+                            title: __('Edit'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-success btn-editone',
+                            url: options.extend.edit_url
+                        });
+                    }
+                    if (options.extend.del_url !== '' && names.indexOf('del') === -1) {
+                        buttons.push({
+                            name: 'del',
+                            icon: 'fa fa-trash',
+                            title: __('Del'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-danger btn-delone'
+                        });
+                    }
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                }
             }
         }
     };
