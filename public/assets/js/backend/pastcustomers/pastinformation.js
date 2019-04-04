@@ -10,6 +10,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     edit_url: 'pastcustomers/pastinformation/edit',
                     del_url: 'pastcustomers/pastinformation/del',
                     multi_url: 'pastcustomers/pastinformation/multi',
+                    referral_url: 'pastcustomers/pastinformation/referral',
+                    violationInformation_url: 'pastcustomers/pastinformation/violationInformation',
                     table: 'past_information',
                 }
             });
@@ -101,6 +103,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                         return false;
                                     }
+                                },
+                                {
+                                    name:'referral',
+                                    text:'添加转介绍',
+                                    title:'添加转介绍',
+                                    icon: 'fa fa-plus',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-success btn-referral',
+                                },
+                                {
+                                    name:'violationInformation',
+                                    text:'查看违章信息',
+                                    title:'查看违章信息',
+                                    icon: 'fa fa-eye',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-success btn-violationInformation',
+                                    visible:function (row) {
+                                        if(row.violation_details){
+                                            return true;
+                                        }
+                                        return false;
+                                    }
                                 }
                             ]
                         }
@@ -117,6 +141,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+        referral: function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
@@ -124,6 +151,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 单元格元素事件
             events: {
                 operate: {
+                    //授权
                     'click .btn-unauthorized': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -134,7 +162,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'pastcustomers/pastinformation/grant_authorization';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
+                    //修改
                     'click .btn-editone': function (e, value, row, index) {
+                        $('.btn-editone').data("area", ["70%", "95%"]);
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -144,6 +174,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
+                    //转介绍
+                    'click .btn-referral': function (e, value, row, index) {
+                        $('.btn-referral').data("area", ["50%", "60%"]);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.referral_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    //查看违章信息
+                    'click .btn-violationInformation': function (e, value, row, index) {
+                        $('.btn-violationInformation').data("area", ["80%", "80%"]);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.violationInformation_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    //删除
                     'click .btn-delone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
