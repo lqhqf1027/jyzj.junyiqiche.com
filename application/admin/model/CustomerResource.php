@@ -49,7 +49,13 @@ class CustomerResource extends Model
     public function getStatusList()
     {
         return ['今日头条' => __('今日头条'),'58同城' => __('58同城'),'百度' => __('百度'),'抖音' => __('抖音')];
+    } 
+    
+    public function getPlatformList()
+    {
+        return ['转介绍' => __('转介绍'),'自己邀约' => __('自己邀约'),'其他' => __('其他')];
     }     
+
 
 
     public function getGenderdataTextAttr($value, $data)

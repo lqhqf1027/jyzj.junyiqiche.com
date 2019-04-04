@@ -21,6 +21,8 @@ class Customertabs extends Backend
      * @var \app\admin\model\CustomerResource
      */
     protected $model = null;
+    protected $noNeedRight = ['*'];
+
 
     public function _initialize()
     {

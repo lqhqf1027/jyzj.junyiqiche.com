@@ -3,24 +3,23 @@
 
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Platform_id')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">所属平台</label>
         <div class="col-xs-12 col-sm-8">
-            {:build_select('row[platform_id]', $platform, null, ['class'=>'form-control selectpicker',  'data-rule'=>'required'])}
-            <!--<input id="c-platform_id" data-rule="required" data-source="salesmanagement/customerlisttabs/getPlatform" class="form-control selectpage" name="row[platform_id]" type="text" value="">-->
+
+            <select  id="c-status" data-rule="required" class="form-control selectpicker" name="row[status]" >
+                {foreach name="platformList" item="vo"}
+                {if condition="$row.status eq null"}
+                <option value="" style="display: none"></option>
+
+                {/if}
+                <option value="{$key}" {in name="key" value="$row.status"}selected{/in}>{$vo}</option>
+                {/foreach}
+
+
+            </select>
+
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Backoffice_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-backoffice_id" data-rule="required" data-source="backoffice/index" class="form-control selectpage" name="row[backoffice_id]" type="text" value="">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Sales_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-sales_id" data-rule="required" data-source="sales/index" class="form-control selectpage" name="row[sales_id]" type="text" value="">
-        </div>
-    </div> -->
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8">
