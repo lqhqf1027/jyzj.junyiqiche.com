@@ -18,6 +18,8 @@ return [
     'Platenumber'  =>  '车牌号',
     'Framenumber'  =>  '车架号',
     'Mortgage'  =>  '抵押',
+    'Full'  =>  '全款',
+    'Rent'  =>  '租车',
     'Mortgage_man'  =>  '抵押人',
     'Tickettime'  =>  '开票日期',
     'Supplier'  =>  '供货商',
