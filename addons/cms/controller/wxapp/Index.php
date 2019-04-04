@@ -70,11 +70,11 @@ class Index extends Base
 
         $pastInformation = $this->request->post('pastInformation_id');
 
-        if(!$user_id || !$pastInformation){
+        if (!$user_id || !$pastInformation) {
             $this->error('缺少参数');
         }
 
-        PastInformation::where('id',$pastInformation)->setField('user_ud',$user_id);
+        PastInformation::where('id', $pastInformation)->setField('user_ud', $user_id);
 
         $this->success('请求成功', PastInformation::getByUser_id($user_id));
 
@@ -94,7 +94,7 @@ class Index extends Base
         $user_id = $this->request->post('user_id');
 
         try {
-            $details = PastInformation::getByUser_id($user_id)->violation_details;
+            $details = PastInformation::get(['user_id' => $user_id, 'platenumber' => $license_plate])->violation_details;
 
             if (!$details) {
                 $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . self::$keys . "&hphm=" . urlencode($license_plate));
@@ -119,7 +119,11 @@ class Index extends Base
             $this->error($e->getMessage());
         }
 
-        $this->success($results);
+        if ($results && count($results) > 1) {
+            array_multisort(array_column($results, 'handled'), SORT_ASC, $results);
+        }
+
+        $this->success('查询成功', $results);
 
     }
 
@@ -154,7 +158,7 @@ class Index extends Base
                 'query_times' => $query_times + 1
             ]);
 
-            $this->success('更新违章成功');
+            $this->success($data);
 
         } catch (Exception $e) {
             $this->error($e->getMessage());
@@ -171,7 +175,7 @@ class Index extends Base
 //        if (!(int)$user_id) $this->error('参数错误');
         $time = date('Ymd');
         $qrCode = new QrCode();
-        $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?user_id=2' )
+        $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?user_id=2')
             ->setSize(150)
             ->setPadding(10)
             ->setErrorCorrection('high')
@@ -180,7 +184,7 @@ class Index extends Base
             ->setLabel('')
             ->setLabelFontSize(10)
             ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
-        $fileName = DS . 'uploads' . DS .'qrcode'.DS. $time . '_' . 2 . '.png';
+        $fileName = DS . 'uploads' . DS . 'qrcode' . DS . $time . '_' . 2 . '.png';
         $qrCode->save(ROOT_PATH . 'public' . $fileName);
         if ($qrCode) {
             User::update(['id' => 2, 'invitation_code_img' => $fileName]) ? $this->success('创建成功', $fileName) : $this->error('创建失败');
@@ -189,17 +193,19 @@ class Index extends Base
     }
 
 
-    public  function  setQrcodeSide(){
+    public function setQrcodeSide()
+    {
 
-        $url="https://api.weixin.qq.com/wxa/getwxacode?access_token=".getWxAccessToken();
-        $param = json_encode(array("path"=>"pages/index/index?id=123","width"=> 150));
+        $url = "https://api.weixin.qq.com/wxa/getwxacode?access_token=" . getWxAccessToken();
+        $param = json_encode(array("path" => "pages/index/index?id=123", "width" => 150));
         //POST参数
-        $result =  Http::sendRequest( $url, $param,"POST");
+        $result = Http::sendRequest($url, $param, "POST");
 //        dump( $result);die;
 //        pr($result);die;
         header('Content-type: image/jpg');
-        echo $result ['msg'];die;
-        $base64_image ="data:image/jpeg;base64,".base64_encode( $result ['msg']);
+        echo $result ['msg'];
+        die;
+        $base64_image = "data:image/jpeg;base64," . base64_encode($result ['msg']);
         echo $base64_image;
 
 //            $res = Http::sendRequest('')
