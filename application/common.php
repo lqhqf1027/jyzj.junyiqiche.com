@@ -1047,6 +1047,6 @@ if (!function_exists('check_bankCard')) {
     }
 
 
-
+}
 
 
