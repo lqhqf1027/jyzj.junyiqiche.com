@@ -1,0 +1,121 @@
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>新车&二手车录入订车信息</em></div>
+        <ul class="nav nav-tabs" >
+            <li class="active text-center"><a href="#newcar_entry" data-toggle="tab" style="font-weight: bold">新车录入订车信息&nbsp;<span class="pull-right-container">
+                {if $total eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_newcar_entry">{$total} </small>&nbsp;
+                {/if}
+                </span></a>
+            </li>
+            <li><a href="#rentalcar_entry" data-toggle="tab" style="font-weight: bold" class="text-center" >租车录入订车信息&nbsp;<span class="pull-right-container">
+                {if $total1 eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_rentalcar_entry">{$total1} </small>&nbsp;
+                {/if}
+                </span></a>
+            </li>
+            <li><a href="#secondcar_entry" data-toggle="tab" style="font-weight: bold" class="text-center" >二手车录入订车信息&nbsp;<span class="pull-right-container">
+                {if $total2 eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_secondcar_entry">{$total2} </small>&nbsp;
+                {/if}
+                </span></a>
+            </li>
+            <li><a href="#fullcar_entry" data-toggle="tab" style="font-weight: bold">全款（新车）录入订车信息&nbsp;<span class="pull-right-container">
+                {if $total3 eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_fullcar_entry">{$total3} </small>&nbsp;
+                {/if}
+                </span></a>
+            </li>
+            <li><a href="#secondfullcar_entry" data-toggle="tab" style="font-weight: bold">全款（二手车）录入订车信息&nbsp;<span class="pull-right-container">
+                {if $total4 eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_secondfullcar_entry">{$total4} </small>&nbsp;
+                {/if}
+                </span></a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <!--新车订单处理-->
+
+            <div class="tab-pane fade active in" id="newcar_entry">
+                <div id="toolbar1" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    
+                </div>
+
+                <table id="newcarEntry" class="table table-striped table-bordered table-hover table-nowrap"
+                       data-operate-edit="{:$auth->check('customer/customerresource/edit')}"
+                       data-operate-del="{:$auth->check('customer/customerresource/del')}"
+                       width="100%">
+                </table>
+            </div>
+
+            <!--租车订单处理-->
+
+            <div class="tab-pane fade" id="rentalcar_entry">
+                <div id="toolbar4" class="toolbar">
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                </div>
+
+                <table id="rentalcarEntry" class="table table-striped table-bordered table-hover table-nowrap"
+                      
+                       width="100%">
+                </table>
+            </div>
+
+
+            <!--二手车订单处理-->
+
+            <div class="tab-pane fade" id="secondcar_entry">
+                <div id="toolbar2" class="toolbar">
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                </div>
+
+                <table id="secondcarEntry" class="table table-striped table-bordered table-hover table-nowrap"
+                       data-operate-edit="{:$auth->check('customer/customerresource/edit')}"
+                       data-operate-del="{:$auth->check('customer/customerresource/del')}"
+                       width="100%">
+                </table>
+            </div>
+
+            <!--全款新车订单处理-->
+
+
+            <div class="tab-pane fade" id="fullcar_entry">
+                <div id="toolbar3" class="toolbar">
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                </div>
+
+                <table id="fullcarEntry" class="table table-striped table-bordered table-hover table-nowrap"
+                       data-operate-edit="{:$auth->check('customer/customerresource/edit')}"
+                       data-operate-del="{:$auth->check('customer/customerresource/del')}"
+                       width="100%">
+                </table>
+            </div>
+
+            <!--全款二手车订单处理-->
+
+
+            <div class="tab-pane fade" id="secondfullcar_entry">
+                <div id="toolbar5" class="toolbar">
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                </div>
+    
+                <table id="secondfullcarEntry" class="table table-striped table-bordered table-hover table-nowrap"
+                           
+                        width="100%">
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
