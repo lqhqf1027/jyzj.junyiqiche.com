@@ -1,0 +1,35 @@
+<form id="secondedit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <!--<div class="form-group">-->
+    <!--<label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>-->
+    <!--<div class="col-xs-12 col-sm-8">-->
+    <!--<input id="c-models_id" data-rule="required" data-source="planmanagement/models/index" class="form-control selectpage" name="row[models_id]" type="text" value="{$row.models_id}">-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="form-group"></div>
+    <div class="form-group"></div>
+    <div class="form-group"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2"><b>{:__('请选择金融平台')}:</b></label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-financial_platform_id" data-rule="required" class="form-control selectpicker" name="row[financial_platform_id]">
+                <option value=" " style='display: none'>未选中任何项</option>
+                {foreach name="$row" item="vo"}
+
+                <option value="{$vo.id}">{$vo.name}</option>
+                {/foreach}
+
+            </select>
+
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

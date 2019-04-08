@@ -19,11 +19,14 @@ class PlanAcar extends Model
     // 追加属性
     protected $append = [
         'nperlist_text',
-        'ismenu_text'
-    ];
-    
 
-    
+        'ismenu_text'
+
+        'working_insurance_text',
+        'status_text'
+
+    ];
+   
     public function getNperlistList()
     {
         return ['12' => __('Nperlist 12'),'24' => __('Nperlist 24'),'36' => __('Nperlist 36'),'48' => __('Nperlist 48'),'60' => __('Nperlist 60')];
@@ -32,12 +35,25 @@ class PlanAcar extends Model
     public function getIsmenuList()
     {
         return ['1' => __('Ismenu 1')];
+    }
+    public function getWorkingInsuranceList()
+    {
+        return ['yes' => __('Working_insurance yes'),'no' => __('Working_insurance no')];
     }     
 
+    public function getStatusList()
+    {
+        return ['1' => __('Status 1'),'2' => __('Status 2')];
+
+    }     
 
     public function getNperlistTextAttr($value, $data)
     {        
+
         $value = $value ? $value : $data['nperlist'];
+
+        $value = $value ? $value : (isset($data['nperlist']) ? $data['nperlist'] : '');
+
         $list = $this->getNperlistList();
         return isset($list[$value]) ? $list[$value] : '';
     }
@@ -47,6 +63,19 @@ class PlanAcar extends Model
     {        
         $value = $value ? $value : $data['ismenu'];
         $list = $this->getIsmenuList();
+
+    public function getWorkingInsuranceTextAttr($value, $data)
+    {        
+        $value = $value ? $value : (isset($data['working_insurance']) ? $data['working_insurance'] : '');
+        $list = $this->getWorkingInsuranceList();
+        return isset($list[$value]) ? $list[$value] : '';
+    }
+
+
+    public function getStatusTextAttr($value, $data)
+    {        
+        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
+        $list = $this->getStatusList();
         return isset($list[$value]) ? $list[$value] : '';
     }
 
@@ -68,20 +97,7 @@ class PlanAcar extends Model
     {
         return $this->belongsTo('Admin', 'sales_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
-
-
-
-    public function financialplatform()
-    {
-        return $this->belongsTo('FinancialPlatform', 'financial_platform_id', 'id', [], 'LEFT')->setEagerlyType(0);
-    }
-
-
-    public function schemecategory()
-    {
-        return $this->belongsTo('Schemecategory','category_id','id',[],'LEFT')->setEagerlyType(0);
-    }
-
+   
     //关联专题
     public function subject()
     {
@@ -111,4 +127,16 @@ class PlanAcar extends Model
     {
         return $this->belongsToMany('Brand','models','brand_id','plan_acar_id');
     }
+
+     * 关联方案类型
+     * @return \think\model\relation\BelongsTo
+     */
+    public function schemecategory()
+    {
+        return $this->belongsTo('SchemeCategory', 'category_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+
+
+
 }
