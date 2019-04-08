@@ -1,0 +1,569 @@
+<link rel="stylesheet" href="/assets/css/bootstrap.css">
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+    .page-cursor {
+        cursor: pointer;
+    }
+    .btn-trash {
+        display: block !important;
+    }
+
+
+</style>
+
+
+<form id="newreserve-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <h2>
+        <center>当前购车方式：以租代购（新车）</center>
+    </h2>
+    <br>
+    <div class="form-group">
+
+        <label class="control-label col-xs-12 col-sm-2">
+            <strong> {:__('请仔细填写录入以下客户资料')}:</strong>
+        </label>
+    </div>
+    
+    <h3>
+        <center>基本资料</center>
+    </h3>
+    <br>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售方案类别')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-category_id" data-rule="required" class="form-control selectpage" data-source="salesmanagement/Orderlisttabs/getCategory" name="row[category_id]"
+             onchange="changePlan(this)">
+                
+
+        </div>
+    </div>
+
+
+    <div class="form-group" id="note" style="display: none">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <p>123</p>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2" style="color: red">{:__('注意')}:</label>
+        <div class="callout callout-warning col-xs-12 col-sm-8">
+
+                <h4>如你的实际销售方案（首付、月供、gps等）与产品经理发布的方案不一致，请私下向产品方案人员沟通并添加专属定制方案(待添加成功后，所需方案会直接展示)！！！</h4>
+        </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-12 text-center">
+
+            <strong class="text-danger" > 如你的定金上面合同签署的销售方案与系统展示的方案不一致，将会驳回你的订单请求，请严格按照系统要求签单，谢谢配合！！！</strong>
+
+
+        </div>
+    </div>
+    <input type="hidden" value="{$Think.session.admin.id}" id="user">
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <table class="plan_acar table table-striped table-bordered table-hover table-nowrap" border="1" width="100%"
+                   bgcolor="#ffffff" cellspacing="0">
+                <tr>
+                    <th>请先选择所属城市，再选城市下门店，然后选门店下的销售方案类别</th>
+                </tr>
+                <!-- <tr>
+                    <th class="col-xs-12 col-sm-1 ">车型</th>
+                    <th class="col-xs-12 col-sm-1 ">首付（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">首付（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">期数（月）</th>
+                    <th class="col-xs-12 col-sm-1 ">尾款（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">GPS(元)</th>
+                    <th class="col-xs-12 col-sm-1 ">首付总额（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">操作</th>
+                </tr> -->
+            </table>
+            <div class="paging"></div>
+        </div>
+
+
+    </div>
+    <script type="text/javascript">
+
+        function changePlan(that) {
+
+
+            $.ajax({
+                url: 'salesmanagement/Orderlisttabs/planacar',
+
+                data: {category_id: JSON.stringify($('#c-category_id').val())},
+
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    var page_number = Math.ceil(parseInt(data.length) / 15);
+
+
+                    $('.plan_acar').html(page_table(data));
+
+                    var page = "";
+
+                    page += '<ul class="pagination">';
+                       if(page_number==0){
+                           page += '<li class="page-cursor"><a>' + 1 + '</a></li>';
+                       }else{
+                           for (var i = 0; i < page_number; i++) {
+                               page += '<li class="page-cursor"><a>' + (i + 1) + '</a></li>';
+                           }
+                       }
+
+                    page += '</ul>';
+
+                    $('.paging').html(page);
+                    $('.paging').append('<span class="text-danger" style="float: right;margin-top: 20px">如无合适方案，请向产品方案人员沟通(方案人员添加成功后，所需方案会直接展示)</span>');
+                    var page_li = $('.paging').find('li');
+
+                    page_li.eq(0).addClass('active');
+
+                    page_li.each(function () {
+
+                        $(this).on('click', function () {
+
+
+
+                            var number = $(this).index();
+
+                            console.log(number);return;
+                            $.ajax({
+                                url: 'salesmanagement/Orderlisttabs/page',
+                                type: 'post',
+                                dataType: 'json',
+                                data: {
+                                    num: number,
+                                    category_id: JSON.stringify(that.value)
+                                },
+                                success: function (data) {
+                                    // var use_data = JSON.parse(data);
+
+                                    // console.log(data);
+
+                                    $('.plan_acar').html(page_table(data));
+                                    button_click();
+
+                                },
+                                error: function (data, ret) {
+                                    console.log(ret);
+                                }
+                            })
+
+                            for (var i in page_li) {
+                                if (page_li.eq(i).hasClass('active')) {
+                                    page_li.eq(i).removeClass('active');
+                                }
+                            }
+                            $(this).addClass('active');
+
+                        })
+
+                    });
+                    button_click();
+
+                    //点击按钮,选择方案
+                    function button_click() {
+                        $("input[type='button']").each(function () {
+
+                            $(this).click(function () {
+                                if ($(".btn-success").length == 2) {
+                                    $("input[type='button']").removeClass("btn-success").addClass("btn-default");
+                                    $("input[type='button']").val("选择该方案");
+                                }
+                                $(this).removeClass("btn-default").addClass("btn-success");
+                                // var value = $(this).val();
+                                // console.log(value);
+
+                                if ($(this).prop("className") == 'btn btn-success') {
+                                    $(this).val('已选择此方案');
+
+                                    // $("input[type='button']").append('<i calss="fa fa-check aria-hidden="true""></i>');
+
+                                    $.ajax({
+                                        url: 'salesmanagement/Orderlisttabs/planname',
+
+                                        data: {id: JSON.stringify($(this).attr("name"))},
+                                    })
+
+                                }
+
+                            })
+
+                        });
+                    }
+
+
+                    /**
+                     * 返回显示的表格
+                     * @param data
+                     * @returns {string}
+                     */
+                    function page_table(data) {
+                        // console.log(data);
+
+                        var html = '<tr>';
+
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '车型' + '</th>';
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '首付（元）' + '</th>';
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '月供（元）' + '</th>';
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '期数（月）' + '</th>';
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '尾款（元）' + '</th>';
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '保证金（元）' + '</th>'
+                        html += '<th class="col-xs-12 col-sm-1 ">' + 'GPS(元)' + '</th>';
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '首付总额（元）' + '</th>';
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '方案备注' + '</th>';
+                        html += '<th class="col-xs-12 col-sm-1 ">' + '操作' + '</th>';
+                        ;
+
+                        html += '</tr>';
+
+
+                        for (var i in data) {
+
+                            if (i > 14) {
+                                break;
+                            }
+
+
+                            var result = data[i];
+                            if (data[i].sales_id && data[i].sales_id == data[i].admin_id) {
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '&nbsp;&nbsp;' + "<span class='label label-warning' style='cursor: pointer'>专属方案</span>";
+                                +'</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.note + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>';
+                                //models_id
+                                html += '<input>';
+                                html += '</tr>';
+                            } else if(!data[i].sales_id){
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.note + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>';
+                                //models_id
+                                html += '<input>';
+                                html += '</tr>';
+                            }
+
+
+
+                        }
+
+                        return html;
+                    }
+
+                    var note = $("#note");
+
+                    if (data[0]) {
+                        if (data[0].category_note != 'undefined' || data[0].category_note != null) {
+
+
+                            note.css('display', 'block');
+
+                            note.find('p').html('<span class="text-danger">' + data[0].category_note + '</span>');
+                        }
+                    } else {
+                        note.css('display', 'none');
+                    }
+
+
+                }
+
+            });
+        }
+    </script>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-id_cardimages"  class="form-control" size="50"
+                       name="row[id_cardimages]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload"
+                                data-input-id="c-id_cardimages"
+                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                                data-multiple="true" data-preview-id="p-id_cardimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-id_cardimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-id_cardimages"></ul>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="" placeholder="必填">
+            <span id="username-value" style="color: red"></span>
+        </div>
+
+
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <input id="c-id_card" data-rule="required;IDcard" class="form-control" name="row[id_card]" type="text" placeholder="必填">
+            <span id="idcard-value" style="color: red"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <input id="c-phone" data-rule="required;mobile" class="form-control" name="row[phone]" type="text" placeholder="必填">
+            <span id="phone-value" style="color: red"></span>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {foreach name="genderdataList" item="vo"}
+                <label for="row[genderdata]-{$key}">
+                    <input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="male" }checked{/in}/>
+
+                    {$vo}</label>
+                {/foreach}
+            </div>
+
+        </div>
+    </div>
+
+    <h3>
+        <center>客户来源</center>
+    </h3>
+    <br>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Customer_source')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)">
+`
+                {foreach name="customerSourceList" item="vo"}
+                <option value="{$key}" {in name="key" value="direct_the_guest" }selected{/in}>{$vo}</option>
+
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        function changeFun(that) {
+            var introduce = document.getElementById('introduce-view');
+
+            if (that.value == 'direct_the_guest') {
+
+                introduce.style.setProperty('display', 'none', 'important');
+
+
+            } else {
+
+                introduce.style.setProperty('display', 'block', 'important');
+            }
+
+        }
+
+    </script>
+    <div id="introduce-view" style="display: none">
+
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_name')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]"type="text" >
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_phone')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-turn_to_introduce_phone"  class="form-control"
+                       name="row[turn_to_introduce_phone]" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_card')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-turn_to_introduce_card"  class="form-control"
+                       name="row[turn_to_introduce_card]" type="text"
+                       placeholder="选填">
+            </div>
+        </div>
+    </div>
+    <h3>
+        <center>审核资料上传（不必填）</center>
+    </h3>
+    <br>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有配偶')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id=""  class="form-control selectpicker" name="row[idcard]"
+                    onchange="idchangeFun(this)">
+
+                <option value="yes">是</option>
+                <option value="no" selected>否</option>
+
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group" id="idcard-view" style="display: none;">
+        <label class="control-label col-xs-12 col-sm-2">{:__('配偶的身份证正反面（多图）')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-mate_id_cardimages" class="form-control" size="50"
+                       name="row[mate_id_cardimages]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-mate_id_cardimages" class="btn btn-danger plupload"
+                                data-input-id="c-mate_id_cardimages"
+                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                                data-multiple="true" data-preview-id="p-mate_id_cardimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-mate_id_cardimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-mate_id_cardimages"></ul>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        function idchangeFun(that) {
+
+            var idcard = document.getElementById('idcard-view');
+
+
+            if (that.value == 'no') {
+                idcard.style.setProperty('display', 'none', 'important');
+            } else {
+                idcard.style.setProperty('display', 'block', 'important');
+            }
+
+        }
+
+    </script>
+    <!--<div class="form-group">-->
+        <!--<label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>-->
+        <!--<div class="col-xs-12 col-sm-8">-->
+            <!--<div class="input-group">-->
+                <!--<input id="c-id_cardimages"  class="form-control" size="50"-->
+                       <!--name="row[id_cardimages]" type="text">-->
+                <!--<div class="input-group-addon no-border no-padding">-->
+                    <!--<span>-->
+                        <!--<button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload"-->
+                                <!--data-input-id="c-id_cardimages"-->
+                                <!--data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"-->
+                                <!--data-multiple="true" data-preview-id="p-id_cardimages">-->
+                            <!--<i class="fa fa-upload"></i> {:__('Upload')}</button>-->
+                    <!--</span>-->
+                    <!--<span>-->
+
+                    <!--</span>-->
+                <!--</div>-->
+                <!--<span class="msg-box n-right" for="c-id_cardimages"></span>-->
+            <!--</div>-->
+            <!--<ul class="row list-inline plupload-preview" id="p-id_cardimages"></ul>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-drivers_licenseimages"  class="form-control" size="50"
+                       name="row[drivers_licenseimages]"
+                       type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-drivers_licenseimages" class="btn btn-danger plupload"
+                                data-input-id="c-drivers_licenseimages"
+                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true"
+                                data-preview-id="p-drivers_licenseimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-drivers_licenseimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-drivers_licenseimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('银行卡正反面')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-bank_cardimages"  class="form-control" size="50"
+                       name="row[bank_cardimages]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-bank_cardimages" class="btn btn-danger plupload"
+                                data-input-id="c-bank_cardimages"
+                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                                data-multiple="true" data-preview-id="p-bank_cardimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-bank_cardimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-bank_cardimages"></ul>
+        </div>
+    </div>
+    
+    <b style="color: #ddd">
+        <center>
+            <i>--我是有底线的--</i>
+        </center>
+    </b>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
