@@ -18,9 +18,28 @@ class Models extends Model
     
     // 追加属性
     protected $append = [
-        'status_text'
+            'status_text'
     ];
-    
+    public function brand()
+    {
+        return $this->belongsTo('Brand', 'brand_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    public function series()
+    {
+        return $this->belongsTo('Brand', 'series_name', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    public function model()
+    {
+        return $this->belongsTo('ModelsDetails', 'model_name', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+
+    public function planacar()
+    {
+        return $this->hasOne('PlanAcar','models_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 
     
     public function getStatusList()
@@ -37,10 +56,4 @@ class Models extends Model
     }
 
 
-
-
-    public function brand()
-    {
-        return $this->belongsTo('Brand', 'brand_id', 'id', [], 'LEFT')->setEagerlyType(0);
-    }
 }

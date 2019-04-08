@@ -1,0 +1,375 @@
+<style>
+    *{margin: 0;padding: 0;box-sizing: border-box;}
+    body, html {
+        font-family:"微软雅黑";
+        font-size: 14px;
+        margin: 0;
+        min-width: 1000px;
+        padding: 0;
+        background-color:#f2f2f2;
+    }
+    .font20{font-size:20px;}
+    .indextop{
+        border-top: 2px #3399ff solid;margin-bottom: 1px;line-height: 30px
+    }
+    
+    .col-555{color: #555;}
+    .col-999{color: #999;}
+    .col-333{color: #333;}
+    .col-fff{color: #fff;}
+    .col-org{color: #f80;}
+    .col-blue{color: #39f;}
+    .bg-fff{background: #fff;}
+    .posi-rel{position: relative;}
+    .posi-abu{position: absolute;}
+    .posi-fix{position: fixed;}
+    .border-radius{border-radius: 50%;}
+    .fl{float: left;}
+    .fr{float: right;}
+    .font12{font-size: 12px;}
+    .font14{font-size: 14px;}
+    .font16{font-size: 16px;}
+    .font18{font-size: 18px;}
+    .font20{font-size: 20px;}
+    .font-bold{font-weight: 600;}
+    .ml45{margin-left: 45px;}   /* 新加*/
+    .mtb5{margin: 5px 0;}
+    .dis-block{display: block;}
+    .dis-inblock{display: inline-block;}
+    .text-center{text-align: center;}
+    i{font-style: normal;}
+    input {
+        margin:0;
+        padding:0;
+        color: #333;
+        font-size: 12px;
+        outline: 0 none;
+        vertical-align: middle;height: 40px !important;border: 1px solid #d7d7d7
+    }
+    button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
+        border: 0 none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /*修改绑定*/
+    .rebinding-menu{ background-color:#fff; height:80px;width:100%; line-height: 80px; border-bottom:solid 1px #d5d5d5; box-shadow: 0px 2px 4px rgba(0,0,0,0.2);margin-bottom: 14px;z-index: 1100;}
+    .rebinding-menu .logo{float: left;}
+    .rebinding-menu .rebinding-btn{float: right;}
+    .rebinding-btn button{width: 80px; height: 40px; background-color: #3399FF; color: #fff; border-radius: 6px;}
+    .rebinding-box .box-title{width: 500px;margin: 60px auto;text-align: center;}
+    .rebinding-box .box-title i{font-size: 12px;color: #999;}
+    .rebinding-box .box-timeline{width: 575px; margin: 0 auto; text-align: center;}
+    .rebinding-box .box-timeline ul li{float: left;font-size: 16px;color: #999;width: 100px; position: relative;margin-right: 105px;}
+    /*.rebinding-box .box-timeline  div[class*=box-outside]{width: 38px; height: 38px; background-color: #d7d7d7; border-radius: 50%;line-height: 38px; margin: 10px auto; display:flex; display: -webkit-flex;  align-items:center;}*/
+    .rebinding-box .box-timeline .outside1ab{width: 38px; height: 38px; background-color: #d7d7d7; border-radius: 50%;line-height: 38px; margin: 10px auto; display:flex; display: -webkit-flex;  align-items:center;}
+    .rebinding-box .box-timeline .outside2a{width: 38px; height: 38px; background-color: #d7d7d7; border-radius: 50%;line-height: 38px; margin: 10px auto; display:flex; display: -webkit-flex;  align-items:center;}
+    .rebinding-box .box-timeline .outside1ab:before{content:"";position:absolute; height: 1px; width: 105px;background-color: #d7d7d7;top: 48px;right: 71px;z-index: 2;}
+    .rebinding-box .box-timeline .outside1ab:after{content:"";position:absolute; height: 1px; width: 105px;background-color: #d7d7d7;top: 48px;left: 71px;z-index: 2;}
+    .rebinding-box .box-timeline .outside2a:before{content:"";position:absolute; height: 1px; width: 105px;background-color: #d7d7d7;top: 48px;right: 71px;z-index: 2;}
+    .rebinding-box .box-timeline  div[class*=box-num]{width: 26px; height: 26px;line-height: 26px; margin: 14px auto; border-radius: 50%; background-color: #39f;color: #fff; }
+    /*.rebinding-box .box-timeline  div[class*=box-nums]:after{content: ""; position:absolute; height: 1px; width: 105px;background-color: #39f;top: 46px;left: 71px;}*/
+    .rebinding-box .box-timeline .outside1ab .num2ab{background-color: #999;}
+    .rebinding-box .box-timeline .outside2a .num3a{background-color: #999;}
+    .rebinding-box .box-timeline ul .box-num1{background-color: #39f;}
+    .rebinding-box .box-timeline .box-num2,.rebinding-box .box-timeline .box-num3{margin-left: 45px;}
+    .rebinding-box .box-timeline .box-num1:after{content:"";position:absolute; height: 1px; width: 105px;background-color: #39f;top: 48px;left: 71px;}
+    .rebinding-box .box-timeline .num2ab:before{content:"";position:absolute; height: 1px; width: 105px;background-color: #39f;top: 48px;right: 71px;}
+    .rebinding-box .box-timeline .num2ab:after{content:"";position:absolute; height: 1px; width: 105px;background-color: #39f;top: 48px;left: 71px;}
+    .rebinding-box .box-timeline .num3a:before{content:"";position:absolute; height: 1px; width: 105px;background-color: #39f;top: 48px;right: 71px;}
+    /*第一步*/
+    .twobox-form{display: none;}
+    .threebox-form{display: none;}
+    /* 第三步 */
+     .threebox-form .successr .symbol{width: 66px;height: 66px;border: solid 4px #39f;border-radius:50%;position: relative;margin: 0 auto;}
+     .threebox-form .successr .symbol:before{position: absolute; content: " ";width:36px; height:19px;border-left:4px solid #39f; border-bottom: 4px solid #39f;top: 12px;left: 10px;transform:rotate(-46deg);}
+     .threebox-form .successr p{font-size: 20px;text-align: center;margin-top: 15px;}
+     /* .threebox-form .successr button{width: 130px;height: 40px;background-color: #39f;color: #fff;margin: 7% 32%;border-radius: 6px;font-size: 14px;} */
+    </style>
+    
+    <!-- 流程图 -->
+    
+    <div class="rebinding-box" id="rebindingbox">
+            <div class="box-title">
+                <h2 class="mtb5">新增租车订单</h2>
+            </div>
+            <div class="box-timeline">
+                <ul class="text-center" style="width: 800px;" >
+                    <li>
+                        选择租车方案
+                        <div class="box-num1">
+                            1
+                        </div>
+                    </li>
+                    <li class="ml45">
+                        完善租车资料
+                        <div class="box-outside1 outside1ab" id="outside1abs">
+                            <div class="box-num2 num2ab">
+                              2
+                            </div>
+                        </div>
+                    </li>
+                    <li class="ml45">
+                        提交资料审核
+                        <div class="box-outside2 outside2a" id="outside2as">
+                            <div class="box-num3 num3a" >
+                             3
+                           </div>
+                        </div>
+                    </li>
+                    <div class="clear">  
+                    </div>
+                </ul>
+            </div>
+    </div>
+    
+    <!-- 选择租车方案 -->
+    
+    <form id="oneform" class="form-horizontal onebox-form"  role="form" data-toggle="validator" method="POST" action="">
+        <div id="oneform">
+    
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('请选择租车方案')}:</label>
+                <div class="col-xs-12 col-sm-8">
+    
+                        <select id="c-plan_acar_name" data-rule="required" class="form-control selectpicker" name="row[plan_acar_name]" onchange="planName(this.value)">
+                            <option class="rentalCar" value=" " style='display: none'>未选中任何项</option>
+                            {volist name="newRes" id="vo"}
+            
+                            <option value="{$vo['brand_logoimage']}" disabled>{$vo['brand_name']}</option>
+                            {volist name="vo.data" id="vo_s"}
+                            <option class="rentalCar" id="rentalCar" value="{$vo_s['id']},{$vo_s['models_name']}">{$vo_s['models_name']}</option>
+                            {/volist} {/volist}
+                        </select>
+                </div>
+                <input type="hidden" value="" id="hiddenPlanName">
+                <div class="control-label col-xs-12 col-sm-11">
+                        <button type="button" class="onebtn btn btn-success btn-embossed" id="onebtn">下一步</button>
+                </div>
+            </div>
+    
+        </div>      
+    </form>
+    <script>
+        function planName(planName){
+            document.getElementById('hiddenPlanName').value=planName;
+        }
+    
+    </script>
+    <!-- 完善客户信息 -->
+    
+    <form id="twoform" class="form-horizontal twobox-form" name="form1"  role="form" data-toggle="validator" method="POST" action="">
+        <div id="twoform">
+    
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('请选择租车方案')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                        <input id="c-plan_acar_name" data-rule="required" class="form-control form-control" name="row[plan_acar_name]" value="{$Request.session.planName}" readonly>        
+                </div>
+    
+            </div>
+            
+        
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('实付押金（元）')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-cash_pledge" data-rule="required" class="form-control form-control" name="row[cash_pledge]" type="number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('实付租金（元）')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-rental_price" data-rule="required" class="form-control form-control" name="row[rental_price]" type="number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('实际租期（月）')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-tenancy_term" data-rule="required" class="form-control form-control" name="row[tenancy_term]" type="number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Username')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-username" data-rule="required" class="form-control form-control" name="row[username]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Phone')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-phone" data-rule="required" class="form-control form-control" name="row[phone]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Id_card')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-id_card" data-rule="required" class="form-control form-control" name="row[id_card]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Genderdata')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    
+                    <div class="radio">
+                    {foreach name="genderdataList" item="vo"}
+                    <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="male"}checked{/in} /> {$vo}</label> 
+                    {/foreach}
+                    </div>
+    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Gps_installation_name')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-gps_installation_name" data-rule="required" class="form-control form-control" name="row[gps_installation_name]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Gps_installation_datetime')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-gps_installation_datetime" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[gps_installation_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Information_audition_name')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-information_audition_name" data-rule="required" class="form-control form-control" name="row[information_audition_name]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Information_audition_datetime')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-information_audition_datetime" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[information_audition_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Insurance_status_name')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-Insurance_status_name" data-rule="required" class="form-control form-control" name="row[Insurance_status_name]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Insurance_status_datetime')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-Insurance_status_datetime" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[Insurance_status_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('General_manager_name')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-general_manager_name" data-rule="required" class="form-control form-control" name="row[general_manager_name]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('General_manager_datetime')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-general_manager_datetime" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[general_manager_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Emergency_contact_1')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-emergency_contact_1" data-rule="required" class="form-control form-control" name="row[emergency_contact_1]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Emergency_contact_2')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-emergency_contact_2" data-rule="required" class="form-control form-control" name="row[emergency_contact_2]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Id_cardimages')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <input id="c-id_cardimages" data-rule="required" class="form-control form-control" size="50" name="row[id_cardimages]" type="text">
+                        <div class="input-group-addon no-border no-padding">
+                            <span><button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload" data-input-id="c-id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-id_cardimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                            <span><button type="button" id="fachoose-id_cardimages" class="btn btn-primary fachoose" data-input-id="c-id_cardimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                        </div>
+                        <span class="msg-box n-right" for="c-id_cardimages"></span>
+                    </div>
+                    <ul class="row list-inline plupload-preview" id="p-id_cardimages"></ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Drivers_licenseimages')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <input id="c-drivers_licenseimages" data-rule="required" class="form-control form-control" size="50" name="row[drivers_licenseimages]" type="text">
+                        <div class="input-group-addon no-border no-padding">
+                            <span><button type="button" id="plupload-drivers_licenseimages" class="btn btn-danger plupload" data-input-id="c-drivers_licenseimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-drivers_licenseimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                            <span><button type="button" id="fachoose-drivers_licenseimages" class="btn btn-primary fachoose" data-input-id="c-drivers_licenseimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                        </div>
+                        <span class="msg-box n-right" for="c-drivers_licenseimages"></span>
+                    </div>
+                    <ul class="row list-inline plupload-preview" id="p-drivers_licenseimages"></ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Residence_bookletimages')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <input id="c-residence_bookletimages" data-rule="required" class="form-control form-control" size="50" name="row[residence_bookletimages]" type="text">
+                        <div class="input-group-addon no-border no-padding">
+                            <span><button type="button" id="plupload-residence_bookletimages" class="btn btn-danger plupload" data-input-id="c-residence_bookletimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-residence_bookletimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                            <span><button type="button" id="fachoose-residence_bookletimages" class="btn btn-primary fachoose" data-input-id="c-residence_bookletimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                        </div>
+                        <span class="msg-box n-right" for="c-residence_bookletimages"></span>
+                    </div>
+                    <ul class="row list-inline plupload-preview" id="p-residence_bookletimages"></ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Call_listfilesimages')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <input id="c-call_listfilesimages" data-rule="required" class="form-control form-control" size="50" name="row[call_listfilesimages]" type="text">
+                        <div class="input-group-addon no-border no-padding">
+                            <span><button type="button" id="plupload-call_listfilesimages" class="btn btn-danger plupload" data-input-id="c-call_listfilesimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-call_listfilesimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                            <span><button type="button" id="fachoose-call_listfilesimages" class="btn btn-primary fachoose" data-input-id="c-call_listfilesimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                        </div>
+                        <span class="msg-box n-right" for="c-call_listfilesimages"></span>
+                    </div>
+                    <ul class="row list-inline plupload-preview" id="p-call_listfilesimages"></ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3">{:__('Delivery_datetime')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="c-delivery_datetime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[delivery_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                </div>
+            </div>
+    
+            <div class="control-label col-xs-12 col-sm-11">
+                    <button type="button" class="twobtn btn btn-success btn-embossed" id="twobtn">提交资料</button>
+            </div>
+    
+    
+        </div>
+    </form>
+    
+    <!-- 提交信息入库 -->
+    
+    <form id="add-form" class="form-horizontal threebox-form" role="form" data-toggle="validator" method="POST" action="">
+        <div id="add-form">
+    
+                <div class="successr control-label col-xs-12 col-sm-12">
+                        <div class="symbol">
+                            
+                        </div>
+                <p>恭喜，完成了租车资料的填写！</p>
+    
+                </div>
+    
+                <div class="control-label col-xs-12 col-sm-8">
+                        <button type="button" class=" confirm twobtn btn btn-success btn-embossed" id="threebtn">提交审核</button>
+                        <button type="button" class=" confirm twobtn btn btn-success btn-embossed" id="fourbtn">暂不提交审核</button>
+                </div>
+    
+        </div>
+    
+    </form>
+    
+    
+    
