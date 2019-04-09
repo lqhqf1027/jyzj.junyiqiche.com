@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\common\controller\Backend;
 use think\Db;
-
+use think\Env;
 /**
  * 以租代购
  *
@@ -13,9 +13,9 @@ use think\Db;
 class Bigdata extends Backend
 {
  
-    protected $model = null;
-    protected $userid = 'junyi_testusr'; //用户id
-    protected $Rc4 = '12b39127a265ce21'; //apikey
+    protected $model = null; 
+    protected $userid = Env::get('bigdata_test.userid'); //用户id
+    protected $Rc4 = Env::get('bigdata_test.rc4'); //apik
     protected $sign = null; //sign  md5加密
     protected $noNeedRight =['toViewBigData','getBigData'];
     // protected $bigData = array();
