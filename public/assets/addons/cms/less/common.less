@@ -13,34 +13,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 40px;
   background: #f4f6f8;
   font-size: 14px;
   color: #616161;
-}
-
-body {
-  padding-top: 70px;
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
 .wow {
   visibility: hidden;
 }
 
-@media (hover: hover) {
-  .dropdown a:hover + .dropdown-menu {
-    display: block;
-    margin-top: 0;
-  }
-}
-
-.alert-paid {
-  margin: 10px 0;
-  text-align: center;
-  a {
-    color:#f39c12;
-  }
+.dropdown:hover > .dropdown-menu {
+  display: block;
+  margin-top: 0;
 }
 
 .dropdown-submenu {
@@ -165,15 +152,6 @@ body {
   .box-shadow(none);
 }
 
-/*修复nice-validator新版下的一处BUG*/
-.nice-validator {
-  input, select, textarea, [contenteditable] {
-    display: inline-block;
-    *display: inline;
-    *zoom: 1;
-  }
-}
-
 /*修复nice-validator和summernote的编辑框冲突*/
 .nice-validator .note-editor .note-editing-area .note-editable {
   display: inherit;
@@ -181,7 +159,7 @@ body {
 
 /*预览区域*/
 .plupload-preview {
-  padding: 0 10px;
+  padding: 10px;
   margin-bottom: 0;
   li {
     margin-bottom: 10px;
@@ -1320,34 +1298,4 @@ h1 .breadcrumb {
     }
   }
 
-}
-
-.fieldlist dd {
-  display: block;
-  margin: 5px 0;
-  input {
-    display: inline-block;
-    width: 300px;
-  }
-  input:first-child {
-    width: 110px;
-  }
-  ins {
-    width: 110px;
-    display: inline-block;
-    text-decoration: none;
-    font-weight: bold;
-  }
-}
-
-.text-gray {
-  color: #d2d6de !important;
-}
-
-.no-padding {
-  padding: 0 !important;
-}
-
-.no-border {
-  border: none !important;
 }

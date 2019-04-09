@@ -8,7 +8,6 @@ use think\Controller;
 use think\Hook;
 use think\Lang;
 use think\Session;
-
 /**
  * 后台控制器基类
  */
@@ -110,7 +109,6 @@ class Backend extends Controller
         $modulename = $this->request->module();
         $controllername = strtolower($this->request->controller());
         $actionname = strtolower($this->request->action());
-
         $path = str_replace('.', '/', $controllername) . '/' . $actionname;
 
         // 定义是否Addtabs请求
@@ -133,7 +131,7 @@ class Backend extends Controller
                 Hook::listen('admin_nologin', $this);
                 $url = Session::get('referer');
                 $url = $url ? $url : $this->request->url();
-                $this->error(__('Please login first'), url('index/login', ['url' => $url]));
+                $this->redirect('index/login');
             }
             // 判断是否需要验证权限
             if (!$this->auth->match($this->noNeedRight)) {
@@ -174,7 +172,6 @@ class Backend extends Controller
         $lang = strip_tags($this->request->langset());
 
         $site = Config::get("site");
-
         $upload = \app\common\model\Config::upload();
 
         // 上传信息配置后
@@ -194,7 +191,6 @@ class Backend extends Controller
             'referer'        => Session::get("referer")
         ];
         $config = array_merge($config, Config::get("view_replace_str"));
-
         Config::set('upload', array_merge(Config::get('upload'), $upload));
 
         // 配置信息后
@@ -209,6 +205,21 @@ class Backend extends Controller
         $this->assign('auth', $this->auth);
         //渲染管理员对象
         $this->assign('admin', Session::get('admin'));
+        //渲染角色
+        $this->assign('rule_message',$site['pushMessage']);
+        $version = collection(model('Config')->where('name','version')->find()->toArray())['value'];
+        //扔出版本信息
+        $this->assign('version',$version);
+        //扔出全局的admin信息到js
+        $this->assignconfig('ADMIN_JS',Session::get('admin'));
+        //扔出Cdnurl
+        $this->assignconfig('cdn_url',Config::get('upload')['cdnurl']);
+    }
+
+
+    /**
+     * 加载语言文件.
+     *
     }
 
     /**
@@ -249,7 +260,6 @@ class Backend extends Controller
         $limit = $this->request->get("limit", 0);
         $filter = (array)json_decode($filter, TRUE);
         $op = (array)json_decode($op, TRUE);
-        $filter = $filter ? $filter : [];
         $where = [];
         $tableName = '';
         if ($relationSearch) {
@@ -470,4 +480,39 @@ class Backend extends Controller
         return json(['list' => $list, 'total' => $total]);
     }
 
+    //该公共方法获取和全局缓存js-sdk需要使用的access_token
+    protected function getAccessToken()
+    {
+        //我们将access_token全局缓存在文件中,每次获取的时候,先判断是否过期,如果过期重新获取再全局缓存
+        //我们缓存的在文件中的数据，包括access_token和该access_token的过期时间戳.
+        //获取缓存的access_token
+        $access_token_data = json_decode(Cache::get('access_token'), true);
+
+        //判断缓存的access_token是否存在和过期，如果不存在和过期则重新获取.
+        if ($access_token_data !== null && $access_token_data['access_token'] && $access_token_data['expires_in'] > time()) {
+            return $access_token_data['access_token'];
+        } else {
+            //重新获取access_token,并全局缓存
+            $curl = curl_init();
+
+            curl_setopt($curl, CURLOPT_URL, 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret);
+
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            //获取access_token
+            $data = json_decode(curl_exec($curl), true);
+            if ($data != null && $data['access_token']) {
+                //设置access_token的过期时间,有效期是7200s
+                $data['expires_in'] = $data['expires_in'] + time();
+
+                //将access_token全局缓存，快速缓存到文件中.
+                Cache::set('access_token', json_encode($data));
+
+                //返回access_token
+                return $data['access_token'];
+            } else {
+                exit('微信获取access_token失败');
+            }
+        }
+    }
 }

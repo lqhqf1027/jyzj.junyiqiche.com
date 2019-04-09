@@ -1,0 +1,213 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
+                <option value=" " style='display: none'>未选中任何项</option>
+                {volist name="store" id="vo" }
+                <option disabled>{$vo.cities_name}</option>
+                {volist name="vo.store" id="store_vo"}
+                {eq name="$store_vo.store_id" value="$row.store_id"}
+                <option value="{$store_vo.store_id}" selected>{$store_vo.store_name}</option>
+                {else /}
+                <option value="{$store_vo.store_id}">{$store_vo.store_name}</option>
+                {/eq}
+                {/volist}
+                {/volist}
+
+            </select>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-models_id" data-rule="required" data-source="planmanagement/plantabs/getModels" 
+                data-params='{"custom[store_ids]":"0"}' class="form-control selectpage form-control" name="row[models_id]" type="text" value="{$row.models_id}">
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择销售方案类型')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-category_id" data-rule="required" data-source="planmanagement/plantabs/getCategory" 
+                data-params='{"custom[store_ids]":"{$row.store_id}"}' class="form-control selectpage form-control" name="row[category_id]" type="text" value="{$row.category_id}">
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择金融平台')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-financial_platform_id" data-rule="required" class="form-control selectpicker"
+                    name="row[financial_platform_id]"
+            >
+                {foreach name="financial" item="vo"}
+                {eq name="$vo.id" value="$row.financial_platform_id"}
+                <option value="{$vo.id}" selected>{$vo.name}</option>
+                {else /}
+                <option value="{$vo.id}">{$vo.name}</option>
+                {/eq}
+
+                {/foreach}
+
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择指定的销售')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-sales_id" class="form-control selectpicker" name=row[sales_id]>
+                {empty name="$row.sales_id"}
+                <option value=" " selected>无</option>
+                {foreach name="$sales" item="vo"}
+                <option value="" disabled>{$vo.name}</option>
+                {foreach name="$vo.message" item="sa"}
+                <option value="{$sa.id}">{$sa.nickname}</option>
+                {/foreach}
+                {/foreach}
+                {else /}
+                <option value=" ">无</option>
+
+                {foreach name="$sales" item="vo"}
+                <option value="" disabled>{$vo.name}</option>
+                {foreach name="$vo.message" item="sa"}
+                {eq name="$sa.id" value="$row.sales_id"}
+                <option value="{$sa.id}" selected>{$sa.nickname}</option>
+                {else /}
+                <option value="{$sa.id}">{$sa.nickname}</option>
+                {/eq}
+                {/foreach}
+                {/foreach}
+
+                {/empty}
+
+            </select>
+
+        </div>
+    </div>
+
+    <!-- <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-models_id" data-rule="required" class="form-control selectpicker" name="row[models_id]">
+                <option value=" " style='display: none'>未选中任何项</option>
+                {volist name="car_models" id="vo"}
+                <option disabled>{$vo.name}</option>
+                {volist name="vo.models" id="model_vo"}
+                {eq name="$model_vo.models_id" value="$row.models_id"}
+                <option value="{$model_vo.models_id}" selected>{$model_vo.models_name}</option>
+                {else /}
+                <option value="{$model_vo.models_id}">{$model_vo.models_name}</option>
+                {/eq}
+
+                {/volist}
+                {/volist}
+
+            </select>
+
+        </div>
+    </div> -->
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有营运险')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {foreach name="working_insurance_list" item="vo"}
+                <label for="row[working_insurance]--{$key}">
+                    {eq name="$row['working_insurance']" value="$key"}
+                    <input id="{row[working_insurance]--{$key}" name="row[working_insurance]" type="radio"
+                           value="{$key}"
+                           checked/>
+                    {else /}
+                    <input id="row[working_insurance]--{$key}" name="row[working_insurance]" type="radio"
+                           value="{$key}"/>
+                    {/eq}
+                    {$vo}</label>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Payment')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-payment" data-rule="required" class="form-control" step="0.01" name="row[payment]"
+                   type="number" value="{$row.payment}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('月供')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly" data-rule="required" class="form-control" step="0.01" name="row[monthly]"
+                   type="number" value="{$row.monthly}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Nperlist')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-nperlist" data-rule="required" class="form-control selectpicker" name="row[nperlist]">
+                {foreach name="nperlistList" item="vo"}
+                {eq name="$key" value="$row.nperlist"}
+                <option value="{$key}" selected>{$vo}</option>
+                {else /}
+                <option value="{$key}">{$vo}</option>
+                {/eq}
+
+
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Margin')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-margin" class="form-control" step="0.01" name="row[margin]" type="number"
+                   value="{$row.margin}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Tail_section')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tail_section" class="form-control" step="0.01" name="row[tail_section]" type="number"
+                   value="{$row.tail_section}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Gps')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-gps" class="form-control" step="0.01" name="row[gps]" type="number" value="{$row.gps}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售方案备注')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-note" class="form-control" name="row[note]" type="text" value="{$row.note}" placeholder="">
+
+            <!--<textarea id="c-note" data-rule="required" class="form-control editor" rows="5" name="row[note]" cols="50">{$row.note}</textarea>-->
+        </div>
+    </div>
+
+
+
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+

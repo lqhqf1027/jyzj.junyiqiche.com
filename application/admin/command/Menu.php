@@ -45,8 +45,6 @@ class Menu extends Command
         $delete = $input->getOption('delete');
         //是否控制器完全匹配
         $equal = $input->getOption('equal');
-
-
         if ($delete) {
             if (in_array('all-controller', $controller)) {
                 throw new Exception("could not delete all menu");

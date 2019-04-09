@@ -1,0 +1,324 @@
+<style type="text/css">
+    .sm-st {
+        background: #fff;
+        padding: 20px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        margin-bottom: 20px;
+        -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    .sm-st-icon {
+        width: 60px;
+        height: 60px;
+        display: inline-block;
+        line-height: 60px;
+        text-align: center;
+        font-size: 30px;
+        background: #eee;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        float: left;
+        margin-right: 10px;
+        color: #fff;
+    }
+
+    .sm-st-info {
+        font-size: 12px;
+        padding-top: 2px;
+    }
+
+    .sm-st-info span {
+        display: block;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .orange {
+        background: #fa8564 !important;
+    }
+
+    .tar {
+        background: #45cf95 !important;
+    }
+
+    .sm-st .green {
+        background: #86ba41 !important;
+    }
+
+    .pink {
+        background: #AC75F0 !important;
+    }
+
+    .yellow-b {
+        background: #fdd752 !important;
+    }
+
+    .stat-elem {
+
+        background-color: #fff;
+        padding: 18px;
+        border-radius: 40px;
+
+    }
+
+    .stat-info {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 5px;
+        margin-top: -5px;
+        padding: 8px;
+        -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+        font-style: italic;
+    }
+
+    .stat-icon {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .st-red {
+        background-color: #F05050;
+    }
+
+    .st-green {
+        background-color: #27C24C;
+    }
+
+    .st-violet {
+        background-color: #7266ba;
+    }
+
+    .st-blue {
+        background-color: #23b7e5;
+    }
+
+    .stats .stat-icon {
+        color: #28bb9c;
+        display: inline-block;
+        font-size: 26px;
+        text-align: center;
+        vertical-align: middle;
+        width: 50px;
+        float: left;
+    }
+
+    .stat {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .stat .value {
+        font-size: 20px;
+        line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 500;
+    }
+
+    .stat .name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .stat.lg .value {
+        font-size: 26px;
+        line-height: 28px;
+    }
+
+    .stat.lg .name {
+        font-size: 16px;
+    }
+
+    .stat-col .progress {
+        height: 2px;
+    }
+
+    .stat-col .progress-bar {
+        line-height: 2px;
+        height: 2px;
+    }
+
+    .item {
+        padding: 30px 0;
+    }
+
+    .carStatus {
+        border-right: 2px solid black;
+        /* border-radius: 5px; */
+    }
+
+    .carStatus h3 {
+        font-weight: 600;
+    }
+</style>
+
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-sm-3 col-xs-6">
+                <div class="sm-st clearfix">
+                    <span class="sm-st-icon st-red"><i class="fa fa-car"></i></span>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info">
+                                <span class="text-danger" id="peccancy">0</span>
+                                {:__('车辆总违章数（台）')}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-6">
+                <div class="sm-st clearfix">
+                    <span class="sm-st-icon st-violet"><i class="fa fa-car"></i></span>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info" style="border-right: 1px solid gray" >
+                                <span class="text-warning" id="year_inspect">0</span>
+                                {:__('即需年检车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info">
+                                <span class="text-danger" id="year_overdue">0</span>
+                                {:__('年检已过期车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-6">
+                <div class="sm-st clearfix">
+                    <span class="sm-st-icon st-blue"><i class="fa fa-car"></i></span>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info" style="border-right: 1px solid gray">
+                                <span class="text-warning" id="strong">0</span>
+                                {:__('交强险即需续保车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info">
+                                <span class="text-danger" id="strong_overdue">0</span>
+                                {:__('交强险已过期车辆（台）')}
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-6">
+                <div class="sm-st clearfix">
+                    <span class="sm-st-icon st-green"><i class="fa fa-car"></i></span>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info" style="border-right: 1px solid gray">
+                                <span class="text-warning" id="business">0</span>
+                                {:__('商业险即需续保车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info">
+                                <span class="text-danger" id="business_overdue">0</span>
+                                {:__('商业险已过期车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-lead"><em></em></div>
+        <ul class="nav nav-tabs">
+            <li class="active text-center"><a href="#prepare_send" data-toggle="tab" style="font-weight: bold">未发送给客服&nbsp;<span
+                    class="pull-right-container"><small class="badge pull-right bg-red" id="prepare_send_total"></small></span></a>
+            </li>
+            <li><a href="#already_send" data-toggle="tab" style="font-weight: bold"
+                   class="text-center">已发送给客服&nbsp;<span class="pull-right-container"><small
+                    class="badge pull-right bg-red" id="already_send_total"></small></span></a></li>
+            <!--<li><a href="#new_feedback" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center"><i class="fa fa-flag-o"></i> 已反馈</a></li>-->
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <!--新客户-->
+
+            <div class="tab-pane fade active in" id="prepare_send">
+                <div id="toolbar1" class="toolbar">
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"><i
+                            class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-info btn-peccancy" title="{:__('查询')}"><i
+                            class="fa fa-search"></i> {:__('批量查询违章')}</a>
+                    <a href="javascript:;" class="btn btn-danger btn-share btn-disabled disabled" title="{:__('发送')}"><i
+                            class="fa fa-share"></i> {:__('批量发送给客服')}</a>
+                </div>
+
+                <table id="prepareSend" class="table table-striped table-bordered table-hover table-nowrap"
+                       width="100%">
+                </table>
+            </div>
+
+
+            <!--已分配给销售的用户-->
+
+            <div class="tab-pane fade " id="already_send">
+                <div id="toolbar2" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"><i
+                            class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-info btn-peccancy2" title="{:__('查询')}"><i
+                            class="fa fa-search"></i> {:__('批量查询违章')}</a>
+
+                </div>
+
+                <table id="alreadySend" class="table table-striped table-bordered table-hover table-nowrap"
+                       width="100%">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

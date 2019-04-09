@@ -1,0 +1,73 @@
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+    .footer {
+        width: 100%;
+        border: 1px solid red;
+    }
+</style>
+
+
+<form id="choose_stock-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action=""
+      data-area='["600px","400px"]'>
+
+
+
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            <th>
+                <!--<input type="checkbox" id="inlineCheckbox1" value="option1">-->
+            </th>
+            <th>ID</th>
+            <th>车型名称</th>
+            <th>车牌号</th>
+            <th>车架号</th>
+            <th>发动机号</th>
+            <th>所属户</th>
+            <th>4S店</th>
+            <th>备注</th>
+
+            <!--<th>邮编</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="stock" id="vo"}
+
+        <tr>
+            <td>
+                <input type="radio" class="inlineCheckbox2" name="id" value="{$vo.id}">
+            </td>
+            <td>{$vo.id}</td>
+            <td>{$vo.name}</td>
+            <td>{$vo.licensenumber}</td>
+            <td>{$vo.frame_number}</td>
+            <td>{$vo.engine_number}</td>
+            <td>{$vo.household}</td>
+            <td>{$vo.4s_shop}</td>
+            <td>{$vo.note}</td>
+        </tr>
+
+        {/volist}
+
+
+        </tbody>
+
+
+    </table>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8" style="margin-left:35%">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('确定')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+
+
+</div>

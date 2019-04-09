@@ -54,7 +54,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => 'https://test.jyzj.junyiqiche.com/index/notify',
+    'value' => 'https://jyzj.junyiqiche.com/index/notify',
     'rule' => '',
     'msg' => '',
     'tip' => '回调通知地址',
@@ -129,7 +129,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => 'jpg,png,bmp,jpeg,gif,zip,rar,xls,xlsx',
+    'value' => 'jpg,png,bmp,jpeg,gif,zip,rar,xls,xlsx,pdf',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',

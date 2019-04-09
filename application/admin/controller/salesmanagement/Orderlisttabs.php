@@ -182,7 +182,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField(['name']);
+                    $query->withField(['name', 'models_name']);
                 }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber');
                 }])
@@ -197,7 +197,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField(['name']);
+                    $query->withField(['name', 'models_name']);
                 }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber');
                 }])
@@ -205,24 +205,24 @@ class Orderlisttabs extends Backend
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
-//
-//            foreach ($list as $k => $row) {
-//                $row->visible(['id', 'order_no', 'financial_name', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data',
-//                    'id_cardimages', 'drivers_licenseimages', 'bank_cardimages', 'undertakingimages', 'accreditimages', 'faceimages', 'informationimages', 'financial_name']);
-//                $row->visible(['planacar']);
-//                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
-//                $row->visible(['admin']);
-//                $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
-//                $row->visible(['models']);
-//                $row->getRelation('models')->visible(['name']);
-//                $row->visible(['newinventory']);
-//                $row->getRelation('newinventory')->visible(['licensenumber']);
 
-//                if ($list[$k]['models']['models_name']) {
-//                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
-//                }
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'financial_name', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data',
+                    'id_cardimages', 'drivers_licenseimages', 'bank_cardimages', 'undertakingimages', 'accreditimages', 'faceimages', 'informationimages', 'financial_name']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+                $row->visible(['newinventory']);
+                $row->getRelation('newinventory')->visible(['licensenumber']);
 
-//            }
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
+            }
 
 
             $list = collection($list)->toArray();
@@ -726,8 +726,6 @@ class Orderlisttabs extends Backend
             }
         }
 
-
-
         //销售方案类别
 
         $rules = Db::name('admin')
@@ -737,11 +735,12 @@ class Orderlisttabs extends Backend
         if($rules =='message8' || $rules == 'message9'){
             $category = Db::name('scheme_category')
                 ->where('id', 'in', $ids)
+                ->where('city_id', '38')
                 ->where('status',0)
                 ->field('id,name')
                 ->select();
         }else{
-            $category = Db::name('scheme_category')->where('id', 'in', $ids)->field('id,name')->select();
+            $category = Db::name('scheme_category')->where('city_id', '38')->where('id', 'in', $ids)->field('id,name')->select();
         }
 
 
@@ -1064,12 +1063,12 @@ class Orderlisttabs extends Backend
             if($rules =='message8' || $rules == 'message9'){
                 $category = $this->model
                     ->where('id', 'in', $ids)
-
+                    ->where('store_ids', 'in', $custom['store_id'])
                     ->where('status',0)
                     ->field('id,name')
                     ->select();
             }else{
-                $category = Db::name('scheme_category')->where('id', 'in', $ids)->field('id,name')->select();
+                $category = Db::name('scheme_category')->where('id', 'in', $ids)->where('store_ids', 'in', $custom['store_id'])->field('id,name')->select();
             }
             // pr($category);
             // die;
@@ -1354,16 +1353,17 @@ class Orderlisttabs extends Backend
                 ->join('scheme_category s', 'a.category_id = s.id')
                 ->where([
                     'a.category_id' => $category_id,
+                    'a.acar_status' => 1
                 ])
                 //   ->where('sales_id', NULL)
                 //   ->whereOr('sales_id', $this->auth->id)
-                ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.sales_id,a.note,b.name as models_name,b.id as models_id,s.category_note')
+                ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.sales_id,a.note,b.models_name as model_name,b.name as models_name,b.id as models_id,s.category_note')
                 ->order('id desc')
                 ->select();
             foreach ($result as $k => $v) {
 
                 $result[$k]['downpayment'] = $v['payment'] + $v['monthly'] + $v['margin'] + $v['gps'];
-//                $result[$k]['models_name'] = $v['models_name'] . " " . $v['model_name'];
+                $result[$k]['models_name'] = $v['models_name'] . " " . $v['model_name'];
                 $result[$k]['admin_id'] = $this->auth->id;
             }
 
@@ -1396,10 +1396,11 @@ class Orderlisttabs extends Backend
             ->join('scheme_category s', 'a.category_id = s.id')
             ->where([
                 'a.category_id' => $category_id,
+                'a.acar_status' => 1
             ])
             // ->where('sales_id', NULL)
             // ->whereOr('sales_id', $this->auth->id)
-            ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,a.sales_id,b.name as models_name,b.id as models_id,s.category_note')
+            ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,a.sales_id,b.models_name as model_name,b.name as models_name,b.id as models_id,s.category_note')
             ->limit($limit_number, 15)
             ->order('id desc')
             ->select();
@@ -1408,7 +1409,7 @@ class Orderlisttabs extends Backend
 
             $result[$k]['downpayment'] = $v['payment'] + $v['monthly'] + $v['margin'] + $v['gps'];
             $result[$k]['admin_id'] = $this->auth->id;
-            $result[$k]['models_name'] = $v['models_name'];
+            $result[$k]['models_name'] = $v['models_name'] . " " . $v['model_name'];
         }
 
         echo json_encode($result);
@@ -1432,10 +1433,10 @@ class Orderlisttabs extends Backend
             $plan_id = json_decode($plan_id, true);
             $sql = Db::name('models')->alias('a')
                 ->join('plan_acar b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id,b.models_id,b.sales_id')
+                ->field('a.models_name as model_name,a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id,b.models_id,b.sales_id')
                 ->where(['b.ismenu' => 1, 'b.id' => $plan_id])
                 ->find();
-            $plan_name = $sql['models_name'] . '【首付' . $sql['payment'] . '，' . '月供' . $sql['monthly'] . '，' . 'GPS ' . $sql['gps'] . '，' . '尾款 ' . $sql['tail_section'] . '，' . '保证金' . $sql['margin'] . '】';
+            $plan_name = $sql['models_name'] . " " . $sql['model_name'] . '【首付' . $sql['payment'] . '，' . '月供' . $sql['monthly'] . '，' . 'GPS ' . $sql['gps'] . '，' . '尾款 ' . $sql['tail_section'] . '，' . '保证金' . $sql['margin'] . '】';
 
             Session::set('plan_id', $plan_id);
             Session::set('plan_name', $plan_name);

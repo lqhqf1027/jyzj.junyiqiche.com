@@ -3,7 +3,8 @@
 namespace app\admin\controller\user;
 
 use app\common\controller\Backend;
-
+use addons\cms\controller\wxapp\User as AddonsUser;
+use think\Db;
 /**
  * 会员管理
  *
@@ -13,8 +14,6 @@ class User extends Backend
 {
 
     protected $relationSearch = true;
-
-
     /**
      * @var \app\admin\model\User
      */
@@ -24,6 +23,23 @@ class User extends Backend
     {
         parent::_initialize();
         $this->model = model('User');
+        //总用户数量
+        $user_count = $this->model->count();
+
+        $startday = \fast\Date::unixtime('day');
+        $endday = $startday + 86400;
+        //今日登陆人数
+        $user_today = $this->model->where('logintime', 'between', [$startday, $endday])->count();
+        //今日加入人数
+        $user_join = $this->model->where('jointime', 'between', [$startday, $endday])->count();
+        //连续登陆天数大于三
+        $user_login = $this->model->where('successions', '>=', '2')->count();
+        $this->view->assign([
+            'user_count' => $user_count,
+            'user_today' => $user_today,
+            'user_join'  => $user_join,
+            'user_login' => $user_login
+        ]);
     }
 
     /**
@@ -55,6 +71,7 @@ class User extends Backend
             foreach ($list as $k => $v)
             {
                 $v->hidden(['password', 'salt']);
+                $list[$k]['nickname'] = AddonsUser::emoji_decode($list[$k]['nickname']);
             }
             $result = array("total" => $total, "rows" => $list);
 
@@ -73,6 +90,20 @@ class User extends Backend
             $this->error(__('No Results were found'));
         $this->view->assign('groupList', build_select('row[group_id]', \app\admin\model\UserGroup::column('id,name'), $row['group_id'], ['class' => 'form-control selectpicker']));
         return parent::edit($ids);
+    }
+    public  function  registerAccount(){
+        if($this->request->isAjax()){
+            $params = input('post.');
+            //判断email是否被注册
+            $email = model('Adminaccount')::where(['email'=>$params['postdata']['email']])->column('email');
+            if(empty($email)&&$params){
+
+                $params['postdata']['createtime'] = time();
+                return model('Adminaccount')->allowField(true)->save($params['postdata'])?json(array('errorcode'=>'00001',msg=>'注册成功',result=>'')):json(array('errorcode'=>'00002',msg=>'注册失败',result=>''));
+            }
+            return json(array('errorcode'=>'00000',msg=>'此邮箱已被注册',result=>''));
+        }
+
     }
 
 }

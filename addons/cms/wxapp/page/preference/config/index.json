@@ -1,0 +1,7 @@
+{
+    "navigationBarTitleText": "详细配置",
+    "usingComponents": {
+        "wux-cell-group": "../../../assets/libs/wux/cell-group/index",
+        "wux-cell": "../../../assets/libs/wux/cell/index"
+    }
+}

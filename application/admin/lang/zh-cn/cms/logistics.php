@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'Id'  =>  'ID',
+    'Models_id'  =>  '车辆车型',
+    'Payment'  =>  '首付（元）',
+    'Monthly'  =>  '月供（元）',
+    'Nperlist'  =>  '期数',
+    'Nperlist 12'  =>  '12',
+    'Nperlist 24'  =>  '24',
+    'Nperlist 36'  =>  '36',
+    'Nperlist 48'  =>  '48',
+    'Nperlist 60'  =>  '60',
+    'Margin'  =>  '里程保证金（一年跑够20000公里）',
+    'Note'  =>  '方案备注',
+    'Total_price'  =>  '全款（不含保险）',
+    'Ismenu'  =>  '是否上线销售',
+    'Createtime'  =>  '创建时间',
+    'Updatetime'  =>  '更新时间',
+    'Subject_id'  =>  '专题id（不必填）',
+    'Modelsimages'  =>  '车型亮点（图片上传）',
+    'Recommendismenu'  =>  '是否为推荐',
+    'Flashviewismenu'  =>  '是否为首页轮播',
+    'Models_main_images'  =>  '封面图片',
+    'Label_id'  =>  '标签id',
+    'Specialismenu'  =>  '是否为专场车型',
+    'Specialimages'  =>  '专场车型代表图片',
+    'Store_id'  =>  '门店id',
+    'Popularity'  =>  '人气值',
+    'Subjectismenu'  =>  '是否为专题'
+];

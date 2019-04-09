@@ -33,7 +33,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {
                             field: 'createtime',
                             sortable: true,
-                            visible: false,
                             title: __('Createtime'),
                             operate: 'RANGE',
                             addclass: 'datetimerange',
@@ -42,7 +41,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {
                             field: 'updatetime',
                             sortable: true,
-                            visible: false,
                             title: __('Updatetime'),
                             operate: 'RANGE',
                             addclass: 'datetimerange',

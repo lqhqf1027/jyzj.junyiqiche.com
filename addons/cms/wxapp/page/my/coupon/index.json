@@ -1,0 +1,11 @@
+{
+    "navigationBarTitleText": "我的优惠券",
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+        "wux-cell-group": "../../../assets/libs/wux/cell-group/index",
+        "wux-cell": "../../../assets/libs/wux/cell/index",
+        "wux-prompt": "../../../assets/libs/wux/prompt/index",
+        "wux-tabs": "../../../assets/libs/wux/tabs/index",
+        "wux-tab": "../../../assets/libs/wux/tab/index"
+    }
+}

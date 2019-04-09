@@ -10,7 +10,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 use think\Env;
-
+use think\Config;
 return [
     // +----------------------------------------------------------------------
     // | 应用设置
@@ -55,7 +55,7 @@ return [
     // | 模块设置
     // +----------------------------------------------------------------------
     // 默认模块名
-    'default_module'         => 'index',
+    'default_module'         => 'admin',
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名
@@ -272,7 +272,7 @@ return [
         //自动检测更新
         'checkupdate'         => false,
         //版本号
-        'version'             => '1.0.0.20190111_beta',
+        'version'             => '1.0.0.20181210_beta',
         //API接口地址
         'api_url'             => 'https://api.fastadmin.net',
     ],

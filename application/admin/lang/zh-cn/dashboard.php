@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'Dashboard xi an'                  => '控制台/西安',
     'Custom'                  => '自定义',
     'Pid'                     => '父ID',
     'Type'                    => '栏目类型',

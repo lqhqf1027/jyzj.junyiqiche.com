@@ -1,13 +1,5 @@
 <div class="panel panel-default panel-intro">
-
-    <div class="panel-heading">
-        {:build_heading(null,FALSE)}
-        <ul class="nav nav-tabs" data-field="main.model_id">
-            {foreach name="modelList" item="vo"}
-            <li class="{:$model['id']==$vo['id']?'active':''}"><a href="cms/archives/content/model_id/{$vo.id}" data-value="{$vo.id}">{$vo.name}</a></li>
-            {/foreach}
-        </ul>
-    </div>
+    {:build_heading()}
 
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">

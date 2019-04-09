@@ -1,0 +1,7 @@
+{
+    "navigationBarTitleText": "我的奖品",
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+        "wux-prompt": "../../../assets/libs/wux/prompt/index"
+    }
+}

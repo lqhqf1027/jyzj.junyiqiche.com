@@ -98,7 +98,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 })
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["30%", "30%"]);
+                    $(".btn-newCustomer").data("area", ["60%", "60%"]);
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -113,12 +113,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'),operate:false},
-                            {field: 'status', title: __('所属平台')},
+                            // {field: 'platform_id', title: __('Platform_id')},
+                            // {field: 'backoffice_id', title: __('Backoffice_id')},
+                            {field: 'platform.name', title: __('所属平台')},
                             {field: 'backoffice.nickname', title: __('所属内勤'),operate:false,formatter:Controller.api.formatter.backoffice},
 
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            // {field: 'invalidtime', title: __('失效时间')},
                             {
                                 field: 'genderdata',
                                 title: __('Genderdata'),
@@ -155,6 +156,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
 
+                //实时消息
+                //推广平台分配给内勤
+                // goeasy.subscribe({
+                //     channel: 'demo-platform',
+                //     onMessage: function(message){
+                //
+                //         var contents = message.content;
+                //
+                //         contents = contents.split('|');
+                //
+                //         if(Config.ADMIN_JS.id == contents[1]){
+                //             Layer.alert('新消息：'+contents[0],{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //
+                //
+                //     }
+                // });
+
 
                 /**
                  * 批量分配
@@ -166,7 +189,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
-                        area: ['30%', '30%'],
+                        area: ['60%', '60%'],
                         callback: function (value) {
 
                         }
@@ -207,13 +230,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: __('Id'),operate:false},
 
-                            {field: 'status', title: __('所属平台')},
+                            {field: 'platform.name', title: __('所属平台')},
                             {field: 'backoffice.nickname', title: __('所属内勤'),operate:false,formatter:Controller.api.formatter.backoffice},
                             {field: 'admin.nickname', title: __('所属销售'),formatter:Controller.api.formatter.sales},
 
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            // {field: 'invalidtime', title: __('失效时间')},
                             {
                                 field: 'genderdata',
                                 title: __('Genderdata'),

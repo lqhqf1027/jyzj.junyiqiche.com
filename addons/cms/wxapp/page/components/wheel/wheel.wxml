@@ -1,0 +1,12 @@
+<template name="wheel" >
+  <view class="wheel_wp">
+  	<block	wx:if = "{{mode == 1}}">
+	    <image src = "{{ prizeUrl }}"/>
+	    <button class="button-clear wheel_pointer" open-type="{{ !hasMobile ? 'getPhoneNumber' : '' }}" bindgetphonenumber="getPhoneNumber" style="transform:rotate({{deg}}deg) translateZ(0); transform-origin: 50% 50% 0px" bindtap="start"><image src = "{{ btnUrl }}" /></button>
+	</block>
+	<block	wx:if = "{{mode == 2}}">
+	    <image src = "{{ prizeUrl }}" style="transform:rotate({{ deg}}deg) translateZ(0); transform-origin: 50% 50% 0px"/>
+	    <button class="button-clear wheel_pointer" open-type="{{ !hasMobile ? 'getPhoneNumber' : '' }}" bindgetphonenumber="getPhoneNumber" bindtap="start"><image src = "{{ btnUrl }}" /></button>		
+	</block>
+  </view>
+</template> 

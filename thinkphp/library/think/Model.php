@@ -1043,17 +1043,15 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
         }
 
         // 数据自动验证
-        if (!empty($data)) {
-            if (!$this->validateData($data)) {
-                return false;
-            }
-
-            // 数据对象赋值
-            foreach ($data as $key => $value) {
-                $this->setAttr($key, $value, $data);
-            }
+        if (!$this->validateData($data)) {
+            return false;
         }
 
+        // 数据对象赋值
+        foreach ($data as $key => $value) {
+            $this->setAttr($key, $value, $data);
+        }
+        
         if (!empty($where)) {
             $this->isUpdate    = true;
             $this->updateWhere = $where;

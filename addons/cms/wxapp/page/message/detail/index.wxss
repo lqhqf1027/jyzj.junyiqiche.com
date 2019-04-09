@@ -1,0 +1,21 @@
+/* page/message/detail/index.wxss */
+
+.article {
+    padding: 40rpx 30rpx;
+    font-size: 30rpx;
+}
+
+.title {
+	font-size: 36rpx;
+    font-weight: 400;
+    margin-bottom: .34em;
+    text-align: center;
+}
+
+.date {
+	font-weight: 400;
+    font-size: 30rpx;
+    margin-bottom: .34em;
+    color: #999;
+    text-align: center;
+}

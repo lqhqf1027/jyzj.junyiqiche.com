@@ -1,0 +1,196 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+        <h2>
+                <center>当前购车方式：纯租</center>
+            </h2>
+            <br>
+            <div class="form-group">
+            
+                <label class="control-label col-xs-12 col-sm-2">
+                    <strong> {:__('请仔细填写录入以下客户资料')}:</strong>
+                </label>
+            </div>
+            <h3>
+                <center>基本资料</center>
+            </h3>
+            <br>
+        
+            <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-2">{:__('租车车型/方案')}:</label>
+                    <div class="col-xs-12 col-sm-8">
+            
+                        <table class="table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
+                            <tr>
+                                <th class="col-xs-12 col-sm-1 ">车牌号</th>
+                                <th class="col-xs-12 col-sm-1 ">车型</th>
+                                <th class="col-xs-12 col-sm-1 ">上户</th>
+                                <th class="col-xs-12 col-sm-1 ">押金（元）</th>
+                                <th class="col-xs-12 col-sm-1 ">3月内（元）</th>
+                                <th class="col-xs-12 col-sm-1 ">6月内（元）</th>
+                                <th class="col-xs-12 col-sm-1 ">6月以上(元)</th>
+                                <th class="col-xs-12 col-sm-1 ">操作</th>
+                            </tr>
+                            
+                            <tr>
+                                <td class="col-xs-12 col-sm-1 ">{$result.licenseplatenumber}</td>
+                                <td class="col-xs-12 col-sm-1 ">{$result.models_name}</td>
+                                <td class="col-xs-12 col-sm-1 ">{$result.companyaccount}</td>
+                                <td class="col-xs-12 col-sm-1 ">{$result.cashpledge}</td>
+                                <td class="col-xs-12 col-sm-1 ">{$result.threemonths}</td>
+                                <td class="col-xs-12 col-sm-1 ">{$result.sixmonths}</td>
+                                <td class="col-xs-12 col-sm-1 ">{$result.manysixmonths}</td>
+                                <td class="col-xs-12 col-sm-1 ">
+            
+                                    <input name="" type="button" class="btn btn-success" value="已选择此方案"></input>
+            
+                                </td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-2">{:__('实付定金（元）')}:</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input id="c-down_payment" data-rule="required" class="form-control form-control" name="row[down_payment]" type="number" value="{$row.down_payment}">
+                    </div>
+                </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('实付押金（元）')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-cash_pledge" data-rule="required" class="form-control form-control" name="row[cash_pledge]" type="number" value="{$row.cash_pledge}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('实付租金（元）')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-rental_price" data-rule="required" class="form-control form-control" name="row[rental_price]" type="number" value="{$row.rental_price}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('实际租期（月）')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tenancy_term" data-rule="required" class="form-control form-control" name="row[tenancy_term]" type="number" value="{$row.tenancy_term}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-username" data-rule="required" class="form-control form-control" name="row[username]" type="text" value="{$row.username}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-phone" data-rule="required" class="form-control form-control" name="row[phone]" type="text" value="{$row.phone}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-id_card" data-rule="required" class="form-control form-control" name="row[id_card]" type="text" value="{$row.id_card}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            
+            <div class="radio">
+            {foreach name="genderdataList" item="vo"}
+            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"}checked{/in} /> {$vo}</label> 
+            {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_1')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-emergency_contact_1" data-rule="required" class="form-control form-control" name="row[emergency_contact_1]" type="text" value="{$row.emergency_contact_1}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_2')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-emergency_contact_2" data-rule="required" class="form-control form-control" name="row[emergency_contact_2]" type="text" value="{$row.emergency_contact_2}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-id_cardimages" data-rule="required" class="form-control form-control" size="50" name="row[id_cardimages]" type="text" value="{$row.id_cardimages}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload" data-input-id="c-id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-id_cardimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-id_cardimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-id_cardimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-drivers_licenseimages" data-rule="required" class="form-control form-control" size="50" name="row[drivers_licenseimages]" type="text" value="{$row.drivers_licenseimages}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-drivers_licenseimages" class="btn btn-danger plupload" data-input-id="c-drivers_licenseimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-drivers_licenseimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-drivers_licenseimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-drivers_licenseimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Residence_bookletimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-residence_bookletimages" data-rule="required" class="form-control form-control" size="50" name="row[residence_bookletimages]" type="text" value="{$row.residence_bookletimages}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-residence_bookletimages" class="btn btn-danger plupload" data-input-id="c-residence_bookletimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-residence_bookletimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-residence_bookletimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-residence_bookletimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('定金收据上传')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <input id="c-deposit_receiptimages" data-rule="required" class="form-control" size="50" name="row[deposit_receiptimages]"
+                        type="text" value="{$row.deposit_receiptimages}">
+                    <div class="input-group-addon no-border no-padding">
+                        <span>
+                            <button type="button" id="plupload-deposit_receiptimages" class="btn btn-danger plupload" data-input-id="c-deposit_receiptimages"
+                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-deposit_receiptimages">
+                                <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                        </span>
+
+                    </div>
+                    <span class="msg-box n-right" for="c-deposit_receiptimages"></span>
+                </div>
+                <ul class="row list-inline plupload-preview" id="p-deposit_receiptimages"></ul>
+            </div>
+        </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfilesimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-call_listfilesimages" data-rule="required" class="form-control form-control" size="50" name="row[call_listfilesimages]" type="text" value="{$row.call_listfilesimages}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-call_listfilesimages" class="btn btn-danger plupload" data-input-id="c-call_listfilesimages" data-multiple="true"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-call_listfilesimages"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

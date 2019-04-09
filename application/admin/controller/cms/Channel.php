@@ -2,13 +2,9 @@
 
 namespace app\admin\controller\cms;
 
-use app\admin\model\Admin;
-use app\admin\model\AuthGroupAccess;
-use app\admin\model\cms\ChannelAdmin;
 use app\common\controller\Backend;
-use app\admin\model\cms\Channel as ChannelModel;
+use app\admin\model\Channel as ChannelModel;
 use fast\Tree;
-use think\Exception;
 
 /**
  * 栏目表
@@ -32,12 +28,12 @@ class Channel extends Backend
     {
         parent::_initialize();
         $this->request->filter(['strip_tags']);
-        $this->model = new \app\admin\model\cms\Channel;
+        $this->model = model('Channel');
 
         $tree = Tree::instance();
         $tree->init(collection($this->model->order('weigh desc,id desc')->select())->toArray(), 'parent_id');
         $this->channelList = $tree->getTreeList($tree->getTreeArray(0), 'name');
-        $this->modelList = \app\admin\model\cms\Modelx::order('id asc')->select();
+        $this->modelList = \app\admin\model\Modelx::order('id asc')->select();
 
         $this->view->assign("modelList", $this->modelList);
         $this->view->assign("channelList", $this->channelList);
@@ -53,7 +49,6 @@ class Channel extends Backend
 
         if ($this->request->isAjax()) {
             $search = $this->request->request("search");
-            $model_id = $this->request->request("model_id");
             //构造父类select列表选项数据
             $list = [];
             if ($search) {
@@ -65,12 +60,6 @@ class Channel extends Backend
             } else {
                 $list = $this->channelList;
             }
-            foreach ($list as $index => $item) {
-                if ($model_id && $model_id != $item['model_id']) {
-                    unset($list[$index]);
-                }
-            }
-            $list = array_values($list);
             $modelNameArr = [];
             foreach ($this->modelList as $k => $v) {
                 $modelNameArr[$v['id']] = $v['name'];
@@ -130,86 +119,6 @@ class Channel extends Backend
     }
 
     /**
-     * 栏目授权
-     */
-    public function admin()
-    {
-        $act = $this->request->param('act');
-        $ids = $this->request->param('ids');
-        if ($act == 'remove') {
-            ChannelAdmin::where('admin_id', $ids)->delete();
-            $this->success('删除成功！');
-        } else if ($act == 'authorization') {
-            $selected = ChannelAdmin::getAdminChanneIds($ids);
-            $all = collection(ChannelModel::order("weigh desc,id desc")->select())->toArray();
-            foreach ($all as $k => $v) {
-                $state = ['opened' => true];
-                if ($v['type'] != 'list') {
-                    $disabledIds[] = $v['id'];
-                }
-                if ($v['type'] == 'link') {
-                    $state['checkbox_disabled'] = true;
-                }
-                $state['selected'] = in_array($v['id'], $selected);
-                $channelList[] = [
-                    'id'     => $v['id'],
-                    'parent' => $v['parent_id'] ? $v['parent_id'] : '#',
-                    'text'   => __($v['name']),
-                    'type'   => $v['type'],
-                    'state'  => $state
-                ];
-            }
-            $this->success('成功', '', $channelList);
-        } else if ($act == 'save') {
-            \think\Db::startTrans();
-            try {
-                ChannelAdmin::where('admin_id', $ids)->delete();
-                $channelIds = explode(",", $this->request->post("ids"));
-                if ($channelIds) {
-                    $listChannelIds = ChannelModel::where('type', 'list')->column('id');
-                    $channelIds = array_intersect($channelIds, $listChannelIds);
-                    $data = [];
-                    foreach ($channelIds as $key => $item) {
-                        $data[] = ['admin_id' => $ids, 'channel_id' => $item];
-                    }
-                    $model = new ChannelAdmin();
-                    $model->saveAll($data, true);
-                }
-                \think\Db::commit();
-            } catch (Exception $e) {
-                \think\Db::rollback();
-                $this->error($e->getMessage());
-            }
-            $this->success("保存成功!");
-
-        }
-
-        if ($this->request->isAjax()) {
-            $list = \think\Db::name("cms_channel_admin")
-                ->group("admin_id")
-                ->field("COUNT(*) as channels,admin_id")
-                ->select();
-            $adminChannelList = [];
-            foreach ($list as $index => $item) {
-                $adminChannelList[$item['admin_id']] = $item['channels'];
-            }
-
-            $superAdminIds = AuthGroupAccess::where('group_id', 1)->column('uid');
-
-            $adminList = Admin::order('id', 'desc')->field('id,username')->select();
-            foreach ($adminList as $index => $item) {
-                $item->channels = isset($adminChannelList[$item['id']]) ? $adminChannelList[$item['id']] : 0;
-                $item->superadmin = in_array($item['id'], $superAdminIds);
-            }
-            $total = count($adminList);
-            $result = array("total" => $total, "rows" => $adminList);
-
-            return json($result);
-        }
-        return $this->view->fetch();
-    }
-
-    /**
      * Selectpage搜索
      *
      * @internal
@@ -250,7 +159,7 @@ class Channel extends Backend
                     if (!isset($itemArr[1])) {
                         $this->error('格式:分类名称|自定义名称');
                     }
-                    $exist = \app\admin\model\cms\Channel::getByDiyname($itemArr[1]);
+                    $exist = \app\admin\model\Channel::getByDiyname($itemArr[1]);
                     if ($exist) {
                         $this->error('自定义名称[' . $itemArr[1] . ']已经存在');
                     }

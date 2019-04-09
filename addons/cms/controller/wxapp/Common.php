@@ -6,6 +6,8 @@ use addons\cms\model\Block;
 use addons\cms\model\Channel;
 use app\common\model\Addon;
 use think\Config;
+use think\Db;
+use think\Cache;
 
 /**
  * 公共
@@ -25,30 +27,26 @@ class Common extends Base
      */
     public function init()
     {
-        //焦点图
-        $bannerList = [];
-        $list = Block::getBlockList(['name' => 'focus', 'row' => 5]);
-        foreach ($list as $index => $item) {
-            $bannerList[] = ['image' => cdnurl($item['image'], true), 'url' => '/', 'title' => $item['title']];
+        $city_id = $this->request->post('city_id');                              //参数：城市ID
+        if (!$city_id) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+        //预约缓存
+        if (!Cache::get('appointment')) {
+            Cache::set('appointment', Index::appointment());
         }
 
-        //首页Tab列表
-        $indexTabList = $newsTabList = $productTabList = [['id' => 0, 'title' => '全部']];
-        $channelList = Channel::where('status', 'normal')
-            ->where('type', 'in', ['list'])
-            ->field('id,parent_id,model_id,name,diyname')
-            ->order('weigh desc,id desc')
-            ->select();
-        foreach ($channelList as $index => $item) {
-            $data = ['id' => $item['id'], 'title' => $item['name']];
-            $indexTabList[] = $data;
-            if ($item['model_id'] == 1) {
-                $newsTabList[] = $data;
-            }
-            if ($item['model_id'] == 2) {
-                $productTabList[] = $data;
-            }
+        //返回所有类型的方案
+        $useful = Index::getAllStylePlan($city_id);
+
+        //焦点图
+        $bannerList = [];
+//        $list = Block::getBlockList(['name' => 'focus', 'row' => 5]);
+        $list = Db::name('cms_block')->where(['name' => 'focus', 'status' => 'normal'])->select();
+        foreach ($list as $index => $item) {
+            $bannerList[] = ['id'=>$item['id'],'image' => $item['image'], 'url' => $item['url'], 'title' => $item['title']];
         }
+
 
         //配置信息
         $upload = Config::get('upload');
@@ -58,12 +56,36 @@ class Common extends Base
             'upload' => $upload
         ];
 
+        $shares = Db::name('config')
+            ->where('group','share')
+            ->field('name,value')
+            ->select();
+
+        $sharesAll = [];
+        $shares[0]['value'] = json_decode($shares[0]['value'],true);
+        $sharesAll['index_share_title'] = $shares[0]['value']['index_share_title'];
+        $sharesAll['index_share_img'] = $shares[1]['value'];
+        $sharesAll['share_moments_bk_img'] = $shares[2]['value'];
+        $sharesAll['index_share_bk_qrcode'] = $shares[3]['value'];
         $data = [
-            'bannerList'     => $bannerList,
-            'indexTabList'   => $indexTabList,
-            'newsTabList'    => $newsTabList,
-            'productTabList' => $productTabList,
-            'config'         => $config
+            'carType' => [
+                'new' => [
+                    //为你推荐
+                    'recommendList' => $useful['recommendList'],
+                    //专题
+                    'specialList' => $useful['specialList'],
+                    //专场
+                    'specialfieldList' => $useful['specialfieldList']
+                ],
+            ],
+            'bannerList' => $bannerList,
+            'config' => $config,
+            //品牌
+            'brandList' => Index::getBrand(),
+            //分享
+            'shares' => $sharesAll,
+            //预约
+            'appointment' => Cache::get('appointment')
         ];
         $this->success('', $data);
 

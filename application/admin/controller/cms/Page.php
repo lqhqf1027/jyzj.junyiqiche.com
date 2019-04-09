@@ -21,17 +21,9 @@ class Page extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\cms\Page;
+        $this->model = model('Page');
         $this->view->assign("flagList", $this->model->getFlagList());
         $this->view->assign("statusList", $this->model->getStatusList());
-    }
-
-    public function index()
-    {
-        $typeArr = \app\admin\model\cms\Page::distinct('type')->column('type');
-        $this->view->assign('typeList', $typeArr);
-        $this->assignconfig('typeList', $typeArr);
-        return parent::index();
     }
 
     /**
@@ -50,7 +42,7 @@ class Page extends Backend
                     $list[] = ['id' => $v, $field => $v];
                 }
             }
-            $typeArr = \app\admin\model\cms\Page::column('type');
+            $typeArr = \app\admin\model\Page::column('type');
             $typeArr = array_unique($typeArr);
             foreach ($typeArr as $index => $item) {
                 $list[] = ['id' => $item, $field => $item];

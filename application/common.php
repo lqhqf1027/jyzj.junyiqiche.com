@@ -1,410 +1,9 @@
 <?php
+
 // 公共助手函数
 error_reporting(E_PARSE | E_ERROR | E_WARNING);
 
 use think\Request;
-use think\Config;
-use think\Cache;
-use think\Env;
-use fast\Http;
-
-// 应用公共文件
-///////////////////////////////////////////
-/**
- * me function
- */
-///////////////////////////////////////////
-if (!function_exists('__')) {
-    /**
-     * 打印变量
-     */
-    function pr($var)
-    {
-        $template = PHP_SAPI !== 'cli' ? '<pre>%s</pre>' : "\n%s\n";
-        printf($template, print_r($var, true));
-    }
-}
-
-
-if (!function_exists('emoji_encode')) {
-    /**
-     * emoji 表情转义
-     * @param $nickname
-     * @return string
-     */
-    function emoji_encode($nickname)
-    {
-        $strEncode = '';
-        $length = mb_strlen($nickname, 'utf-8');
-        for ($i = 0; $i < $length; $i++) {
-            $_tmpStr = mb_substr($nickname, $i, 1, 'utf-8');
-            if (strlen($_tmpStr) >= 4) {
-                $strEncode .= '[[EMOJI:' . rawurlencode($_tmpStr) . ']]';
-            } else {
-                $strEncode .= $_tmpStr;
-            }
-        }
-        return $strEncode;
-    }
-}
-if (!function_exists('emoji_decode')) {
-    /**
-     * emoji 表情解密
-     * @param $nickname
-     * @return string
-     */
-    function emoji_decode($str)
-    {
-        $strDecode = preg_replace_callback('|\[\[EMOJI:(.*?)\]\]|', function ($matches) {
-            return rawurldecode($matches[1]);
-        }, $str);
-        return $strDecode;
-    }
-}
-
-if (!function_exists('arraySort')) {
-    function arraySort($array, $keys, $sort = 'asc')
-    {
-        $newArr = $valArr = array();
-        foreach ($array as $key => $value) {
-            $valArr[$key] = $value[$keys];
-        }
-        ($sort == 'asc') ? asort($valArr) : arsort($valArr);//先利用keys对数组排序，目的是把目标数组的key排好序
-        reset($valArr); //指针指向数组第一个值
-        foreach ($valArr as $key => $value) {
-            $newArr[$key] = $array[$key];
-        }
-        return $newArr;
-    }
-}
-
-
-function strexists($string, $find)
-{
-    return !(strpos($string, $find) === FALSE);
-}
-
-function ihttp_request($url, $post = '', $extra = array(), $timeout = 60)
-{
-    $urlset = parse_url($url);
-    if (empty($urlset['path'])) {
-        $urlset['path'] = '/';
-    }
-    if (!empty($urlset['query'])) {
-        $urlset['query'] = "?{$urlset['query']}";
-    }
-    if (empty($urlset['port'])) {
-        $urlset['port'] = $urlset['scheme'] == 'https' ? '443' : '80';
-    }
-    if (strexists($url, 'https://') && !extension_loaded('openssl')) {
-        if (!extension_loaded("openssl")) {
-            //die('请开启您PHP环境的openssl');
-        }
-    }
-    if (function_exists('curl_init') && function_exists('curl_exec')) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $urlset['scheme'] . '://' . $urlset['host'] . ($urlset['port'] == '80' ? '' : ':' . $urlset['port']) . $urlset['path'] . $urlset['query']);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        if ($post) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            if (is_array($post)) {
-                $post = http_build_query($post);
-            }
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        }
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
-        if (defined('CURL_SSLVERSION_TLSv1')) {
-            curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
-        }
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:9.0.1) Gecko/20100101 Firefox/9.0.1');
-        if (!empty($extra) && is_array($extra)) {
-            $headers = array();
-            foreach ($extra as $opt => $value) {
-                if (strexists($opt, 'CURLOPT_')) {
-                    curl_setopt($ch, constant($opt), $value);
-                } elseif (is_numeric($opt)) {
-                    curl_setopt($ch, $opt, $value);
-                } else {
-                    $headers[] = "{$opt}: {$value}";
-                }
-            }
-            if (!empty($headers)) {
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            }
-        }
-        $data = curl_exec($ch);
-        $status = curl_getinfo($ch);
-        $errno = curl_errno($ch);
-        $error = curl_error($ch);
-        curl_close($ch);
-        if ($errno || empty($data)) {
-            //return error(1, $error);
-        } else {
-            return ihttp_response_parse($data);
-        }
-    }
-    $method = empty($post) ? 'GET' : 'POST';
-    $fdata = "{$method} {$urlset['path']}{$urlset['query']} HTTP/1.1\r\n";
-    $fdata .= "Host: {$urlset['host']}\r\n";
-    if (function_exists('gzdecode')) {
-        $fdata .= "Accept-Encoding: gzip, deflate\r\n";
-    }
-    $fdata .= "Connection: close\r\n";
-    if (!empty($extra) && is_array($extra)) {
-        foreach ($extra as $opt => $value) {
-            if (!strexists($opt, 'CURLOPT_')) {
-                $fdata .= "{$opt}: {$value}\r\n";
-            }
-        }
-    }
-    $body = '';
-    if ($post) {
-        if (is_array($post)) {
-            $body = http_build_query($post);
-        } else {
-            $body = urlencode($post);
-        }
-        $fdata .= 'Content-Length: ' . strlen($body) . "\r\n\r\n{$body}";
-    } else {
-        $fdata .= "\r\n";
-    }
-    if ($urlset['scheme'] == 'https') {
-        $fp = fsockopen('ssl://' . $urlset['host'], $urlset['port'], $errno, $error);
-    } else {
-        $fp = fsockopen($urlset['host'], $urlset['port'], $errno, $error);
-    }
-    stream_set_blocking($fp, true);
-    stream_set_timeout($fp, $timeout);
-    if (!$fp) {
-        //return error(1, $error);
-    } else {
-        fwrite($fp, $fdata);
-        $content = '';
-        while (!feof($fp))
-            $content .= fgets($fp, 512);
-        fclose($fp);
-        return ihttp_response_parse($content, true);
-    }
-}
-
-function ihttp_response_parse($data, $chunked = false)
-{
-    $rlt = array();
-    $pos = strpos($data, "\r\n\r\n");
-    $split1[0] = substr($data, 0, $pos);
-    $split1[1] = substr($data, $pos + 4, strlen($data));
-
-    $split2 = explode("\r\n", $split1[0], 2);
-    preg_match('/^(\S+) (\S+) (\S+)$/', $split2[0], $matches);
-    $rlt['code'] = $matches[2];
-    $rlt['status'] = $matches[3];
-    $rlt['responseline'] = $split2[0];
-    $header = explode("\r\n", $split2[1]);
-    $isgzip = false;
-    $ischunk = false;
-    foreach ($header as $v) {
-        $row = explode(':', $v);
-        $key = trim($row[0]);
-        $value = trim($row[1]);
-        if (is_array($rlt['headers'][$key])) {
-            $rlt['headers'][$key][] = $value;
-        } elseif (!empty($rlt['headers'][$key])) {
-            $temp = $rlt['headers'][$key];
-            unset($rlt['headers'][$key]);
-            $rlt['headers'][$key][] = $temp;
-            $rlt['headers'][$key][] = $value;
-        } else {
-            $rlt['headers'][$key] = $value;
-        }
-        if (!$isgzip && strtolower($key) == 'content-encoding' && strtolower($value) == 'gzip') {
-            $isgzip = true;
-        }
-        if (!$ischunk && strtolower($key) == 'transfer-encoding' && strtolower($value) == 'chunked') {
-            $ischunk = true;
-        }
-    }
-    if ($chunked && $ischunk) {
-        $rlt['content'] = ihttp_response_parse_unchunk($split1[1]);
-    } else {
-        $rlt['content'] = $split1[1];
-    }
-    if ($isgzip && function_exists('gzdecode')) {
-        $rlt['content'] = gzdecode($rlt['content']);
-    }
-
-    //$rlt['meta'] = $data;
-    if ($rlt['code'] == '100') {
-        return ihttp_response_parse($rlt['content']);
-    }
-    return $rlt;
-}
-
-function ihttp_response_parse_unchunk($str = null)
-{
-    if (!is_string($str) or strlen($str) < 1) {
-        return false;
-    }
-    $eol = "\r\n";
-    $add = strlen($eol);
-    $tmp = $str;
-    $str = '';
-    do {
-        $tmp = ltrim($tmp);
-        $pos = strpos($tmp, $eol);
-        if ($pos === false) {
-            return false;
-        }
-        $len = hexdec(substr($tmp, 0, $pos));
-        if (!is_numeric($len) or $len < 0) {
-            return false;
-        }
-        $str .= substr($tmp, ($pos + $add), $len);
-        $tmp = substr($tmp, ($len + $pos + $add));
-        $check = trim($tmp);
-    } while (!empty($check));
-    unset($tmp);
-    return $str;
-}
-
-
-function ihttp_get($url)
-{
-    return ihttp_request($url);
-}
-
-function ihttp_post($url, $data)
-{
-    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
-    return ihttp_request($url, $data, $headers);
-}
-
-function gets($url = NULL)
-{
-    if ($url) {
-        $rslt = ihttp_get($url);
-        if (strtolower(trim($rslt['status'])) == 'ok') {
-            //pr($rslt) ;exit;
-            if (is_json($rslt['content'])) { //返回格式是json 直接返回数组
-                $return = json_decode($rslt['content'], true);
-                if ($return['errcode']) //有错误
-                    exit('Error:<br>Api:' . $url . '  <br>errcode:' . $return['errcode'] . '<br>errmsg:' . $return['errmsg']);
-                return $return;
-            } else {  //先暂时直接返回，以后其它格式再增加
-                return $rslt['content'];
-            }
-        }
-        exit('远程请求失败：' . $url);
-    }
-    exit('未发现远程请求地址');
-}
-
-/**
- * 远程post请求
- */
-function posts($url = NULL, $data = NULL)
-{
-    if ($url && $data) {
-        $rslt = ihttp_post($url, $data);
-        if (strtolower(trim($rslt['status'])) == 'ok') {
-            //pr($rslt) ;
-            if (is_json($rslt['content'])) { //返回格式是json 直接返回数组
-                $return = json_decode($rslt['content'], true);
-                if ($return['errcode']) //有错误
-                    exit('Error:<br>Api:' . $url . '  <br>errcode:' . $return['errcode'] . '<br>errmsg:' . $return['errmsg']);
-                return $return;
-            } else {  //先暂时直接返回，以后其它格式再增加
-                return $rslt['content'];
-            }
-        }
-        exit('远程请求失败：' . $url);
-    }
-    exit('post远程请求，参数错误');
-}
-
-if (!function_exists('is_json')) {
-    function is_json($string)
-    {
-        json_decode($string);
-        return (json_last_error() == JSON_ERROR_NONE);
-    }
-
-}
-
-if (!function_exists('getWxAccessToken')) {
-    /**
-     * 该公共方法获取和全局缓存js-sdk需要使用的access_token
-     * @param $appid
-     * @param $secret
-     * @return mixed
-     */
-    function getWxAccessToken()
-    {
-
-        $config = get_addon_config('cms');
-
-        $appid = \think\Env::get('wxpay.appid');
-        $secret =\think\Env::get('wxpay.appsecret');
-        //我们将access_token全局缓存在文件中,每次获取的时候,先判断是否过期,如果过期重新获取再全局缓存
-        //我们缓存的在文件中的数据，包括access_token和该access_token的过期时间戳.
-        //获取缓存的access_token
-        $access_token_data = json_decode(Cache::get('access_token'), true);
-
-        //判断缓存的access_token是否存在和过期，如果不存在和过期则重新获取.
-        if ($access_token_data !== null && $access_token_data['access_token'] && $access_token_data['expires_in'] > time()) {
-
-            return $access_token_data['access_token'];
-        } else {
-            //重新获取access_token,并全局缓存
-            $result = Http::sendRequest("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$appid}&secret={$secret}", 'GET');
-            if ($result['ret']) {
-                $data = (array)json_decode($result['msg'], true);
-                //获取access_token
-                if ($data != null && $data['access_token']) {
-                    //设置access_token的过期时间,有效期是7200s
-                    $data['expires_in'] = $data['expires_in'] + time();
-                    //将access_token全局缓存，快速缓存到文件中.
-                    Cache::set('access_token', json_encode($data));
-
-                    //返回access_token
-                    return $data['access_token'];
-                }
-            } else {
-                exit('微信获取access_token失败');
-            }
-        }
-    }
-}
-if (!function_exists('xmlstr_to_array')) {
-
-    /**
-     * xml转数组
-     * @param $xmlstr
-     * @return mixed
-     */
-    function xmlstr_to_array($xmlstr)
-    {
-        libxml_disable_entity_loader(true);
-        $values = json_decode(json_encode(simplexml_load_string($xmlstr, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-        return $values;
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- * fa function
- */
-///////////////////////////////////////////
 if (!function_exists('__')) {
 
     /**
@@ -672,7 +271,102 @@ if (!function_exists('addtion')) {
     }
 
 }
+/**
+ * 对象转数组
+ *
+ */
+if (!function_exists('object_to_array')) {
+    function object_to_array($obj)
+    {
+        $obj = (array)$obj;
+        foreach ($obj as $k => $v) {
+            if (gettype($v) == 'resource') {
+                return;
+            }
+            if (gettype($v) == 'object' || gettype($v) == 'array') {
+                $obj[$k] = (array)object_to_array($v);
+            }
+        }
 
+        return $obj;
+    }
+}
+/**************************************************************
+ *
+ *  将数组转换为JSON字符串（兼容中文）
+ * @param  array $array 要转换的数组
+ * @return string      转换得到的json字符串
+ * @access public
+ *
+ *************************************************************/
+if (!function_exists('ARRAY_TO_JSON')) {
+    function ARRAY_TO_JSON($array)
+    {
+        arrayRecursive($array, 'urlencode', true);
+
+        $json = json_encode($array);
+
+        return urldecode($json);
+
+    }
+}
+
+/**************************************************************
+ *
+ *  使用特定function对数组中所有元素做处理
+ * @param  string &$array 要处理的字符串
+ * @param  string $function 要执行的函数
+ * @return boolean $apply_to_keys_also     是否也应用到key上
+ * @access public
+ *
+ *************************************************************/
+if (!function_exists('arrayRecursive')) {
+    function arrayRecursive(&$array, $function, $apply_to_keys_also = false)
+
+
+    {
+
+        static $recursive_counter = 0;
+
+        if (++$recursive_counter > 1000) {
+
+            die('possible deep recursion attack');
+
+        }
+
+        foreach ($array as $key => $value) {
+
+            if (is_array($value)) {
+
+                arrayRecursive($array[$key], $function, $apply_to_keys_also);
+
+            } else {
+
+                $array[$key] = $function($value);
+
+            }
+
+
+            if ($apply_to_keys_also && is_string($key)) {
+
+                $new_key = $function($key);
+
+                if ($new_key != $key) {
+
+                    $array[$new_key] = $array[$key];
+
+                    unset($array[$key]);
+
+                }
+
+            }
+
+        }
+
+        $recursive_counter--;
+
+    }
+}
 if (!function_exists('var_export_short')) {
 
     /**
@@ -698,11 +392,334 @@ if (!function_exists('var_export_short')) {
             case "boolean":
                 return $var ? "TRUE" : "FALSE";
             default:
-                return var_export($var, TRUE);
+                return var_export($var, true);
         }
     }
 
+}
 
+
+if (!function_exists('pr')) {
+    function pr($var)
+    {
+        if (config('app_debug')) {
+            $template = PHP_SAPI !== 'cli' ? '<pre>%s</pre>' : "\n%s\n";
+            printf($template, print_r($var, true));
+        }
+    }
+
+}
+
+if (!function_exists('ismobile')) {
+    // 查看是否为手机端的方法  
+    //判断是手机登录还是电脑登录  
+    function ismobile()
+    {
+        // 如果有HTTP_X_WAP_PROFILE则一定是移动设备  
+        if (isset($_SERVER['HTTP_X_WAP_PROFILE']))
+            return true;
+
+        //此条摘自TPM智能切换模板引擎，适合TPM开发  
+        if (isset($_SERVER['HTTP_CLIENT']) && 'PhoneClient' == $_SERVER['HTTP_CLIENT'])
+            return true;
+        //如果via信息含有wap则一定是移动设备,部分服务商会屏蔽该信息  
+        if (isset($_SERVER['HTTP_VIA']))
+            //找不到为flase,否则为true  
+            return stristr($_SERVER['HTTP_VIA'], 'wap') ? true : false;
+        //判断手机发送的客户端标志,兼容性有待提高  
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            $clientkeywords = array(
+                'nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc', 'sgh', 'lg', 'sharp', 'sie-', 'philips', 'panasonic', 'alcatel', 'lenovo', 'iphone', 'ipod', 'blackberry', 'meizu', 'android', 'netfront', 'symbian', 'ucweb', 'windowsce', 'palm', 'operamini', 'operamobi', 'openwave', 'nexusone', 'cldc', 'midp', 'wap', 'mobile'
+            );
+            //从HTTP_USER_AGENT中查找手机浏览器的关键字  
+            if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))) {
+                return true;
+            }
+        }
+        //协议法，因为有可能不准确，放到最后判断  
+        if (isset($_SERVER['HTTP_ACCEPT'])) {
+            // 如果只支持wml并且不支持html那一定是移动设备  
+            // 如果支持wml和html但是wml在html之前则是移动设备  
+            if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+
+if (!function_exists('strexists')) {
+    function is_json($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
+}
+
+
+if (!function_exists('strexists')) {
+    function strexists($string, $find)
+    {
+        return !(strpos($string, $find) === false);
+    }
+}
+/**
+ *
+ */
+if (!function_exists('ihttp_request')) {
+    function ihttp_request($url, $post = '', $extra = array(), $timeout = 60)
+    {
+        $urlset = parse_url($url);
+        if (empty($urlset['path'])) {
+            $urlset['path'] = '/';
+        }
+        if (!empty($urlset['query'])) {
+            $urlset['query'] = "?{$urlset['query']}";
+        }
+        if (empty($urlset['port'])) {
+            $urlset['port'] = $urlset['scheme'] == 'https' ? '443' : '80';
+        }
+        if (strexists($url, 'https://') && !extension_loaded('openssl')) {
+            if (!extension_loaded("openssl")) {
+                //die('请开启您PHP环境的openssl');
+            }
+        }
+        if (function_exists('curl_init') && function_exists('curl_exec')) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $urlset['scheme'] . '://' . $urlset['host'] . ($urlset['port'] == '80' ? '' : ':' . $urlset['port']) . $urlset['path'] . $urlset['query']);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            if ($post) {
+                curl_setopt($ch, CURLOPT_POST, 1);
+                if (is_array($post)) {
+                    $post = http_build_query($post);
+                }
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+            }
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+            if (defined('CURL_SSLVERSION_TLSv1')) {
+                curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+            }
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:9.0.1) Gecko/20100101 Firefox/9.0.1');
+            if (!empty($extra) && is_array($extra)) {
+                $headers = array();
+                foreach ($extra as $opt => $value) {
+                    if (strexists($opt, 'CURLOPT_')) {
+                        curl_setopt($ch, constant($opt), $value);
+                    } elseif (is_numeric($opt)) {
+                        curl_setopt($ch, $opt, $value);
+                    } else {
+                        $headers[] = "{$opt}: {$value}";
+                    }
+                }
+                if (!empty($headers)) {
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                }
+            }
+            $data = curl_exec($ch);
+            $status = curl_getinfo($ch);
+            $errno = curl_errno($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+            if ($errno || empty($data)) {
+                //return error(1, $error);
+            } else {
+                return ihttp_response_parse($data);
+            }
+        }
+        $method = empty($post) ? 'GET' : 'POST';
+        $fdata = "{$method} {$urlset['path']}{$urlset['query']} HTTP/1.1\r\n";
+        $fdata .= "Host: {$urlset['host']}\r\n";
+        if (function_exists('gzdecode')) {
+            $fdata .= "Accept-Encoding: gzip, deflate\r\n";
+        }
+        $fdata .= "Connection: close\r\n";
+        if (!empty($extra) && is_array($extra)) {
+            foreach ($extra as $opt => $value) {
+                if (!strexists($opt, 'CURLOPT_')) {
+                    $fdata .= "{$opt}: {$value}\r\n";
+                }
+            }
+        }
+        $body = '';
+        if ($post) {
+            if (is_array($post)) {
+                $body = http_build_query($post);
+            } else {
+                $body = urlencode($post);
+            }
+            $fdata .= 'Content-Length: ' . strlen($body) . "\r\n\r\n{$body}";
+        } else {
+            $fdata .= "\r\n";
+        }
+        if ($urlset['scheme'] == 'https') {
+            $fp = fsockopen('ssl://' . $urlset['host'], $urlset['port'], $errno, $error);
+        } else {
+            $fp = fsockopen($urlset['host'], $urlset['port'], $errno, $error);
+        }
+        stream_set_blocking($fp, true);
+        stream_set_timeout($fp, $timeout);
+        if (!$fp) {
+            //return error(1, $error);
+        } else {
+            fwrite($fp, $fdata);
+            $content = '';
+            while (!feof($fp))
+                $content .= fgets($fp, 512);
+            fclose($fp);
+            return ihttp_response_parse($content, true);
+        }
+    }
+}
+if (!function_exists('ihttp_response_parse')) {
+    function ihttp_response_parse($data, $chunked = false)
+    {
+        $rlt = array();
+        $pos = strpos($data, "\r\n\r\n");
+        $split1[0] = substr($data, 0, $pos);
+        $split1[1] = substr($data, $pos + 4, strlen($data));
+
+        $split2 = explode("\r\n", $split1[0], 2);
+        preg_match('/^(\S+) (\S+) (\S+)$/', $split2[0], $matches);
+        $rlt['code'] = $matches[2];
+        $rlt['status'] = $matches[3];
+        $rlt['responseline'] = $split2[0];
+        $header = explode("\r\n", $split2[1]);
+        $isgzip = false;
+        $ischunk = false;
+        foreach ($header as $v) {
+            $row = explode(':', $v);
+            $key = trim($row[0]);
+            $value = trim($row[1]);
+            if (is_array($rlt['headers'][$key])) {
+                $rlt['headers'][$key][] = $value;
+            } elseif (!empty($rlt['headers'][$key])) {
+                $temp = $rlt['headers'][$key];
+                unset($rlt['headers'][$key]);
+                $rlt['headers'][$key][] = $temp;
+                $rlt['headers'][$key][] = $value;
+            } else {
+                $rlt['headers'][$key] = $value;
+            }
+            if (!$isgzip && strtolower($key) == 'content-encoding' && strtolower($value) == 'gzip') {
+                $isgzip = true;
+            }
+            if (!$ischunk && strtolower($key) == 'transfer-encoding' && strtolower($value) == 'chunked') {
+                $ischunk = true;
+            }
+        }
+        if ($chunked && $ischunk) {
+            $rlt['content'] = ihttp_response_parse_unchunk($split1[1]);
+        } else {
+            $rlt['content'] = $split1[1];
+        }
+        if ($isgzip && function_exists('gzdecode')) {
+            $rlt['content'] = gzdecode($rlt['content']);
+        }
+
+        //$rlt['meta'] = $data;
+        if ($rlt['code'] == '100') {
+            return ihttp_response_parse($rlt['content']);
+        }
+        return $rlt;
+    }
+}
+if (!function_exists('ihttp_response_parse_unchunk')) {
+    function ihttp_response_parse_unchunk($str = null)
+    {
+        if (!is_string($str) or strlen($str) < 1) {
+            return false;
+        }
+        $eol = "\r\n";
+        $add = strlen($eol);
+        $tmp = $str;
+        $str = '';
+        do {
+            $tmp = ltrim($tmp);
+            $pos = strpos($tmp, $eol);
+            if ($pos === false) {
+                return false;
+            }
+            $len = hexdec(substr($tmp, 0, $pos));
+            if (!is_numeric($len) or $len < 0) {
+                return false;
+            }
+            $str .= substr($tmp, ($pos + $add), $len);
+            $tmp = substr($tmp, ($len + $pos + $add));
+            $check = trim($tmp);
+        } while (!empty($check));
+        unset($tmp);
+        return $str;
+    }
+}
+if (!function_exists('ihttp_get')) {
+    function ihttp_get($url)
+    {
+        return ihttp_request($url);
+    }
+}
+
+if (!function_exists('ihttp_post')) {
+    function ihttp_post($url, $data)
+    {
+        $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+        return ihttp_request($url, $data, $headers);
+    }
+}
+/**
+ * 远程GET请求
+ */
+if (!function_exists('gets')) {
+    function gets($url = null)
+    {
+        if ($url) {
+            $rslt = ihttp_get($url);
+            if (strtolower(trim($rslt['status'])) == 'ok') {
+                //pr($rslt) ;exit;
+                if (is_json($rslt['content'])) { //返回格式是json 直接返回数组
+                    $return = json_decode($rslt['content'], true);
+                    if ($return['errcode']) //有错误
+                        exit('Error:<br>Api:' . $url . '  <br>errcode:' . $return['errcode'] . '<br>errmsg:' . $return['errmsg']);
+                    return $return;
+                } else {  //先暂时直接返回，以后其它格式再增加
+                    return $rslt['content'];
+                }
+            }
+            exit('远程请求失败：' . $url);
+        }
+        exit('未发现远程请求地址');
+    }
+}
+/**
+ * 远程post请求
+ */
+if (!function_exists('posts')) {
+
+    function posts($url = null, $data = null)
+    {
+        if ($url && $data) {
+            $rslt = ihttp_post($url, $data);
+            if (strtolower(trim($rslt['status'])) == 'ok') {
+                //pr($rslt) ;
+                if (is_json($rslt['content'])) { //返回格式是json 直接返回数组
+                    $return = json_decode($rslt['content'], true);
+                    if ($return['errcode']) //有错误
+                        exit('Error:<br>Api:' . $url . '  <br>errcode:' . $return['errcode'] . '<br>errmsg:' . $return['errmsg']);
+                    return $return;
+                } else {  //先暂时直接返回，以后其它格式再增加
+                    return $rslt['content'];
+                }
+            }
+            exit('远程请求失败：' . $url);
+        }
+        exit('post远程请求，参数错误');
+    }
 }
 
 /**
@@ -737,42 +754,905 @@ if (!function_exists('sales_inform')) {
         return $arr;
     }
 }
-
 /**
- * 得到字符串中的数字
+ * /**
+ * 以租代购（新车）发送给内勤
  */
-if (!function_exists('findNum')) {
-    function findNum($str = '')
+if (!function_exists('newinternal_inform')) {
+
+
+    function newinternal_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
     {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "待录入实收定金、装饰通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的预定，请及时登录后台进行金额、装饰录入 . '</div>'
+            ];
 
-        $str = trim($str);
-
-        if (empty($str)) {
-            return '';
+            return $arr;
         }
+        exit('参数错误');
 
-        $result = '';
+    }
+}
+/**
+ * 以租代购（新车）内勤发送给车管
+ */
+if (!function_exists('newcar_inform')) {
+    function newcar_inform($models_name = NULL, $admin_name = NULLL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "新增订车通知",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的预定，请及时登录后台进行处理 . '</div>'
+            ];
 
-        for ($i = 0; $i < strlen($str); $i++) {
-
-            if (is_numeric($str[$i])) {
-
-                $result .= $str[$i];
-
-            }
-
+            return $arr;
         }
+        exit('参数错误');
 
-        return $result;
+    }
+}
+/**
+ * 以租代购（新车）车管发送给匹配金融
+ */
+if (!function_exists('newfinance_inform')) {
+
+
+    function newfinance_inform($models_name = NULL, $admin_name = NULLL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "金融待匹配通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行金融匹配 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）匹配金融发送给风控审核
+ */
+if (!function_exists('newcontrol_inform')) {
+
+
+    function newcontrol_inform($models_name = NULL, $admin_name = NULLL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "征信待审核通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行风控审核 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给销售，审核通过
+ */
+if (!function_exists('newpass_inform')) {
+
+
+    function newpass_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "征信审核结果通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;color: green">' . 客户： . $username . 已经通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给销售，签订金融合同 --- 走一汽金平台，先签合同再订车
+ */
+if (!function_exists('newpass_finance')) {
+
+
+    function newpass_finance($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "待签订金融合同通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你的客户： . $username . 已经通过风控审核，请通知客户进行签订金融合同 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给车管，进行录入库存  ---   一汽租赁
+ */
+if (!function_exists('newcontrol_tube')) {
+
+
+    function newcontrol_tube($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车金融合同已签订，可以进行录入库存通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经签订金融合同，可以进行录入库存，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给车管，进行录入库存----其他金融
+ */
+if (!function_exists('newcontrol_tube_finance')) {
+
+
+    function newcontrol_tube_finance($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车审核已通过，可以进行录入库存通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，审核已通过，可以进行录入库存，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核选择库存，发送给车管
+ */
+if (!function_exists('newchoose_stock')) {
+
+
+    function newchoose_stock($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车已经选择完库存通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经匹配完库存车，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）车管发送销售，补全提车资料
+ */
+if (!function_exists('newtake_car')) {
+
+
+    function newtake_car($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "客户提车资料待补全通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经可以进行提车，请补全提车资料，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）销售发送车管，资料补全，可以提车
+ */
+if (!function_exists('newsend_car')) {
+
+
+    function newsend_car($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "客户提车资料补全，可以进行提车通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，资料已经补全，可以进行提车，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）车管发送销售，已提车
+ */
+if (!function_exists('sales_takecar')) {
+
+
+    function sales_takecar($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "客户提车成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经提车，请悉知 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）车管发送金融按揭专员，已提车
+ */
+if (!function_exists('financial_takecar')) {
+
+
+    function financial_takecar($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "客户提车成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经提车，请悉知 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给销售，审核需要保证金
+ */
+if (!function_exists('newdata_inform')) {
+
+
+    function newdata_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车风控审核通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，风控需要你提交保证金收据，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）销售发送给风控审核，保证金上传
+ */
+if (!function_exists('newdata_cash')) {
+
+
+    function newdata_cash($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车销售已上传保证金收据通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，保证金收据已经上传，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给销售，审核不通过
+ */
+if (!function_exists('newnopass_inform')) {
+
+
+    function newnopass_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车风控审核不通过通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给销售，审核不通过，待补录资料
+ */
+if (!function_exists('new_information')) {
+
+
+    function new_information($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "新车风控审核不通过,待补录资料通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，需补录. $text .资料，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）销售发送给风控，资料补录完成
+ */
+if (!function_exists('new_collection_data')) {
+
+
+    function new_collection_data($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "新车资料补录完成通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，补录：. $text . 资料已完成，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车 发送给车管进行预定
+ */
+if (!function_exists('rentalcar_inform')) {
+
+
+    function rentalcar_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "租车预定通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的租车预定，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车 车管同意预定，发送给销售员，可补全客户信息
+ */
+if (!function_exists('rentalsales_inform')) {
+
+
+    function rentalsales_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "车管租车预定成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的租车预定，车管已经同意，请及时登录后台进行客户信息的补全 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车 销售员补全客户信息后，发送给风控审核
+ */
+if (!function_exists('rentalcontrol_inform')) {
+
+
+    function rentalcontrol_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "租车风控审核通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的租车请求，车管已经同意，客户信息已补全，请及时登录后台进行风控审核 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车  风控审核发送给销售，审核通过
+ */
+if (!function_exists('rentalpass_inform')) {
+
+
+    function rentalpass_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "租车风控审核通过通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的租车请求，已经通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车  风控审核发送给销售，审核不通过
+ */
+if (!function_exists('rentalnopass_inform')) {
+
+
+    function rentalnopass_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "租车风控审核不通过通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的租车请求，没有通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车 风控审核发送给销售，审核不通过，待补录资料
+ */
+if (!function_exists('rental_information')) {
+
+
+    function rental_information($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "租车风控审核不通过,待补录资料通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，需补录. $text .资料，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车 销售发送给风控，资料补录完成
+ */
+if (!function_exists('rental_collection_data')) {
+
+
+    function rental_collection_data($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "租车资料补录完成通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，补录：. $text . 资料已完成，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）发送给内勤
+ */
+if (!function_exists('secondinternal_inform')) {
+
+
+    function secondinternal_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "二手车待录入金额通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行金额录入 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）内勤发送给车管
+ */
+if (!function_exists('secondcar_inform')) {
+
+
+    function secondcar_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "二手车待车管确认通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，待车管确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）车管发送给金融匹配
+ */
+if (!function_exists('secondfinance_inform')) {
+
+
+    function secondfinance_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "二手车待匹配金融通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行金融匹配 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）金融发送给风控
+ */
+if (!function_exists('secondcontrol_inform')) {
+
+
+    function secondcontrol_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "二手车待风控审核通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，金融已匹配，请及时登录后台进行风控审核 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）风控审核匹配车辆，发送给销售，补全客户提车资料，通知客户提车
+ */
+if (!function_exists('secondpass_inform')) {
+
+
+    function secondpass_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "风控匹配车辆成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，匹配完车辆，请及时登录后台进行处理，通知客户进行提车 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）风控审核匹配车辆，发送给车管，进行备车
+ */
+if (!function_exists('secondpass_tubeinform')) {
+
+
+    function secondpass_tubeinform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "风控匹配车辆成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，匹配完车辆，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）风控审核发送给销售，审核需要保证金
+ */
+if (!function_exists('seconddata_inform')) {
+
+
+    function seconddata_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "二手车风控审核通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，风控需要你提交保证金收据，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）风控审核发送给销售，审核不通过
+ */
+if (!function_exists('secondnopass_inform')) {
+
+
+    function secondnopass_inform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "二手车风控审核不通过通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）风控审核发送给销售，审核不通过，待补录资料
+ */
+if (!function_exists('second_information')) {
+
+
+    function second_information($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "二手车风控审核不通过,待补录资料通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，需补录：. $text . 资料，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）销售发送给风控，资料补录完成
+ */
+if (!function_exists('second_collection_data')) {
+
+
+    function second_collection_data($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "二手车资料补录完成通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，补录：. $text . 资料已完成，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
     }
 }
 
 /**
- * 检查是否为手机号
+ * 全款车 销售发送给内勤
  */
-if (!function_exists('checkPhoneNumberValidate')) {
-    function checkPhoneNumberValidate($phone_number)
+if (!function_exists('fullinternal_inform')) {
+
+    
+    function fullinternal_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
     {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款车待录入金额通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行金额录入 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 全款车 内勤发送给车管
+ */
+if (!function_exists('fullcar_inform')) {
+
+
+    function fullcar_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款车待车管确认通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，待车管确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 全款车 车管发送给销售， 可以提车
+ */
+if (!function_exists('fullsales_inform')) {
+
+
+    function fullsales_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款车待提车通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 全款二手车 销售发送给内勤
+ */
+if (!function_exists('second_full_backoffice')) {
+
+    
+    function second_full_backoffice($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款二手车待录入金额通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行金额录入 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 全款二手车 内勤发送给车管
+ */
+if (!function_exists('secondfullcar_amount')) {
+
+
+    function secondfullcar_amount($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款二手车待车管确认通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，待车管确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 全款车 车管发送给销售， 可以提车
+ */
+if (!function_exists('secondfullsales_inform')) {
+
+
+    function secondfullsales_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款二手车待提车通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 新车月供扣款不成功通知 ，财务出纳发送给风控
+ */
+if (!function_exists('send_monthly_to_risk')) {
+    function send_monthly_to_risk()
+    {
+        $arr = [
+            'subject' => "月供代扣失败通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你有客户月供扣款不成功数据，请登陆系统查看 . '</div>'
+        ];
+        return $arr;
+    }
+}
+
+
+if (!function_exists('send_newmodels_to_sales')) {
+    function send_newmodels_to_sales($model = null, $payment = null, $monthly = null)
+    {
+        if ($model && $payment && $monthly) {
+            $arr = [
+                'subject' => "定制方案审核结果通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 您需要的车型： . $model . 首付： . $payment . 元， . 月供： . $monthly . 元，该方案已添加成功，请注意查看 . '</div>'
+            ];
+            return $arr;
+        } else {
+            exit('参数错误');
+        }
+
+    }
+}
+
+if (!function_exists('send_peccancy')) {
+    function send_peccancy()
+    {
+        $arr = [
+            'subject' => "新违章客户进入通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 您有新的违章客户进入，请注意查看 . '</div>'
+        ];
+        return $arr;
+
+
+    }
+}
+if (!function_exists('lift_car')) {
+    function lift_car($customer=null)
+    {
+        $arr = [
+            'subject' => "客户提车成功通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 您的客户：.$customer.已成功提车 . '</div>'
+        ];
+        return $arr;
+    }
+}
+
+/**数组去重
+ * @param $arr
+ * @param $key
+ * @return mixed
+ */
+if (!function_exists('assoc_unique')) {
+
+
+    function assoc_unique($arr, $key)
+    {
+        $tmp_arr = array();
+        foreach ($arr as $k => $v) {
+            if (in_array($v[$key], $tmp_arr))//搜索$v[$key]是否在$tmp_arr数组中存在，若存在返回true
+            {
+                unset($arr[$k]);
+            } else {
+                $tmp_arr[] = $v[$key];
+            }
+        }
+        sort($arr); //sort函数对数组进行排序
+        return $arr;
+    }
+}
+if (!function_exists('checkPhoneNumberValidate')) {
+    function checkPhoneNumberValidate($phone_number){
         //@2017-11-25 14:25:45 https://zhidao.baidu.com/question/1822455991691849548.html
         //中国联通号码：130、131、132、145（无线上网卡）、155、156、185（iPhone5上市后开放）、186、176（4G号段）、175（2015年9月10日正式启用，暂只对北京、上海和广东投放办理）,166,146
         //中国移动号码：134、135、136、137、138、139、147（无线上网卡）、148、150、151、152、157、158、159、178、182、183、184、187、188、198
@@ -780,11 +1660,11 @@ if (!function_exists('checkPhoneNumberValidate')) {
         $g = "/^1[34578]\d{9}$/";
         $g2 = "/^19[89]\d{8}$/";
         $g3 = "/^166\d{8}$/";
-        if (preg_match($g, $phone_number)) {
+        if(preg_match($g, $phone_number)){
             return true;
-        } else if (preg_match($g2, $phone_number)) {
+        }else  if(preg_match($g2, $phone_number)){
             return true;
-        } else if (preg_match($g3, $phone_number)) {
+        }else if(preg_match($g3, $phone_number)){
             return true;
         }
 
@@ -792,260 +1672,3 @@ if (!function_exists('checkPhoneNumberValidate')) {
 
     }
 }
-
-/**
- * 某个时间戳在当前时间的多久前
- */
-if (!function_exists('format_date')) {
-    function format_date($time)
-    {
-        $nowtime = time();
-        $difference = $nowtime - $time;
-        switch ($difference) {
-            case $difference <= '60' :
-                $msg = '刚刚';
-                break;
-            case $difference > '60' && $difference <= '3600' :
-                $msg = floor($difference / 60) . '分钟前';
-                break;
-            case $difference > '3600' && $difference <= '86400' :
-                $msg = floor($difference / 3600) . '小时前';
-                break;
-            case $difference > '86400' && $difference <= '2592000' :
-                $msg = floor($difference / 86400) . '天前';
-                break;
-            case $difference > '2592000' && $difference <= '31536000':
-                $msg = floor($difference / 2592000) . '个月前';
-                break;
-            case $difference > '31536000':
-                $msg = floor($difference / 31104000) . '年前';
-                break;
-        }
-        return $msg;
-    }
-}
-
-/**
- * 发送验证码
- * @param $mobile
- * @param $template_id
- * @param null $user_id
- * @return array
- * @throws \GuzzleHttp\Exception\GuzzleException
- * @throws \think\Exception
- * @throws \think\db\exception\DataNotFoundException
- * @throws \think\db\exception\ModelNotFoundException
- * @throws \think\exception\DbException
- * @throws \think\exception\PDOException
- */
-if (!function_exists('message_send')) {
-    function message_send($mobile, $template_id, $user_id = null)
-    {
-        if (!$mobile) return ['error', 'msg' => '参数缺失或格式错误'];
-        if (!checkPhoneNumberValidate($mobile)) return ['error', 'msg' => '手机号格式错误'];
-        $authnum = '';
-        //随机生成四位数验证码
-        $list = explode(",", "0,1,2,3,4,5,6,7,8,9");
-        for ($i = 0; $i < 4; $i++) {
-            $randnum = rand(0, 9);
-            $authnum .= $list[$randnum];
-        }
-
-        $Ucpass = [
-            'accountsid' => Env::get('sms.accountsid'),
-            'token' => Env::get('sms.token'),
-            'appid' => Env::get('sms.appid'),
-            'templateid' => $template_id,
-        ];
-
-        $url = 'http://open.ucpaas.com/ol/sms/sendsms';
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', $url, [
-            'json' => [
-                'sid' => $Ucpass['accountsid'],
-                'token' => $Ucpass['token'],
-                'appid' => $Ucpass['appid'],
-                'templateid' => $Ucpass['templateid'],
-                'param' => $authnum,
-                'mobile' => $mobile,
-                'uid' => $user_id
-            ]
-        ]);
-        if ($response) {
-            $result = json_decode($response->getBody(), true);
-            $num = '';
-            if ($result['code'] == '000000') {
-                //查询当前手机号，如果存在更新他的的请求次数与 请求时间
-                $getPhone = think\Db::name('cms_login_info')->where(['login_phone' => $mobile])->find();
-                if ($getPhone) {
-                    $num = $getPhone['login_num'];
-                    ++$num;
-                    return think\Db::name('cms_login_info')->update([
-                        'login_time' => strtotime($result['create_date']),
-                        'login_code' => $authnum,
-                        'login_num' => $num,
-                        'login_phone' => $mobile,
-                        'id' => $getPhone['id'],
-                        'login_state' => 0,
-                        'user_id' => $user_id
-                    ]) ? ['success', 'msg' => '发送成功'] : ['error', 'msg' => '发送失败'];
-
-                } else {
-                    //否则新增当前用户到登陆表
-                    think\Db::name('cms_login_info')->insert([
-                        'login_time' => strtotime($result['create_date']),
-                        'login_code' => $authnum,
-                        'login_num' => 1,
-                        'login_phone' => $mobile,
-                        'login_state' => 0,
-                        'user_id' => $user_id
-                    ]) ? ['success', 'msg' => '发送成功'] : ['error', 'msg' => '发送失败'];
-                }
-            } else {
-                return ['error', 'msg' => $result['msg']];
-//                $this->error($result['msg'], $result);
-            }
-        } else {
-            $err = json_decode($response->getBody(), true);
-            return ['error', 'msg' => $err['msg']];
-//            $this->error($err['msg'], $err);
-        }
-    }
-}
-
-/**
- * 报价
- * @param int $user_id
- * @param $phone
- * @param $money
- * @param $models_id
- * @param $type
- * @param $templateid
- * @param $param
- * @return array
- * @throws \GuzzleHttp\Exception\GuzzleException
- */
-if (!function_exists('sendOffers')) {
-
-    function sendOffers($user_id, $by_user_id, $phone, $money, $models_id, $type, $templateid, $param)
-    {
-
-        $typeModels = $type == 'buy' ? new \addons\cms\model\BuycarModel : new \addons\cms\model\ModelsInfo; //转换表名
-        if (!(int)$user_id || !(int)$by_user_id || !(float)$money || !(string)$type || !(int)$models_id || !(string)$param || !checkPhoneNumberValidate($phone)) {
-//            $this->error('缺少参数或参数格式错误');
-            return ['error', 'msg' => '缺少参数或参数格式错误'];
-        }
-        try {
-            $merchantsPhone = trim($typeModels->get(['id' => $models_id])->phone);//商户的手机号
-//            $modelsInfo = collection($typeModels->with(['brand'])->select(['id' => $models_id]))->toArray();
-//            $modelsInfo = $modelsInfo[0]['brand']['name'] . ' ' . $modelsInfo[0]['models_name'];  //拼接品牌、车型
-            if ($phone) {
-                think\Db::name('user')->where(['id' => $user_id])->setField('mobile', $phone);  //每次执行一次更新手机号操作
-            }
-//            $newPone = substr($user_id, 7);//手机尾号4位数
-            $url = 'http://open.ucpaas.com/ol/sms/sendsms';
-
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', $url, [
-                'json' => [
-                    'sid' => Env::get('sms.accountsid'),
-                    'token' => Env::get('sms.token'),
-                    'appid' => Env::get('sms.appid'),
-                    'templateid' => $templateid,
-                    'param' => $param,  //参数
-                    'mobile' => $merchantsPhone,
-                    'uid' => $user_id
-                ]
-            ]);
-
-            if ($response) {
-                $result = json_decode($response->getBody(), true);
-                if ($result['code'] == '000000') { //发送成功
-                    $field = $type == 'buy' ? 'buy_car_id' : 'models_info_id';
-                    return \addons\cms\model\QuotedPrice::create(
-                        ['user_ids' => $user_id, 'by_user_ids' => $by_user_id, 'money' => $money, $field => $models_id, 'type' => $type, 'quotationtime' => time(), 'is_see' => 2]
-                    ) ? ['success', 'msg' => '报价成功'] : ['error', 'msg' => '报价失败'];
-                }
-                return ['error', 'msg' => $result['msg']];
-            }
-            return ['error', 'msg' => '短信通知失败'];
-        } catch (\think\Exception $e) {
-            return ['error', 'msg' => $e->getMessage()];
-        }
-    }
-
-}
-
-/**
- * 检查是否为银行卡号
- * @param $card_number
- * @return string
- */
-if (!function_exists('check_bankCard')) {
-    function check_bankCard($card_number)
-    {
-        $arr_no = str_split($card_number);
-        $last_n = $arr_no[count($arr_no) - 1];
-        krsort($arr_no);
-        $i = 1;
-        $total = 0;
-        foreach ($arr_no as $n) {
-            if ($i % 2 == 0) {
-                $ix = $n * 2;
-                if ($ix >= 10) {
-                    $nx = 1 + ($ix % 10);
-                    $total += $nx;
-                } else {
-                    $total += $ix;
-                }
-            } else {
-                $total += $n;
-            }
-            $i++;
-        }
-        $total -= $last_n;
-        $x = 10 - ($total % 10);
-        if ($x == $last_n) {
-            return 'true';
-        } else {
-            return 'false';
-        }
-    }
-
-    /**
-     * 生成二维码
-     * @throws \Endroid\QrCode\Exceptions\ImageTypeInvalidException
-     */
-    function setQrcode($type='', $models_id='', $name = null)
-    {
-//        $user_id = $this->request->post('user_id');
-//        if (!(int)$user_id) $this->error('参数错误');
-        $text = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?';
-
-//        $text .= 'type=' . $type . '&models_id=' . $models_id;
-                $text .= 'type=new';
-
-        $setLabel = $name == null ? '' : '需由客户' . $name . '扫码授权';
-        $time = date('Ymd');
-        $qrCode = new \Endroid\QrCode\QrCode();
-        $qrCode->setText($text)
-            ->setSize(150)
-            ->setPadding(10)
-            ->setErrorCorrection('high')
-            ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
-            ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
-            ->setLabelFontPath(ROOT_PATH . DS . 'vendor/endroid/qr-code/assets/font/simhei.ttf')
-            ->setLabel($setLabel)
-            ->setLabelFontSize(10)
-            ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
-        $fileName = DS . 'uploads' . DS . 'qrcode' . DS . $time . '_' . $models_id . '_' . $type . '.png';
-        $qrCode->save(ROOT_PATH . 'public' . $fileName);
-        if ($qrCode) {
-            return \app\admin\model\PastInformation::update(['id' => $models_id, 'qr_code' => $fileName]) ? $fileName : false;
-        }
-        return false;
-    }
-
-}
-
-

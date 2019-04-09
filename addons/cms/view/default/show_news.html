@@ -1,6 +1,6 @@
 {layout name="common/layout" /}
 
-<div class="container" id="content-container">
+<div class="container"  id="content-container"> 
 
     <div class="article-list-body row">
 
@@ -12,7 +12,7 @@
                     <li><a href="{$item.url}">{$item.name}</a></li>
                     {/cms:breadcrumb}
                     <!-- E 面包屑导航 -->
-                </ol>
+                </ol>        
                 <div class="article-metas">
                     <!-- S 标题区域 -->
                     <div class="pull-left">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <!-- E 标题区域 -->
-                </div>
+                </div>        
                 <div class="article-text">
                     <!-- S 正文 -->
                     <p>
@@ -46,25 +46,6 @@
                     </p>
                     <!-- E 正文 -->
                 </div>
-
-                {if isset($__ARCHIVES__.price)}
-                    <!-- S 付费阅读 -->
-                    <div class="article-pay">
-                        {if $__ARCHIVES__.price<=0 || $__ARCHIVES__.ispay}
-                        <div class="alert alert-success">
-                            <strong>温馨提示!</strong> 以下是付费内容 <b>你可以随意修改付费可见的字段或内容，这里仅测试标题：{cms:archives name="title" /}</b> 请直接修改模板中需要显示的付费字段
-                        </div>
-                        {else /}
-                        <div class="alert alert-danger">
-                            <strong>温馨提示!</strong> 你需要支付 <b>￥{cms:archives name='price' /}</b> 元后才能查看付费内容
-                            <a href="{:addon_url('cms/order/submit', ['id'=>$__ARCHIVES__.id])}" class="btn btn-danger"><i class="fa fa-wechat"></i> 立即支付</a>
-                            <a href="{:addon_url('cms/order/submit', ['id'=>$__ARCHIVES__.id,'paytype'=>'alipay'])}" class="btn btn-info"><i class="fa fa-money"></i> 支付宝支付</a>
-                            <a href="{:addon_url('cms/order/submit', ['id'=>$__ARCHIVES__.id,'paytype'=>'balance'])}" class="btn btn-warning"><i class="fa fa-dollar"></i> 余额支付</a>
-                        </div>
-                        {/if}
-                    </div>
-                    <!-- E 付费阅读 -->
-                {/if}
 
                 <div class="product-like-wrapper">
                     <!-- S 赞踩 -->
@@ -108,6 +89,7 @@
 
                 <div class="product-action-btn">
                     <div class="pull-left">
+                        <a href="javascript:void(0);" name="anchor" id="anchor"></a>
                         <!-- S 收藏 -->
                         <a class="product-favorite addbookbark" href="javascript:;">
                             <i class="fa fa-heart"></i> {:__('Favourite')}

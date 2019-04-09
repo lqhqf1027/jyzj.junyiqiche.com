@@ -4,6 +4,9 @@ namespace app\admin\controller\cms;
 
 use app\common\controller\Backend;
 
+use think\Controller;
+use think\Request;
+
 /**
  * 评论管理
  *
@@ -20,7 +23,7 @@ class Comment extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\cms\Comment;
+        $this->model = model('Comment');
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("statusList", $this->model->getStatusList());
     }
@@ -59,7 +62,6 @@ class Comment extends Backend
 
             return json($result);
         }
-        $this->assignconfig("typeList", $this->model->getTypeList());
         return $this->view->fetch();
     }
 }

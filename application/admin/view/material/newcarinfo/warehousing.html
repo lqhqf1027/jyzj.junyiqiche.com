@@ -1,0 +1,288 @@
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle!important;
+    }
+</style>
+
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <table class="table table-bordered table-striped table-hover click-table">
+        <tbody class="">
+        <th colspan="2"> 资料类型</th>
+        <th>是否入库</th>
+        <tr class="tr-click">
+
+            <td colspan="2">行驶证</td>
+            {empty name="$row.driving_licenseimages"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[driving_licenseimages]" value="no">
+            {else /}
+            {eq name="$row.driving_licenseimages" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[driving_licenseimages]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[driving_licenseimages]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">交强险</td>
+            {empty name="$row.strong_insurance"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[strong_insurance]" value="no">
+            {else /}
+            {eq name="$row.strong_insurance" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[strong_insurance]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[strong_insurance]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">完税证明</td>
+            {empty name="$row.tax_proofimages"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[tax_proofimages]" value="no">
+            {else /}
+            {eq name="$row.tax_proofimages" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[tax_proofimages]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[tax_proofimages]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">发票或抵扣联</td>
+            {empty name="$row.invoice_or_deduction_coupletimages"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[invoice_or_deduction_coupletimages]" value="no">
+            {else /}
+            {eq name="$row.invoice_or_deduction_coupletimages" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[invoice_or_deduction_coupletimages]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[invoice_or_deduction_coupletimages]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">登记证书</td>
+            {empty name="$row.registration_certificateimages"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[registration_certificateimages]" value="no">
+            {else /}
+            {eq name="$row.registration_certificateimages" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[registration_certificateimages]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[registration_certificateimages]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">商业险</td>
+            {empty name="$row.commercial_insurance"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[commercial_insurance]" value="no">
+            {else /}
+            {eq name="$row.commercial_insurance" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[commercial_insurance]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[commercial_insurance]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">抵押登记费</td>
+            {empty name="$row.mortgage_registration"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[mortgage_registration]" value="no">
+            {else /}
+            {eq name="$row.mortgage_registration" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[mortgage_registration]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[mortgage_registration]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">购置税</td>
+            {empty name="$row.tax"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[tax]" value="no">
+            {else /}
+            {eq name="$row.tax" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[tax]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[tax]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">最高保障合同</td>
+            {empty name="$row.maximum_guarantee_contractimages"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[maximum_guarantee_contractimages]" value="no">
+            {else /}
+            {eq name="$row.maximum_guarantee_contractimages" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[maximum_guarantee_contractimages]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[maximum_guarantee_contractimages]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">通话清单</td>
+            {empty name="$row.detailed_list"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[detailed_list]" value="no">
+            {else /}
+            {eq name="$row.detailed_list" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[detailed_list]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[detailed_list]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+        <tr class="tr-click">
+
+            <td colspan="2">钥匙</td>
+            {empty name="$row.car_keys"}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[car_keys]" value="no">
+            {else /}
+            {eq name="$row.car_keys" value="yes"}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="row[car_keys]" value="yes">
+            {else /}
+            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
+            <input type="hidden" name="row[car_keys]" value="no">
+            {/eq}
+            {/empty}
+
+        </tr>
+
+
+        </tbody>
+    </table>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('备注')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-information_remark" class="form-control editor" rows="5" name="row[information_remark]" cols="50" placeholder="选填">{$row.information_remark}</textarea>
+        </div>
+    </div>
+    <input type="hidden" value="new" name="row[classification]">
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        var trC = $('.click-table').find('.tr-click').each(function () {
+            $(this).on('click',function () {
+                var attrTr = $(this).find('.td2 i');
+
+                var hidden = $(this).find("input[type=hidden]");
+
+
+
+                    // attrTr =='text-success'?'text-success':'text-info';
+                    if(attrTr.hasClass('fa-check')){
+                        attrTr.removeClass('fa-check text-success').addClass('fa-times text-danger')
+                        hidden.val("no");
+                    }
+                    else{
+                        attrTr.removeClass('fa-times text-danger').addClass('fa-check text-success')
+                        hidden.val("yes");
+                    }
+                    // console.log(attrTr);
+                // console.log($(this).find('.td2 i').removeClass('text-success').addClass('text-info'));
+
+            })
+        })
+    })
+</script>

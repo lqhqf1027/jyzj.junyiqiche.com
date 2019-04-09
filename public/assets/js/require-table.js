@@ -1,5 +1,5 @@
 define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table', 'bootstrap-table-lang', 'bootstrap-table-export', 'bootstrap-table-commonsearch', 'bootstrap-table-template'], function ($, undefined, Moment) {
-    var Table = {
+var Table = {
         list: {},
         // Bootstrap-table 基础配置
         defaults: {
@@ -544,7 +544,6 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 var hidden, visible, disable, url, classname, icon, text, title, refresh, confirm, extend, click, dropdown, link;
                 var fieldIndex = column.fieldIndex;
                 var dropdowns = {};
-
                 $.each(buttons, function (i, j) {
                     if (type === 'operate') {
                         if (j.name === 'dragsort' && typeof row[Table.config.dragsortfield] === 'undefined') {

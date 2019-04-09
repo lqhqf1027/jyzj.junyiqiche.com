@@ -87,19 +87,19 @@
     <div class="form-group tf tf-channel">
         <label for="c-channeltpl" class="control-label col-xs-12 col-sm-2">{:__('Channeltpl')}:</label>
         <div class="col-xs-12 col-sm-4">
-            <input id="c-channeltpl" data-rule="required" class="form-control selectpage" name="row[channeltpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"channel"}' data-primary-key="name" data-field="name" type="text" value="{$row.channeltpl}" placeholder="自定义模板文件必须以channel开头">
+            <input id="c-channeltpl" data-rule="required" class="form-control selectpage" name="row[channeltpl]" data-source="cms/ajax/get_template_list" data-primary-key="name" data-field="name" type="text" value="{$row.channeltpl}">
         </div>
     </div>
     <div class="form-group tf tf-list">
         <label for="c-listtpl" class="control-label col-xs-12 col-sm-2">{:__('Listtpl')}:</label>
         <div class="col-xs-12 col-sm-4">
-            <input id="c-listtpl" data-rule="required" class="form-control selectpage" name="row[listtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"list"}' data-primary-key="name" data-field="name" type="text" value="{$row.listtpl}" placeholder="自定义模板文件必须以list开头">
+            <input id="c-listtpl" data-rule="required" class="form-control selectpage" name="row[listtpl]" data-source="cms/ajax/get_template_list" data-primary-key="name" data-field="name" type="text" value="{$row.listtpl}">
         </div>
     </div>
     <div class="form-group tf tf-list">
         <label for="c-showtpl" class="control-label col-xs-12 col-sm-2">{:__('Showtpl')}:</label>
         <div class="col-xs-12 col-sm-4">
-            <input id="c-showtpl" data-rule="required" class="form-control selectpage" name="row[showtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"show"}' data-primary-key="name" data-field="name" type="text" value="{$row.showtpl}" placeholder="自定义模板文件必须以show开头">
+            <input id="c-showtpl" data-rule="required" class="form-control selectpage" name="row[showtpl]" data-source="cms/ajax/get_template_list" data-primary-key="name" data-field="name" type="text" value="{$row.showtpl}">
         </div>
     </div>
     <div class="form-group tf tf-list">
@@ -115,7 +115,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <label for="c-status" class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
         <div class="col-xs-12 col-sm-8">
 
             <div class="radio">

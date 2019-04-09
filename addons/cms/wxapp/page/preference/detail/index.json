@@ -1,0 +1,13 @@
+{
+    "navigationBarTitleText": "车辆详情",
+    "usingComponents": {
+    	"wux-animation-group": "../../../assets/libs/wux/animation-group/index",
+    	"wux-popup": "../../../assets/libs/wux/popup/index",
+    	"wux-input": "../../../assets/libs/wux/input/index",
+    	"wux-cell-group": "../../../assets/libs/wux/cell-group/index",
+    	"wux-cell": "../../../assets/libs/wux/cell/index",
+    	"wux-media": "../../../assets/libs/wux/media/index",
+    	"wux-tag": "../../../assets/libs/wux/tag/index",
+    	"wux-card": "../../../assets/libs/wux/card/index"
+    }
+}

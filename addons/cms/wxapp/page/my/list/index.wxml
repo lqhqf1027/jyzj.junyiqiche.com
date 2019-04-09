@@ -1,0 +1,151 @@
+<template name="car">
+    <i-sticky scrollTop="{{ scrollTop }}">
+        <block wx:for="{{ carSelectList }}" wx:key="" wx:if="{{ hasList }}">
+            <block wx:if="{{ item.type !== 'used' && item.planList.length > 0 }}">
+                <i-sticky-item i-class="i-sticky-demo-title">
+                    <view slot="title" class="title">{{ item.type_name }}</view>
+                    <view slot="content">
+                        <block wx:for="{{ item.planList }}" wx:for-item="card" wx:for-index="cIndex" wx:key="">
+                            <i-swipeout i-class="i-swipeout-demo-item" unclosable disabled="{{ style !== 'collection' }}" toggle="{{ toggle }}" actions="{{ actions }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bind:change="onSwipeout">
+                                <view slot="content">
+                                    <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 180rpx; background: #f1efef" thumb="{{ card.models_main_images ? (config.upload.cdnurl + card.models_main_images) : globalData.empty_carimg }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
+                                        <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
+                                        <view class="wux-clearfix" style='height:50rpx;line-height:50rpx'>
+                                            <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ card.payment < 10000 ? card.payment + ' 元' : card.payment / 10000 + ' 万' }}</view>
+                                            <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10">月供 {{ card.monthly }} 元</view>
+                                            <view class="media__desc wux-pull-right">
+                                                <view class="fa fa-map-marker"></view> {{ card.city.cities_name }}
+                                            </view>
+                                            <view class="media__desc wux-pull-right wux-mr--10">
+                                                <view class="popular"></view> {{ common.getDistance(card.popularity, 1) }}
+                                            </view>
+                                        </view>
+                                    </wux-media>
+                                </view>
+                            </i-swipeout>
+                        </block>
+                    </view>
+                </i-sticky-item>
+            </block>
+            <block wx:if="{{ item.type === 'used' && item.planList.length > 0 }}">
+                <i-sticky-item i-class="i-sticky-demo-title">
+                    <view slot="title" class="title">{{ item.type_name }}</view>
+                    <view slot="content">
+                        <block wx:for="{{ item.planList }}" wx:for-item="card" wx:for-index="cIndex" wx:key="">
+                            <i-swipeout i-class="i-swipeout-demo-item" unclosable disabled="{{ style !== 'collection' }}" toggle="{{ toggle }}" actions="{{ actions }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bind:change="onSwipeout">
+                                <view slot="content">
+                                    <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ card.models_main_images ? (config.upload.cdnurl + card.models_main_images) : globalData.empty_carimg }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
+                                        <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
+                                        <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(card.car_licensedate) + '/' + common.getDistance(card.kilometres) + '公里' }}</view>
+                                        <view class="wux-clearfix" style='height:50rpx;line-height:50rpx'>
+                                            <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ card.totalprices }}">{{ card.totalprices / 10000 }} 万</view>
+                                            <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ card.newpayment < 10000 ? card.newpayment + ' 元' : card.newpayment / 10000 + ' 万' }}</view>
+                                            <view class="media__desc wux-pull-right">
+                                                <view class="fa fa-map-marker"></view> {{ card.city.cities_name }}
+                                            </view>
+                                        </view>
+                                    </wux-media>
+                                </view>
+                            </i-swipeout>
+                        </block>
+                    </view>
+                </i-sticky-item>
+            </block>
+        </block>
+    </i-sticky>
+    <view class="notfound" wx:if="{{ !hasList }}">
+        <view class="notfound__title">暂无记录~</view>
+        <view class="notfound__button" bindtap="toMore">去逛逛</view>
+    </view>
+</template>
+
+<view class="container">
+    <view class="header">
+        <view class="userinfo">
+            <wux-avatar wux-class="avatar" src="{{ userInfo.avatar }}" />
+            <view class="wux-mt--10" wx:if="{{ userInfo.nickname }}">{{ userInfo.nickname }}</view>
+            <button class="button-clear wux-mt--10" open-type="getUserInfo" bind:getuserinfo="bindGetUserInfo" wx:else>立即登录</button>
+        </view>
+        <view class="other">
+            <view class="sign" bindtap="signIn" wx:if="{{ sign !== 1 }}">立即签到</view>
+            <view class="sign" wx:else>已签到</view>
+            <view class="wux-mt--20">
+                <text class="score" bindtap="toScore">积分：{{ score }}</text>
+                <text class="line"></text>
+                <text class="coupon" bindtap="toCoupon">优惠券：{{ couponCount }}</text>
+            </view>
+        </view>
+    </view>
+    <wux-tabs wux-class="wux-mt--10" theme="positive" current="{{ style }}" controlled bind:change="onChange">
+        <wux-tab key="collection" title="我的收藏"></wux-tab>
+        <wux-tab key="subscribe" title="我的预约"></wux-tab>
+        <wux-tab key="pickup" title="已提车"></wux-tab>
+    </wux-tabs>
+    <view class="body">
+        <template is="car" data="{{ ...collection, ...globalData, scrollTop, actions, toggle, style }}" wx:if="{{ style === 'collection' }}" />
+        <template is="car" data="{{ ...subscribe, ...globalData, scrollTop, actions, toggle, style }}" wx:if="{{ style === 'subscribe' }}" />
+        <template is="car" data="{{ ...pickup, ...globalData, scrollTop, actions, toggle, style }}" wx:if="{{ style === 'pickup' }}" />
+    </view>
+    <wux-grids wux-class="wux-mt--10" bordered="{{ false }}" col="4">
+        <wux-grid thumb="/assets/images/score.png" bindtap="toScore">
+            <view class="grid__name">我的积分</view>
+        </wux-grid>
+        <wux-grid thumb="/assets/images/coupon.png" bindtap="toCoupon">
+            <view class="grid__name">我的卡券</view>
+        </wux-grid>
+        <wux-grid bindtap="toMessage">
+            <wux-badge count="{{ messageCount }}">
+                <image src="/assets/images/message.png" style="width: 60rpx; height: 60rpx" />
+                <view class="grid__name">我的消息</view>
+            </wux-badge>
+        </wux-grid>
+        <wux-grid>
+            <button class="button-clear" open-type="contact">
+                <view>
+                    <image src="/assets/images/service.png" style="width: 60rpx; height: 60rpx" />
+                    <view class="grid__name">我的客服</view>
+                </view>
+            </button>
+        </wux-grid>
+         <wux-grid>
+            <button class="button-clear" bindtap="toPrize">
+                <view>
+                    <image src="/assets/images/prize.png" style="width: 60rpx; height: 60rpx" />
+                    <view class="grid__name">我的奖品</view>
+                </view>
+            </button>
+        </wux-grid>
+    </wux-grids>
+    <!-- <view class="wish">
+        <view class="wish__hd">
+            <image class="wish__image" src="/assets/images/upload.png"></image>
+        </view>
+        <view class="wish__bd">关于友车有家</view>
+        <view class="wish__ft"></view>
+    </view> -->
+    <view class="footer wux-mt--20">©成都君忆汽车服务有限公司 • All Rights Reserved </view>
+</view>
+
+<wxs module="common">
+    module.exports = {
+        getDateString: function(value) {
+            if (!value) return ''
+            return value.substring(0, 7)
+        },
+        getDistance: function(value) {
+            var p1 = arguments[1] || 2
+            var p2 = arguments[2] || 'K'
+            var p3 = arguments[3] || 'W'
+            if (!value) return 0
+            if (value < 1000) {
+                return value
+            } else if (value >= 1000 && value < 10000) {
+                value = value / 1000
+                return value.toFixed(p1) + p2
+            } else if (value >= 10000) {
+                value = value / 10000
+                return value.toFixed(p1) + p3
+            }
+        },
+    }
+</wxs>

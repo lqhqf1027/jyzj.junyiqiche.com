@@ -1,0 +1,7 @@
+/* page/preference/image/index.wxss */
+
+.plan-image {
+	display: block;
+	width: 100%;
+	height: 100%;
+}

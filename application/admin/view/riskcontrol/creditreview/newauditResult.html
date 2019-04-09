@@ -1,0 +1,292 @@
+<form id="auditResult-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <h2>
+        <center>审核资料
+
+        </center>
+    </h2>
+
+    <br>
+
+
+
+    <div class="container-fulid">
+
+        <br>
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('Createtime')}：</strong> {$row.createtime|date='Y-m-d H:i:s',###}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-9">
+                <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name}
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('Username')}：</strong> {$row.username} {if condition="$row.genderdata_text eq '男'"} &nbsp;
+                <span class="fa fa-male text-info"></span>
+                {else /}
+                <span class="fa fa-female" style="color:palevioletred"></span>
+
+                {/if}
+
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('Phone')}：</strong> {$row.phone}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('Id_card')}：</strong> {$row.id_card}
+            </div>
+            <!--<div class="col-xs-12 col-sm-8 col-md-5">-->
+                <!--<strong>{:__('现居住地址（同联系地址）')}：</strong> {$row.city}{$row.detailed_address}-->
+            <!--</div>-->
+
+
+        </div>
+
+        <hr>
+
+        <!--<div class="form-group">-->
+
+            <!--<div class="col-xs-12 col-sm-8 col-md-4">-->
+                <!--<strong>{:__('Emergency_contact_1')}：</strong> {$row.emergency_contact_1}-->
+            <!--</div>-->
+            <!--<div class="col-xs-12 col-sm-8 col-md-4">-->
+                <!--<strong>{:__('Emergency_contact_2')}：</strong> {$row.emergency_contact_2}-->
+            <!--</div>-->
+            <!--<div class="col-xs-12 col-sm-8 col-md-4">-->
+                <!--<strong>{:__('Family_members')}：</strong> {$row.family_members}-->
+            <!--</div>-->
+
+        <!--</div>-->
+        <hr>
+        <div class="form-group">
+
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('身份证正反面')}：</strong>
+                {foreach $id_cardimages as $k => $v}
+
+                    <img src="{$cdn}{$v}" alt="{:__('身份证正反面')}" style="width:80px;height:80px;">
+               {/foreach}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('驾照正副页')}：</strong>
+                {foreach $drivers_licenseimages as $k => $v}
+
+                    <img src="{$cdn}{$v}" alt="{:__('驾照正副页')}" style="width:80px;height:80px;">
+                {/foreach}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('银行卡')}：</strong>
+                {foreach $bank_cardimages as $k => $v}
+
+                    <img src="{$cdn}{$v}" alt="" style="width:80px;height:80px;">
+
+                {/foreach}
+            </div>
+            <!--<div class="col-xs-12 col-sm-8 col-md-3">-->
+                <!--<strong>{:__('住房合同/房产证')}：</strong>-->
+                <!--{foreach $housingimages as $k => $v}-->
+                <!--<a href="{$cdn}{$v}" target="_blank">-->
+                    <!--<img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">-->
+                <!--</a> {/foreach}-->
+            <!--</div>-->
+
+        </div>
+        <hr>
+        <div class="form-group">
+
+            <!--<div class="col-xs-12 col-sm-8 col-md-6">-->
+                <!--<strong>{:__('户口簿【首页、户主页、本人页】')}：</strong>-->
+                <!--{foreach $residence_bookletimages as $k => $v}-->
+                <!--<a href="{$cdn}{$v}" target="_blank">-->
+                    <!--<img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">-->
+                <!--</a> {/foreach}-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<div class="col-xs-12 col-sm-8 col-md-6">-->
+                    <!--<strong>{:__('申请表')}：</strong>-->
+                    <!--{foreach $application_formimages as $k => $v}-->
+                    <!--<a href="{$cdn}{$v}" target="_blank">-->
+                        <!--<img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">-->
+                    <!--</a> {/foreach}-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+        <hr>
+        <div class="form-group">
+
+            <div class="col-xs-12 col-sm-8 col-md-4">
+
+                    {empty name="$deposit_contractimages"}
+                    <p ><strong>{:__('定金合同')}：</strong><span class="text-info">暂无</span></p>
+                    {else /}
+                     <strong>{:__('定金合同')}：</strong>
+                    {foreach $deposit_contractimages as $k => $v}
+
+                        <img src="{$cdn}{$v}" alt="{:__('定金合同')}" style="width:80px;height:80px;">
+                    {/foreach}
+                    {/empty}
+            </div>
+
+            <div class="col-xs-12 col-sm-8 col-md-4">
+                {empty name="$deposit_receiptimages"}
+                <p ><strong>{:__('定金收据')}：</strong><span class="text-info">暂无</span></p>
+                {else /}
+                <strong>{:__('定金收据')}：</strong>
+                {foreach $deposit_receiptimages as $k => $v}
+
+                <img src="{$cdn}{$v}" alt="{:__('定金收据')}" style="width:80px;height:80px;">
+                {/foreach}
+                {/empty}
+            </div>
+
+            <!--<div class="col-xs-12 col-sm-8 col-md-4" style="line-height: 80px">-->
+                <!--{empty name="$call_listfiles_arr"}-->
+                <!--<p style="margin-top: 8%"><strong>{:__('通话清单')}：</strong><span class="text-info">暂无</span></p>-->
+
+                <!--{else /}-->
+
+                <!--{foreach $call_listfiles_arr as $k => $v}-->
+                <!--<a href="{$v}" target="_blank">-->
+                    <!--<button type="button" class="btn btn-info">查看通话清单</button>-->
+                <!--</a> {/foreach}-->
+                <!--{/empty}-->
+            <!--</div>-->
+
+        </div>
+        <hr>
+        <!--<div class="form-group">-->
+
+            <!--<div class="col-xs-12 col-sm-8 col-md-4">-->
+                <!--<strong>{:__('保证金收据')}：</strong>-->
+                <!--{empty name="$new_car_marginimages"}-->
+                <!--<span class="text-info">暂无{:__('保证金收据')}</span>-->
+                <!--{else /} {foreach $new_car_marginimages as $k => $v}-->
+                <!--<a href="{$cdn}{$v}" target="_blank">-->
+                    <!--<img src="{$cdn}{$v}" alt="{:__('保证金收据')}" style="width:80px;height:80px;">-->
+                <!--</a> {/foreach} {/empty}-->
+
+            <!--</div> -->
+        <!--</div>-->
+    </div>
+    <input type="hidden" name="hidden1" id="hidden1" value="{$row.id}" />
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="button" class="btn btn-success btn-embossed" id="new_pass">{:__('审核通过')}</button>
+            <button type="button" class="btn btn-default btn-embossed" id="new_data">{:__('需提供担保人')}</button>
+            <button type="button" class="btn btn-danger btn-embossed" id="new_nopass">{:__('审核不通过')}</button>
+            <button type="button" class="btn btn-warning btn-embossed" id="new_information">{:__('补录资料')}</button>
+        </div>
+    </div>
+
+</form>
+<script>
+    image_preview($("img"));
+    var id = $('#hidden1').val();
+    $('#new_pass').on('click',function () {
+        var confirm = layer.confirm(
+            __('确定通过征信审核吗?'),
+            {icon: 3, title: __('Warning'), shadeClose: true},
+            function (index) {
+
+                Fast.api.ajax({
+                    url: 'riskcontrol/creditreview/newpass',
+                    data: {id: JSON.stringify(id)}
+                }, function (data, ret) {
+                    parent.$('#toolbar1 .btn-refresh', parent.document).trigger('click')
+                    Layer.close(confirm);
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index);
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+                    return false;
+                });
+
+            }
+        );
+    })
+    $('#new_data').on('click',function () {
+    var confirm = Layer.confirm(
+        __('是否需要提供担保人吗?'),
+        {icon: 3, title: __('Warning'), shadeClose: true},
+        function (index) {
+
+            Fast.api.ajax({
+                url: 'riskcontrol/creditreview/newdata',
+                data: {id: JSON.stringify(id)}
+            }, function (data, ret) {
+
+                Toastr.success("成功");
+                parent.$('#toolbar1 .btn-refresh', parent.document).trigger('click')
+
+                Layer.close(confirm);
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index);
+                return false;
+            }, function (data, ret) {
+                //失败的回调
+
+                return false;
+            });
+
+
+        }
+    );
+    })
+    $('#new_nopass').on('click',function () {
+        var confirm = Layer.confirm(
+            __('确定不通过征信审核吗?'),
+            {icon: 3, title: __('Warning'), shadeClose: true},
+
+            function (index) {
+
+                Fast.api.ajax({
+                    url: 'riskcontrol/creditreview/newnopass',
+                    data: {id: JSON.stringify(id)}
+                }, function (data, ret) {
+                    parent.$('#toolbar1 .btn-refresh', parent.document).trigger('click')
+                    Layer.close(confirm);
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index);
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+                    return false;
+                });
+
+
+            }
+        );
+    })
+    $('#new_information').on('click',function () {
+        var prompt = Layer.prompt(
+            {title: '输入需要补录的资料，并确认', shadeClose: true},
+
+            function (text, index) {
+                // console.log(text);
+                Fast.api.ajax({
+                    url: 'riskcontrol/creditreview/newinformation',
+                    data: {id: JSON.stringify(id), text: text}
+                }, function (data, ret) {
+
+                    parent.$('#toolbar1 .btn-refresh', parent.document).trigger('click')
+
+                    Layer.close(prompt);
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index);
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+
+                    return false;
+                });
+
+
+            }
+        );
+    })
+</script>

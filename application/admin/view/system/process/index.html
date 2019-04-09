@@ -1,0 +1,201 @@
+
+<div class="panel panel-default panel-intro">
+
+    <!-- <div class="panel-heading">
+        {:build_heading(null, false)}
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#new" data-toggle="tab">{:__('以租代购（新车）签单流程')}</a></li>
+            <li><a href="#rental" data-toggle="tab">{:__('纯租签单流程')}</a></li>
+            <li><a href="#second" data-toggle="tab">{:__('已租代购（二手车）签单流程')}</a></li>
+            <li><a href="#full" data-toggle="tab">{:__('全款签单流程')}</a></li>
+        </ul>
+    </div> -->
+     <!--流程内容-->
+     <!-- <div class="panel panel-default process-body" >
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="process-title">推广部</span>
+                <p>
+                <ul>
+                    <li>
+                        推广平台列管理 : 表格列展示的数据为在进行投放的推广平台名称 <i class="fa fa-hand-o-right"></i>可 添加/编辑
+                    </li>
+                    <li>
+                        客户池 ：表格列展示从各推广平台所获取到的客户资源
+                        <i class="fa fa-hand-o-right text-blue"></i>
+                        添加（选择客户来源平台，填写姓名、电话即可）
+                        <i class="fa fa-hand-o-right text-blue"></i>
+                        删除（从系统删除客户信息）
+                        <i class="fa fa-hand-o-right text-blue"></i>
+                        分配/批量分配（将客户分配到对应的部门内勤人员）
+                        <i class="fa fa-hand-o-right text-blue"></i>
+                        导入客户（若无导入模板，请先下载导入模板，按照正确 的格式录入客户信息）
+                    </li>
+                </ul>
+
+            </h2>
+        </div>
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="process-title">内勤</span>
+                <p></p>
+                <ul>
+                    <li>
+                        客户信息 ：表格列展示的数据为推广部门人员分配过来的客户信息
+                        <i class="fa fa-hand-o-right text-blue"></i>
+                        分配/批量分配客户 （选择各部门下的销售人员，进行分配客户）
+                    </li>
+                    <li>
+                        定金管理 ：表格列展示的数据为当前自己部门销售签单客户收取的定金常用统计记录
+                    </li>
+                    <li>
+                        订车列表 ：表格列展示的数据为当前自己部门销售签单收取的客户定金，（包括新车、二手车、全款车），租车并没有记录在此列表里
+                        <i class="fa fa-hand-o-right text-blue"></i>
+                        录入实际订车金额（需录入当前部门销售所签约的客户实际交付的定金金额）
+                    </li>
+                </ul>
+            </h2>
+        </div>
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="process-title">销售管理</span>
+                <p></p>
+                <ul>
+                    <li>
+                        订单列表 ：请点击上方的 以租代购（新车）、租车、以租代购（二手车）、全款 按钮进行对应的操作/查看
+                        <p>延伸操作</p>
+                        <hr>
+                       
+                        <div id="newechart" style="height: 200px"></div>
+                          
+                        </div>
+                        <p>
+                            <b class="text-success "> <u>以租代购（新车）签单流程：</u></b>
+                        </p>
+                        <p>
+                            <buttton class="btn btn-info btn-xs"><i class=" fa fa-plus"></i>新增销售单</buttton>
+                            （选择方案，填写/上传客户基本资料），开始生成订车单
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <buttton class="btn btn-info btn-xs"><i class=" fa fa-share"></i>提交到内勤</buttton>
+                            （用于记录实收定金金额）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="btn-primary btn-one">内勤正在处理</span>（内勤还未录入实收定金金额，录入后会自动提交到车管处）
+
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="btn-primary btn-one">车管正在处理</span>（汇总/收集各部门内勤提交过来的订车数据，然后提交到财务产品经理处匹配金融）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="btn-primary btn-one">正在匹配金融</span>（产品方案经理正在对该客户购买的车型匹配对应的金融平台,待匹配完成后，自动提交到风控审核）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="btn-primary btn-one">风控正在审核</span>（风控人员正在对客户资料进行征信审核，审核结果为三种状态【通过、不通过、需交保证金】）
+
+                        </p>
+                        <p>
+
+                            <i class="fa fa-check-circle text-info "></i>
+                            <span class="text-info"> 征信已通过，车管正在备车中</span>（车管开始准备车辆）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="text-success"><i class="fa fa-automobile"></i>已提车</span>
+
+                        </p>
+                        <p>
+                            <i class="fa fa-times"></i> <u class="text-danger"> 征信未通过，订单已关闭</u>
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            该条订单已关闭，不可进行任何操作
+                        </p>
+                        <p>
+                            <button class="btn btn-warning btn-xs"><i class="fa fa-upload "></i> 需交保证金</button>
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            需上传保证金收据（上传后自动重新提交到风控审核）
+                        </p>
+                        <hr>
+                        <p>
+                            <b class="text-success "> <u>纯租签单流程：</u></b>
+                        </p>
+                        <p>
+                            <button class="btn btn-info btn-add btn-xs"><i class="fa fa-plus"></i>租车预定</button>
+                            （选择可出租的车辆进行预定，填写客户姓名、电话，实收定金金额、上传定金收据）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="btn-primary btn-one">车管正在处理中</span>（车管人员正在确人你的租车请求）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <button class="btn btn-info btn-xs"><i class="fa fa-share"></i>开始提车</button>
+                            （车管已同意你的租车请求，上传客户资料准备提车流程）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <button class="btn btn-info btn-xs"><i class="fa fa-share"></i>提交审核</button>
+                            （已录入完客户基本资料，开始提交资料到风控处审核）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="btn-primary btn-one">风控正在处理中</span>（已提交资料到风控处，风控人员正在进行征信审核）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            【
+                            <span class="text-info"> <i class="fa-check-circle"></i>征信已通过，待提车</span>（征信已通过，等待车管人员确定是否提车）
+                            ||
+                            <i class="fa fa-times"></i> <u class="text-danger"> 征信未通过，订单已关闭</u>
+                            】
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="text-success"><i class="fa fa-automobile"></i>已提车</span>（车管人员已确定客户提车）
+                        </p>
+                        <hr>
+                        <p>
+                            <b class="text-success "> <u>已租代购（二手车）签单流程：</u></b>
+                            （请参考以租代购 新车 流程）
+                        </p>
+                        <hr>
+                        <p>
+                            <b class="text-success "> <u>全款 签单流程：</u></b>
+
+                        </p>
+                        <p>
+                            <button class="btn btn-info btn-add btn-xs"><i class="fa fa-plus"></i>新增全款单</button>
+                            （选择对应的方案并填写/上传 客户基本资料 ）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <buttton class="btn btn-info btn-xs"><i class=" fa fa-share"></i>提交到内勤</buttton>
+                            （用于记录实收定金金额）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="btn-primary btn-one">内勤正在处理</span>（内勤还未录入实收定金金额，录入后会自动提交到车管处开始准备订车）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="text-info"><i class="fa fa-check-circle"></i>车管正在备车中</span>（车管正在处理订车手续，客户准备提车）
+                            <i class="fa fa-hand-o-right text-blue"></i>
+                            <span class="text-success"><i class="fa fa-automobile"></i>已提车</span>（车管人员已确定客户提车）
+                        </p>
+                    </li>
+
+                </ul>
+            </h2>
+        </div>
+    </div> -->
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="new">
+               
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="newechart" style="height:300px;width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade active in" id="rental">
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="rentalechart" style="height:200px;width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade active in" id="second">
+               
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="secondechart" style="height:200px;width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade active in" id="full">
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="fullechart" style="height:200px;width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

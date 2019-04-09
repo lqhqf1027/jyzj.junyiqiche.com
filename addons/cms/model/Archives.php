@@ -2,7 +2,7 @@
 
 namespace addons\cms\model;
 
-use think\Cache;
+use InvalidArgumentException;
 use think\Db;
 use think\Model;
 
@@ -62,49 +62,6 @@ class Archives Extends Model
     {
         $value = $value ? $value : self::$config['default_archives_img'];
         return cdnurl($value, true);
-    }
-
-    public function getContentAttr($value, $data)
-    {
-        //如果内容中包含有付费标签
-        $value = str_replace(['##paidbegin##', '##paidend##'], ['<paid>', '</paid>'], $value);
-        $pattern = '/<paid>(.*?)<\/paid>/is';
-        if (preg_match($pattern, $value) && !$this->getAttr('ispay')) {
-            $payurl = addon_url('cms/order/submit', ['id' => $data['id']]);
-            $value = preg_replace($pattern, "<div class='alert alert-warning alert-paid'><a href='{$payurl}' target='_blank'>内容已经隐藏，点击付费后查看</a></div>", $value);
-        }
-        return $value;
-    }
-
-    /**
-     * 获取金额
-     */
-    public function getPriceAttr($value, &$data)
-    {
-        if (isset($data['price'])) {
-            return $data['price'];
-        }
-        $price = 0;
-        if (isset($data['model_id'])) {
-            $model = Modelx::get($data['model_id']);
-            if ($model && in_array('price', $model['fields'])) {
-                $price = \think\Db::name($model['table'])->where('id', $data['id'])->value('price');
-            }
-        }
-        $data['price'] = $price;
-        return $price;
-    }
-
-    /**
-     * 判断是否支付
-     */
-    public function getIspayAttr($value, &$data)
-    {
-        if (isset($data['ispay'])) {
-            return $data['ispay'];
-        }
-        $data['ispay'] = Order::checkOrder($data['id']);
-        return $data['ispay'];
     }
 
     public function getTagslistAttr($value, $data)
@@ -215,7 +172,7 @@ class Archives Extends Model
             if ($channel) {
                 //如果channel设置了多个值则只取第一个作为判断
                 $channelArr = explode(',', $channel);
-                $channelinfo = Channel::get($channelArr[0], [], true);
+                $channelinfo = Channel::get($channelArr[0]);
                 $model = $channelinfo ? $channelinfo['model_id'] : $model;
             }
             // 查询相关联的模型信息
@@ -348,23 +305,6 @@ class Archives Extends Model
         $model->order($type === 'prev' ? 'id desc' : 'id asc');
         $row = $model->find();
         return $row;
-    }
-
-    /**
-     * 获取SQL查询结果
-     */
-    public static function getQueryList($tag)
-    {
-        $sql = isset($tag['sql']) ? $tag['sql'] : '';
-        $bind = isset($tag['bind']) ? $tag['bind'] : [];
-        $cache = !isset($tag['cache']) ? true : (int)$tag['cache'];
-        $name = md5("sql-" . $tag['sql']);
-        $list = Cache::get($name);
-        if (!$list) {
-            $list = \think\Db::query($sql, $bind);
-            Cache::set($name, $list, $cache);
-        }
-        return $list;
     }
 
     /**

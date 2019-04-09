@@ -478,7 +478,6 @@ class Crud extends Command
             $appendAttrList = [];
             $controllerAssignList = [];
             $headingHtml = '{:build_heading()}';
-
             //循环所有字段,开始构造视图的HTML和JS信息
             foreach ($columnList as $k => $v) {
                 $field = $v['COLUMN_NAME'];

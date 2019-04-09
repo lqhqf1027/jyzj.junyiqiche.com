@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'backend', 'table', 'form','upload'], function ($, undefined, Backend, Table, Form,Upload) {
+define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
     /**
      * goeasy推送的key
@@ -37,9 +37,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','upload'], function ($
              */
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
 
-            // $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
-            //     $(this).trigger("shown.bs.tab");
-            // })
+            $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
+                $(this).trigger("shown.bs.tab");
+            })
 
         },
         /**
@@ -3739,12 +3739,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','upload'], function ($
                 Toastr.error("失败");
 
             });
-Upload.api.plupload($('.plupload'),function (ret) {
-    console.log(ret);
-})
 
 
-            Controller.api.bindevent();
+
+            // Controller.api.bindevent();
  
         },
         /**
@@ -4586,16 +4584,16 @@ Upload.api.plupload($('.plupload'),function (ret) {
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
 
-                    // if(Config.ADMIN_JS.rule_message == 'message21'){
-                    //     buttons.push({
-                    //         name: 'del',
-                    //         text: '管理员删除',
-                    //         icon: 'fa fa-trash',
-                    //         title: __('Del'),
-                    //         extend: 'data-toggle="tooltip"',
-                    //         classname: 'btn btn-xs btn-danger btn-delones'
-                    //     });
-                    // }
+                    if(Config.ADMIN_JS.rule_message == 'message21'){
+                        buttons.push({
+                            name: 'del',
+                            text: '管理员删除',
+                            icon: 'fa fa-trash',
+                            title: __('Del'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-danger btn-delones'
+                        });
+                    }
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },

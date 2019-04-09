@@ -1,0 +1,6 @@
+<view class="article" wx:if="{{ messageDetails.id }}">
+	<view class="title">{{ messageDetails.title }}</view>
+	<view class="date">发布时间 {{ messageDetails.date }}</view>
+	<rich-text nodes="{{ messageDetails.content }}" wx:if="{{ messageDetails.analysis === 1 }}"></rich-text>
+	<view class="content" wx:else>{{ messageDetails.content }}</view>
+</view>

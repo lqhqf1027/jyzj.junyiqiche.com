@@ -25,7 +25,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', sortable: true, title: __('Id')},
-                        {field: 'type', title: __('Type'), formatter: Table.api.formatter.flag, custom: {archives: 'success', page: 'info'}, searchList: Config.typeList},
+                        {field: 'type', title: __('Type'), visible: false, searchList: {"archives": __('archives'), "page": __('page')}},
+                        {field: 'type_text', title: __('Type'), operate: false},
                         {field: 'aid', sortable: true, title: __('Aid'), formatter: Table.api.formatter.search},
                         {field: 'pid', sortable: true, title: __('Pid'), formatter: Table.api.formatter.search, visible: false},
                         {field: 'user_id', sortable: true, title: __('User_id'), formatter: Table.api.formatter.search},

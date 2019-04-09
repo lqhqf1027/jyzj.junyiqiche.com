@@ -1,0 +1,59 @@
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>待提车客户&已提车客户</em></div>
+        <ul class="nav nav-tabs" >
+            <li class="active text-center"><a href="#prepare_lift_car" data-toggle="tab" style="font-weight: bold">待提车&nbsp;<small class="badge pull-right bg-red" id="badge_prepare">{$prepare_total}</small><span class="pull-right-container"></span></a></li>
+            <li><a href="#already_lift_car" data-toggle="tab" style="font-weight: bold" class="text-center" >已提车&nbsp;<small class="badge pull-right bg-red" id="badge_already">{$already_total}</small><span class="pull-right-container"></span></a></li>
+            <!--<li><a href="#new_feedback" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center"><i class="fa fa-flag-o"></i> 已反馈</a></li>-->
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <!--新客户-->
+
+            <div class="tab-pane fade active in" id="prepare_lift_car">
+                <div id="toolbar1" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>-->
+                    <!--<a class="btn btn-info   btn-disabled disabled btn-selected" href="javascript:;" ><i class="fa fa-eye"></i> {:__('Distribution')}</a>-->
+                    <!--data-params="batch"-->
+                </div>
+
+                <table id="prepareLiftCar" class="table table-striped table-bordered table-hover table-nowrap"
+                       data-operate-edit="{:$auth->check('order/salesorder/edit')}"
+                       data-operate-del="{:$auth->check('order/salesorder/del')}"
+                       width="100%">
+                </table>
+            </div>
+
+
+            <!--已分配给销售的用户-->
+
+            <div class="tab-pane fade active" id="already_lift_car">
+                <div id="toolbar2" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>-->
+                    <!--<a class="btn btn-info btn-multi btn-disabled disabled" href="javascript:;" ><i class="fa fa-eye"></i> {:__('Distribution')}</a>-->
+
+                </div>
+
+                <table id="alreadyLiftCar" class="table table-striped table-bordered table-hover table-nowrap"
+                       data-operate-edit="{:$auth->check('order/salesorder/edit')}"
+                       data-operate-del="{:$auth->check('order/salesorder/del')}"
+                       width="100%">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{php}
+//dump($already_total);
+{/php}

@@ -2,8 +2,6 @@
 
 namespace addons\cms\taglib;
 
-use fast\Random;
-use think\Cache;
 use think\template\TagLib;
 
 class Cms extends TagLib
@@ -20,10 +18,7 @@ class Cms extends TagLib
         'block'       => ['attr' => 'id,name', 'close' => 0],
         'config'      => ['attr' => 'name', 'close' => 0],
         'page'        => ['attr' => 'name', 'close' => 0],
-        'diyform'     => ['attr' => 'name', 'close' => 0],
         'nav'         => ['attr' => 'name,maxlevel,condition,cache', 'close' => 0],
-        'execute'     => ['attr' => 'sql', 'close' => 0],
-        'query'       => ['attr' => 'id,empty,key,mod,sql,cache', 'close' => 1],
         'prevnext'    => ['attr' => 'id,type,archives,channel', 'close' => 1],
         'blocklist'   => ['attr' => 'id,row,limit,empty,key,mod,cache,orderby,orderway,imgwidth,imgheight,condition,name', 'close' => 1],
         'commentlist' => ['attr' => 'id,row,limit,empty,key,mod,cache,orderby,orderway,condition,type,aid,pid,fragment', 'close' => 1],
@@ -44,46 +39,10 @@ class Cms extends TagLib
         $empty = isset($tag['empty']) ? $tag['empty'] : '';
         $key = !empty($tag['key']) ? $tag['key'] : 'i';
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
-
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Channel::getBreadcrumb(isset($__CHANNEL__)?$__CHANNEL__:[], isset($__ARCHIVES__)?$__ARCHIVES__:[], isset($__TAGS__)?$__TAGS__:[], isset($__PAGE__)?$__PAGE__:[]);';
+        $parse .= '$__LIST__ = \addons\cms\model\Channel::getBreadcrumb(isset($__CHANNEL__)?$__CHANNEL__:[], isset($__ARCHIVES__)?$__ARCHIVES__:[], isset($__TAGS__)?$__TAGS__:[], isset($__PAGE__)?$__PAGE__:[]);';
         $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
-        $parse .= $content;
-        $parse .= '{/volist}';
-        return $parse;
-    }
-
-    public function tagExecute($tag, $content)
-    {
-        $sql = isset($tag['sql']) ? $tag['sql'] : '';
-        $sql = addslashes($sql);
-        $parse = '<?php ';
-        $parse .= '\think\Db::execute(\'' . $sql . '\');';
-        $parse .= ' ?>';
-        return $parse;
-    }
-
-    public function tagQuery($tag, $content)
-    {
-        $id = isset($tag['id']) ? $tag['id'] : 'item';
-        $empty = isset($tag['empty']) ? $tag['empty'] : '';
-        $key = !empty($tag['key']) ? $tag['key'] : 'i';
-        $mod = isset($tag['mod']) ? $tag['mod'] : '2';
-        $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
-                $v = $this->autoBuildVar($v);
-            }
-            $v = '"' . $v . '"';
-            $params[] = '"' . $k . '"=>' . $v;
-        }
-        $var = Random::alnum(10);
-        $parse = '<?php ';
-        $parse .= '$__LIST__ = \addons\cms\model\Archives::getQueryList([' . implode(',', $params) . ']);';
-        $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= '{volist name="$__LIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
         return $parse;
@@ -94,8 +53,10 @@ class Cms extends TagLib
         $id = isset($tag['id']) ? $tag['id'] : 'prevnext';
         $type = isset($tag['type']) ? $tag['type'] : 'prev';
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['archives', 'channel'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['archives', 'channel']))
+            {
                 $v = $this->autoBuildVar($v);
                 $v = preg_match("/^\d+[0-9\,]+\d+$/i", $v) ? '"' . $v . '"' : $v;
             }
@@ -126,11 +87,6 @@ class Cms extends TagLib
         return '{$__PAGE__.' . $tag['name'] . '}';
     }
 
-    public function tagDiyform($tag)
-    {
-        return '{$__DIYFORM__.' . $tag['name'] . '}';
-    }
-
     public function tagBlock($tag)
     {
         return \addons\cms\model\Block::getBlockContent($tag);
@@ -139,18 +95,19 @@ class Cms extends TagLib
     public function tagNav($tag)
     {
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
             $params[] = '"' . $k . '"=>' . $v;
         }
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Channel::getNav(isset($__CHANNEL__)?$__CHANNEL__:[], [' . implode(',', $params) . ']);';
+        $parse .= '$__LIST__ = \addons\cms\model\Channel::getNav(isset($__CHANNEL__)?$__CHANNEL__:[], [' . implode(',', $params) . ']);';
         $parse .= ' ?>';
-        $parse .= '{$__' . $var . '__}';
+        $parse .= '{$__LIST__}';
         return $parse;
     }
 
@@ -161,18 +118,19 @@ class Cms extends TagLib
         $key = !empty($tag['key']) ? $tag['key'] : 'i';
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
             $params[] = '"' . $k . '"=>' . $v;
         }
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Block::getBlockList([' . implode(',', $params) . ']);';
+        $parse .= '$__LIST__ = \addons\cms\model\Block::getBlockList([' . implode(',', $params) . ']);';
         $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= '{volist name="$__LIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
         return $parse;
@@ -190,18 +148,19 @@ class Cms extends TagLib
         $key = !empty($tag['key']) ? $tag['key'] : 'i';
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
             $params[] = '"' . $k . '"=>' . $v;
         }
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Archives::getPageFilter($__FILTERLIST__, [' . implode(',', $params) . ']);';
+        $parse .= '$__LIST__ = \addons\cms\model\Archives::getPageFilter($__FILTERLIST__, [' . implode(',', $params) . ']);';
         $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= '{volist name="$__LIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
         return $parse;
@@ -214,18 +173,19 @@ class Cms extends TagLib
         $key = !empty($tag['key']) ? $tag['key'] : 'i';
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
             $params[] = '"' . $k . '"=>' . $v;
         }
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Archives::getPageOrder($__ORDERLIST__, [' . implode(',', $params) . ']);';
+        $parse .= '$__LIST__ = \addons\cms\model\Archives::getPageOrder($__ORDERLIST__, [' . implode(',', $params) . ']);';
         $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= '{volist name="$__LIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
         return $parse;
@@ -239,18 +199,19 @@ class Cms extends TagLib
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
 
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
             $params[] = '"' . $k . '"=>' . $v;
         }
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Archives::getPageList($__PAGELIST__, [' . implode(',', $params) . ']);';
+        $parse .= '$__LIST__ = \addons\cms\model\Archives::getPageList($__PAGELIST__, [' . implode(',', $params) . ']);';
         $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= '{volist name="$__LIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
         return $parse;
@@ -259,8 +220,10 @@ class Cms extends TagLib
     public function tagPageinfo($tag, $content)
     {
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
@@ -282,18 +245,19 @@ class Cms extends TagLib
         $key = !empty($tag['key']) ? $tag['key'] : 'i';
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
             $params[] = '"' . $k . '"=>' . $v;
         }
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Tags::getTagsList([' . implode(',', $params) . ']);';
+        $parse .= '$__LIST__ = \addons\cms\model\Tags::getTagsList([' . implode(',', $params) . ']);';
         $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= '{volist name="$__LIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
         return $parse;
@@ -311,8 +275,10 @@ class Cms extends TagLib
         $key = !empty($tag['key']) ? $tag['key'] : 'i';
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
@@ -336,8 +302,10 @@ class Cms extends TagLib
     public function tagCommentinfo($tag, $content)
     {
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
             $v = '"' . $v . '"';
@@ -359,22 +327,26 @@ class Cms extends TagLib
         $key = !empty($tag['key']) ? $tag['key'] : 'i';
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['typeid', 'model', 'condition'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['typeid', 'model', 'condition']))
+            {
                 $v = $this->autoBuildVar($v);
             }
-            if (in_array($k, ['typeid', 'model'])) {
+            if (in_array($k, ['typeid', 'model']))
+            {
                 $v = preg_match("/^\d+[0-9\,]+\d+$/i", $v) ? '"' . $v . '"' : $v;
-            } else {
+            }
+            else
+            {
                 $v = '"' . $v . '"';
             }
             $params[] = '"' . $k . '"=>' . $v;
         }
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Channel::getChannelList([' . implode(',', $params) . ']);';
+        $parse .= '$__LIST__ = \addons\cms\model\Channel::getChannelList([' . implode(',', $params) . ']);';
         $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= '{volist name="$__LIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
         return $parse;
@@ -387,22 +359,26 @@ class Cms extends TagLib
         $key = !empty($tag['key']) ? $tag['key'] : 'i';
         $mod = isset($tag['mod']) ? $tag['mod'] : '2';
         $params = [];
-        foreach ($tag as $k => & $v) {
-            if (in_array($k, ['channel', 'model', 'condition', 'tags'])) {
+        foreach ($tag as $k => & $v)
+        {
+            if (in_array($k, ['channel', 'model', 'condition', 'tags']))
+            {
                 $v = $this->autoBuildVar($v);
             }
-            if (in_array($k, ['channel', 'model', 'tags'])) {
+            if (in_array($k, ['channel', 'model', 'tags']))
+            {
                 $v = preg_match("/^\d+[0-9\,]+\d+$/i", $v) ? '"' . $v . '"' : $v;
-            } else {
+            }
+            else
+            {
                 $v = '"' . $v . '"';
             }
             $params[] = '"' . $k . '"=>' . $v;
         }
-        $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__' . $var . '__ = \addons\cms\model\Archives::getArchivesList([' . implode(',', $params) . ']);';
+        $parse .= '$__LIST__ = \addons\cms\model\Archives::getArchivesList([' . implode(',', $params) . ']);';
         $parse .= ' ?>';
-        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= '{volist name="$__LIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
         return $parse;

@@ -25,10 +25,10 @@ class Archives extends Base
         if ($diyname && !is_numeric($diyname)) {
             $archives = ArchivesModel::getByDiyname($diyname);
         } else {
-            $id = $diyname ? $diyname : $this->request->param('id', '');
-            $archives = ArchivesModel::get($id, ['channel']);
+            $id = $diyname ? $diyname : $this->request->get('id', '');
+            $archives = ArchivesModel::get($id);
         }
-        if (!$archives || ($archives['user_id'] != $this->auth->id && $archives['status'] != 'normal') || $archives['deletetime']) {
+        if (!$archives || $archives['status'] == 'hidden' || $archives['deletetime']) {
             $this->error(__('No specified article found'));
         }
         $channel = Channel::get($archives['channel_id']);
@@ -73,7 +73,7 @@ class Archives extends Base
             $this->error(__('Operation failed'));
         }
         $archives = ArchivesModel::get($id);
-        if (!$archives || ($archives['user_id'] != $this->auth->id && $archives['status'] != 'normal') || $archives['deletetime']) {
+        if (!$archives || $archives['status'] == 'hidden') {
             $this->error(__('No specified article found'));
         }
         $archives->where('id', $id)->setInc($type === 'like' ? 'likes' : 'dislikes', 1);

@@ -1,0 +1,81 @@
+
+<style>
+    .form-control{
+        border-radius: 3px;
+    }
+</style>
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>月供管理中心</em></div>
+        <ul>
+            <li>此列表的月供数据由财务部出纳专员导入分配过来。</li>
+            <p></p>
+            <li>批量发送短信时，如需要全部发送请先把屏幕下方的每页显示“条数”记录改为 All ,在选择批量发送短信按钮-》选中本页XXX条。。。。</li>
+            <p></p>
+            <li>
+                客户电话有两个及以上的，默认只选择发送从左往右第一个号码。
+            </li>
+        </ul>
+        <ul class="nav nav-tabs" >
+            <li class="active text-center"><a href="#newcar_monthly" data-toggle="tab">扣款失败客户&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="newcar_monthly_badge"> {$has_total}</small></span></a></li>
+
+            <!--<li class="active text-center"><a href="#newcar_monthly" data-toggle="tab">已租代购月供&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_newcar_audit"></small></span></a></li>-->
+            <!--<li><a href="#secondhandcar_monthly" data-toggle="tab" class="text-center" > 二手车月供 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_rental_audit">{</small></span></a></li>-->
+
+            <!--<li><a href="#rentalcar_monthly" data-toggle="tab"  class="text-center" > 租车月供&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_secondhandcar_audit"></small></span></a></li>-->
+            <li class=""><a href="#deductions_succ" data-toggle="tab"  class="text-center" >扣款成功客户&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-green" id="deductions_succ_badge"> {$dedu_total}</small></span></a></li>
+
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+
+
+            <!--以租代购扣款失败客户-->
+
+            <div class="tab-pane fade active in" id="newcar_monthly" >
+                <div id="toolbar1" class="toolbar" >
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+
+
+                    <!-- <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('promote/customertabs/edit')?'':'hide'}" title="{:__('Import')}" ><i class="fa fa-upload"></i> {:__('Import')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-danger import" title="{:__('Import')}"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
+                    <!-- <a href="customertabs/download" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
+                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a> -->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('导入客户信息')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a> -->
+                    <!-- 导出新客户信息 -->
+                    <a href="javascript:;" class="btn btn-danger btn-export " title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>
+
+                </div>
+                <table id="newcarMonthly" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+            <!--扣款成功-->
+            <div class="tab-pane fade " id="deductions_succ">
+                <div id="toolbar2" class="toolbar" >
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('monthly/newcarmonthly/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
+                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('monthly/newcarmonthly/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
+
+
+
+
+                </div>
+                <table id="deductionsSucc" class="table table-striped table-bordered table-hover table-nowrap"  width="100%">
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+</script>

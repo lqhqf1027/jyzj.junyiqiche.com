@@ -2,7 +2,10 @@
 
 namespace app\admin\controller\cms;
 
+use app\admin\model\Channel;
 use app\common\controller\Backend;
+use fast\Tree;
+use think\db\Query;
 
 /**
  * Ajax
@@ -33,10 +36,9 @@ class Ajax extends Backend
         $files = [];
         $keyValue = $this->request->request("keyValue");
         if (!$keyValue) {
-            $type = $this->request->request("type");
             $name = $this->request->request("name");
             if ($name) {
-                //$files[] = ['name' => $name . '.html'];
+                $files[] = ['name' => $name . '.html'];
             }
             //设置过滤方法
             $this->request->filter(['strip_tags']);
@@ -46,11 +48,6 @@ class Ajax extends Backend
             while (false !== ($filename = readdir($dh))) {
                 if ($filename == '.' || $filename == '..')
                     continue;
-                if ($type) {
-                    if (!preg_match("/^{$type}(.*)/i", $filename)) {
-                        continue;
-                    }
-                }
                 $files[] = ['name' => $filename];
             }
         } else {

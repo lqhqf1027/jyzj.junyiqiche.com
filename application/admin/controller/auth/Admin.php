@@ -7,7 +7,8 @@ use app\admin\model\AuthGroupAccess;
 use app\common\controller\Backend;
 use fast\Random;
 use fast\Tree;
-
+use app\common\model\Config as ConfigModel;
+use think\Exception;
 /**
  * 管理员管理
  *
@@ -60,9 +61,93 @@ class Admin extends Backend
             }
             $groupdata = $result;
         }
+        //系统配置查询
+        $siteList = [];
+        $groupList = ConfigModel::getGroupList();
+        $messageModel = model('Config');
+        foreach ($groupList as $k => $v) {
+            $siteList[$k]['name'] = $k;
+            $siteList[$k]['title'] = $v;
+            $siteList[$k]['list'] = [];
+        }
 
+        foreach ($messageModel->all() as $k => $v) {
+            if (!isset($siteList[$v['group']])) {
+                continue;
+            }
+            $value = $v->toArray();
+           
+            $value['title'] = __($value['title']);
+            if (in_array($value['type'], ['select', 'selects', 'checkbox', 'radio'])) {
+                $value['value'] = explode(',', $value['value']);
+            }
+            $value['content'] = json_decode($value['content'], TRUE);
+            $siteList[$v['group']]['list'][] = $value;
+          
+
+            // $siteList['message']['list']['value'] = json_decode($siteList['message']['list']['value'],TRUE);
+        }
+        foreach($siteList['message']['list'] as $k => $v){
+            $siteList['message']['list'][$k]['value']=json_decode($v['value'],TRUE);
+        }
+       
+     
+        $this->view->assign('siteList', $siteList['message']['list'][0]['value']);
+
+      
+        $this->assignconfig("siteList", $siteList['message']['list']);
+
+        // dump($groupdata);
         $this->view->assign('groupdata', $groupdata);
         $this->assignconfig("admin", ['id' => $this->auth->id]);
+        $this->view->assign('groupdata', $groupdata);
+        $this->assignconfig("admin", ['id' => $this->auth->id]);
+
+
+
+        //组织架构列表
+        $groupList = [];
+        $disabledIds = [];
+        $authgroup = [];
+
+        $this->childrenGroupIds = $this->auth->getChildrenGroupIds(true);
+
+        $group_all = collection(AuthGroup::where('id', 'in', $this->childrenGroupIds)->select())->toArray();
+        // pr($group_all);
+        // die;
+        foreach ($group_all as $k => $v) {
+
+            $state = ['opened' => true];
+
+            $disabledIds[] = $v['id'];
+            
+            if ($v['pid'] == 0) {
+                $groupList[] = [
+                    'id'     => $v['id'],
+                    'parent' => '#',
+                    'text'   => __($v['name']),
+                    'state'  => $state
+                ];
+            }
+            
+            foreach ($group_all as $key => $value) {
+                
+                if ($v['id'] == $value['pid']) {
+                    $groupList[] = [
+                        'id'     => $value['id'],
+                        'parent' => $v['id'],
+                        'text'   => __($value['name']),
+                        'state'  => $state
+                    ];
+                }
+                   
+            }
+            
+        }
+        // pr($groupList);
+        // die;
+        $this->assignconfig('groupList', $groupList);
+
     }
 
     /**
@@ -128,6 +213,7 @@ class Admin extends Backend
      */
     public function add()
     {
+        $this->model = model('Admin');
         if ($this->request->isPost())
         {
             $params = $this->request->post("row/a");
@@ -136,20 +222,26 @@ class Admin extends Backend
                 $params['salt'] = Random::alnum();
                 $params['password'] = md5(md5($params['password']) . $params['salt']);
                 $params['avatar'] = '/assets/img/avatar.png'; //设置新管理员默认头像。
+
                 $result = $this->model->validate('Admin.add')->save($params);
                 if ($result === false)
                 {
                     $this->error($this->model->getError());
                 }
-                $group = $this->request->post("group/a");
 
+                $group = $this->request->post("group/a");
+                
                 //过滤不允许的组别,避免越权
                 $group = array_intersect($this->childrenGroupIds, $group);
+               
                 $dataset = [];
                 foreach ($group as $value)
                 {
                     $dataset[] = ['uid' => $this->model->id, 'group_id' => $value];
+                    $this->model->where('id', $this->model->id)->setField('group_id', $value);
                 }
+
+                
                 model('AuthGroupAccess')->saveAll($dataset);
                 $this->success();
             }
@@ -186,7 +278,8 @@ class Admin extends Backend
                     'username' => 'require|max:50|unique:admin,username,' . $row->id,
                     'email'    => 'require|email|unique:admin,email,' . $row->id
                 ]);
-                $result = $row->validate('Admin.edit')->save($params);
+                $result = $row->save($params);
+//                $result = $row->validate('Admin.edit')->save($params);
                 if ($result === false)
                 {
                     $this->error($row->getError());
@@ -204,7 +297,10 @@ class Admin extends Backend
                 foreach ($group as $value)
                 {
                     $dataset[] = ['uid' => $row->id, 'group_id' => $value];
+                    $this->model->where('id', $row->id)->setField('group_id', $value);
                 }
+
+
                 model('AuthGroupAccess')->saveAll($dataset);
                 $this->success();
             }

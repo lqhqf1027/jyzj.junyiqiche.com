@@ -2,9 +2,7 @@
 
 namespace app\admin\controller\cms;
 
-use app\admin\model\cms\Channel;
-use app\admin\model\cms\ChannelAdmin;
-use app\admin\model\cms\Modelx;
+use app\admin\model\Channel;
 use app\common\controller\Backend;
 use fast\Tree;
 use think\Db;
@@ -23,24 +21,15 @@ class Archives extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['get_channel_fields', 'check_element_available'];
-    protected $channelIds = [];
-    protected $isSuperAdmin = false;
-    protected $searchFields = 'id,title';
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\cms\Archives;
+        $this->model = model('Archives');
 
-        //是否超级管理员
-        $this->isSuperAdmin = $this->auth->isSuperAdmin();
         $channelList = [];
         $disabledIds = [];
         $all = collection(Channel::order("weigh desc,id desc")->select())->toArray();
-
-        //允许的栏目
-        $this->channelIds = $this->isSuperAdmin ? Channel::column('id') : ChannelAdmin::getAdminChanneIds();
-        $parentChannelIds = Channel::where('id', 'in', $this->channelIds)->column('parent_id');
         foreach ($all as $k => $v) {
             $state = ['opened' => true];
             if ($v['type'] != 'list') {
@@ -48,12 +37,6 @@ class Archives extends Backend
             }
             if ($v['type'] == 'link') {
                 $state['checkbox_disabled'] = true;
-            }
-            if (!$this->isSuperAdmin) {
-                if (($v['type'] != 'list' && !in_array($v['id'], $parentChannelIds)) || ($v['type'] == 'list' && !in_array($v['id'], $this->channelIds))) {
-                    unset($all[$k]);
-                    continue;
-                }
             }
             $channelList[] = [
                 'id'     => $v['id'],
@@ -70,10 +53,6 @@ class Archives extends Backend
 
         $this->view->assign("flagList", $this->model->getFlagList());
         $this->view->assign("statusList", $this->model->getStatusList());
-
-        $cms = get_addon_config('cms');
-        $this->assignconfig('cms', ['archiveseditmode' => $cms['archiveseditmode']]);
-
     }
 
     /**
@@ -90,17 +69,12 @@ class Archives extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            if (!$this->auth->isSuperAdmin()) {
-                $this->model->where('channel_id', 'in', $this->channelIds);
-            }
             $total = $this->model
                 ->with('Channel')
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
-            if (!$this->auth->isSuperAdmin()) {
-                $this->model->where('channel_id', 'in', $this->channelIds);
-            }
+
             $list = $this->model
                 ->with('Channel')
                 ->where($where)
@@ -113,7 +87,7 @@ class Archives extends Backend
             return json($result);
         }
 
-        $modelList = \app\admin\model\cms\Modelx::all();
+        $modelList = \app\admin\model\Modelx::all();
         $this->view->assign('modelList', $modelList);
         return $this->view->fetch();
     }
@@ -123,11 +97,11 @@ class Archives extends Backend
      */
     public function content($model_id = null)
     {
-        $model = \app\admin\model\cms\Modelx::get($model_id);
+        $model = \app\admin\model\Modelx::get($model_id);
         if (!$model) {
             $this->error('未找到对应模型');
         }
-        $fieldsList = \app\admin\model\cms\Fields::where('model_id', $model['id'])->where('type', '<>', 'text')->select();
+        $fieldsList = \app\admin\model\Fields::where('model_id', $model['id'])->where('type', '<>', 'text')->select();
 
         //设置过滤方法
         $this->request->filter(['strip_tags']);
@@ -143,22 +117,11 @@ class Archives extends Backend
             $table = $this->model->getTable();
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $sort = 'main.id';
-            $isSuperAdmin = $this->isSuperAdmin;
-            $channelIds = $this->channelIds;
-            $customWhere = function ($query) use ($isSuperAdmin, $channelIds, $model_id) {
-                if (!$isSuperAdmin) {
-                    $query->where('main.channel_id', 'in', $channelIds);
-                }
-                if ($model_id) {
-                    $query->where('main.model_id', $model_id);
-                }
-            };
             $total = Db::table($table)
                 ->alias('main')
                 ->join('cms_channel channel', 'channel.id=main.channel_id', 'LEFT')
                 ->join($model['table'] . ' addon', 'addon.id=main.id', 'LEFT')
                 ->field('main.id,main.channel_id,main.title,channel.name as channel_name,addon.id as aid' . ($fields ? ',' . implode(',', $fields) : ''))
-                ->where($customWhere)
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
@@ -168,7 +131,6 @@ class Archives extends Backend
                 ->join('cms_channel channel', 'channel.id=main.channel_id', 'LEFT')
                 ->join($model['table'] . ' addon', 'addon.id=main.id', 'LEFT')
                 ->field('main.id,main.channel_id,main.title,channel.name as channel_name,addon.id as aid' . ($fields ? ',' . implode(',', $fields) : ''))
-                ->where($customWhere)
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -185,8 +147,6 @@ class Archives extends Backend
         $this->view->assign('fieldsList', $fieldsList);
         $this->view->assign('model', $model);
         $this->assignconfig('model_id', $model_id);
-        $modelList = \app\admin\model\cms\Modelx::all();
-        $this->view->assign('modelList', $modelList);
         return $this->view->fetch();
     }
 
@@ -194,7 +154,6 @@ class Archives extends Backend
      * 编辑
      *
      * @param mixed $ids
-     * @return string
      */
     public function edit($ids = NULL)
     {
@@ -207,9 +166,6 @@ class Archives extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-        if (!$this->isSuperAdmin && !in_array($row['channel_id'], $this->channelIds)) {
-            $this->error(__('You have no permission'));
-        }
         if ($this->request->isPost()) {
             return parent::edit($ids);
         }
@@ -217,7 +173,7 @@ class Archives extends Backend
         if (!$channel) {
             $this->error(__('No specified channel found'));
         }
-        $model = \app\admin\model\cms\Modelx::get($channel['model_id']);
+        $model = \app\admin\model\Modelx::get($channel['model_id']);
         if (!$model) {
             $this->error(__('No specified model found'));
         }
@@ -226,7 +182,6 @@ class Archives extends Backend
             $row = array_merge($row->toArray(), $addon);
         }
 
-        $disabledIds = [];
         $all = collection(Channel::order("weigh desc,id desc")->select())->toArray();
         foreach ($all as $k => $v) {
             if ($v['type'] != 'list' || $v['model_id'] != $channel['model_id']) {
@@ -246,29 +201,10 @@ class Archives extends Backend
      */
     public function del($ids = "")
     {
-        \app\admin\model\cms\Archives::event('after_delete', function ($row) {
+        \app\admin\model\Archives::event('after_delete', function ($row) {
             Channel::where('id', $row['channel_id'])->where('items', '>', 0)->setDec('items');
         });
-        parent::del($ids);
-    }
-
-    /**
-     * 销毁
-     * @param string $ids
-     */
-    public function destroy($ids = "")
-    {
-        \app\admin\model\cms\Archives::event('after_delete', function ($row) {
-            //删除副表
-            $channel = Channel::get($row->channel_id);
-            if ($channel) {
-                $model = Modelx::get($channel['model_id']);
-                if ($model) {
-                    db($model['table'])->where("id", $row['id'])->delete();
-                }
-            }
-        });
-        parent::destroy($ids);
+        return parent::del($ids);
     }
 
     /**
@@ -302,7 +238,6 @@ class Archives extends Backend
 
     /**
      * 移动
-     * @param string $ids
      */
     public function move($ids = "")
     {
@@ -316,7 +251,7 @@ class Archives extends Backend
             $this->model->where($pk, 'in', $ids);
             $channel = Channel::get($channel_id);
             if ($channel && $channel['type'] === 'list') {
-                $channelNums = \app\admin\model\cms\Archives::
+                $channelNums = \app\admin\model\Archives::
                 with('channel')
                     ->where('archives.' . $pk, 'in', $ids)
                     ->where('channel_id', '<>', $channel['id'])
@@ -364,12 +299,11 @@ class Archives extends Backend
                 $values = db($channel['model']['table'])->where('id', $archives_id)->find();
             }
 
-            $fields = \app\admin\model\cms\Fields::where('model_id', $channel['model_id'])
+            $fields = \app\admin\model\Fields::where('model_id', $channel['model_id'])
                 ->order('weigh desc,id desc')
                 ->select();
             foreach ($fields as $k => $v) {
-                //优先取编辑的值,再次取默认值
-                $v->value = isset($values[$v['name']]) ? $values[$v['name']] : (is_null($v['defaultvalue']) ? '' : $v['defaultvalue']);
+                $v->value = isset($values[$v['name']]) ? $values[$v['name']] : '';
                 $v->rule = str_replace(',', '; ', $v->rule);
                 if (in_array($v->type, ['checkbox', 'lists', 'images'])) {
                     $checked = '';

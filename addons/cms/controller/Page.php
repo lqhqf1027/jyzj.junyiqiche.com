@@ -19,10 +19,10 @@ class Page extends Base
         if ($diyname && !is_numeric($diyname)) {
             $page = PageModel::getByDiyname($diyname);
         } else {
-            $id = $diyname ? $diyname : $this->request->param('id', '');
+            $id = $diyname ? $diyname : $this->request->get('id', '');
             $page = PageModel::get($id);
         }
-        if (!$page || $page['status'] != 'normal') {
+        if (!$page || $page['status'] == 'hidden') {
             $this->error(__('No specified page found'));
         }
         $this->view->assign("__PAGE__", $page);

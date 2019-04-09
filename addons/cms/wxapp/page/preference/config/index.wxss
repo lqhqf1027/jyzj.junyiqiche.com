@@ -1,0 +1,19 @@
+/* page/preference/config/index.wxss */
+
+.title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 30rpx;
+    padding-left: 26rpx;
+}
+
+.title:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6rpx;
+    height: 100%;
+    background-color: #3f51b5;
+}

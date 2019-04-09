@@ -1,0 +1,350 @@
+<style>
+    .change {
+        border: 2px solid red;
+    }
+    .imgBorder{
+        width:80px;height:80px;border-radius: 5px;
+    }
+</style>
+
+<h3>
+    <center>
+        <span style="float: left;font-size: medium"><strong>{:__('订单编号')}：</strong> {$row.order_no}</span>
+        <h2><span style="margin-left: -20%">资料详情</span></h2> <span
+            style="float: right;margin-top: -35px;font-size: medium"><strong>{:__('提车日期')}：</strong>  {empty name="$row.delivery_datetime"} <span class="text-info">暂无</span>{else /}{$row.delivery_datetime|date="Y-m-d",###}{/empty}</span>
+        <span style="float: right;margin-top: -35px;margin-right: 15%;font-size: medium"><strong>{:__('订车日期')}：</strong>  {empty name="$row.createtime"} <span class="text-info">暂无</span>{else /}{$row.createtime|date="Y-m-d",###}{/empty}</span>
+    </center>
+</h3>
+<div class="container-fulid" style="background-color: #ddd">
+    <br>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-offset-3 col-md-6">
+            <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('销售员')}：</strong> {$row.sales_name|default="<span class='text-info'>暂无</span>"}
+        </div>
+    </div>
+    <br>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('姓名')}：</strong>
+            {:__($row.username)}
+            {eq name="$row.genderdata" value="male"}
+            <span class="fa fa-male text-info"></span>
+            {else /}
+            <span class="fa fa-female" style="color:palevioletred"></span>
+            {/eq}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('联系电话')}：</strong> {$row.phone|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('身份证号')}：</strong> {$row.id_card|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('车辆总价（元）')}：</strong> {empty name="$row.totalprices"}<span class='text-info'>暂无</span>{else /}{$row.totalprices}{/empty}
+        </div>
+
+    </div>
+    <hr>
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('车牌号')}：</strong>{$row.licenseplatenumber|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('发动机号')}：</strong> {$row.engine_number|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('车架号')}：</strong> {$row.vin|default="<span class='text-info'>暂无</span>"}
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('所属公司')}：</strong> {$row.companyaccount|default="<span class='text-info'>暂无</span>"}
+        </div>
+
+
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8  col-md-12 text-center">
+            <h3 class="text-info">日期信息</h3>
+
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('保险到期时间')}：</strong>{$row.expirydate|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('年审到期时间')}：</strong>{$row.annualverificationdate|default="<span class='text-info'>暂无</span>"}
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('公里数')}：</strong> {$row.kilometres|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('车辆颜色')}：</strong> {$row.carcolor|default="<span class='text-info'>暂无</span>"}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('放款时间')}：</strong>{$row.lending_date|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('扣款卡号')}：</strong>{$row.bank_card|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('开票金额（元）')}：</strong>{$row.invoice_monney|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('登记编码')}：</strong>{$row.registration_code|default="<span class='text-info'>暂无</span>"}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('购置税（元）')}：</strong>{$row.tax|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('商业险（元）')}：</strong>{$row.business_risks|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('交强险（元）')}：</strong>{$row.insurance|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('抵押类型(元)')}：</strong>{$row.mortgage_type|default="<span class='text-info'>暂无</span>"}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-12 text-center">
+            <h3  class="text-info">客户相关信息</h3>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('客户来源')}：</strong> {eq name="$row.customer_source" value="direct_the_guest"}直客{else/}转介绍{/eq}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong >{:__('介绍人姓名')}：</strong> {empty name="$row.turn_to_introduce_name"} <span class="text-info">暂无</span>{else/}{$row.turn_to_introduce_name|default="<span class='text-info'>暂无</span>"}{/empty}
+
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong >{:__('介绍人电话')}：</strong>{empty name="$row.turn_to_introduce_phone"} <span class="text-info">暂无</span>{else /}{$row.turn_to_introduce_phone|default="<span class='text-info'>暂无</span>"}{/empty}
+
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong >{:__('介绍人身份证')}：</strong>{empty name="$row.turn_to_introduce_card"} <span class="text-info">暂无</span>{else /}{$row.turn_to_introduce_card|default="<span class='text-info'>暂无</span>"}{/empty}
+
+        </div>
+        
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('地址')}：</strong>{$row.city}/{$row.detailed_address|default="<span class='text-info'>暂无</span>"}
+        </div>
+
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-12 text-center">
+            <h3  class="text-info">个人相关图片</h3>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$id_cardimages|default=''"}
+            <p style="margin-top: 8%"><strong>{:__('身份证正反面(多图)')}：</strong><span class="text-info">暂无</span></p>
+
+            {else /}
+            <strong class="imgClickTitle">{:__('身份证正反面(多图)')}：</strong>
+            {foreach $id_cardimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="身份证正反面" class="imgBorder">
+            {/foreach}
+            {/empty}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$drivers_licenseimages"}
+            <p style="margin-top: 8%"><strong>{:__('驾照正副页(多图)')}：</strong><span class="text-info">暂无</span></p>
+
+            {else /}
+            <strong class="imgClickTitle">{:__('驾照正副页(多图)')}：</strong>
+            {foreach $drivers_licenseimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="驾照正副页" class="imgBorder">
+            {/foreach}
+            {/empty}
+
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$bank_cardimages"}
+            <p style="margin-top: 8%"><strong>{:__('银行卡照(多图)')}：</strong><span class="text-info">暂无</span></p>
+            {else /}
+            <strong class="imgClickTitle">{:__('银行卡照(多图)')}：</strong>
+            {foreach $bank_cardimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="银行卡照" class="imgBorder">
+            {/foreach}
+            {/empty}
+        </div>
+    </div>
+    <hr>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$drivinglicenseimages"}
+            <p style="margin-top: 8%"><strong>{:__('行驶证照(多图)')}：</strong><span class="text-info">暂无</span></p>
+
+            {else /}
+            <strong class="imgClickTitle">{:__('行驶证照(多图)')}：</strong>
+            {foreach $drivinglicenseimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="行驶证照(多图)" class="imgBorder">
+            {/foreach}
+            {/empty}
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$application_formimages"}
+            <p style="margin-top: 8%"><strong>{:__('申请表(多图)')}：</strong><span class="text-info">暂无</span></p>
+
+            {else /}
+            <strong class="imgClickTitle">{:__('申请表(多图)')}：</strong>
+            {foreach $application_formimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="申请表(多图)" class="imgBorder">
+            {/foreach}
+            {/empty}
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4" id="clear-div">
+
+            {empty name="$call_listfiles"}
+            <strong>{:__('通话清单')}：</strong><span class="text-info">暂无</span>
+
+            {else /}
+            <strong>{:__('通话清单')}：</strong>
+            {foreach $call_listfiles as $k => $v}
+            <a href="{$cdnurl}{$v}" target="_blank">
+                {$cdnurl}{$v}
+            </a>
+            {/foreach}
+            {/empty}
+        </div>
+        
+    </div>
+    <hr>
+</div>
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST"
+      action="{:url('admin/Imagedownload/pack')}">
+
+    <input type="hidden" id="hid" name="all">
+    <input type="hidden" id="font" name="all_font">
+    <input type="hidden" id="username" name="username" value="{$row.username} - {$row.phone} - {$row.models_name}">
+    <div class="row layer-footer">
+        <label class="control-label col-xs-12 col-sm-5"></label>
+
+        <div class="col-xs-12 col-sm-5">
+            <button class="btn btn-success btn-embossed disabled">{:__('下载图片')}</button>（请点击图片标题选中下载），键盘上下左右键可上/下张、顺/逆旋转
+
+        </div>
+    </div>
+
+</form>
+
+
+<script>
+    image_preview($("img"));
+    $(function () {
+        var imgClickTitle = $('.imgClickTitle'),btn = $('.btn-embossed'),count_s = 0;
+        imgClickTitle.css({'cursor':'pointer'})
+        if(imgClickTitle.find('span').length==0){
+            $(document).delegate('.imgClickTitle','click',function (e) {
+                window.event? window.event.cancelBubble = true : e.stopPropagation();//阻止事件冒泡
+                var that  = $(this);
+                if (that.closest('div').find(".check-dowload").length == 0) {
+                    that.closest('div').append('<strong style="position: absolute;left: 15px;top: 60px;" class=" text-success check-dowload">已选中下载 <i class="fa fa-check"></i> </strong>');
+                    count_s++
+                } else {
+                    count_s--
+                    that.closest('div').find(".check-dowload").remove();
+                }
+                count_s == 0?btn.addClass("disabled"):btn.hasClass("disabled")?btn.removeClass("disabled"):'';
+                var all_val = [];
+                var all_font = [];
+                $(".row").find(".check-dowload").each(function () {
+                    var count = 1;
+                    $(this).prevAll("img").each(function () {
+                        all_val.push($(this).attr("src"));
+                        var fonts = $.trim($(this).prevAll("strong").html());
+                        fonts = fonts.replace("：", "");
+                        //判断如果文件名重复就加括号数字区分
+                        if(all_font.indexOf(fonts)>-1){
+                            fonts = fonts+"("+count+")";
+                            count++;
+                        }
+                        all_font.push(fonts);
+                    })
+                })
+
+                $("#hid").val(all_val);
+                $("#font").val(all_font);
+            })
+        }
+
+    //判断如果是单图，直接在js下载图片
+    $(".btn-embossed").on('click', function (event) {
+
+        var selects = imgClickTitle.closest('div').find(".check-span");
+
+        if (count_s.length == 1) {
+
+            var src = count_s.prevAll("img");
+
+            if (src.length == 1) {
+                event.preventDefault();
+                download(src.attr("src"));
+            }else{
+                layer.msg('加载中', {
+                    icon: 16,
+                    shade: 0.01,
+                    time: 2000
+                });
+            }
+
+
+        } else {
+            layer.msg('加载中', {
+                icon: 16,
+                shade: 0.01,
+                time: 2000
+            });
+        }
+
+    });
+
+    //浏览器单个下载图片
+    function download(src) {
+        var $a = document.createElement('a');
+        $a.setAttribute("href", src);
+        $a.setAttribute("download", "");
+
+
+        var evObj = document.createEvent('MouseEvents');
+        evObj.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, true, true, true, true, 0, null);
+        $a.dispatchEvent(evObj);
+    };
+
+    })
+</script>

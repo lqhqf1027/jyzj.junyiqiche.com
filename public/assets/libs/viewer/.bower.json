@@ -1,0 +1,53 @@
+{
+  "name": "viewer",
+  "version": "0.11.1",
+  "homepage": "https://github.com/box/viewer.js",
+  "authors": [
+    "Cameron Lakenen <lakenen@box.com>",
+    "Nicholas Silva <nes@box.com>"
+  ],
+  "description": "A viewer for documents converted with the Box View API",
+  "main": [
+    "dist/crocodoc.viewer.js",
+    "dist/crocodoc.viewer.css"
+  ],
+  "keywords": [
+    "box",
+    "box",
+    "view",
+    "crocodoc",
+    "view",
+    "api",
+    "viewer",
+    "viewerjs"
+  ],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "build",
+    "node_modules",
+    "bower_components",
+    "examples",
+    "git-hooks",
+    "test",
+    "testing",
+    ".editorconfig",
+    ".gitignore",
+    ".npmignore",
+    ".jshintrc",
+    ".travis.yml",
+    "Gruntfile.js",
+    "jsdoc-conf.json",
+    "postinstall.sh"
+  ],
+  "_release": "0.11.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.11.1",
+    "commit": "7d11f2e4b01ef418aeb76efe2c2e5f08950f7c17"
+  },
+  "_source": "https://github.com/box/viewer.js.git",
+  "_target": "^0.11.1",
+  "_originalSource": "viewer",
+  "_direct": true
+}

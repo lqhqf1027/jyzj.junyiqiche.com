@@ -139,7 +139,6 @@ abstract class AbstractAPI
      * @param array  $args
      *
      * @return \EasyWeChat\Support\Collection | null
-     *
      * @throws \EasyWeChat\Core\Exceptions\HttpException
      */
     public function parseJSON($method, array $args)

@@ -1,43 +1,43 @@
 <div class="panel panel-default panel-intro">
     <div class="panel-heading">
-        <div class="panel-lead"><em>新车&二手车录入订车信息</em></div>
+        <div class="panel-lead"><em>新车&二手车车录入实际订车金额</em></div>
         <ul class="nav nav-tabs" >
-            <li class="active text-center"><a href="#newcar_entry" data-toggle="tab" style="font-weight: bold">新车录入订车信息&nbsp;<span class="pull-right-container">
+            <li class="active text-center"><a href="#newcar_entry" data-toggle="tab" style="font-weight: bold">新车录入实际订车金额&nbsp;<span class="pull-right-container">
                 {if $total eq 0}
                 {else /}
                 <small class="badge pull-right bg-red" id="badge_newcar_entry">{$total} </small>&nbsp;
                 {/if}
                 </span></a>
             </li>
-            <li><a href="#rentalcar_entry" data-toggle="tab" style="font-weight: bold" class="text-center" >租车录入订车信息&nbsp;<span class="pull-right-container">
+            <li><a href="#rentalcar_entry" data-toggle="tab" style="font-weight: bold" class="text-center" >租车录入实际订车金额&nbsp;<span class="pull-right-container">
                 {if $total1 eq 0}
                 {else /}
                 <small class="badge pull-right bg-red" id="badge_rentalcar_entry">{$total1} </small>&nbsp;
                 {/if}
                 </span></a>
             </li>
-            <li><a href="#secondcar_entry" data-toggle="tab" style="font-weight: bold" class="text-center" >二手车录入订车信息&nbsp;<span class="pull-right-container">
+            <li><a href="#secondcar_entry" data-toggle="tab" style="font-weight: bold" class="text-center" >二手车录入实际订车金额&nbsp;<span class="pull-right-container">
                 {if $total2 eq 0}
                 {else /}
                 <small class="badge pull-right bg-red" id="badge_secondcar_entry">{$total2} </small>&nbsp;
                 {/if}
                 </span></a>
             </li>
-            <li><a href="#fullcar_entry" data-toggle="tab" style="font-weight: bold">全款（新车）录入订车信息&nbsp;<span class="pull-right-container">
+            <li><a href="#fullcar_entry" data-toggle="tab" style="font-weight: bold">全款（新车）录入实际订车金额&nbsp;<span class="pull-right-container">
                 {if $total3 eq 0}
                 {else /}
                 <small class="badge pull-right bg-red" id="badge_fullcar_entry">{$total3} </small>&nbsp;
                 {/if}
                 </span></a>
             </li>
-            <li><a href="#secondfullcar_entry" data-toggle="tab" style="font-weight: bold">全款（二手车）录入订车信息&nbsp;<span class="pull-right-container">
+            <li><a href="#secondfullcar_entry" data-toggle="tab" style="font-weight: bold">全款（二手车）录入实际订车金额&nbsp;<span class="pull-right-container">
                 {if $total4 eq 0}
                 {else /}
                 <small class="badge pull-right bg-red" id="badge_secondfullcar_entry">{$total4} </small>&nbsp;
                 {/if}
                 </span></a>
             </li>
-            
+            <!--<li><a href="#new_feedback" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center"><i class="fa fa-flag-o"></i> 已反馈</a></li>-->
         </ul>
     </div>
     <div class="panel-body">
@@ -48,7 +48,12 @@
                 <div id="toolbar1" class="toolbar">
 
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    
+                    <!-- <a href="javascript:;" class="btn btn-danger btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('edit')}" ><i class="fa fa-pencil"></i> {:__('批量录入')}</a> -->
+                    <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>-->
+                    <!--<a class="btn btn-info   btn-disabled disabled btn-selected" href="javascript:;" ><i class="fa fa-eye"></i> {:__('Distribution')}</a>-->
+                    <!--data-params="batch"-->
                 </div>
 
                 <table id="newcarEntry" class="table table-striped table-bordered table-hover table-nowrap"
@@ -105,16 +110,15 @@
 
 
             <div class="tab-pane fade" id="secondfullcar_entry">
-                <div id="toolbar5" class="toolbar">
-                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                </div>
+                    <div id="toolbar5" class="toolbar">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    </div>
     
-                <table id="secondfullcarEntry" class="table table-striped table-bordered table-hover table-nowrap"
+                    <table id="secondfullcarEntry" class="table table-striped table-bordered table-hover table-nowrap"
                            
-                        width="100%">
-                </table>
-            </div>
-
+                           width="100%">
+                    </table>
+                </div>
         </div>
     </div>
 </div>

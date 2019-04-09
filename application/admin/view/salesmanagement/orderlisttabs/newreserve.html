@@ -32,18 +32,55 @@
         <center>基本资料</center>
     </h3>
     <br>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择城市')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                
+            <input id="c-city_id" data-rule="required" data-source="salesmanagement/Orderlisttabs/getCities" 
+            data-params='{"custom[pid]":"0"}' data-field="cities_name" class="form-control selectpage form-control" name="row[city_id]" 
+            
+            type="text" value="{$row.city_id}">
+        
+        </div>
+    </div>
 
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择门店')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-store_ids" data-rule="required" class="form-control selectpage" data-source="salesmanagement/Orderlisttabs/getStore"
+            data-params='{"custom[city_id]":"0"}' data-field="store_name" name="row[store_ids]"
+                   type="text" value="{$row.store_ids}">
+
+        </div>
+    </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('销售方案类别')}:</label>
         <div class="col-xs-12 col-sm-8">
 
             <input id="c-category_id" data-rule="required" class="form-control selectpage" data-source="salesmanagement/Orderlisttabs/getCategory" name="row[category_id]"
-             onchange="changePlan(this)">
+            data-params='{"custom[store_id]":"0"}' onchange="changePlan(this)">
                 
 
         </div>
     </div>
 
+    <!-- <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售方案类别')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]" onchange="changePlan(this)">
+                <option value=" " style='display: none'>未选中任何项</option>
+
+                {foreach $category as $k => $v}
+                
+                <option value="{$v['id']}">{$v['name']}</option>
+               
+                {/foreach}
+            </select>
+
+        </div>
+    </div> -->
 
     <div class="form-group" id="note" style="display: none">
         <label class="control-label col-xs-12 col-sm-2"></label>
@@ -134,11 +171,7 @@
 
                         $(this).on('click', function () {
 
-
-
                             var number = $(this).index();
-
-                            console.log(number);return;
                             $.ajax({
                                 url: 'salesmanagement/Orderlisttabs/page',
                                 type: 'post',
@@ -298,30 +331,6 @@
     </script>
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-id_cardimages"  class="form-control" size="50"
-                       name="row[id_cardimages]" type="text">
-                <div class="input-group-addon no-border no-padding">
-                    <span>
-                        <button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload"
-                                data-input-id="c-id_cardimages"
-                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
-                                data-multiple="true" data-preview-id="p-id_cardimages">
-                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
-                    </span>
-                    <span>
-
-                    </span>
-                </div>
-                <span class="msg-box n-right" for="c-id_cardimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-id_cardimages"></ul>
-        </div>
-    </div>
-
-    <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
             <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="" placeholder="必填">
@@ -361,7 +370,54 @@
 
         </div>
     </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_contractimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-deposit_contractimages"  class="form-control" size="50"
+                       name="row[deposit_contractimages]"
+                       type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-deposit_contractimages" class="btn btn-danger plupload"
+                                data-input-id="c-deposit_contractimages"
+                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true"
+                                data-preview-id="p-deposit_contractimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
 
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-deposit_contractimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-deposit_contractimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_receiptimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-deposit_receiptimages" class="form-control" size="50"
+                       name="row[deposit_receiptimages]"
+                       type="text" placeholder="必填">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-deposit_receiptimages" class="btn btn-danger plupload"
+                                data-input-id="c-deposit_receiptimages"
+                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true"
+                                data-preview-id="p-deposit_receiptimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-deposit_receiptimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-deposit_receiptimages"></ul>
+        </div>
+    </div>
     <h3>
         <center>客户来源</center>
     </h3>
@@ -482,29 +538,29 @@
         }
 
     </script>
-    <!--<div class="form-group">-->
-        <!--<label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>-->
-        <!--<div class="col-xs-12 col-sm-8">-->
-            <!--<div class="input-group">-->
-                <!--<input id="c-id_cardimages"  class="form-control" size="50"-->
-                       <!--name="row[id_cardimages]" type="text">-->
-                <!--<div class="input-group-addon no-border no-padding">-->
-                    <!--<span>-->
-                        <!--<button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload"-->
-                                <!--data-input-id="c-id_cardimages"-->
-                                <!--data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"-->
-                                <!--data-multiple="true" data-preview-id="p-id_cardimages">-->
-                            <!--<i class="fa fa-upload"></i> {:__('Upload')}</button>-->
-                    <!--</span>-->
-                    <!--<span>-->
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-id_cardimages"  class="form-control" size="50"
+                       name="row[id_cardimages]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload"
+                                data-input-id="c-id_cardimages"
+                                data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                                data-multiple="true" data-preview-id="p-id_cardimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
 
-                    <!--</span>-->
-                <!--</div>-->
-                <!--<span class="msg-box n-right" for="c-id_cardimages"></span>-->
-            <!--</div>-->
-            <!--<ul class="row list-inline plupload-preview" id="p-id_cardimages"></ul>-->
-        <!--</div>-->
-    <!--</div>-->
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-id_cardimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-id_cardimages"></ul>
+        </div>
+    </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
         <div class="col-xs-12 col-sm-8">

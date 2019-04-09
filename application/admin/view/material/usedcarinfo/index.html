@@ -1,0 +1,52 @@
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>新客户&已分配给销售客户</em></div>
+        <ul class="nav nav-tabs" >
+            <li class="active text-center"><a href="#car_purchase_info" data-toggle="tab" style="font-weight: bold">二手车按揭客户购车信息登记表&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="total-login"></small></span></a></li>
+            <li><a href="#data_warehousing" data-toggle="tab" style="font-weight: bold" class="text-center" >二手车按揭客户资料入库登记表&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="total-warehousing"></small></span></a></li>
+            <!--<li><a href="#new_feedback" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center"><i class="fa fa-flag-o"></i> 已反馈</a></li>-->
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <!--新客户-->
+
+            <div class="tab-pane fade active in" id="car_purchase_info">
+                <div id="toolbar1" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>-->
+                    <!--data-params="batch"-->
+                </div>
+
+                <table id="carPurchaseInfo" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+            <!--按揭客户资料入库登记表-->
+
+            <div class="tab-pane fade" id="data_warehousing">
+                <div id="toolbar2" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>-->
+                    <!--data-params="batch"-->
+                </div>
+
+                <table id="dataWarehousing" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

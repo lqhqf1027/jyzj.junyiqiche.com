@@ -316,7 +316,6 @@ class FormBuilder
         $value = (string)$this->getValueAttribute($name, $value);
 
         unset($options['size']);
-
         $options['class'] = isset($options['class']) ? $options['class'] . (stripos($options['class'], 'form-control') !== false ? '' : ' form-control') : 'form-control';
         $options = $this->attributes($options);
 
