@@ -15,7 +15,7 @@
         onEditableSave: function(field, row, oldValue, $el) {
             return false;
         },
-        onEditableShown: function(field, row, $el, editable) {
+        onEditableShown: function(field, row, $el, editable) {in
             return false;
         },
         onEditableHidden: function(field, row, $el, reason) {

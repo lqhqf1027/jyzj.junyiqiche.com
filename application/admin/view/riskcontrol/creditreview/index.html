@@ -1,0 +1,161 @@
+
+<style>
+    .form-control{
+        border-radius: 3px;
+    }
+</style>
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>征信审核，审核客户信息是否通过</em></div>
+
+        <!-- <div>
+            <p style="color:coral;font-weight: bold">注意事项：</p>
+            <ol>
+                <li style="color:rgb(250, 10, 10);font-weight: bold">导入客户信息时，请先下载导入模板 </li>
+                <li style="color:rgb(250, 10, 10);font-weight: bold">在下载的模板里填写所属平台时，请填写数字【2代表今日头条，3代表百度，4代表58同城】 </li>
+            </ol>
+        </div> -->
+        <ul class="nav nav-tabs" >
+            <li class="active text-center"><a href="#newcar_audit" data-toggle="tab">审核新车单 &nbsp;<span class="pull-right-container">
+                {if $total eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_newcar_audit">{$total} </small>&nbsp;
+                {/if}
+                {if $total3 eq 0}
+                {else /}
+
+                 <small class="badge pull-right bg-green" id="badge_newtakecar_audit"> {$total3}</small>
+                {/if}
+                </span></a>
+            </li>
+            <li><a href="#rentalcar_audit" data-toggle="tab" class="text-center" > 审核租车单 &nbsp;<span class="pull-right-container">
+                {if $total1 eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_rental_audit">{$total1}</small>
+                {/if}
+                {if $total4 eq 0}
+                {else /}
+                <small class="badge pull-right bg-green" id="badge_rentaltake_audit"> {$total4}</small>
+                {/if}
+                </span></a>
+            </li>
+            <li><a href="#secondhandcar_audit" data-toggle="tab"  class="text-center" > 审核二手车单 &nbsp;<span class="pull-right-container">
+                {if $total2 eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_secondhandcar_audit">{$total2}</small>
+                {/if}
+                {if $total5 eq 0}
+                {else /}
+                <small class="badge pull-right bg-green" id="badge_secondhandtakecar_audit"> {$total5}</small>
+                </span></a>
+                {/if}
+            </li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+
+
+            <!--待审核新车单-->
+            
+            <div class="tab-pane fade active in" id="newcar_audit">
+                <div id="toolbar1" class="toolbar" >
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"  ><i class="fa fa-refresh"></i> 刷新 </a>
+                  
+
+                    <!-- <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="form-control">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Button</button>
+                            </span>
+                        </div>     
+                             -->
+                            
+
+                    <!-- <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('promote/customertabs/edit')?'':'hide'}" title="{:__('Import')}" ><i class="fa fa-upload"></i> {:__('Import')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-danger import" title="{:__('Import')}"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
+                    <!-- <a href="customertabs/download" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
+                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('导入客户信息')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a> -->
+                    <!-- <a class="btn btn-info btn-disabled disabled btn-selected" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a> -->
+                    <!-- 导出新客户信息 -->
+                    <!-- <a href="javascript:;" class="btn btn-success btn-export {:$auth->check('promote/customertabs/export')?'':'hide'}" title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a> -->
+
+                </div>
+                <table id="newcarAudit" class="table table-striped table-bordered table-hover table-nowrap"
+                        
+                        width="100%">
+                </table>
+            </div>
+
+
+            <!--租车单-->
+            
+            <div class="tab-pane fade" id="rentalcar_audit">
+                <div id="toolbar2" class="toolbar">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                        <!-- <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('plan/planusedcar/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('plan/planusedcar/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>
+                        <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('plan/planusedcar/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
+                        <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('plan/planusedcar/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>
+                        <div class="dropdown btn-group {:$auth->check('plan/planusedcar/multi')?'':'hide'}">
+                            <a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> {:__('More')}</a>
+                            <ul class="dropdown-menu text-left" role="menu">
+                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="ismenu=1"><i class="fa fa-eye"></i> 批量上架</a></li>
+                            <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="ismenu=0"><i class="fa fa-eye-slash"></i> 批量下架</a></li>
+                            </ul>
+                        </div> -->
+                        
+                        <!-- 导出分配客户信息 -->
+                        <!-- <a href="javascript:;" class="btn btn-success btn-allocationexport {:$auth->check('promote/customertabs/allocationexport')?'':'hide'}" title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a> -->
+
+                </div>
+                <table id="rentalcarAudit" class="table table-striped table-bordered table-hover table-nowrap"
+                        
+                        width="100%">
+                </table>
+
+            </div>
+
+
+            <!--二手车-->
+
+            <div class="tab-pane fade" id="secondhandcar_audit">
+                    <div id="toolbar3" class="toolbar">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" id="re"><i class="fa fa-refresh"></i> </a>
+                        <!-- <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('order/secondsalesorder/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a> -->
+                        <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('order/secondsalesorder/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a> -->
+                        <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('order/secondsalesorder/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
+                        <!-- <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('order/secondsalesorder/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
+
+                        <!-- <div class="dropdown btn-group {:$auth->check('order/secondsalesorder/multi')?'':'hide'}">
+                            <a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> {:__('More')}</a>
+                            <ul class="dropdown-menu text-left" role="menu">
+                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=normal"><i class="fa fa-eye"></i> {:__('Set to normal')}</a></li>
+                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=hidden"><i class="fa fa-eye-slash"></i> {:__('Set to hidden')}</a></li>
+                            </ul>
+                        </div> -->
+                    </div>
+                    <table id="secondhandcarAudit" class="table table-striped table-bordered table-hover table-nowrap"
+                           data-operate-edit="{:$auth->check('order/secondsalesorder/edit')}" 
+                           data-operate-del="{:$auth->check('order/secondsalesorder/del')}" 
+                           width="100%">
+                    </table>
+                    
+                </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="hidden1" id="hidden1"/>
+
+<script>
+    function examine(type){
+        document.getElementById("hidden1").value=type;
+    }
+    function  reCli() {
+        $('ul.nav-tabs li.active a[data-toggle="tab"]').parents('.panel').find('#myTabContent').find('#newcar_audit .btn-refresh').click();
+    }
+</script>

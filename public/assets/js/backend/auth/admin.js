@@ -36,6 +36,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'groups_text', title: __('Group'), operate:false, formatter: Table.api.formatter.label},
                         {field: 'email', title: __('Email')},
                         {field: 'status', title: __("Status"), formatter: Table.api.formatter.status},
+                        {field: 'openid', title: __('Openid')},
+                        {field: 'rule_message', title: '所属角色',formatter:function(value, row, index){
+                            for(var i in Config.siteList[0].value){
+                               if(value==i){
+                                   return Config.siteList[0].value[i];
+                               }
+                            }
+                        }},
                         {field: 'logintime', title: __('Login time'), formatter: Table.api.formatter.datetime, operate: 'RANGE', addclass: 'datetimerange', sortable: true},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: function (value, row, index) {
                                 if(row.id == Config.admin.id){
@@ -49,6 +57,65 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
+
+            $(document).on("click", "a.btn-channel", function () {
+                $("#archivespanel").toggleClass("col-md-9", $("#channelbar").hasClass("hidden"));
+                $("#channelbar").toggleClass("hidden");
+            });
+
+            require(['jstree'], function () {
+                //全选和展开
+                $(document).on("click", "#checkall", function () {
+                    $("#channeltree").jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
+                });
+                $(document).on("click", "#expandall", function () {
+                    $("#channeltree").jstree($(this).prop("checked") ? "open_all" : "close_all");
+                });
+                $('#channeltree').on("changed.jstree", function (e, data) {
+                    console.log(data);
+                    console.log(data.selected);
+                    var options = table.bootstrapTable('getOptions');
+                    options.pageNumber = 1;
+                    options.queryParams = function (params) {
+                        params.filter = JSON.stringify(data.selected.length > 0 ? {group_id: data.selected.join(",")} : {});
+                        params.op = JSON.stringify(data.selected.length > 0 ? {group_id: 'in'} : {});
+                        return params;
+                    };
+                    table.bootstrapTable('refresh', {});
+                    return false;
+                });
+                $('#channeltree').jstree({
+                    "themes": {
+                        "stripes": true
+                    },
+                    "checkbox": {
+                        "keep_selected_style": false,
+                    },
+                    "types": {
+                        "channel": {
+                            "icon": "fa fa-th",
+                        },
+                        "list": {
+                            "icon": "fa fa-list",
+                        },
+                        "link": {
+                            "icon": "fa fa-link",
+                        },
+                        "disabled": {
+                            "check_node": false,
+                            "uncheck_node": false
+                        }
+                    },
+                    'plugins': ["types", "checkbox"],
+                    "core": {
+                        "multiple": true,
+                        'check_callback': true,
+                        "data": Config.groupList
+                    }
+                });
+            });
+
+
         },
         add: function () {
             Form.api.bindevent($("form[role=form]"));

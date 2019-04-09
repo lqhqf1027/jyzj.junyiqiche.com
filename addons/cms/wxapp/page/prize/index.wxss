@@ -1,0 +1,18 @@
+/* page/prize/index.wxss */
+
+@import '../components/wheel/wheel.wxss';
+
+image {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.circle {
+	position: absolute;
+	left: 0;
+	top: 394rpx;
+	width: 100%;
+	height: 782rpx;
+	z-index: 1;
+}

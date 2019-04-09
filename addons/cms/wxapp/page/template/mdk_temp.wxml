@@ -1,0 +1,12 @@
+
+
+<view class='div {{isshow}}' style='{{inviteimage}}'>
+
+<view class='temp'>
+<button bindtap='clickclose' class='close'></button>
+
+ <button  class='kf_button' open-type="contact" session-from="weapp">
+
+  </button>
+  </view>
+</view>

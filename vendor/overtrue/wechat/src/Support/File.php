@@ -109,6 +109,7 @@ class File
                 $stream = file_get_contents($stream);
             }
         } catch (\Exception $e) {
+            return false;
         }
 
         $finfo = new finfo(FILEINFO_MIME);

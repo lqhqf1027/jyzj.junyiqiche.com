@@ -66,7 +66,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             addclass: 'datetimerange',
                             formatter: Table.api.formatter.datetime
                         },
-                        {field: 'iscontribute', title: __('Iscontribute'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: Table.api.formatter.toggle},
                         {field: 'status', title: __('Status'), formatter: Table.api.formatter.status},
                         {
                             field: 'operate',
@@ -79,20 +78,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ],
                 search: false,
                 commonSearch: false
-            });
-
-            // 绑定TAB事件
-            $('.panel-heading a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                var field = $(this).closest("ul").data("field");
-                var value = $(this).data("value");
-                var options = table.bootstrapTable('getOptions');
-                options.pageNumber = 1;
-                options.queryParams = function (params) {
-                    params.model_id = value;
-                    return params;
-                };
-                table.bootstrapTable('refresh', {});
-                return false;
             });
 
             $(document).on("change", ".text-weigh", function () {
@@ -112,149 +97,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
             $("input[name='row[type]']:checked").trigger("fa.event.typeupdated", "edit");
-        },
-        admin: function () {
-
-            // 初始化表格参数配置
-            Table.api.init({
-                extend: {
-                    index_url: 'cms/channel/admin',
-                    dragsort_url: '',
-                    table: 'channel_admin',
-                }
-            });
-
-            var table = $("#table");
-
-            // 初始化表格
-            table.bootstrapTable({
-                url: $.fn.bootstrapTable.defaults.extend.index_url,
-                pk: 'id',
-                sortName: 'weigh',
-                pagination: false,
-                escape: false,
-                columns: [
-                    [
-                        {
-                            field: 'username', title: __('Username')
-                        },
-                        {
-                            field: 'superadmin', title: __('Type'), formatter: function (value, row, index) {
-                                return row.superadmin ? "<span class='label label-danger'>超级管理员</span>" : "<span class='label label-success'>普通管理员</span>";
-                            }
-                        },
-                        {field: 'channels', title: __('Channels')},
-                        {
-                            field: 'operate',
-                            title: __('Operate'),
-                            table: table,
-                            formatter: Table.api.formatter.buttons,
-                            buttons: [
-                                {
-                                    name: 'authorization',
-                                    text: __('Authorization'),
-                                    classname: 'btn btn-xs btn-success btn-authorization',
-                                    icon: 'fa fa-list',
-                                    url: 'cms/channel/admin/act/authorization',
-                                    visible: function (row) {
-                                        return !row.superadmin;
-                                    },
-                                },
-                                {
-                                    name: 'remove',
-                                    text: __('Remove'),
-                                    classname: 'btn btn-xs btn-danger btn-remove btn-ajax',
-                                    icon: 'fa fa-times',
-                                    url: 'cms/channel/admin/act/remove',
-                                    visible: function (row) {
-                                        return row.channels > 0;
-                                    },
-                                    confirm: __('Are you sure you want to remove this item?'),
-                                    success: function (ret) {
-                                        $(".btn-refresh").trigger("click");
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                ],
-                search: false,
-                commonSearch: false
-            });
-            // 为表格绑定事件
-            Table.api.bindevent(table);
-
-            require(['jstree'], function () {
-                //全选和展开
-                $(document).on("click", "#checkall", function () {
-                    $("#channeltree").jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
-                });
-                $(document).on("click", "#expandall", function () {
-                    $("#channeltree").jstree($(this).prop("checked") ? "open_all" : "close_all");
-                });
-
-                // 点击授权
-                $(document).on("click", ".btn-authorization", function () {
-                    var row = Table.api.getrowbyindex(table, $(this).data("row-index"));
-                    Fast.api.ajax($(this).attr("href"), function (data, ret) {
-                        Layer.open({
-                            id: "auth",
-                            type: 1,
-                            title: __('Authorization'),
-                            btn: [__('Save')],
-                            area: ["600px", "400px"],
-                            content: Template("authorizationtpl", {}),
-                            success: function () {
-                                $('#channeltree').jstree({
-                                    "themes": {
-                                        "stripes": true
-                                    },
-                                    "checkbox": {
-                                        "keep_selected_style": false,
-                                    },
-                                    "types": {
-                                        "channel": {
-                                            "icon": "fa fa-th",
-                                        },
-                                        "list": {
-                                            "icon": "fa fa-list",
-                                        },
-                                        "link": {
-                                            "icon": "fa fa-link",
-                                        },
-                                        "disabled": {
-                                            "check_node": false,
-                                            "uncheck_node": false
-                                        }
-                                    },
-                                    'plugins': ["types", "checkbox"],
-                                    "core": {
-                                        "multiple": true,
-                                        'check_callback': true,
-                                        "data": data
-                                    }
-                                });
-                            },
-                            yes: function (index, o) {
-                                var selected = $("#channeltree", o).jstree("get_selected");
-                                if (selected.length <= 0) {
-                                    Layer.msg(__('You must choose at least one channel'), {id: "aaafd"});
-                                } else {
-                                    Fast.api.ajax({
-                                        url: "cms/channel/admin/act/save/ids/" + row.id,
-                                        data: {"ids": selected.join(",")}
-                                    }, function (data, ret) {
-                                        $(".btn-refresh").trigger("click");
-                                        Layer.close(index);
-                                    });
-                                }
-                            }
-                        });
-                        return false;
-                    });
-                    return false;
-                });
-            });
         },
         api: {
             bindevent: function () {
@@ -308,10 +150,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var data = $("option:selected", this).data();
                     var type = $("input[name='row[type]']:checked").val();
                     if (type == 'channel') {
-                        $("input[name='row[channeltpl]']").val(data.channeltpl).prev().val(data.channeltpl);
+                        $("input[name='row[channeltpl]']").val(data.channeltpl);
                     } else if (type == 'list') {
-                        $("input[name='row[listtpl]']").val(data.listtpl).prev().val(data.listtpl);
-                        $("input[name='row[showtpl]']").val(data.showtpl).prev().val(data.showtpl);
+                        $("input[name='row[listtpl]']").val(data.listtpl);
+                        $("input[name='row[showtpl]']").val(data.showtpl);
                     }
                 });
 

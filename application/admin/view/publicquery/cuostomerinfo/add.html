@@ -1,0 +1,268 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Archival_coding')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-archival_coding" class="form-control form-control" name="row[archival_coding]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Signtime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-signtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[signtime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-username" class="form-control form-control" name="row[username]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-id_card" class="form-control form-control" name="row[id_card]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-phone" class="form-control form-control" name="row[phone]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Constract_total')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-constract_total" class="form-control form-control" name="row[constract_total]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Payment')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-payment" class="form-control form-control" name="row[payment]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly" class="form-control form-control" step="0.01" name="row[monthly]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Term')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-term" class="form-control form-control" name="row[term]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Last_rent')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-last_rent" class="form-control form-control" step="0.01" name="row[last_rent]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Bond')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-bond" class="form-control form-control" step="0.01" name="row[bond]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Wealthytime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-wealthytime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[wealthytime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Models')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-models" class="form-control form-control" name="row[models]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Platenumber')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-platenumber" class="form-control form-control" name="row[platenumber]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Framenumber')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-framenumber" class="form-control form-control" name="row[framenumber]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Mortgage')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-mortgage" class="form-control form-control" name="row[mortgage]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Mortgage_man')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-mortgage_man" class="form-control form-control" name="row[mortgage_man]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Tickettime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tickettime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[tickettime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Supplier')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-supplier" class="form-control form-control" name="row[supplier]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Tax_amount')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tax_amount" class="form-control form-control" step="0.01" name="row[tax_amount]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('No_tax')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-no_tax" class="form-control form-control" name="row[no_tax]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Paymenttime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-paymenttime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[paymenttime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Purchase_tax')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-purchase_tax" class="form-control form-control" name="row[purchase_tax]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('House_fee')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-house_fee" class="form-control form-control" step="0.01" name="row[house_fee]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Road_fee')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-road_fee" class="form-control form-control" name="row[road_fee]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Buytime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-buytime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[buytime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Strong_insurance_list')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-strong_insurance_list" class="form-control form-control" name="row[strong_insurance_list]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Strong_insurance_money')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-strong_insurance_money" class="form-control form-control" step="0.01" name="row[strong_insurance_money]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_money')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_money" class="form-control form-control" step="0.01" name="row[car_money]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Commercial_insurance_list')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-commercial_insurance_list" class="form-control form-control" name="row[commercial_insurance_list]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Commercial_insurance_money')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-commercial_insurance_money" class="form-control form-control" name="row[commercial_insurance_money]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Transfertime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-transfertime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[transfertime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Branch_office')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-branch_office" class="form-control form-control" name="row[branch_office]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sales')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sales" class="form-control form-control" name="row[sales]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Rent_month')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-rent_month" class="form-control form-control" name="row[rent_month]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_line')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_line" class="form-control form-control" name="row[car_line]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Deposit')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-deposit" class="form-control form-control" name="row[deposit]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Rent_money_month')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-rent_money_month" class="form-control form-control" name="row[rent_money_month]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Renttime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-renttime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[renttime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Backtime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-backtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[backtime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-note" class="form-control form-control" name="row[note]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Types')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-types" class="form-control selectpicker" name="row[types]">
+                {foreach name="typesList" item="vo"}
+                    <option value="{$key}" {in name="key" value=""}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

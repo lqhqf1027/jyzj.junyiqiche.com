@@ -27,10 +27,9 @@
         <label for="c-flag" class="control-label col-xs-12 col-sm-2">{:__('Flag')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-flag" data-rule="" class="form-control selectpicker" multiple="" name="row[flag][]">
+            <select  id="c-flag" data-rule="" class="form-control selectpicker" multiple="" name="row[flag][]">
                 {foreach name="flagList" item="vo"}
-                <option value="{$key}" {in name="key" value="$row.flag" }selected{
-                /in}>{$vo}</option>
+                <option value="{$key}" {in name="key" value="$row.flag"}selected{/in}>{$vo}</option>
                 {/foreach}
             </select>
 
@@ -65,7 +64,7 @@
     <div class="form-group">
         <label for="c-showtpl" class="control-label col-xs-12 col-sm-2">{:__('Showtpl')}:</label>
         <div class="col-xs-12 col-sm-4">
-            <input id="c-showtpl" data-rule="required" class="form-control selectpage" name="row[showtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"page"}' data-primary-key="name" data-field="name" placeholder="自定义模板文件必须以page开头" type="text" value="{$row.showtpl}">
+            <input id="c-showtpl" data-rule="required" class="form-control selectpage" name="row[showtpl]" data-source="cms/ajax/get_template_list" data-primary-key="name" data-field="name" type="text" value="{$row.showtpl}">
         </div>
     </div>
     <div class="form-group">
@@ -87,12 +86,12 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <label for="c-status" class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
         <div class="col-xs-12 col-sm-8">
 
             <div class="radio">
                 {foreach name="statusList" item="vo"}
-                <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status" }checked{/in} /> {$vo}</label>
+                <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status"}checked{/in} /> {$vo}</label> 
                 {/foreach}
             </div>
 

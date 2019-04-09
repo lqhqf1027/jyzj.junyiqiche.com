@@ -1,0 +1,43 @@
+<form id="change_platform-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action=""
+      data-area='["600px","400px"]'>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2" style="font-size: larger"><b>{:__('请选择更改平台')}:</b></label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio" style="margin-left: 30%;margin-top:5%;font-size: medium">
+
+
+                <!--<h4><b style="margin: auto">销售1部:</b></h4>-->
+                {foreach name="mortgage_type_list" id="vo"}
+
+                {empty name="$my_type"}
+                <label>{notin name="key" value="new_car"}<input name="mortgage_type" data-rule="required" type="radio" value="{$key}"/> {$vo}{/notin}</label>
+                {else /}
+
+                <label>{notin name="key" value="$my_type"}<input name="mortgage_type" data-rule="required" type="radio" value="{$key}"/> {$vo}{/notin}</label>
+
+
+                {/empty}
+
+
+                {/foreach}
+
+
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('确定')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+{php}
+//dump($mortgage_type_list);
+{/php}
+
+

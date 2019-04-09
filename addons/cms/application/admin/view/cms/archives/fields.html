@@ -1,8 +1,3 @@
-<style>
-    .radio-inline, .checkbox-inline {
-        padding-left:0;
-    }
-</style>
 {foreach $fields as $item}
 
 <div class="form-group">
@@ -49,16 +44,12 @@
         {/case}
         {case checkbox}
         {foreach name="item.content_list" item="vo"}
-        <div class="checkbox checkbox-inline">
         <label for="row[{$item.name}][]-{$key}"><input id="row[{$item.name}][]-{$key}" name="row[{$item.name}][]" type="checkbox" value="{$key}" data-rule="{$item.rule}" data-tip="{$item.tip}" {in name="key" value="$item.value"}checked{/in} /> {$vo}</label>
-        </div>
         {/foreach}
         {/case}
         {case radio}
         {foreach name="item.content_list" item="vo"}
-        <div class="radio radio-inline">
         <label for="row[{$item.name}]-{$key}"><input id="row[{$item.name}]-{$key}" name="row[{$item.name}]" type="radio" value="{$key}" data-rule="{$item.rule}" data-tip="{$item.tip}" {in name="key" value="$item.value"}checked{/in} /> {$vo}</label>
-        </div>
         {/foreach}
         {/case}
         {case value="select" break="0"}{/case}
@@ -91,12 +82,6 @@
             </div>
             <span class="msg-box n-right" for="c-{$item.name}"></span>
         </div>
-        {/case}
-        {case switch}
-        <input id="c-{$item.name}" name="row[{$item.name}]" type="hidden" value="{:$item.value?1:0}">
-        <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-{$item.name}" data-yes="1" data-no="0" >
-            <i class="fa fa-toggle-on text-success {if !$item.value}fa-flip-horizontal text-gray{/if} fa-2x"></i>
-        </a>
         {/case}
         {case bool}
         <label for="row[{$item.name}]-yes"><input id="row[{$item.name}]-yes" name="row[{$item.name}]" type="radio" value="1" {$item.value?'checked':''} data-tip="{$item.tip}" /> {:__('Yes')}</label> 

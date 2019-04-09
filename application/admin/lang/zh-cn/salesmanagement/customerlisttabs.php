@@ -31,11 +31,6 @@ return [
     'Intention' => '有意向',
     'Nointention' => '暂无意向',
 
-    'Customerlevel giveup' => '放弃',
-    'Customerlevel relation' => '待联系',
-    'Customerlevel intention' => '有意向',
-    'Customerlevel nointention' => '暂无意向',
-
 
 
     'Id'  =>  'ID',

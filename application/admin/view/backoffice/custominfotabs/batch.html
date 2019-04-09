@@ -7,11 +7,29 @@
         <div class="col-xs-12 col-sm-8">
 
             <div class="radio">
-                {volist name="sale_list" id="vo"}
 
-                <label><input name="row[id]" type="radio" value="{$vo.id}"/>{$vo.nickname}</label>
-                {/volist}
+                {neq name="$firstSale" value=""}
+                <h4><b style="margin: auto">销售1部:</b></h4>
+                {foreach $firstSale as $k=>$v}
+                <label><input name="row[id]" type="radio" value="{$v.id}" checked/> {$v.nickname}</label>
 
+                {/foreach}
+                <br>
+                {/neq}
+
+                {neq name="$secondSale" value=""}
+                <h4><b style="margin: auto">销售2部:</b></h4>
+                {foreach $secondSale as $k=>$v}
+                <label><input name="row[id]" type="radio" value="{$v.id}" checked/> {$v.nickname}</label>
+                {/foreach}
+                {/neq}
+
+                {neq name="$thirdSale" value=""}
+                <h4><b style="margin: auto">销售3部:</b></h4>
+                {foreach $thirdSale as $k=>$v}
+                <label><input name="row[id]" type="radio" value="{$v.id}" checked/> {$v.nickname}</label>
+                {/foreach}
+                {/neq}
             </div>
 
         </div>
@@ -25,3 +43,6 @@
         </div>
     </div>
 </form>
+{php}
+//dump($thirdSale);
+{/php}

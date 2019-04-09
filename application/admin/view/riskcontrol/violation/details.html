@@ -1,0 +1,70 @@
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    .text-center span{
+        margin-left: 15px;
+    }
+</style>
+
+<h3 class="text-center"><span>姓名：{$username}</span><span>电话：{$phone}</span>
+<span>总扣分：{$total_deduction}</span><span>总罚款：{$total_fine}(元)</span></h3>
+<p></p>
+<table class="table table-bordered table-striped table-hover" style="max-width: 1103px;max-height: 700px;margin: auto">
+    <thead>
+
+    <tr>
+
+        <th>违章时间</th>
+        <th>违章城市</th>
+        <th>违章地点</th>
+        <th>违章扣分</th>
+        <th>违章罚款</th>
+        <th>违章原因</th>
+        <th>处理状态</th>
+        <th>文书编号</th>
+
+
+        <!--<th>邮编</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    {foreach name="detail" item="vo"}
+    <tr>
+        <td>{$vo.date}</td>
+        <td>{$vo.wzcity}</td>
+        <td>{$vo.area}</td>
+        <td>{$vo.fen}</td>
+        <td>{$vo.money}</td>
+        <td>{$vo.act}</td>
+        <td>
+            {if condition="$vo.handled eq 1"}
+            <span class="text-success">已处理</span>
+            {elseif condition="$vo.handled eq 0"}
+            <span class="text-danger">未处理</span>
+            {else /}
+            未知
+            {/if}
+        </td>
+        <td>{$vo.archiveno}</td>
+    </tr>
+    {/foreach}
+
+
+    </tbody>
+</table>
+<div class="form-group layer-footer">
+    <label class="control-label col-xs-12 col-sm-2"></label>
+    <div class="col-xs-12 col-sm-8">
+
+        <button type="submit" class="btn btn-success btn-embossed" onclick="doPrint()">打印</button>
+
+    </div>
+</div>
+<script>
+    function doPrint() {
+
+        window.print();
+    }
+</script>

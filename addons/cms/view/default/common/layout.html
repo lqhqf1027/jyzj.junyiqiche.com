@@ -50,9 +50,9 @@
                             <!--以下是两种实现导航菜单的方法-->
 
                             <!--如果你需要自定义NAV,可使用channellist标签来完成,这里只设置了2级-->
+                            <!--
                             {cms:channellist id="nav" type="top"}
-                            <!--判断是否有子级或高亮当前栏目-->
-                            <li class="{if $nav.has_child}dropdown{/if} {if $__CHANNEL__&&($__CHANNEL__.id==$nav.id||$__CHANNEL__.parent_id==$nav.id)} active{/if}">
+                            <li{if $nav.has_child} class="dropdown"{/if}>
                                 <a href="{$nav.url}"{if $nav.has_child} data-toggle="dropdown"{/if}>{$nav.name}{if $nav.has_child}  <b class="caret"></b>{/if}</a>
                                 <ul class="dropdown-menu" role="menu">
                                     {cms:channellist id="sub" type="son" typeid="$nav['id']"}
@@ -61,9 +61,10 @@
                                 </ul>
                             </li>
                             {/cms:channellist}
+                            -->
 
                             <!--实现无限级下拉菜单,maxlevel来控制最大层级-->
-                            <!--{cms:nav maxlevel="3" cache="86400" /}-->
+                            {cms:nav maxlevel="3" cache="86400" /}
                         </ul>
                         <ul class="nav navbar-right hidden">
                             <ul class="nav navbar-nav">
@@ -85,7 +86,7 @@
                             <li class="dropdown">
                                 {if $user}
                                 <a href="{:url('index/user/index')}" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 10px;height: 50px;">
-                                    <span class="avatar-img"><img src="{$user.avatar|cdnurl}" style="width:30px;height:30px;border-radius:50%;" alt=""></span>
+                                    <span class="avatar-img"><img src="{$user.avatar}" style="width:30px;height:30px;border-radius:50%;" alt=""></span>
                                 </a>
                                 {else /}
                                 <a href="{:url('index/user/index')}" class="dropdown-toggle" data-toggle="dropdown">会员<span class="hidden-sm">中心</span> <b class="caret"></b></a>
@@ -93,9 +94,7 @@
                                 <ul class="dropdown-menu">
                                     {if $user}
                                     <li><a href="{:url('index/user/index')}"><i class="fa fa-user fa-fw"></i>会员中心</a></li>
-                                    <li><a href="{:url('index/cms.archives/my')}"><i class="fa fa-list fa-fw"></i>我发布的文章</a></li>
-                                    <li><a href="{:url('index/cms.archives/post')}"><i class="fa fa-pencil fa-fw"></i>发布文章</a></li>
-                                    <li><a href="{:url('index/user/logout')}"><i class="fa fa-sign-out fa-fw"></i>注销</a></li>
+                                    <li><a href="{:url('index/user/logout')}"><i class="fa fa-sign-out fa-fw"></i>退出</a></li>
                                     {else /}
                                     <li><a href="{:url('index/user/login')}"><i class="fa fa-sign-in fa-fw"></i>登录</a></li>
                                     <li><a href="{:url('index/user/register')}"><i class="fa fa-user-o fa-fw"></i>注册</a></li>

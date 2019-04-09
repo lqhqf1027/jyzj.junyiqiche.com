@@ -374,11 +374,14 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label>MySQL 数据表前缀</label>
                     <input type="text" name="mysqlPrefix" value="fa_">
                 </div>
+<<<<<<< HEAD
+=======
 
                 <div class="form-field">
                     <label>MySQL 端口号</label>
                     <input type="number" name="mysqlHostport" value="3306">
                 </div>
+>>>>>>> fastadmin/master
             </div>
 
             <div class="form-group">
@@ -407,10 +410,8 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
                 <button type="submit" <?php echo $errInfo ? 'disabled' : '' ?>>点击安装</button>
             </div>
         </form>
-
         <!-- jQuery -->
         <script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
-
         <script>
             $(function () {
                 $('form :input:first').select();

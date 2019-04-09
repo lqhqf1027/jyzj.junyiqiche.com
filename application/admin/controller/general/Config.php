@@ -134,7 +134,6 @@ class Config extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
     }
-
     public function del($ids = "")
     {
         $name = $this->request->request('name');
@@ -151,7 +150,6 @@ class Config extends Backend
             $this->error(__('Invalid parameters'));
         }
     }
-
     /**
      * 刷新配置文件
      */

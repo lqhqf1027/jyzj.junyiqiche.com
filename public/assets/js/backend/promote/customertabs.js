@@ -2,84 +2,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
+
             // 初始化表格参数配置
-            Table.api.init({
-                extend: {
-                    index_url: 'promote/customertabs/index',
-                    add_url: 'promote/customertabs/add',
-                    // edit_url: 'promote/customertabs/edit',
-                    del_url: 'promote/customertabs/del',
-                    multi_url: 'promote/customertabs/multi',
-                    import_url: 'promote/customertabs/import',
-                    distribution_url: 'promote/customertabs/distribution',
-                    table: 'customer_resource',
-                }
-            });
-
-            var table = $("#table");
-
-            // 初始化表格
-            table.bootstrapTable({
-                url: $.fn.bootstrapTable.defaults.extend.index_url,
-                pk: 'id',
-                sortName: 'id',
-                columns: [
-                    [
-                        {checkbox: true},
-                        {field: 'id', title: __('Id')},
-                        {field: 'backoffice.nickname', title: __('Backoffice_id'), formatter: Controller.api.formatter.backoffice},
-                        {field: 'admin.nickname', title: __('Sales_id'), formatter: Controller.api.formatter.saleAvatar},
-
-                        {field: 'username', title: __('Username')},
-                        {field: 'phone', title: __('Phone')},
-                        {field: 'distributinternaltime', title: __('Distributinternaltime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-
-                        {
-                            field: 'feedback_content',
-                            title: __('反馈结果'),
-                            operate: false,
-                            formatter: function (v, r, i) {
-                                return Controller.feedFun(v);
-                            }
-                        },
-                        {field: 'status', title: __('Status'), searchList: {"今日头条":__('今日头条'),"58同城":__('58同城'),"百度":__('百度'),"抖音":__('抖音')}, formatter: Table.api.formatter.status},
-                        {field: 'operate', title: __('Operate'), table: table, events: Controller.api.events.operate, formatter: Controller.api.operate}
-                    ]
-                ]
-            });
-
-            // 为表格绑定事件
-            Table.api.bindevent(table);
-
-            batch_share('.btn-selected', table);
-
-            
-        },
-        add: function () {
-            Controller.api.bindevent();
-        },
-        edit: function () {
-            Controller.api.bindevent();
-        },
-        //单个分配
-        dstribution: function () {
-
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
-            Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
 
-                Fast.api.close(data);//这里是重点
-                // console.log(data);
-                // Toastr.success("成功");//这个可有可无
-            }, function (data, ret) {
-                // console.log(data);
-                Toastr.success("失败");
+            //绑定事件
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var panel = $($(this).attr("href"));
+                if (panel.size() > 0) {
+                    Controller.table[panel.attr("id")].call(this);
+                    $(this).on('click', function (e) {
+                        $($(this).attr("href")).find(".btn-refresh").trigger("click");
+                    });
+                }
+                //移除绑定的事件
+                $(this).unbind('shown.bs.tab');
             });
-            Controller.api.bindevent();
-            // console.log(Config.id);
 
+            //必须默认触发shown.bs.tab事件
+            // $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
+            $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
+                $(this).trigger("shown.bs.tab")
+            })
         },
+
+
         //批量分配
         distribution: function () {
 
@@ -105,6 +53,428 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // Controller.api.bindevent();
             // console.log(Config.id);
 
+
+        },
+        //批量导入
+        import: function () {
+            // console.log(123);
+            // return;
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+
+                // Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+
+                Toastr.success("失败");
+
+            });
+            Controller.api.bindevent();
+            // console.log(Config.id);
+
+        },
+        table: {
+            /**
+             * 今日头条
+             */
+            headline: function () {
+
+                var headlines = $("#headlines");
+                headlines.bootstrapTable({
+                    url: 'promote/Customertabs/headline',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'customer/customerresource/add',
+                        // edit_url: 'customer/customerresource/edit',
+                        del_url: 'promote/customertabs/del',
+                        multi_url: 'promote/customertabs/multi',
+                        distribution_url: 'promote/customertabs/distribution',
+                        import_url: 'promote/customertabs/import',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar1',
+                    pk: 'id',
+                    // sortName: 'id',
+                    searchFormVisible: true,
+                    // fixedColumns:true,
+                    // fixedNumber:1,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id'), operate: false,sortable:true},
+
+                            {field: 'platform.name', title: __('所属平台')},
+
+                            {
+                                field: 'backoffice.nickname',
+                                title: __('所属内勤'),
+                                formatter: Controller.api.formatter.backoffice
+                            },
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+
+
+                            {
+                                field: 'distributinternaltime',
+                                title: __('Distributinternaltime'),
+                                operate: false,
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
+                            },
+                            // {
+                            //     field: 'createtime',
+                            //     title: __('导入时间'),
+                            //     operate: false,
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime,
+                            //     datetimeFormat: "YYYY-MM-DD"
+                            //     ,sortable:true
+                            // },
+
+                            // {
+                            //     field: 'updatetime',
+                            //     title: __('Updatetime'),
+                            //     operate: false,
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime,
+                            //     datetimeFormat: "YYYY-MM-DD"
+                            //     ,sortable:true
+                            // },
+                            {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
+                            {
+                                field: 'feedback_content',
+                                title: __('反馈结果'),
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: headlines,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.operate
+                            }
+
+                        ]
+                    ]
+
+                });
+
+                // 为已分配的客户表格绑定事件
+                Table.api.bindevent(headlines);
+
+                //数据实时统计
+                headlines.on('load-success.bs.table', function (e, data) {
+
+                        // $('#badge_new_toutiao').text(data.total);
+                })
+                add_data('.add-headline', headlines, 'promote/Customertabs/add_headline');
+                batch_share('.btn-selected-headline', headlines);
+
+
+            },
+
+            /**
+             * 百度
+             */
+            baidu: function () {
+                // 已分配的客户
+                var baidus = $("#baidus");
+                baidus.bootstrapTable({
+                    url: 'promote/Customertabs/baidu',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'customer/customerresource/add',
+                        // edit_url: 'customer/customerresource/edit',
+                        del_url: 'promote/customertabs/del',
+                        multi_url: 'promote/customertabs/multi',
+                        distribution_url: 'promote/customertabs/distribution',
+                        import_url: 'promote/customertabs/import',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar5',
+                    pk: 'id',
+                    // sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id'), operate: false,sortable:true},
+
+                            {field: 'platform.name', title: __('所属平台')},
+
+                            {
+                                field: 'backoffice.nickname',
+                                title: __('所属内勤'),
+                                formatter: Controller.api.formatter.backoffice
+                            },
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+
+
+                            {
+                                field: 'distributinternaltime',
+                                title: __('Distributinternaltime'),
+                                operate: false,
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
+
+                            },
+                            {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
+                            {
+                                field: 'feedback_content',
+                                title: __('反馈结果'),
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: baidus,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.operate
+                            }
+
+                        ]
+                    ]
+
+                });
+
+                // 为已分配的客户表格绑定事件
+                Table.api.bindevent(baidus);
+
+                //数据实时统计
+                baidus.on('load-success.bs.table', function (e, data) {
+                    // $('#badge_new_baidu').text(data.total);
+                })
+
+
+
+                add_data('.add-baidu', baidus, 'promote/Customertabs/add_baidu');
+
+                batch_share('.btn-selected-baidu', baidus);
+
+
+            },
+
+            /**
+             * 58同城
+             */
+            same_city: function () {
+                // 已分配的客户
+                var sameCity = $("#sameCity");
+                sameCity.bootstrapTable({
+                    url: 'promote/Customertabs/same_city',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'customer/customerresource/add',
+                        // edit_url: 'customer/customerresource/edit',
+                        del_url: 'promote/customertabs/del',
+                        multi_url: 'promote/customertabs/multi',
+                        distribution_url: 'promote/customertabs/distribution',
+                        import_url: 'promote/customertabs/import',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar6',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id'), operate: false,sortable:true},
+
+                            {field: 'platform.name', title: __('所属平台')},
+
+                            {
+                                field: 'backoffice.nickname',
+                                title: __('所属内勤'),
+                                formatter: Controller.api.formatter.backoffice
+                            },
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+
+
+                            {
+                                field: 'distributinternaltime',
+                                title: __('Distributinternaltime'),
+                                operate: false,
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
+                            },
+
+                            {field: 'invalidtime', title: __('失效时间')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
+                            {
+                                field: 'feedback_content',
+                                title: __('反馈结果'),
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: sameCity,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.operate
+                            }
+
+                        ]
+                    ]
+
+                });
+
+                // 为已分配的客户表格绑定事件
+                Table.api.bindevent(sameCity);
+
+                //数据实时统计
+                sameCity.on('load-success.bs.table', function (e, data) {
+
+                //   $('#badge_new_58').text(data.total);
+                })
+                add_data('.add-same_city', sameCity, 'promote/Customertabs/add_same_city');
+
+                batch_share('.btn-selected-same_city', sameCity);
+
+
+            },
+
+            /**
+             * 抖音
+             */
+            music: function () {
+                // 已分配的客户
+                var musics = $("#musics");
+                musics.bootstrapTable({
+                    url: 'promote/Customertabs/music',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'customer/customerresource/add',
+                        // edit_url: 'customer/customerresource/edit',
+                        del_url: 'promote/customertabs/del',
+                        multi_url: 'promote/customertabs/multi',
+                        distribution_url: 'promote/customertabs/distribution',
+                        import_url: 'promote/customertabs/import',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar7',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id'), operate: false,sortable:true},
+
+                            {field: 'platform.name', title: __('所属平台')},
+
+                            {
+                                field: 'backoffice.nickname',
+                                title: __('所属内勤'),
+                                formatter: Controller.api.formatter.backoffice
+                            },
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+
+
+                            {
+                                field: 'distributinternaltime',
+                                title: __('Distributinternaltime'),
+                                operate: false,
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
+                            },
+                            {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
+                            {
+                                field: 'feedback_content',
+                                title: __('反馈结果'),
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: musics,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.operate
+                            }
+
+                        ]
+                    ]
+
+                });
+
+                // 为已分配的客户表格绑定事件
+                Table.api.bindevent(musics);
+
+                //数据实时统计
+                musics.on('load-success.bs.table', function (e, data) {
+                    // $('#badge_new_douyin').text(data.total);
+
+                })
+
+                add_data('.add-music', musics, 'promote/Customertabs/add_music');
+
+                batch_share('.btn-selected-music', musics);
+
+
+            },
+        },
+
+        add: function () {
+            Controller.api.bindevent();
+
+        },
+        add_headline: function () {
+            Controller.api.bindevent();
+        },
+        add_baidu: function () {
+            Controller.api.bindevent();
+        },
+        add_same_city: function () {
+            Controller.api.bindevent();
+        },
+        add_music: function () {
+            Controller.api.bindevent();
+        },
+        //单个分配
+        dstribution: function () {
+
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+                Toastr.success("失败");
+            });
+            Controller.api.bindevent();
+            // console.log(Config.id);
 
         },
         /**
@@ -224,48 +594,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         api: {
             bindevent: function () {
+                $(document).on('click', "input[name='row[ismenu]']", function () {
+                    var name = $("input[name='row[name]']");
+                    name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
+                });
+                $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
-            },
-            operate: function (value, row, index) {
-                var table = this.table;
-                // 操作配置
-                var options = table ? table.bootstrapTable('getOptions') : {};
-                // 默认按钮组
-                var buttons = $.extend([], this.buttons || []);
 
-
-
-                if (row.backoffice_id == null) {
-                    buttons.push(
-                        {
-                            name: 'detail',
-                            text: '分配',
-                            title: '分配',
-                            icon: 'fa fa-share',
-                            classname: 'btn btn-xs btn-info btn-newCustomer',
-                        },
-                        {
-                            name: 'del',
-                            icon: 'fa fa-trash',
-                            title: __('Del'),
-                            extend: 'data-toggle="tooltip"',
-                            classname: 'btn btn-xs btn-danger btn-delone'
-                        }
-                    )
-                } else {
-                    buttons.push(
-                        {
-                            name: 'allocated',
-                            text: '已分配给内勤',
-                            title: '已分配',
-                            icon: 'fa fa-check',
-                            classname: 'text-info',
-                        }
-                    );
-                }
-
-
-                return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
             },
             events: {
                 operate: {
@@ -277,8 +612,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param index
                      */
                     'click .btn-newCustomer': function (e, value, row, index) {
-                        $(".btn-newCustomer").data("area", ["30%", "30%"]);
-
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -347,8 +680,69 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 }
             },
+            operate: function (value, row, index) {
+                var table = this.table;
+                // 操作配置
+                var options = table ? table.bootstrapTable('getOptions') : {};
+                // 默认按钮组
+                var buttons = $.extend([], this.buttons || []);
+
+
+
+                if (row.backoffice_id == null) {
+                    buttons.push(
+                        {
+                            name: 'detail',
+                            text: '分配',
+                            title: '分配',
+                            icon: 'fa fa-share',
+                            classname: 'btn btn-xs btn-info btn-newCustomer',
+                        },
+                        {
+                            name: 'del',
+                            icon: 'fa fa-trash',
+                            title: __('Del'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-danger btn-delone'
+                        }
+                    )
+                } else {
+                    buttons.push(
+                        {
+                            name: 'allocated',
+                            text: '已分配给内勤',
+                            title: '已分配',
+                            icon: 'fa fa-check',
+                            classname: 'text-info',
+                        }
+                    );
+                }
+
+
+                return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+            }
         }
+
     };
+
+
+    /**
+     * 添加按钮
+     * @param clickname
+     * @param table
+     * @param urls
+     */
+    function add_data(clickname, table, urls) {
+        $(document).on('click', clickname, function () {
+            var ids = Table.api.selectedids(table);
+            var url = urls;
+            if (url.indexOf("{ids}") !== -1) {
+                url = Table.api.replaceurl(url, {ids: ids.length > 0 ? ids.join(",") : 0}, table);
+            }
+            Fast.api.open(url, __('Add'), $(this).data() || {});
+        });
+    }
+
 
     /**
      * 批量分配
@@ -372,6 +766,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Fast.api.open(url, '批量分配', options)
         })
     }
+
 
     return Controller;
 });

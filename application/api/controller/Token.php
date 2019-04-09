@@ -47,3 +47,4 @@ class Token extends Api
     }
 
 }
+

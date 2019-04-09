@@ -33,7 +33,7 @@ class PastInformation extends Model
     
     public function getTypesList()
     {
-        return ['full' => __('Full'),'rent' => __('Rent'),'mortgage' => __('Mortgage')];
+        return ['full' => __('Types full'),'rent' => __('Types rent'),'mortgage' => __('Types mortgage')];
     }     
 
 

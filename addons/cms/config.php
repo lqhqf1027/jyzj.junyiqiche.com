@@ -9,7 +9,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => '君忆之家',
+    'value' => '爱车易得',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',
@@ -17,51 +17,6 @@ return array (
     'extend' => '',
   ),
   1 => 
-  array (
-    'name' => 'title',
-    'title' => '首页标题',
-    'type' => 'string',
-    'content' => 
-    array (
-    ),
-    'value' => '君忆之家',
-    'rule' => 'required',
-    'msg' => '',
-    'tip' => '',
-    'ok' => '',
-    'extend' => '',
-  ),
-  2 => 
-  array (
-    'name' => 'keywords',
-    'title' => '首页关键字',
-    'type' => 'string',
-    'content' => 
-    array (
-    ),
-    'value' => '君忆之家',
-    'rule' => 'required',
-    'msg' => '',
-    'tip' => '',
-    'ok' => '',
-    'extend' => '',
-  ),
-  3 => 
-  array (
-    'name' => 'description',
-    'title' => '首页描述',
-    'type' => 'string',
-    'content' => 
-    array (
-    ),
-    'value' => '君忆之家',
-    'rule' => 'required',
-    'msg' => '',
-    'tip' => '',
-    'ok' => '',
-    'extend' => '',
-  ),
-  4 => 
   array (
     'name' => 'theme',
     'title' => '皮肤',
@@ -76,7 +31,7 @@ return array (
     'ok' => '',
     'extend' => '',
   ),
-  5 => 
+  2 => 
   array (
     'name' => 'qrcode',
     'title' => '公众号二维码',
@@ -91,7 +46,7 @@ return array (
     'ok' => '',
     'extend' => '',
   ),
-  6 => 
+  3 => 
   array (
     'name' => 'default_archives_img',
     'title' => '文档默认图片',
@@ -106,7 +61,7 @@ return array (
     'ok' => '',
     'extend' => '',
   ),
-  7 => 
+  4 => 
   array (
     'name' => 'default_channel_img',
     'title' => '栏目默认图片',
@@ -121,7 +76,7 @@ return array (
     'ok' => '',
     'extend' => '',
   ),
-  8 => 
+  5 => 
   array (
     'name' => 'default_block_img',
     'title' => '区块默认图片',
@@ -136,7 +91,7 @@ return array (
     'ok' => '',
     'extend' => '',
   ),
-  9 => 
+  6 => 
   array (
     'name' => 'default_page_img',
     'title' => '单页默认图片',
@@ -151,7 +106,7 @@ return array (
     'ok' => '',
     'extend' => '',
   ),
-  10 => 
+  7 => 
   array (
     'name' => 'domain',
     'title' => '绑定二级域名前缀',
@@ -166,7 +121,7 @@ return array (
     'ok' => '',
     'extend' => '',
   ),
-  11 => 
+  8 => 
   array (
     'name' => 'rewrite',
     'title' => '伪静态',
@@ -176,13 +131,12 @@ return array (
     ),
     'value' => 
     array (
-      'index/index' => '/cms/$',
-      'archives/index' => '/cms/a/[:diyname]',
+      'index/index' => '/cms$',
+      'channel/index' => '/cms/c/[:diyname]',
       'tags/index' => '/cms/t/[:name]',
+      'archives/index' => '/cms/a/[:diyname]',
       'page/index' => '/cms/p/[:diyname]',
       'search/index' => '/cms/s',
-      'channel/index' => '/cms/c/[:diyname]',
-      'diyform/index' => '/cms/d/[:diyname]',
     ),
     'rule' => 'required',
     'msg' => '',
@@ -190,7 +144,7 @@ return array (
     'ok' => '',
     'extend' => '',
   ),
-  12 => 
+  9 => 
   array (
     'name' => 'wxappid',
     'title' => '小程序AppID',
@@ -198,14 +152,14 @@ return array (
     'content' => 
     array (
     ),
-    'value' => 'wxbf30f98715bbb9b5',
+    'value' => 'wxf789595e37da2838',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',
     'ok' => '',
     'extend' => '',
   ),
-  13 => 
+  10 => 
   array (
     'name' => 'wxappsecret',
     'title' => '小程序AppSecret',
@@ -213,14 +167,14 @@ return array (
     'content' => 
     array (
     ),
-    'value' => '8f8da2d690f4cb345bb20c153b736d7e',
+    'value' => '5429ed29f3a7e43119114c8262f02ff0',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',
     'ok' => '',
     'extend' => '',
   ),
-  14 => 
+  11 => 
   array (
     'name' => 'apikey',
     'title' => 'ApiKey',
@@ -232,38 +186,6 @@ return array (
     'rule' => '',
     'msg' => '',
     'tip' => '用于调用API接口时写入数据权限控制<br>可以为空',
-    'ok' => '',
-    'extend' => '',
-  ),
-  15 => 
-  array (
-    'name' => 'archiveseditmode',
-    'title' => '文档编辑模式',
-    'type' => 'radio',
-    'content' => 
-    array (
-      'addtabs' => '新选项卡',
-      'dialog' => '弹窗',
-    ),
-    'value' => 'dialog',
-    'rule' => '',
-    'msg' => '',
-    'tip' => '在添加或编辑文档时的操作方式',
-    'ok' => '',
-    'extend' => '',
-  ),
-  16 => 
-  array (
-    'name' => '__tips__',
-    'title' => '温馨提示',
-    'type' => 'string',
-    'content' => 
-    array (
-    ),
-    'value' => '1.如果需要将CMS绑定到首页,请移除伪静态中的<b>cms/</b><br>2.默认CMS不包含富文本编辑器插件，请在<a href="https://www.fastadmin.net/store.html?category=16" target="_blank">插件市场</a>按需要安装<br>3.如果需要启用付费阅读,请务必安装<a href="https://www.fastadmin.net/store/epay.html" target="_blank">企业支付</a>插件',
-    'rule' => '',
-    'msg' => '',
-    'tip' => '',
     'ok' => '',
     'extend' => '',
   ),

@@ -20,7 +20,7 @@ class Tags extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\cms\Tags;
+        $this->model = model('Tags');
     }
 
     /**

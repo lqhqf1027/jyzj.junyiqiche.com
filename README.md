@@ -1,6 +1,5 @@
 FastAdmin是一款基于ThinkPHP5+Bootstrap的极速后台开发框架。
 
-
 ## **主要特性**
 
 * 基于`Auth`验证的权限管理系统
@@ -52,8 +51,8 @@ https://demo.fastadmin.net
 在使用中有任何问题，请使用以下联系方式联系我们
 
 交流社区: https://forum.fastadmin.net
-
 QQ群: [636393962](https://jq.qq.com/?_wv=1027&k=487PNBb)(满) [708784003](https://jq.qq.com/?_wv=1027&k=5ObjtwM)(满) [964776039](https://jq.qq.com/?_wv=1027&k=59qjU2P)(3群)
+
 
 Email: (karsonzhang#163.com, 把#换成@)
 

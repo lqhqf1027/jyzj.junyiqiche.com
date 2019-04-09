@@ -15,8 +15,8 @@ class Tags extends Base
 
     public function index()
     {
-        $tags = null;
         $name = $this->request->param('name');
+
         if ($name) {
             $tags = TagsModel::getByName($name);
         }
@@ -34,24 +34,26 @@ class Tags extends Base
             $params['orderby'] = $orderby;
         if ($orderway)
             $params['orderway'] = $orderway;
-        $sortrank = [
-            ['name' => 'default', 'field' => 'weigh', 'title' => __('Default')],
-            ['name' => 'views', 'field' => 'views', 'title' => __('Views')],
-            ['name' => 'id', 'field' => 'id', 'title' => __('Post date')],
-        ];
+        if ($tags) {
+            $sortrank = [
+                ['name' => 'default', 'field' => 'weigh', 'title' => __('Default')],
+                ['name' => 'views', 'field' => 'views', 'title' => __('Views')],
+                ['name' => 'id', 'field' => 'id', 'title' => __('Post date')],
+            ];
 
-        $orderby = $orderby && in_array($orderby, ['default', 'id', 'views']) ? $orderby : 'default';
-        $orderway = $orderway ? $orderway : 'desc';
-        foreach ($sortrank as $k => $v) {
-            $url = '?' . http_build_query(array_merge($params, ['orderby' => $v['name'], 'orderway' => ($orderway == 'desc' ? 'asc' : 'desc')]));
-            $v['active'] = $orderby == $v['name'] ? true : false;
-            $v['orderby'] = $orderway;
-            $v['url'] = $url;
-            $orderlist[] = $v;
+            $orderby = $orderby && in_array($orderby, ['default', 'id', 'views']) ? $orderby : 'default';
+            $orderway = $orderway ? $orderway : 'desc';
+            foreach ($sortrank as $k => $v) {
+                $url = '?' . http_build_query(array_merge($params, ['orderby' => $v['name'], 'orderway' => ($orderway == 'desc' ? 'asc' : 'desc')]));
+                $v['active'] = $orderby == $v['name'] ? true : false;
+                $v['orderby'] = $orderway;
+                $v['url'] = $url;
+                $orderlist[] = $v;
+            }
+            $orderby = $orderby == 'default' ? 'weigh' : $orderby;
         }
-        $orderby = $orderby == 'default' ? 'weigh' : $orderby;
-        $pagelist = Archives::with(['channel'])
-            ->where('status', 'normal')
+        $pagelist = Archives
+            ::where('status', 'normal')
             ->where('id', 'in', explode(',', $tags['archives']))
             ->order($orderby, $orderway)
             ->paginate(10, false, ['type' => '\\addons\\cms\\library\\Bootstrap']);

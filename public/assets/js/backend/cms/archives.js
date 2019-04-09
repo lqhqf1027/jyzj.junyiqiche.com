@@ -19,14 +19,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
 
             //在表格内容渲染完成后回调的事件
             table.on('post-body.bs.table', function (e, settings, json, xhr) {
-                //当为新选项卡中打开时
-                if (Config.cms.archiveseditmode == 'addtabs') {
-                    $(".btn-editone", this)
-                        .off("click")
-                        .removeClass("btn-editone")
-                        .addClass("btn-addtabs")
-                        .prop("title", __('Edit'));
-                }
+                $(".btn-editone", this)
+                    .off("click")
+                    .removeClass("btn-editone")
+                    .addClass("btn-addtabs")
+                    .prop("title", __('Edit'));
             });
             //当双击单元格时
             table.on('dbl-click-row.bs.table', function (e, row, element, field) {
@@ -44,19 +41,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                         {checkbox: true},
                         {field: 'id', title: __('Id'), sortable: true},
                         {
-                            field: 'user_id',
-                            title: __('User_id'),
+                            field: 'model_id',
+                            title: __('Model_id'),
                             visible: false,
                             addclass: 'selectpage',
-                            extend: 'data-source="user/user/index" data-field="nickname"',
-                            operate: '=',
+                            extend: 'data-source="cms/modelx/index"',
                             formatter: Table.api.formatter.search
                         },
                         {
                             field: 'channel_id',
                             title: __('Channel_id'),
                             visible: false,
-                            operate: false,
+                            addclass: 'selectpage',
+                            extend: 'data-source="cms/channel/index"',
                             formatter: Table.api.formatter.search
                         },
                         {
@@ -68,17 +65,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             }
                         },
                         {
-                            field: 'model_id', title: __('Model'), visible: false, align: 'left', addclass:"selectpage", extend:"data-source='cms/modelx/index' data-field='name'"
-                        },
-                        {
                             field: 'title', title: __('Title'), align: 'left', formatter: function (value, row, index) {
-                                return '<div class="tdtitle"><a href="' + row.url + '" target="_blank">' + value + '</a></div>' + Table.api.formatter.flag.call(this, row['flag'], row, index);
+                                return '<div class="tdtitle">' + value + '</div>' + Table.api.formatter.flag.call(this, row['flag'], row, index);
                             }
                         },
                         {field: 'image', title: __('Image'), operate: false, formatter: Table.api.formatter.image},
                         {field: 'views', title: __('Views'), operate: 'BETWEEN', sortable: true},
                         {field: 'comments', title: __('Comments'), operate: 'BETWEEN', sortable: true},
                         {field: 'weigh', title: __('Weigh'), operate: false},
+                        {
+                            field: 'url', title: __('Url'), operate: false, formatter: function (value, row, index) {
+                                return '<a href="' + value + '" target="_blank" class="btn btn-default btn-xs"><i class="fa fa-link"></i></a>';
+                            }
+                        },
                         {
                             field: 'createtime',
                             title: __('Createtime'),
@@ -95,7 +94,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             addclass: 'datetimerange',
                             formatter: Table.api.formatter.datetime
                         },
-                        {field: 'status', title: __('Status'), searchList: {"normal": __('Status normal'), "hidden": __('Status hidden'), "rejected": __('Status rejected'), "pulloff": __('Status pulloff')}, formatter: Table.api.formatter.status},
+                        {field: 'status', title: __('Status'), operate: false, formatter: Table.api.formatter.status},
                         {
                             field: 'operate',
                             title: __('Operate'),
@@ -109,14 +108,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
 
             // 为表格绑定事件
             Table.api.bindevent(table);
-
-            //当为新选项卡中打开时
-            if (Config.cms.archiveseditmode == 'addtabs') {
-                $(".btn-add").off("click").on("click", function () {
-                    Fast.api.addtabs('cms/archives/add', __('Add'));
-                    return false;
-                });
-            }
 
             $(document).on("click", "a.btn-channel", function () {
                 $("#archivespanel").toggleClass("col-md-9", $("#channelbar").hasClass("hidden"));
@@ -132,6 +123,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     $("#channeltree").jstree($(this).prop("checked") ? "open_all" : "close_all");
                 });
                 $('#channeltree').on("changed.jstree", function (e, data) {
+                    console.log(data);
+                    console.log(data.selected);
                     var options = table.bootstrapTable('getOptions');
                     options.pageNumber = 1;
                     options.queryParams = function (params) {
@@ -227,75 +220,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 //这里因为涉及到关联多个表,因为用了两个字段来操作,一个隐藏,一个搜索
                 {field: 'main.id', title: __('Id'), visible: false},
                 {field: 'id', title: __('Id'), operate: false},
-                {
-                    field: 'channel_id',
-                    title: __('Channel_id'),
-                    addclass: 'selectpage',
-                    extend: 'data-source="cms/channel/index"',
-                    formatter: Table.api.formatter.search
-                },
+                {field: 'channel_id', title: __('Channel_id'), formatter: Table.api.formatter.search},
                 {field: 'channel_name', title: __('Channel_name'), operate: false}
-            ];
-            //动态追加字段
-            $.each(Config.fields, function (i, j) {
-                var data = {field: j.field, title: j.title, operate: 'like'};
-                //如果是图片,加上formatter
-                if (j.type == 'image') {
-                    data.formatter = Table.api.formatter.image;
-                } else if (j.type == 'images') {
-                    data.formatter = Table.api.formatter.images;
-                } else if (j.type == 'radio' || j.type == 'check' || j.type == 'select' || j.type == 'selects') {
-                    data.formatter = Controller.api.formatter.content;
-                    data.extend = j.content;
-                }
-                columns.push(data);
-            });
-            //追加操作字段
-            columns.push({
-                field: 'operate',
-                title: __('Operate'),
-                table: table,
-                events: Table.api.events.operate,
-                formatter: Table.api.formatter.operate
-            });
-
-            // 初始化表格
-            table.bootstrapTable({
-                url: $.fn.bootstrapTable.defaults.extend.index_url,
-                pk: 'id',
-                sortName: 'id',
-                columns: columns
-            });
-
-            // 为表格绑定事件
-            Table.api.bindevent(table);
-        },
-        diyform: function () {
-            // 初始化表格参数配置
-            Table.api.init({
-                extend: {
-                    index_url: 'cms/archives/diyform/diyform_id/' + Config.diyform_id,
-                    add_url: '',
-                    edit_url: 'cms/archives/edit',
-                    del_url: 'cms/archives/del',
-                    multi_url: '',
-                    table: '',
-                }
-            });
-
-            var table = $("#table");
-            //在表格内容渲染完成后回调的事件
-            table.on('post-body.bs.table', function (e, settings, json, xhr) {
-                $(".btn-editone", this)
-                    .off("click")
-                    .removeClass("btn-editone")
-                    .addClass("btn-addtabs")
-                    .prop("title", __('Edit'));
-            });
-            //默认字段
-            var columns = [
-                {checkbox: true},
-                {field: 'id', title: __('Id'), operate: false},
             ];
             //动态追加字段
             $.each(Config.fields, function (i, j) {
@@ -472,13 +398,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     }
                 });
                 Form.api.bindevent($("form[role=form]"), function () {
-                    if (Config.cms.archiveseditmode == 'addtabs') {
-                        var obj = top.window.$("ul.nav-addtabs li.active");
-                        top.window.Toastr.success(__('Operation completed'));
-                        top.window.$(".sidebar-menu a[url$='/cms/archives'][addtabs]").click();
-                        top.window.$(".sidebar-menu a[url$='/cms/archives'][addtabs]").dblclick();
-                        obj.find(".fa-remove").trigger("click");
-                    }
+                    var obj = top.window.$("ul.nav-addtabs li.active");
+                    top.window.Toastr.success(__('Operation completed'));
+                    top.window.$(".sidebar-menu a[url$='/cms/archives'][addtabs]").click();
+                    top.window.$(".sidebar-menu a[url$='/cms/archives'][addtabs]").dblclick();
+                    obj.find(".fa-remove").trigger("click");
                 });
             }
         }

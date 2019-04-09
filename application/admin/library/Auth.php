@@ -43,6 +43,11 @@ class Auth extends \fast\Auth
             $this->setError('Username is incorrect');
             return false;
         }
+        $admin = Admin::get(['username' => $username, 'status' => 'normal']);
+        if (!$admin) {
+            $this->setError('该账户已被停用');
+            return false;
+        }
         if ($admin['status'] == 'hidden') {
             $this->setError('Admin is forbidden');
             return false;
@@ -394,7 +399,6 @@ class Auth extends \fast\Auth
         }
         $selected && $selected['url'] = url($selected['url']);
         $referer && $referer['url'] = url($referer['url']);
-
         $select_id = $selected ? $selected['id'] : 0;
         $menu = $nav = '';
         if (Config::get('fastadmin.multiplenav')) {
@@ -430,7 +434,6 @@ class Auth extends \fast\Auth
                 $nav .= '<li role="presentation" id="tab_' . $referer['id'] . '" class="active"><a href="#con_' . $referer['id'] . '" node-id="' . $referer['id'] . '" aria-controls="' . $referer['id'] . '" role="tab" data-toggle="tab"><i class="' . $referer['icon'] . ' fa-fw"></i> <span>' . $referer['title'] . '</span> </a> <i class="close-tab fa fa-remove"></i></li>';
             }
         }
-
         return [$menu, $nav, $selected, $referer];
     }
 

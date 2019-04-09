@@ -25,7 +25,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', sortable: true, title: __('Id')},
-                        {field: 'type', title: __('Type'), formatter: Table.api.formatter.search, searchList: Config.typeList},
+                        {field: 'type', title: __('Type'), formatter:Table.api.formatter.search},
                         {field: 'name', title: __('Name')},
                         {field: 'title', title: __('Title')},
                         {field: 'image', title: __('Image'), formatter: Table.api.formatter.image},

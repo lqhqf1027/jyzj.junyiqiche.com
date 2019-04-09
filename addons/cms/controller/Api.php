@@ -42,7 +42,7 @@ class Api extends Base
         $data['content'] = !isset($data['content']) ? '' : $data['content'];
         Db::startTrans();
         try {
-            (new \app\admin\model\cms\Archives)->allowField(true)->save($data);
+            (new \app\admin\model\Archives)->allowField(true)->save($data);
             Db::commit();
         } catch (PDOException $e) {
             Db::rollback();

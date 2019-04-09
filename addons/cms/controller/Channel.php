@@ -22,7 +22,7 @@ class Channel extends Base
         if ($diyname && !is_numeric($diyname)) {
             $channel = ChannelModel::getByDiyname($diyname);
         } else {
-            $id = $diyname ? $diyname : $this->request->param('id', '');
+            $id = $diyname ? $diyname : $this->request->get('id', '');
             $channel = ChannelModel::get($id);
         }
         if (!$channel) {

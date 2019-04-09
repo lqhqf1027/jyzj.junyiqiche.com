@@ -16,8 +16,7 @@
             tab: '.tab-addtabs',
             iframeUse: true, //使用iframe还是ajax
             iframeHeight: $(window).height() - 50, //固定TAB中IFRAME高度,根据需要自己修改
-            iframeForceRefresh: false, //点击后强制加载对应的iframe
-            iframeForceRefreshTable: false, //点击后强制刷新对应的iframe中的table
+            iframeForceRefresh: false, //点击后强制刷新对应的iframe
             callback: function () {
                 //关闭后回调函数
             }
@@ -142,15 +141,6 @@
                     $("#" + conid + " iframe").attr('src', function (i, val) {
                         return val;
                     });
-                } else if (options.iframeForceRefreshTable) {
-                    try {
-                        //检测iframe中是否存在刷新按钮
-                        if ($("#" + conid + " iframe").contents().find(".btn-refresh").size() > 0) {
-                            $("#" + conid + " iframe")[0].contentWindow.$(".btn-refresh").trigger("click");
-                        }
-                    } catch (e) {
-
-                    }
                 }
             }
             localStorage.setItem("addtabs", $(this).prop('outerHTML'));

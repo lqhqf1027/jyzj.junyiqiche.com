@@ -880,16 +880,12 @@ class Validate
             // 支持多个字段验证
             $fields = explode('^', $key);
             foreach ($fields as $key) {
-                if (isset($data[$key])) {
-                    $map[$key] = $data[$key];
-                }
+                $map[$key] = $data[$key];
             }
         } elseif (strpos($key, '=')) {
             parse_str($key, $map);
-        } elseif (isset($data[$field])) {
-            $map[$key] = $data[$field];
         } else {
-            $map = [];
+            $map[$key] = $data[$field];
         }
 
         $pk = isset($rule[3]) ? $rule[3] : $db->getPk();

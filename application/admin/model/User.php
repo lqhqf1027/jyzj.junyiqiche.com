@@ -1,7 +1,6 @@
 <?php
 
 namespace app\admin\model;
-
 use app\common\model\MoneyLog;
 use think\Model;
 
@@ -21,12 +20,10 @@ class User extends Model
         'logintime_text',
         'jointime_text'
     ];
-
     public function getOriginData()
     {
         return $this->origin;
     }
-
     protected static function init()
     {
         self::beforeUpdate(function ($row) {
@@ -42,8 +39,6 @@ class User extends Model
                 }
             }
         });
-
-
         self::beforeUpdate(function ($row) {
             $changedata = $row->getChangedData();
             if (isset($changedata['money'])) {

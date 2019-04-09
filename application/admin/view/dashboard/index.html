@@ -121,308 +121,466 @@
     .item {
         padding:30px 0;
     }
+    .carStatus{
+        border-right: 2px solid grey;
+        /* border-radius: 5px; */
+    }
+    .carStatus h3,.carStatus_last h3{
+        font-weight:600;
+    }
+
+    small .font_little{
+        font-size: 20%;
+    }
 </style>
-{if preg_match('/\/admin\/|admin\.php|admin_d75KABNWt\.php/i', url())}
-<div class="alert alert-danger-light">
-    {:__('Security tips')}
-</div>
-{/if}
 <div class="panel panel-default panel-intro">
+
     <div class="panel-heading">
         {:build_heading(null, false)}
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#one" data-toggle="tab">{:__('Dashboard')}</a></li>
-            <li><a href="#two" data-toggle="tab">{:__('Custom')}</a></li>
+            <li class="active"><a href="#one" data-toggle="tab">{:__('控制台-成都')}</a></li>
+            <li><a href="#xi-an" data-toggle="tab">{:__('控制台-西安')}</a></li>
+            <li><a href="#yinchuan" data-toggle="tab">{:__('控制台-银川')}</a></li>
+            <li><a href="#kuming" data-toggle="tab">{:__('控制台-昆明')}</a></li>
+            <li><a href="#nanchong" data-toggle="tab">{:__('控制台-南充')}</a></li>
         </ul>
     </div>
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="one">
 
-                <div class="row">
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="sm-st clearfix">
-                            <span class="sm-st-icon st-red"><i class="fa fa-users"></i></span>
-                            <div class="sm-st-info">
-                                <span>{$totaluser}</span>
-                                {:__('Total user')}
+                    <div class="row">
+                            <div class="col-sm-3 col-xs-6">
+                                <div class="sm-st clearfix">
+                                    <span class="sm-st-icon st-red"><i class="fa fa-handshake-o"></i></span>
+                                    <div class="sm-st-info">
+                                        <span>{$todaytake}</span>
+                                        {:__('本月提车数')}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="sm-st clearfix">
-                            <span class="sm-st-icon st-violet"><i class="fa fa-book"></i></span>
-                            <div class="sm-st-info">
-                                <span>{$totalviews}</span>
-                                {:__('Total view')}
+                            <div class="col-sm-3 col-xs-6">
+                                <div class="sm-st clearfix">
+                                    <span class="sm-st-icon st-violet"><i class="fa fa-clock-o"></i></span>
+                                    <div class="sm-st-info">
+                                        <span>{$todayorder}</span>
+                                        {:__('本月待提车数')}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="sm-st clearfix">
-                            <span class="sm-st-icon st-blue"><i class="fa fa-shopping-bag"></i></span>
-                            <div class="sm-st-info">
-                                <span>{$totalorder}</span>
-                                {:__('Total order')}
+                            <div class="col-sm-3 col-xs-6">
+                                <div class="sm-st clearfix">
+                                    <span class="sm-st-icon st-blue"><i class="fa fa-percent"></i></span>
+                                    <div class="sm-st-info">
+                                        <span>{$guest}</span>
+                                        {:__('本月直客成交百分比')}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="sm-st clearfix">
-                            <span class="sm-st-icon st-green"><i class="fa fa-cny"></i></span>
-                            <div class="sm-st-info">
-                                <span>{$totalorderamount}</span>
-                                {:__('Total order amount')}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div id="echart" style="height:200px;width:100%;"></div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card sameheight-item stats">
-                            <div class="card-block">
-                                <div class="row row-sm stats-container">
-                                    <div class="col-xs-6 stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-rocket"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$todayusersignup} </div>
-                                            <div class="name"> {:__('Today user signup')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 30%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-shopping-cart"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$todayuserlogin} </div>
-                                            <div class="name"> {:__('Today user login')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6  stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-line-chart"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$todayorder} </div>
-                                            <div class="name"> {:__('Today order')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6  stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-users"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$unsettleorder} </div>
-                                            <div class="name"> {:__('Unsettle order')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6  stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-list-alt"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$sevendnu} </div>
-                                            <div class="name"> {:__('Seven dnu')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-dollar"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$sevendau} </div>
-                                            <div class="name"> {:__('Seven dau')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
+                            <div class="col-sm-3 col-xs-6">
+                                <div class="sm-st clearfix">
+                                    <span class="sm-st-icon st-green"><i class="fa fa-percent"></i></span>
+                                    <div class="sm-st-info">
+                                        <span>{$introduce}</span>
+                                        {:__('本月转介绍成交百分比')}
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                <!-- 新车 -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="newechart" style="height:300px;width:100%;"></div>
                     </div>
                 </div>
+              
 
                 <div class="row" style="margin-top:15px;">
 
-                    <div class="col-lg-12">
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <div class="panel bg-blue">
+                    <div class="col-xs-6 col-md-2 carStatus">
+                        <div class="panel">
                             <div class="panel-body">
                                 <div class="panel-title">
                                     <span class="label label-success pull-right">{:__('Real time')}</span>
-                                    <h5>{:__('Category count')}</h5>
+                                    <h3>{:__('年检')}</h3>
                                 </div>
                                 <div class="panel-content">
-                                    <h1 class="no-margins">1234</h1>
-                                    <div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>
-                                    <small>{:__('Category count tips')}</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <div class="panel bg-aqua-gradient">
-                            <div class="panel-body">
-                                <div class="ibox-title">
-                                    <span class="label label-info pull-right">{:__('Real time')}</span>
-                                    <h5>{:__('Attachment count')}</h5>
-                                </div>
-                                <div class="ibox-content">
-                                    <h1 class="no-margins">1043</h1>
-                                    <div class="stat-percent font-bold text-gray"><i class="fa fa-modx"></i> 2592</div>
-                                    <small>{:__('Attachment count tips')}</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-6 col-md-3">
-                        <div class="panel bg-purple-gradient">
-                            <div class="panel-body">
-                                <div class="ibox-title">
-                                    <span class="label label-primary pull-right">{:__('Real time')}</span>
-                                    <h5>{:__('Article count')}</h5>
-                                </div>
-                                <div class="ibox-content">
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h1 class="no-margins">1234</h1>
-                                            <div class="font-bold"><i class="fa fa-commenting"></i> <small>{:__('Comment count')}</small></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h1 class="no-margins">6754</h1>
-                                            <div class="font-bold"><i class="fa fa-heart"></i> <small>{:__('Like count')}</small></div>
-                                        </div>
+                                    
+                                    <div class="col-md-4">
+                                        <h1 class="no-margins">{$year_status}</h1>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('需年检车辆（台）')}</small></div>
                                     </div>
+                                    <div class="col-md-6">
+                                        {if $year_status_past == 0}
+                                        <h1 class="no-margins">{$year_status_past}</h1>
+                                        {else /}
+                                        <h1 class="no-margins text-danger">{$year_status_past}</h1>
+                                        {/if}
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('年检已过期车辆')}</small></div>
+                                    </div>
+                                        
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-md-3">
-                        <div class="panel bg-green-gradient">
+                    <div class="col-xs-6 col-md-5 carStatus">
+
+                        <div class="panel col-md-6 ">
                             <div class="panel-body">
                                 <div class="ibox-title">
-                                    <span class="label label-primary pull-right">{:__('Real time')}</span>
-                                    <h5>{:__('News count')}</h5>
+                                    <span class="label label-success pull-right">{:__('Real time')}</span>
+                                    <h3>{:__('保险（续保）')}</h3>
                                 </div>
                                 <div class="ibox-content">
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h1 class="no-margins">5302</h1>
-                                            <div class="font-bold"><i class="fa fa-commenting"></i> <small>{:__('Comment count')}</small></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h1 class="no-margins">8205</h1>
-                                            <div class="font-bold"><i class="fa fa-user"></i> <small>{:__('Like count')}</small></div>
-                                        </div>
+                                    <div class="col-md-6">
+                                            <h1 class="no-margins"><span class="">{$strong_status}</span></h1>
+                                            <div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="">交强险</span> 需续保车辆（台）')}</small></div>
+
                                     </div>
+                                    <div class="col-md-6">
+
+                                        <h1 class="no-margins"><span class="">{$business_status}</span></h1>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small> {:__('<span class="">商业险</span>需续保车辆（台）')}</small></div>
+                                    </div>
+                                    <!--<div class="col-md-6">-->
+                                        <!--{if $strong_status_past == 0}-->
+                                        <!--<h1 class="no-margins"><span class="">{$strong_status_past}</span> / <span class="">{$business_status_past}</span></h1>-->
+                                        <!--{else /}-->
+                                        <!--<h1 class="no-margins ">{$strong_status_past}</h1>-->
+                                        <!--{/if}  -->
+                                        <!--<div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="">交强</span> / <span class="">商业险</span>续保过期车辆（台）')}</small></div>-->
+                                    <!--</div>-->
+                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel col-md-6 ">
+                            <div class="panel-body">
+                                <div class="ibox-title">
+                                    <span class="label label-success pull-right">{:__('Real time')}</span>
+                                    <h3>{:__('保险（过期）')}</h3>
+                                </div>
+                                <div class="ibox-content">
+
+                                    <div class="col-md-6">
+                                        <h1 class="no-margins"><span class="">{$strong_status_past}</span></h1>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="">交强险</span> 过期车辆（台）')}</small></div>
+
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <h1 class="no-margins"><span class="">{$business_status_past}</span></h1>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small> {:__('<span class="">商业险</span>过期车辆（台）')}</small></div>
+                                    </div>
+                                    <!--<div class="col-md-6">-->
+                                    <!--{if $strong_status_past == 0}-->
+                                    <!--<h1 class="no-margins"><span class="">{$strong_status_past}</span> / <span class="">{$business_status_past}</span></h1>-->
+                                    <!--{else /}-->
+                                    <!--<h1 class="no-margins ">{$strong_status_past}</h1>-->
+                                    <!--{/if}  -->
+                                    <!--<div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="">交强</span> / <span class="">商业险</span>续保过期车辆（台）')}</small></div>-->
+                                    <!--</div>-->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-md-5 carStatus_last">
+                        <div class="panel ">
+                            <div class="panel-body">
+                                <div class="ibox-title">
+                                    <span class="label label-success pull-right">{:__('Real time')}</span>
+                                    <h3>{:__('违章')}</h3>
+                                </div>
+                                <div class="ibox-content">
+
+                                    <div class="col-md-3">
+                                        {if $violation_inquiry == 0}
+                                        <h1 class="no-margins">{$violation_inquiry}</h1>
+                                        {else /}
+                                        <h1 class="no-margins text-danger">{$violation_inquiry}</h1>
+                                        {/if}  
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('总违章车辆（台）')}</small></div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        {if $total_deduction_little == 0}
+                                        <h1 class="no-margins">{$total_deduction_little}</h1>
+                                        {else /}
+                                        <h1 class="no-margins ">{$total_deduction_little}</h1>
+                                        {/if}  
+                                        <div class="font-bold "><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分1~20')}</small></div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        {if $total_deduction_more == 0}
+                                        <h1 class="no-margins">{$total_deduction_more}</h1>
+                                        {else /}
+                                        <h1 class="no-margins ">{$total_deduction_more}</h1>
+                                        {/if}
+                                        <div class="font-bold "><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分21~50')}</small></div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        {if $total_deduction_many == 0}
+                                        <h1 class="no-margins">{$total_deduction_many}</h1>
+                                        {else /}
+                                        <h1 class="no-margins ">{$total_deduction_many}</h1>
+                                        {/if}  
+                                        <div class="font-bold " ><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分51以上')}</small></div>
+                                    </div>
+                                
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!--如果需要删除最新新闻和最新发贴，删除HTML后还需要删除dashboard.js中的代码-->
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="box box-danger">
                             <div class="box-header">
-                                <h3 class="box-title">{:__('Recent news')}</h3>
+                                <h3 class="box-title">{:__('车辆管理数据')}</h3>
                                 <div class="box-tools pull-right">
-                                    <a href="https://www.fastadmin.net" target="_blank" class="btn btn-box-tool">{:__('More')}</a>
+                                    
                                 </div>
                             </div>
-                            <div class="box-body" id="news-list">
-                                
-                            </div>
+                            <!-- <div class="box-body stats" id="news-list">
+                                <div class="row row-sm stats-container">
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon" style="color:green"> <i class="fa fa-hand-peace-o"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$rentaltakecar} </div>
+                                            <div class="name"> {:__('租车已租车辆')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-green" style="width: 25%"></div>
+                                        </div>
+                                    </div>  
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:goldenrod"> <i class="fa fa-clock-o"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$rentalcar} </div>
+                                            <div class="name"> {:__('租车待租车辆')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-goldenrod" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:blueviolet"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$secondcar} </div>
+                                            <div class="name"> {:__('二手车可买车辆')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-blueviolet" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:orangered"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$introduce} </div>
+                                            <div class="name"> {:__('需年检车辆')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-orangered" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:orangered"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$introduce} </div>
+                                            <div class="name"> {:__('需续保车辆')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-orangered" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon" style="color:red"> <i class="fa fa-bar-chart"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$count} </div>
+                                            <div class="name"> {:__('违章车辆')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-red" style="width: 30%"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="box box-success">
                             <div class="box-header">
-                                <h3 class="box-title">{:__('Recent discussion')}</h3>
+                                <h3 class="box-title">{:__('财务管理数据')}</h3>
                                 <div class="box-tools pull-right">
-                                    <a href="https://forum.fastadmin.net" class="btn btn-box-tool">{:__('More')}</a>
+                                    
                                 </div>
                             </div>
-                            <div class="box-body" id="discussion-list">
-                                
-                            </div>
+                            <!-- <div class="box-body stats" id="discussion-list">
+                                <div class="row row-sm stats-container">
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon" style="color:green"> <i class="fa fa-hand-peace-o"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$todaytake} </div>
+                                            <div class="name"> {:__('本月总共成交数')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-green" style="width: 25%"></div>
+                                        </div>
+                                    </div>  
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:goldenrod"> <i class="fa fa-clock-o"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$todayorder} </div>
+                                            <div class="name"> {:__('本月待完成订单')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-goldenrod" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:blueviolet"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$guest} </div>
+                                            <div class="name"> {:__('本月直客总共成交百分比')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-blueviolet" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:orangered"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$introduce} </div>
+                                            <div class="name"> {:__('本月转介绍总共成交百分比')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-orangered" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:orangered"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$introduce} </div>
+                                            <div class="name"> {:__('本月转介绍总共成交百分比')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-orangered" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon" style="color:red"> <i class="fa fa-bar-chart"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$count} </div>
+                                            <div class="name"> {:__('总共历史成交数')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-red" style="width: 30%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="box box-info">
-                            <div class="box-header"><h3 class="box-title">{:__('Server info')}</h3></div>
-                            <div class="box-body">
-                                <table class="table table-striped">
-                                    <tbody>
-                                        <tr>
-                                            <td width="140">{:__('FastAdmin version')}</td>
-                                            <td>{$Think.config.fastadmin.version} <a href="javascript:;" class="btn btn-xs btn-checkversion">检查最新版</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('FastAdmin addon version')}</td>
-                                            <td>{$addonversion}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Sapi name')}</td>
-                                            <td>{:php_sapi_name()}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Debug mode')}</td>
-                                            <td>{$Think.config.app_debug?__('Yes'):__('No')}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Software')}</td>
-                                            <td>{$Think.server.SERVER_SOFTWARE}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Upload mode')}</td>
-                                            <td>{$uploadmode}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Upload url')}</td>
-                                            <td>{$config.upload.uploadurl}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Upload Cdn url')}</td>
-                                            <td>{$config.upload.cdnurl}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Timezone')}</td>
-                                            <td>{:date_default_timezone_get()}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Cdn url')}</td>
-                                            <td>__CDN__</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Language')}</td>
-                                            <td>{$config.language}</td>
-                                        </tr>
-                                    </tbody></table>
-                            </div>
+                            <div class="box-header"><h3 class="box-title">{:__('风控审核数据')}</h3></div>
+                            <!-- <div class="box-body stats">
+                                <div class="row row-sm stats-container">
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon" style="color:green"> <i class="fa fa-hand-peace-o"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$todaytake} </div>
+                                            <div class="name"> {:__('本月总共成交数')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-green" style="width: 25%"></div>
+                                        </div>
+                                    </div>  
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:goldenrod"> <i class="fa fa-clock-o"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$todayorder} </div>
+                                            <div class="name"> {:__('本月待完成订单')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-goldenrod" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:blueviolet"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$guest} </div>
+                                            <div class="name"> {:__('本月直客总共成交百分比')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-blueviolet" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:orangered"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$introduce} </div>
+                                            <div class="name"> {:__('本月转介绍总共成交百分比')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-orangered" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon" style="color:orangered"> <i class="fa fa-percent"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$introduce} </div>
+                                            <div class="name"> {:__('本月转介绍总共成交百分比')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-orangered" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon" style="color:red"> <i class="fa fa-bar-chart"></i> </div>
+                                        <div class="stat">
+                                            <div class="value"> {$count} </div>
+                                            <div class="name"> {:__('总共历史成交数')} </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-red" style="width: 30%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="two">
+            <div class="tab-pane fade" id="xi-an">
                 <div class="row">
                     <div class="col-xs-12">
-                        {:__('Custom zone')}
+                        {:__('暂未开放')}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="yinchuan">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {:__('暂未开放')}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="kuming">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {:__('暂未开放')}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nanchong">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {:__('暂未开放')}
                     </div>
                 </div>
             </div>
@@ -459,8 +617,14 @@
 </script>
 <script>
     var Orderdata = {
-    column: {:json_encode(array_keys($paylist))},
-            paydata: {:json_encode(array_values($paylist))},
-            createdata: {:json_encode(array_values($createlist))},
+            column: {:json_encode(array_keys($newsales))},
+            newsales: {:json_encode(array_values($newsales))},
+            rentalsales: {:json_encode(array_values($rentalsales))},
+            secondsales: {:json_encode(array_values($secondsales))},
+            fullsales: {:json_encode(array_values($fullsales))},
+            fullsecondsales: {:json_encode(array_values($fullsecondsales))},
+            count: {:json_encode(array_values($count))},
+          
     };
+    // console.log(Orderdata);
 </script>

@@ -7,7 +7,6 @@ use addons\third\library\Service;
 use think\addons\Controller;
 use think\Cookie;
 use think\Hook;
-use think\Session;
 
 /**
  * 第三方登录插件
@@ -48,12 +47,8 @@ class Index extends Controller
     public function connect()
     {
         $platform = $this->request->param('platform');
-        $url = $this->request->param('url');
         if (!$this->app->{$platform}) {
             $this->error(__('Invalid parameters'));
-        }
-        if ($url) {
-            Session::set("redirecturl", $url);
         }
         // 跳转到登录授权页面
         $this->redirect($this->app->{$platform}->getAuthorizeUrl());
@@ -83,8 +78,8 @@ class Index extends Controller
         });
         $platform = $this->request->param('platform');
 
-        // 成功后返回之前页面
-        $url = Session::has("redirecturl") ? Session::pull("redirecturl") : url('index/user/index');
+        // 成功后返回会员中心
+        $url = url('index/user/index');
 
         // 授权成功后的回调
         $result = $this->app->{$platform}->getUserInfo();
@@ -97,10 +92,10 @@ class Index extends Controller
                     $uc = new \addons\ucenter\library\client\Client();
                     $synchtml = $uc->uc_user_synlogin($this->auth->id);
                 }
-                $this->success(__('登录成功') . $synchtml, $url);
+                $this->success(__('Logged in successful') . $synchtml, $url);
             }
         }
-        $this->error(__('操作失败'), $url);
+        $this->error(__('Operation failed'), $url);
     }
 
 }

@@ -1,0 +1,45 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Referee_bonus')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-referee_bonus" class="form-control form-control" data-rule="required" step="0.01" name="row[referee_bonus]" type="number" value="{$row.referee_bonus}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Bank_account')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-bank_account" class="form-control form-control" data-rule="required" name="row[bank_account]" type="text" value="{$row.bank_account}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Make_moneytime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-make_moneytime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[make_moneytime]" type="text" value="{$row.make_moneytime}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Request_fundstime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-request_fundstime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[request_fundstime]" type="text" value="{$row.request_fundstime}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Introduction_note')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-introduction_note" class="form-control editor" rows="5" name="row[introduction_note]" cols="50" placeholder="选填">{$row.introduction_note}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+{php}
+//dump($row);
+{/php}

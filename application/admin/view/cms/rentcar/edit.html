@@ -1,0 +1,84 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-store_id" class="form-control selectpicker" name="row[store_id]" disabled>
+
+                <option value="" style="display: none">未选择任何项</option>
+                {foreach name="$store" item="vo"}
+                {eq name="$vo.id" value="$row.store_id"}
+                <option value="{$vo.id}" selected>{$vo.store_name}</option>
+                {else /}
+                <option value="{$vo.id}">{$vo.store_name}</option>
+                {/eq}
+                {/foreach}
+
+            </select>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择标签名称(多选)')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                {:Form::selectpages('row[label_id]', 2, 'cms/label/index', null, null)}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('车型主图')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-models_main_images" data-rule="required" class="form-control" size="50" name="row[models_main_images]" type="text"
+                    value="{$row.models_main_images}">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-models_main_images" class="btn btn-danger plupload" data-input-id="c-models_main_images" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-models_main_images">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+                            
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-models_main_images"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-models_main_images"></ul>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('车型亮点（图片上传）')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-modelsimages" data-rule="required" class="form-control" size="50" name="row[modelsimages]" type="text"
+                    value="{$row.modelsimages}">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-modelsimages" class="btn btn-danger plupload" data-input-id="c-modelsimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-modelsimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+                        
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-modelsimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-modelsimages"></ul>
+        </div>
+    </div>
+
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+

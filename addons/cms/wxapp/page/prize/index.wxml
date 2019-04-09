@@ -1,0 +1,4 @@
+<import src="../components/wheel/wheel.wxml" />
+
+<image src="{{globalData.config.upload.cdnurl+zhuanpan_bk_img}}" bindload="onImageLoad" style="{{ imageStyle }}" />
+<template is="wheel" data="{{ ...wheel }}" />

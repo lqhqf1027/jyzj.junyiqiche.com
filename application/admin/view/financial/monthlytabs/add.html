@@ -1,0 +1,83 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_card_number')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_card_number" data-rule="required" class="form-control form-control" name="row[monthly_card_number]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_name" data-rule="required" class="form-control form-control" name="row[monthly_name]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_phone_number')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_phone_number" data-rule="required" class="form-control form-control" name="row[monthly_phone_number]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_models')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_models" data-rule="required" class="form-control form-control" name="row[monthly_models]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_monney')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_monney" data-rule="required" class="form-control form-control" step="0.01" name="row[monthly_monney]" type="number">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_failure_why')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_failure_why" data-rule="required" class="form-control form-control" name="row[monthly_failure_why]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_in_arrears_time')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_in_arrears_time" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[monthly_in_arrears_time]" type="text" value="{:date('Y-m-d')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_company')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_company" data-rule="required" class="form-control form-control" name="row[monthly_company]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_car_number')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_car_number" data-rule="required" class="form-control form-control" name="row[monthly_car_number]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_arrears_months')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_arrears_months" data-rule="required" class="form-control form-control" name="row[monthly_arrears_months]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('补交情况')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_supplementary" class="form-control form-control" name="row[monthly_supplementary]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly_note')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly_note" class="form-control form-control" name="row[monthly_note]" type="text">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

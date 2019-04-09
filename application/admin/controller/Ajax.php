@@ -9,7 +9,7 @@ use think\Cache;
 use think\Config;
 use think\Db;
 use think\Lang;
-
+use think\Session;
 /**
  * Ajax异步请求接口
  * @internal
@@ -264,5 +264,4 @@ class Ajax extends Backend
         }
         $this->success('', null, $provincelist);
     }
-
 }

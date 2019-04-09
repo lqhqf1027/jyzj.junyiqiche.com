@@ -1,0 +1,232 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data1')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data1" data-rule="required" class="form-control form-control" name="row[data1]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data2')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data2" data-rule="required" class="form-control form-control" name="row[data2]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data3')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data3" data-rule="required" class="form-control form-control" name="row[data3]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data4')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data4" data-rule="required" class="form-control form-control" name="row[data4]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data5')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data5" class="form-control form-control" step="0.01" name="row[data5]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data6')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data6" class="form-control form-control" step="0.01" name="row[data6]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data7')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-data7" class="form-control selectpicker" name="row[data7]">
+                {foreach name="data7List" item="vo"}
+                    <option value="{$key}" {in name="key" value=""}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data8')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data8" class="form-control form-control" step="0.01" name="row[data8]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data9')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data9" class="form-control form-control" step="0.01" name="row[data9]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data10')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data10" class="form-control form-control" step="0.01" name="row[data10]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data11')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data11" class="form-control form-control" step="0.01" name="row[data11]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data12')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data12" class="form-control form-control" step="0.01" name="row[data12]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data13')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data13" class="form-control form-control" step="0.01" name="row[data13]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data14')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-data14" class="form-control selectpicker" name="row[data14]">
+                {foreach name="data14List" item="vo"}
+                    <option value="{$key}" {in name="key" value="male"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data15')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data15" class="form-control form-control" name="row[data15]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data16')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data16" class="form-control form-control" name="row[data16]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data17')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data17" class="form-control form-control" name="row[data17]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data18')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data18" class="form-control form-control" name="row[data18]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data19')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data19" class="form-control form-control" name="row[data19]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data20')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-data20" data-rule="required" class="form-control selectpicker" name="row[data20]">
+                {foreach name="data20List" item="vo"}
+                    <option value="{$key}" {in name="key" value="direct_the_guest"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data21')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data21" class="form-control form-control" name="row[data21]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data22')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data22" class="form-control form-control" name="row[data22]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data23')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data23" class="form-control form-control" name="row[data23]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data24')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data24" class="form-control form-control" name="row[data24]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data25')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data25" class="form-control form-control" name="row[data25]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data26')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data26" class="form-control form-control" name="row[data26]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data27')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data27" class="form-control form-control" name="row[data27]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data28')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data28" data-rule="required" class="form-control form-control" name="row[data28]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data29')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data29" data-rule="required" class="form-control form-control" name="row[data29]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data30')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data30" class="form-control form-control" name="row[data30]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data31')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data31" class="form-control form-control" name="row[data31]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data32')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data32" class="form-control form-control" name="row[data32]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Salestype')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-salestype" class="form-control selectpicker" name="row[salestype]">
+                {foreach name="salestypeList" item="vo"}
+                    <option value="{$key}" {in name="key" value=""}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

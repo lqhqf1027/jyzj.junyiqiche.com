@@ -25,17 +25,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', sortable: true, title: __('Id')},
-                        {field: 'type', title: __('Type'), formatter: Table.api.formatter.search, searchList: Config.typeList},
                         {field: 'title', title: __('Title')},
                         {field: 'flag', title: __('Flag'), formatter: Table.api.formatter.flag},
                         {field: 'image', title: __('Image'), formatter: Table.api.formatter.image},
                         {field: 'views', sortable: true, title: __('Views'), operate: 'BETWEEN'},
                         {field: 'comments', sortable: true, title: __('Comments'), operate: 'BETWEEN'},
-                        {
-                            field: 'url', title: __('Url'), formatter: function (value, row, index) {
-                                return '<a href="' + value + '" target="_blank" class="btn btn-default btn-xs"><i class="fa fa-link"></i></a>';
-                            }
-                        },
+                        {field: 'url', title: __('Url'), formatter: function(value, row, index){
+                                 return '<a href="' + value + '" target="_blank" class="btn btn-default btn-xs"><i class="fa fa-link"></i></a>';
+                        }},
                         {field: 'createtime', sortable: true, title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', sortable: true, title: __('Updatetime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'weigh', sortable: true, title: __('Weigh')},

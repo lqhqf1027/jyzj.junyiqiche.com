@@ -1,0 +1,18 @@
+{
+    "navigationBarTitleText": "我的",
+    "navigationBarBackgroundColor": "#3b66bb",
+    "navigationBarTextStyle": "white",
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+    	"i-sticky": "../../../assets/libs/iview/sticky/index",
+    	"i-sticky-item": "../../../assets/libs/iview/sticky-item/index",
+        "i-swipeout": "../../../assets/libs/iview/swipeout/index",
+        "wux-avatar": "../../../assets/libs/wux/avatar/index",
+        "wux-media": "../../../assets/libs/wux/media/index",
+        "wux-grids": "../../../assets/libs/wux/grids/index",
+        "wux-tabs": "../../../assets/libs/wux/tabs/index",
+        "wux-tab": "../../../assets/libs/wux/tab/index",
+        "wux-badge": "../../../assets/libs/wux/badge/index",
+        "wux-grid": "../../../assets/libs/wux/grid/index"
+    }
+}

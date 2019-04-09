@@ -7,6 +7,10 @@
         <meta name="description" content="">
         <meta name="author" content="{$config.author}">
         <title>{$config.title}</title>
+<<<<<<< HEAD
+        <link href="https://cdn.bootcss.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet">
+=======
 
         <!-- Bootstrap Core CSS -->
         <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -20,6 +24,7 @@
         <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
+>>>>>>> fastadmin/master
         <style type="text/css">
             body {
                 padding-top: 70px; margin-bottom: 15px;
@@ -353,12 +358,17 @@
 
         </div> <!-- /container -->
 
+<<<<<<< HEAD
+        <script src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+=======
         <!-- jQuery -->
         <script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
         <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+>>>>>>> fastadmin/master
         <script type="text/javascript">
             function syntaxHighlight(json) {
                 if (typeof json != 'string') {
@@ -491,14 +501,22 @@
                     //keep a copy of action attribute in order to modify the copy
                     //instead of the initial attribute
                     var url = $(form).attr('action');
+<<<<<<< HEAD
+=======
                     var method = $(form).prop('method').toLowerCase() || 'get';
+>>>>>>> fastadmin/master
 
                     var formData = new FormData();
 
                     $(form).find('input').each(function (i, input) {
+<<<<<<< HEAD
+                        if ($(input).attr('type') == 'file') {
+                            formData.append($(input).attr('name'), $(input)[0].files[0]);
+=======
                         if ($(input).attr('type').toLowerCase() == 'file') {
                             formData.append($(input).attr('name'), $(input)[0].files[0]);
                             method = 'post';
+>>>>>>> fastadmin/master
                         } else {
                             formData.append($(input).attr('name'), $(input).val())
                         }
@@ -541,8 +559,13 @@
 
                     $.ajax({
                         url: $('#apiUrl').val() + url,
+<<<<<<< HEAD
+                        data: $(form).prop('method').toLowerCase() == 'get' ? $(form).serialize() : formData,
+                        type: $(form).prop('method') + '',
+=======
                         data: method == 'get' ? $(form).serialize() : formData,
                         type: method,
+>>>>>>> fastadmin/master
                         dataType: 'json',
                         contentType: false,
                         processData: false,

@@ -1,0 +1,232 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Coupon_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-coupon_name" data-rule="required" class="form-control form-control" name="row[coupon_name]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('优惠卷金额')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-coupon_amount" data-rule="required" class="form-control form-control" name="row[coupon_amount]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Circulation')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-circulation" data-rule="required" class="form-control form-control" name="row[circulation]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('City_ids')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-city_ids" data-rule="required" data-source="cms/coupon/city" data-params='{"custom[pid]":"0"}' data-field="cities_name" class="form-control selectpage" name="row[city_ids]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('发放门店')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-store_ids" data-rule="required" data-source="cms/coupon/getStore" data-params='{"custom[city_id]":"0"}' data-field="store_name" data-multiple="true" class="form-control selectpage" name="row[store_ids]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Display_diagramimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-display_diagramimages" data-rule="required" class="form-control form-control" size="50" name="row[display_diagramimages]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-display_diagramimages" class="btn btn-danger plupload" data-input-id="c-display_diagramimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-display_diagramimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                   
+                </div>
+                <span class="msg-box n-right" for="c-display_diagramimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-display_diagramimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Membership_grade')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-membership_grade" class="form-control form-control" name="row[membership_grade]" type="number">
+            </div>
+        </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Threshold')}:</label>
+        <div class="col-xs-12 col-sm-8 radio"> 
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label for="">
+                        <input id="" name="threshold" type="radio" value="0" onchange="changeFun(this)"> 全场通用 </input> 
+                    </label>  
+                </div>
+                <div class="col-md-6">
+                    <label for="">
+                        <input id="" name="threshold" type="radio" value="1" onchange="changeFun(this)"> 满 
+                            <input id="c-threshold"  name="row[threshold]" type="text" disabled> 金额可用 
+                        </input> 
+                    </label>    
+                </div>
+            </div>
+            
+            <div class="col-md-12">
+                <div class="col-md-12">
+                    <label for="">
+                        <input id="" name="threshold" type="radio" value="2" onchange="changeFun(this)">{:__('Models_ids')}:
+                        <div id="models_view" style="display: none">
+                            <div class="col-md-12">
+                                <input id="c-models_ids" style="width: 808px" data-source="planmanagement/models/index" data-multiple="true" class="form-control selectpage form-control" name="row[models_ids]" type="text">
+                            </div>    
+                        </div>
+                        
+                        </input> 
+                    </label> 
+                </div>
+               
+            </div>
+           
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        function changeFun(that) {
+
+            var models = document.getElementById('models_view');
+            
+            if (that.value == '0') {
+               
+                $("#c-threshold").attr("disabled",true);
+
+                $("#c-threshold").val('');
+
+                models.style.setProperty('display', 'none', 'important');
+
+            } 
+            else if (that.value == '1') {
+
+                $("#c-threshold").removeAttr("disabled");
+
+                models.style.setProperty('display', 'none', 'important');
+
+                
+            }
+            else if (that.value == '2') {
+
+                $("#c-threshold").attr("disabled",true);
+                
+                $("#c-threshold").val('');
+
+                models.style.setProperty('display', 'block', 'important');
+            }
+
+        }
+
+        function changeFun1(that) {
+            
+            if (that.value == '0') { 
+                $("#c-limit_collar").attr("disabled",true);
+                $("#c-limit_collar").val('');
+
+            } else {
+
+                $("#c-limit_collar").removeAttr("disabled");
+                
+            }
+
+        }
+
+        function changeFun2(that) {
+
+            if (that.value == '0') {
+                $("#c-release_datetime").attr("disabled",true);
+                $("#c-release_datetime").val('');
+            } else {
+
+                $("#c-release_datetime").removeAttr("disabled");
+
+            }
+
+        }
+
+        function changeFun3(that) {
+    
+            if (that.value == '0') {
+                $("#c-validity_datetime").attr("disabled",true);
+                $("#c-validity_datetime").val('');
+            } else {
+
+                $("#c-validity_datetime").removeAttr("disabled");
+
+            }
+
+        }
+
+    </script>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Limit_collar')}:</label>
+        <div class="col-xs-12 col-sm-8 radio">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label for="">
+                        <input id="" name="limit_collar" type="radio" value="0" onchange="changeFun1(this)"> 不限 </input> 
+                    </label>  
+                </div>
+                <div class="col-md-6">
+                    <label for="">
+                        <input id="" name="limit_collar" type="radio" value="1" onchange="changeFun1(this)">可以领 
+                            <input id="c-limit_collar"  name="row[limit_collar]" type="text" disabled> 张 
+                        </input> 
+                    </label>    
+                </div>
+            </div>  
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Release_datetime')}:</label>
+        <div class="col-xs-12 col-sm-8 radio">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label for="">
+                        <input id="" name="release_datetime" type="radio" value="0" onchange="changeFun2(this)"> 长期有效 </input> 
+                    </label>  
+                </div>
+                <div class="col-md-6">
+                    <label for="">
+                        <input id="" name="release_datetime" type="radio" value="1" onchange="changeFun2(this)"> 截至某日之前有效:
+                            <input id="c-release_datetime" class="datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[release_datetime]" type="text" value="" disabled>
+                        </input> 
+                    </label>    
+                </div>
+            </div>            
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Validity_datetime')}:</label>
+        <div class="col-xs-12 col-sm-8 radio">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label for="">
+                        <input id="" name="validity_datetime" type="radio" value="0" onchange="changeFun3(this)"> 长期有效 </input>
+                    </label>  
+                </div>
+                <div class="col-md-6">
+                    <label for="">
+                        <input id="" name="validity_datetime" type="radio" value="1" onchange="changeFun3(this)"> 截至某日之前有效:
+                            <input id="c-validity_datetime" class="datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[validity_datetime]" type="text" value="" disabled>
+                        </input> 
+                    </label>    
+                </div>
+            </div>             
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

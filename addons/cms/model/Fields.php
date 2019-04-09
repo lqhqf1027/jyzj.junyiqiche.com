@@ -15,18 +15,12 @@ class Fields extends \think\Model
     // 追加属性
     protected $append = [
         'content_list',
-        'isrequire',
     ];
     protected static $listFields = ['select', 'selects', 'checkbox', 'radio', 'array'];
 
     protected static function init()
     {
 
-    }
-
-    public function getIsrequireAttr($value, $data)
-    {
-        return $data['rule'] && in_array('required', explode(',', $data['rule']));
     }
 
     /**

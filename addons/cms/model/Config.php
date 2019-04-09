@@ -1,17 +1,15 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: EDZ
- * Date: 2019/3/29
- * Time: 14:35
+ * User: glen9
+ * Date: 2018/11/20
+ * Time: 17:59
  */
 
 namespace addons\cms\model;
-
-
 use think\Model;
 
-class Config extends Model
+class Config extends  Model
 {
-   protected $name = 'config';
+    protected $name = 'config';
 }

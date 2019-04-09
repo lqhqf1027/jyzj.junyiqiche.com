@@ -1,7 +1,7 @@
 /**
  * @preserve tableExport.jquery.plugin
  *
- * Version 1.9.15
+ * Version 1.9.11
  *
  * Copyright (c) 2015-2018 hhurz, https://github.com/hhurz
  *
@@ -41,15 +41,14 @@
             textColor:     50,          // Color value or 'inherit' to use css color from html table
             fontStyle:     'normal',    // normal, bold, italic, bolditalic or 'inherit' to use css font-weight and fonst-style from html table
             overflow:      'ellipsize', // visible, hidden, ellipsize or linebreak
-            halign:        'inherit',   // left, center, right or 'inherit' to use css horizontal cell alignment from html table
+            halign:        'left',      // left, center, right
             valign:        'middle'     // top, middle, bottom
           },
           headerStyles: {
             fillColor:     [52, 73, 94],
             textColor:     255,
             fontStyle:     'bold',
-            halign:        'inherit',   // left, center, right or 'inherit' to use css horizontal header cell alignment from html table
-            valign:        'middle'     // top, middle, bottom
+            halign:        'center'
           },
           alternateRowStyles: {
             fillColor:     245
@@ -100,11 +99,6 @@
         },
         fonts: {}
       },
-      preserve: {
-        leadingWS:         false,       // preserve leading white spaces
-        trailingWS:        false        // preserve trailing white spaces
-      },
-      preventInjection:    true,
       tbodySelector:       'tr',
       tfootSelector:       'tr',        // Set empty ('') to prevent export of tfoot rows
       theadSelector:       'tr',
@@ -201,8 +195,7 @@
             if ( dataString instanceof Date )
               result = defaults.csvEnclosure + dataString.toLocaleString() + defaults.csvEnclosure;
             else {
-              result = preventInjection(csvValue);
-              result = replaceAll(result, defaults.csvEnclosure, defaults.csvEnclosure + defaults.csvEnclosure);
+              result = replaceAll(csvValue, defaults.csvEnclosure, defaults.csvEnclosure + defaults.csvEnclosure);
 
               if ( result.indexOf(defaults.csvSeparator) >= 0 || /[\r\n ]/g.test(result) )
                 result = defaults.csvEnclosure + result + defaults.csvEnclosure;
@@ -836,10 +829,8 @@
                                  if ( tdrowspan > 0 )
                                    trData += ' rowspan="' + tdrowspan + '"';
 
-                                 if ( typeof tdvalue === 'string' && tdvalue !== '' ) {
-                                   tdvalue = preventInjection(tdvalue);
+                                 if ( typeof tdvalue === 'string' && tdvalue !== '' )
                                    tdvalue = tdvalue.replace(/\n/g, '<br>');
-                                 }
 
                                  trData += '>' + tdvalue + '</td>';
                                }
@@ -1239,12 +1230,8 @@
                       cell.styles.rowHeight = rh;
                   }
 
-                  cell.styles.halign = (atOptions.headerStyles.halign === 'inherit') ? 'center' : atOptions.headerStyles.halign;
-                  cell.styles.valign = atOptions.headerStyles.valign;
-
                   if ( typeof col.style !== 'undefined' && col.style.hidden !== true ) {
-                    if ( atOptions.headerStyles.halign === 'inherit' )
-                      cell.styles.halign = col.style.align;
+                    cell.styles.halign = col.style.align;
                     if ( atOptions.styles.fillColor === 'inherit' )
                       cell.styles.fillColor = col.style.bcolor;
                     if ( atOptions.styles.textColor === 'inherit' )
@@ -1261,12 +1248,10 @@
               atOptions.createdCell = function (cell, data) {
                 var rowopt = teOptions.rowoptions [data.row.index + ":" + data.column.dataKey];
 
-                cell.styles.halign = (atOptions.styles.halign === 'inherit') ? 'center' : atOptions.styles.halign;
-                cell.styles.valign = atOptions.styles.valign;
-
-                if ( typeof rowopt !== 'undefined' && typeof rowopt.style !== 'undefined' && rowopt.style.hidden !== true ) {
-                  if ( atOptions.styles.halign === 'inherit' )
-                    cell.styles.halign = rowopt.style.align;
+                if ( typeof rowopt !== 'undefined' &&
+                  typeof rowopt.style !== 'undefined' &&
+                  rowopt.style.hidden !== true ) {
+                  cell.styles.halign = rowopt.style.align;
                   if ( atOptions.styles.fillColor === 'inherit' )
                     cell.styles.fillColor = rowopt.style.bcolor;
                   if ( atOptions.styles.textColor === 'inherit' )
@@ -1815,13 +1800,10 @@
 
           while ( tag ) {
             var txt = tag.innerText || tag.textContent || "";
-            var leadingspace = (txt.length && txt[0] === " ") ? " " : "";
-            var trailingspace = (txt.length > 1 && txt[txt.length - 1] === " ") ? " " : "";
 
-            if (defaults.preserve.leadingWS !== true)
-              txt = leadingspace + trimLeft(txt);
-            if (defaults.preserve.trailingWS !== true)
-              txt = trimRight(txt) + trailingspace;
+            txt = ((txt.length && txt[0] === " ") ? " " : "") +
+              $.trim(txt) +
+              ((txt.length > 1 && txt[txt.length - 1] === " ") ? " " : "");
 
             if ( $(tag).is("br") ) {
               x = cell.textPos.x;
@@ -1887,19 +1869,11 @@
     }
 
     function escapeRegExp (string) {
-      return string == null ? "" : string.toString().replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+      return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
     }
 
     function replaceAll (string, find, replace) {
-      return string == null ? "" : string.toString().replace(new RegExp(escapeRegExp(find), 'g'), replace);
-    }
-
-    function trimLeft (string) {
-      return string == null ? "" : string.toString().replace(/^\s+/, "");
-    }
-
-    function trimRight (string) {
-      return string == null ? "" : string.toString().replace(/\s+$/, "");
+      return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
     }
 
     function parseNumber (value) {
@@ -1948,8 +1922,6 @@
                 htmlData += $cell.find('input').eq(inputidx++).val();
               else if ( $(this).is("select") )
                 htmlData += $cell.find('select option:selected').eq(selectidx++).text();
-              else if ( $(this).is("br") )
-                htmlData += "<br>";
               else {
                 if ( typeof $(this).html() === 'undefined' )
                   htmlData += $(this).text();
@@ -1973,28 +1945,17 @@
             var obj    = $('<div/>').html(text).contents();
             var number = false;
             text       = '';
-
             $.each(obj.text().split("\u2028"), function (i, v) {
               if ( i > 0 )
                 text += " ";
-
-              if (defaults.preserve.leadingWS !== true)
-                v = trimLeft(v);
-              text += (defaults.preserve.trailingWS !== true) ? trimRight(v) : v;
+              text += $.trim(v);
             });
 
             $.each(text.split("\u2060"), function (i, v) {
               if ( i > 0 )
                 result += "\n";
-
-              if (defaults.preserve.leadingWS !== true)
-                v = trimLeft(v);
-              if (defaults.preserve.trailingWS !== true)
-                v = trimRight(v);
-              result += v.replace(/\u00AD/g, ""); // remove soft hyphens
+              result += $.trim(v).replace(/\u00AD/g, ""); // remove soft hyphens
             });
-
-            result = result.replace(/\u00A0/g, " "); // replace nbsp's with spaces
 
             if ( defaults.type === 'json' ||
               (defaults.type === 'excel' && defaults.mso.fileFormat === 'xmlss') ||
@@ -2035,15 +1996,6 @@
       }
 
       return result;
-    }
-
-    function preventInjection (string) {
-      if ( string.length > 0 && defaults.preventInjection === true ) {
-        var chars = "=+-@";
-        if ( chars.indexOf(string.charAt(0)) >= 0 )
-          return ( "'" + string );
-      }
-      return string;
     }
 
     //noinspection JSUnusedLocalSymbols

@@ -1,0 +1,473 @@
+<style>
+    .btn-trash{
+        display: none !important;
+    }
+    #p-new_car_marginimages .btn-trash{
+        display: block !important;
+    }
+    #p-bank_cardimages .btn-trash{
+        display: block !important;
+    }
+    #p-residence_bookletimages .btn-trash{
+        display: block !important;
+    }
+    #p-marriedimages .btn-trash{
+        display: block !important;
+    }
+    #p-housingimages .btn-trash{
+        display: block !important;
+    }
+    #p-crime_undertakingimages .btn-trash{
+        display: block !important;
+    }
+    #p-car_confirmationimages .btn-trash{
+        display: block !important;
+    }
+    #p-credit_reportimages .btn-trash{
+        display: block !important;
+    }
+
+</style>
+
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <h2>
+        <center>当前购车方式：以租代购（二手车）</center>
+    </h2>
+    <br>
+
+
+    <center>
+        <strong class="text-info"> {:__('如需编辑资料，可选择对应的选项进行编辑操作')}</strong>
+
+    </center>
+
+
+    <h3>
+        <center>基本资料</center>
+    </h3>
+    <br>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售二手车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-plan_car_second_name"  class="form-control selectpicker" name="row[plan_car_second_name]" disabled>
+                <option value=" " style='display: none'>未选中任何项</option>
+                {volist name="newRes" id="vo"}
+
+                <option disabled>{$vo['brand_name']}</option>
+                {volist name="vo.data" id="vo_s"} {if condition="$result['plan_id'] eq $vo_s['id']"}
+                <option value="{$vo_s['id']}" selected>{$vo_s['models_name']}</option>
+                {else /}
+                <option value="{$vo_s['id']}">{$vo_s['models_name']}</option>
+
+                {/if} {/volist} {/volist}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-username"   class="form-control form-control" name="row[username]" type="text" value="{$row.username}" disabled>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-phone" data-rule="required;mobile" class="form-control form-control" name="row[phone]" type="text" value="{$row.phone}" disabled>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-id_card" data-rule="required;IDcard" class="form-control form-control" name="row[id_card]" type="text" value="{$row.id_card}" disabled>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            
+            <div class="radio">
+            {foreach name="genderdataList" item="vo"}
+            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"}checked{/in} disabled/> {$vo}</label> 
+            {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('City')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <div class='control-relative'><input id="c-city"  class="form-control form-control" data-toggle="city-picker" name="row[city]" type="text" value="{$row.city}"></div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-5">
+            <input id="c-detailed_address"  class="form-control form-control" name="row[detailed_address]" type="text" placeholder="详细地址" value="{$row.detailed_address}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_1')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-emergency_contact_1"  class="form-control form-control" name="row[emergency_contact_1]" type="text" value="{$row.emergency_contact_1}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_2')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-emergency_contact_2"  class="form-control form-control" name="row[emergency_contact_2]" type="text" value="{$row.emergency_contact_2}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Family_members')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-family_members"  class="form-control form-control" name="row[family_members]" type="text" value="{$row.family_members}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_contractimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-deposit_contractimages"   class="form-control form-control" size="50" name="row[deposit_contractimages]" type="text" value="{$row.deposit_contractimages}" >
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-deposit_contractimages" class="btn btn-danger plupload" data-input-id="c-deposit_contractimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-deposit_contractimages" ><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    
+                </div>
+                <span class="msg-box n-right" for="c-deposit_contractimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-deposit_contractimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_receiptimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-deposit_receiptimages"   class="form-control form-control" size="50" name="row[deposit_receiptimages]" type="text" value="{$row.deposit_receiptimages}" >
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-deposit_receiptimages" class="btn btn-danger plupload" data-input-id="c-deposit_receiptimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-deposit_receiptimages" ><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                   
+                </div>
+                <span class="msg-box n-right" for="c-deposit_receiptimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-deposit_receiptimages"></ul>
+        </div>
+    </div>
+    <h3>
+        <center>客户来源</center>
+    </h3>
+    <br>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Customer_source')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-customer_source"   class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)" disabled>
+                {foreach name="customerSourceList" item="vo"}
+                <option value="{$key}" {in name="key" value="$row.customer_source" }selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        function changeFun(that) {
+            var introduce = document.getElementById('introduce-view');
+
+            if (that.value == 'direct_the_guest') {
+
+                introduce.style.setProperty('display', 'none', 'important');
+
+
+            } else {
+
+                introduce.style.setProperty('display', 'block', 'important');
+            }
+
+        }
+
+    </script>
+    <div id="introduce-view" {if condition="$row.customer_source eq direct_the_guest" } style="display: none" {else /} style="display: block"
+        {/if}>
+
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_name')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]" type="text" value="{$row.turn_to_introduce_name}" disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_phone')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-turn_to_introduce_phone" class="form-control" name="row[turn_to_introduce_phone]" type="text" value="{$row.turn_to_introduce_phone}" disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_card')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-turn_to_introduce_card" class="form-control" name="row[turn_to_introduce_card]" type="text" value="{$row.turn_to_introduce_card}" disabled>
+            </div>
+        </div>
+
+
+    </div>
+    
+    <h3>
+        <center>审核资料上传（不必填）</center>
+    </h3>
+    <br>
+    
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-id_cardimages"   class="form-control" size="50" name="row[id_cardimages]" value="{$row.id_cardimages}" type="text" >
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload" data-input-id="c-id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-id_cardimages" >
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-id_cardimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-id_cardimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-drivers_licenseimages"   class="form-control form-control" size="50" name="row[drivers_licenseimages]" value="{$row.drivers_licenseimages}" type="text" >
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-drivers_licenseimages" class="btn btn-danger plupload" data-input-id="c-drivers_licenseimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-drivers_licenseimages" ><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    
+                </div>
+                <span class="msg-box n-right" for="c-drivers_licenseimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-drivers_licenseimages"></ul>
+        </div>
+    </div>
+    <h3>
+        <center>提车资料上传（现在可上传也可不上传，提车时必须上传）</center>
+    </h3>
+    <br>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Bank_cardimages')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-bank_cardimages"    class="form-control form-control" size="50" name="row[bank_cardimages]"  value="{$row.bank_cardimages}" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-bank_cardimages" class="btn btn-danger plupload" data-input-id="c-bank_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-bank_cardimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    
+                </div>
+                <span class="msg-box n-right" for="c-bank_cardimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-bank_cardimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('户口簿【首页、主人页、本人页】')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-residence_bookletimages"    class="form-control" size="50" name="row[residence_bookletimages]" value="{$row.residence_bookletimages}" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-residence_bookletimages" class="btn btn-danger plupload" data-input-id="c-residence_bookletimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-residence_bookletimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-residence_bookletimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-residence_bookletimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否结婚')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-customer_source"  class="form-control selectpicker" name="row[idcard]"
+                    onchange="idchangeFun(this)">
+
+                <option value="yes">是</option>
+                <option value="no" selected>否</option>
+
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group" id="idcard-view" style="display: none;">
+        <label class="control-label col-xs-12 col-sm-2">{:__('结婚证复印件（非必须）')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-marriedimages"  class="form-control" size="50" name="row[marriedimages]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-marriedimages" class="btn btn-danger plupload" data-input-id="c-marriedimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-marriedimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-marriedimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-marriedimages"></ul>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        function idchangeFun(that) {
+
+            var idcard = document.getElementById('idcard-view');
+
+
+            if (that.value == 'no') {
+                idcard.style.setProperty('display', 'none', 'important');
+            } else {
+                idcard.style.setProperty('display', 'block', 'important');
+            }
+
+        }
+
+    </script>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('住房合同/房产证（多图）')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-housingimages"    class="form-control" size="50" name="row[housingimages]" value="{$row.housingimages}" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-housingimages" class="btn btn-danger plupload" data-input-id="c-housingimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-housingimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-housingimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-housingimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('无犯罪记录承诺书')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-crime_undertakingimages"   class="form-control" size="50" name="row[crime_undertakingimages]" value="{$row.crime_undertakingimages}" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-crime_undertakingimages" class="btn btn-danger plupload" data-input-id="c-crime_undertakingimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-crime_undertakingimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-crime_undertakingimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-crime_undertakingimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('购车确认书')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-car_confirmationimages"   class="form-control" size="50" name="row[car_confirmationimages]" value="{$row.car_confirmationimages}" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-car_confirmationimages" class="btn btn-danger plupload" data-input-id="c-car_confirmationimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-car_confirmationimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-car_confirmationimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-car_confirmationimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('征信报告')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-credit_reportimages"   class="form-control" size="50" name="row[credit_reportimages]" value="{$row.credit_reportimages}" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-credit_reportimages" class="btn btn-danger plupload" data-input-id="c-credit_reportimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-credit_reportimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-credit_reportimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-credit_reportimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('申请表（多图）')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-application_formimages"   class="form-control" size="50" name="row[application_formimages]" value="{$row.application_formimages}" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-application_formimages" class="btn btn-danger plupload" data-input-id="c-application_formimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-application_formimages">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-application_formimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-application_formimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfiles')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <div class="input-group">
+                <input id="c-call_listfiles"   class="form-control" size="50" name="row[call_listfiles]" type="text" placeholder="请上传PDF格式！！！" value="{$row.call_listfiles}">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-call_listfiles" class="btn btn-danger plupload" data-input-id="c-call_listfiles" data-multiple="true">
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    &nbsp;&nbsp;&nbsp;
+                    <!-- <span>
+
+                        <button type="button" id="fachoose-call_listfiles" class="btn btn-info get_call_listfiles" data-multiple="true">
+                            <i class="fa fa-download"></i> {:__('点击这里一键获取通话清单')}</button>
+                    </span> -->
+                </div>
+                <span class="msg-box n-right" for="c-call_listfiles"></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

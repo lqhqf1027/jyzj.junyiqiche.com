@@ -31,6 +31,11 @@ class Channel Extends Model
         self::$config = $config;
     }
 
+    public function model()
+    {
+        return $this->belongsTo("Modelx");
+    }
+
     public function getUrlAttr($value, $data)
     {
         $diyname = $data['diyname'] ? $data['diyname'] : $data['id'];
@@ -243,11 +248,6 @@ class Channel Extends Model
             }
         }
         return $str;
-    }
-
-    public function model()
-    {
-        return $this->belongsTo('Modelx', 'model_id')->setEagerlyType(0);
     }
 
 }

@@ -1,0 +1,13 @@
+/* page/message/list/index.wxss */
+
+page {
+	height: 100%;
+}
+
+.dot {
+	width: 12rpx;
+	height: 12rpx;
+	border-radius: 50%;
+	background-color: #ff6740;
+	margin-right: 20rpx;
+}

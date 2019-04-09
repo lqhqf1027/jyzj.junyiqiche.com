@@ -38,9 +38,8 @@
                             <thead>
                                 <tr>
                                     <th width="15%">{:__('Title')}</th>
-                                    <th width="68%">{:__('Value')}</th>
+                                    <th width="70%">{:__('Value')}</th>
                                     <th width="15%">{:__('Name')}</th>
-                                    <th width="2%"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +74,7 @@
                                                 {/case}
                                                 {case number}
                                                 <input {$item.extend} type="number" name="row[{$item.name}]" value="{$item.value}" class="form-control" data-tip="{$item.tip}" data-rule="{$item.rule}" />
+
                                                 {/case}
                                                 {case checkbox}
                                                 {foreach name="item.content" item="vo"}

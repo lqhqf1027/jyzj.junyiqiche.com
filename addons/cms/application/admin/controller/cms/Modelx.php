@@ -20,7 +20,7 @@ class Modelx extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\cms\Modelx;
+        $this->model = model('Modelx');
     }
 
 }

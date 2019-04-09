@@ -1,0 +1,5 @@
+/* page/my/setting.wxss */
+
+.zan-panel {
+    padding: 30rpx;
+}

@@ -1,9 +1,31 @@
+
+<style>
+    .process-body {
+        position: absolute;
+        top: 50px;
+        width: 100%;
+    }
+
+    .process-body .panel-heading {
+        background-color: #eee;
+    }
+
+    .process-title {
+        font-size: 18px;
+        color: #323333;
+        font-weight: bold;
+    }
+</style>
+
 <!-- Logo -->
+
 <a href="javascript:;" class="logo">
     <!-- 迷你模式下Logo的大小为50X50 -->
     <span class="logo-mini">{$site.name|mb_substr=0,4,'utf-8'|mb_strtoupper='utf-8'}</span>
     <!-- 普通模式下Logo -->
-    <span class="logo-lg"><b>{$site.name|mb_substr=0,4,'utf-8'}</b>{$site.name|mb_substr=4,null,'utf-8'}</span>
+    <span class="logo-lg"><b>{$site.name|mb_substr=0,4,'utf-8'}</b>{$site.name|mb_substr=4,null,'utf-8'}
+        <span style="font-size: 10px;">v {$version}</span>
+    </span>
 </a>
 
 <!-- 顶部通栏样式 -->
@@ -23,18 +45,15 @@
 
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-
                 <li>
                     <a href="__PUBLIC__" target="_blank"><i class="fa fa-home" style="font-size:14px;"></i></a>
                 </li>
-
                 <!-- 账号信息下拉框 -->
                 <li class="hidden-xs">
                     <a href="javascript:;" data-toggle="checkupdate" title="{:__('Check for updates')}">
                         <i class="fa fa-refresh"></i>
                     </a>
                 </li>
-
                 <!-- 清除缓存 -->
                 <li>
                     <a href="javascript:;" data-toggle="dropdown" title="{:__('Wipe cache')}">
@@ -79,26 +98,25 @@
                         <!-- User image -->
                         <li class="user-header">
                             <img src="{$admin.avatar|cdnurl}" class="img-circle" alt="">
-
                             <p>
                                 {$admin.nickname}
                                 <small>{$admin.logintime|date="Y-m-d H:i:s",###}</small>
                             </p>
                         </li>
                         <!-- Menu Body -->
-                        <li class="user-body">
-                            <div class="row">
-                                <div class="col-xs-4 text-center">
-                                    <a href="https://www.fastadmin.net" target="_blank">{:__('FastAdmin')}</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a href="https://forum.fastadmin.net" target="_blank">{:__('Forum')}</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a href="https://doc.fastadmin.net" target="_blank">{:__('Docs')}</a>
-                                </div>
-                            </div>
-                        </li>
+                        <!--<li class="user-body">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-xs-4 text-center">-->
+                                    <!--<a href="https://www.fastadmin.net" target="_blank">{:__('FastAdmin')}</a>-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-4 text-center">-->
+                                    <!--<a href="https://forum.fastadmin.net" target="_blank">{:__('Forum')}</a>-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-4 text-center">-->
+                                    <!--<a href="https://doc.fastadmin.net" target="_blank">{:__('Docs')}</a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</li>-->
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
@@ -119,7 +137,6 @@
             </ul>
         </div>
     </div>
-
     {if $config.fastadmin.multiplenav}
     <!--第二级菜单,只有在multiplenav开启时才显示-->
     <div id="secondnav">

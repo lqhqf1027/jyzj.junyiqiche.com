@@ -4,7 +4,6 @@ namespace addons\cms\controller\wxapp;
 
 use app\common\controller\Api;
 use app\common\library\Auth;
-use think\Config;
 use think\Lang;
 
 class Base extends Api
@@ -19,7 +18,6 @@ class Base extends Api
     {
         parent::_initialize();
 
-        Config::set('default_return_type', 'json');
         Auth::instance()->setAllowFields($this->allowFields);
 
         //这里手动载入语言包

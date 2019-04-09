@@ -1,0 +1,53 @@
+<div class="panel panel-default panel-intro">
+    
+    <div class="panel-heading">
+        {:build_heading(null,FALSE)}
+        <ul class="nav nav-tabs" data-field="status">
+            <li class="active"><a href="#t-all" data-value="" data-toggle="tab">{:__('All')}</a></li>
+            {foreach name="statusList" item="vo"}
+            <li><a href="#t-{$key}" data-value="{$key}" data-toggle="tab">{$vo}</a></li>
+            {/foreach}
+        </ul>
+    </div>
+
+
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="one">
+                <div class="widget-body no-padding">
+                    <div id="toolbar" class="toolbar">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('riskcontrol/violation/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
+                        
+                        <a href="{$config['upload']['cdnurl']}/violation/查询违章导入模板.xlsx" class="btn btn-embossed btn-primary btn-download" title="{:__('下载查询违章导入模板')}">
+                                <i class="fa fa-download"></i> {:__('下载查询违章导入模板')}</a>
+
+                        <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入EXCEL</a>
+                                        
+                        <a href="javascript:;" class="btn btn-info btn-peccancy" title="{:__('查询')}"><i
+                            class="fa fa-search"></i> {:__('批量查询违章')}</a>
+
+                        <a href="javascript:;" class="btn btn-danger btn-export " title="{:__('导出违章信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出违章信息')}</a>
+                        <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('riskcontrol/violation/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a> -->
+                        <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('riskcontrol/violation/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
+                        <!-- <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('riskcontrol/violation/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
+
+                        <!-- <div class="dropdown btn-group {:$auth->check('riskcontrol/violation/multi')?'':'hide'}">
+                            <a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> {:__('More')}</a>
+                            <ul class="dropdown-menu text-left" role="menu">
+                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=normal"><i class="fa fa-eye"></i> {:__('Set to normal')}</a></li>
+                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=hidden"><i class="fa fa-eye-slash"></i> {:__('Set to hidden')}</a></li>
+                            </ul>
+                        </div> -->
+                    </div>
+                    <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
+                           data-operate-edit="{:$auth->check('riskcontrol/violation/edit')}" 
+                           data-operate-del="{:$auth->check('riskcontrol/violation/del')}" 
+                           width="100%">
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

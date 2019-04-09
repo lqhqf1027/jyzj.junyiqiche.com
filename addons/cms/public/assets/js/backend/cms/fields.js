@@ -2,16 +2,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            var params = Config.model_id ? '/model_id/' + Config.model_id : '/diyform_id/' + Config.diyform_id;
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'cms/fields/index' + params,
-                    add_url: 'cms/fields/add' + params,
-                    edit_url: 'cms/fields/edit' + params,
-                    del_url: 'cms/fields/del' + params,
-                    multi_url: 'cms/fields/multi' + params,
-                    table: 'cms_fields',
+                    index_url: 'cms/fields/index/model_id/' + Config.model_id,
+                    add_url: 'cms/fields/add/model_id/' + Config.model_id,
+                    edit_url: 'cms/fields/edit/model_id/' + Config.model_id,
+                    del_url: 'cms/fields/del/model_id/' + Config.model_id,
+                    multi_url: 'cms/fields/multi/model_id/' + Config.model_id,
+                    table: 'fields',
                 }
             });
 
@@ -27,12 +26,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', sortable: true, title: __('Id')},
                         {field: 'model_id', visible: false, operate: false, title: __('Model_id')},
-                        {field: 'diyform_id', visible: false, operate: false, title: __('Diyform_id')},
                         {field: 'name', title: __('Name')},
                         {field: 'type', title: __('Type')},
                         {field: 'title', title: __('Title')},
-                        {field: 'isfilter', title: __('Isfilter'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: Table.api.formatter.toggle},
-                        {field: 'iscontribute', title: __('Iscontribute'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: Table.api.formatter.toggle},
                         {field: 'weigh', title: __('Weigh'), visible: false},
                         {field: 'createtime', title: __('Createtime'), visible: false, operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), visible: false, operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
@@ -41,6 +37,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ],
             });
+
             // 为表格绑定事件
             Table.api.bindevent(table);
         },

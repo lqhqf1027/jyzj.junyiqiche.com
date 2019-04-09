@@ -1,0 +1,74 @@
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>全款（新车）&南商行&其他</em></div>
+        <ul class="nav nav-tabs" >
+            <li class="active text-center"><a href="#new_car" data-toggle="tab" style="font-weight: bold">全款（新车）&nbsp;<small class="badge pull-right bg-red" id="total-new"></small><span class="pull-right-container"></span></a></li>
+            <li><a href="#yue_da_car" data-toggle="tab" style="font-weight: bold" class="text-center" >南商行&nbsp;<small class="badge pull-right bg-red" id="total-yueda"></small><span class="pull-right-container"></span></a></li>
+            <li><a href="#other_car" data-toggle="tab" style="font-weight: bold" class="text-center" >其他&nbsp;<small class="badge pull-right bg-red" id="total-other"></small><span class="pull-right-container"></span></a></li>
+           
+        </ul>
+    </div>
+
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+
+            <!--新车-->
+            <div class="tab-pane fade active in" id="new_car">
+                <div id="toolbar1" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
+                    <a href="javascript:;" class="btn btn-danger btn-disabled disabled btn-platform" title="{:__('平台')}" ><i class="fa fa-arrows"></i> {:__('批量更改平台')}</a>
+                    <!-- <a href="javascript:;" class="btn btn-info btn-loan btn-disabled disabled" title="{:__('Delete')}" ><i class="fa fa-clock-o"></i> {:__('放款日期')}</a> -->
+                    <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>-->
+                    <!--<a class="btn btn-info   btn-disabled disabled btn-selected" href="javascript:;" ><i class="fa fa-eye"></i> {:__('Distribution')}</a>-->
+                    <!--data-params="batch"-->
+                </div>
+
+                <table id="newCar" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+
+            <!--悦达-->
+            <div class="tab-pane fade" id="yue_da_car">
+                <div id="toolbar2" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
+                    <a href="javascript:;" class="btn btn-danger btn-platform2 btn-disabled disabled" title="{:__('平台')}" ><i class="fa fa-arrows"></i> {:__('批量更改平台')}</a>
+                    <!-- <a href="javascript:;" class="btn btn-info btn-loan2 btn-disabled disabled" title="{:__('Delete')}" ><i class="fa fa-clock-o"></i> {:__('放款日期')}</a> -->
+                </div>
+
+                <table id="yueDaCar" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+            <!--其他-->
+            <div class="tab-pane fade" id="other_car">
+                <div id="toolbar3" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
+                    <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
+                    <a href="javascript:;" class="btn btn-danger btn-platform3 btn-disabled disabled" title="{:__('平台')}" ><i class="fa fa-arrows"></i> {:__('批量更改平台')}</a>
+                    <!-- <a href="javascript:;" class="btn btn-info btn-loan3 btn-disabled disabled" title="{:__('Delete')}" ><i class="fa fa-clock-o"></i> {:__('放款日期')}</a> -->
+                </div>
+
+                <table id="otherCar" class="table table-striped table-bordered table-hover table-nowrap"
+                       
+                       width="100%">
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
