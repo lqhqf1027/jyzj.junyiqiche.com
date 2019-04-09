@@ -14,14 +14,14 @@ class Schemecategory extends Backend
     
     /**
      * Category模型对象
-     * @var \app\admin\model\SchemeCategory
+     * @var \app\admin\model\Schemecategory
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\SchemeCategory;
+        $this->model = new \app\admin\model\Schemecategory;
         $this->view->assign("statusList", $this->model->getStatusList());
     }
     
