@@ -55,7 +55,7 @@ class Profile extends Backend
         if ($this->request->isPost())
         {
             $params = $this->request->post("row/a");
-            $params = array_filter(array_intersect_key($params, array_flip(array('email', 'nickname', 'password', 'avatar'))));
+            $params = array_filter(array_intersect_key($params, array_flip(array('email', 'nickname', 'password', 'avatar','phone'))));
             unset($v);
             if (isset($params['password']))
             {

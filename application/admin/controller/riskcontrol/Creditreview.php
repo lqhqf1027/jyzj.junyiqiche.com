@@ -15,7 +15,7 @@ use app\common\library\Email;
 use think\Cache;
 use think\Session;
 use app\admin\controller\Sharedetailsdatas;
-
+use think\Env;
 /**
  * 订单列管理.
  *
@@ -29,8 +29,8 @@ class Creditreview extends Backend
      * @var \app\admin\model\Ordertabs
      */
     protected $model = null;
-    protected $userid = 'junyi'; //用户id
-    protected $Rc4 = 'd477d6d1803125f1'; //apikey
+    protected $userid = Env::get('bigdata.userid'); //用户id
+    protected $Rc4 = Env::get('bigdata.rc4'); //apikey
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
     protected $noNeedRight = ['*'];
