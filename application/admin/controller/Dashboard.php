@@ -21,7 +21,7 @@ class Dashboard extends Backend
     /**
      * 查看
      */
-    public function index()
+  /*  public function index()
     {
 
         $time = \fast\Date::unixtime('month');
@@ -242,6 +242,10 @@ class Dashboard extends Backend
 
         ]);
 
+        return $this->view->fetch();
+    }*/
+
+    public function index(){
         return $this->view->fetch();
     }
 
