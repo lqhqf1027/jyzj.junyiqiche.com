@@ -9,7 +9,7 @@ class Schemecategory extends Model
     // 表名
     protected $name = 'scheme_category';
     
-    // 自动写入时间戳字段
+    // 自动写入时间戳字段1
     protected $autoWriteTimestamp = 'int';
 
     // 定义时间戳字段名
