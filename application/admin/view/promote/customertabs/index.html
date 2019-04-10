@@ -1,121 +1,47 @@
 <div class="panel panel-default panel-intro">
+    
     <div class="panel-heading">
         <div class="panel-lead"><em>客户池，导入客户资源，分配给内勤，同时可以展示销售反馈回来的信息</em></div>
         <div>
             <p style="color:coral;font-weight: bold">注意事项：</p>
             <ol>
                 <li style="color:rgb(250, 10, 10);font-weight: bold">导入客户信息时，请先下载导入模板 </li>
-                <li style="color:rgb(250, 10, 10);font-weight: bold">在下载的模板里填写所属平台时，请填写数字【2代表今日头条，3代表百度，4代表58同城，8代表抖音】 </li>
+                <li style="color:rgb(250, 10, 10);font-weight: bold">在下载的模板里填写所属平台时，请直接填写【今日头条，百度，58同城，抖音】 </li>
             </ol>
         </div>
-        <ul class="nav nav-tabs" >
-            <li class="active text-center"><a href="#headline" data-toggle="tab">今日头条 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_toutiao">{$toutiao_total}</small></span></a></li>
-            <!--<li><a href="#new_allocation" data-toggle="tab" class="text-center" > 已分配 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_allocation">{$total1}</small></span></a></li>-->
-            <!--<li><a href="#new_feedback" data-toggle="tab"  class="text-center" > 已反馈 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_feedback">{$total2}</small></span></a></li>-->
-            <!--<li><a href="#headline" data-toggle="tab"  class="active text-center" > 今日头条 <span class="pull-right-container"></span></a></li>-->
-            <li><a href="#baidu" data-toggle="tab"  class="text-center" > 百度&nbsp;<span class="pull-right-container"></span><small class="badge pull-right bg-red" id="badge_new_baidu">{$baidu_total}</small></span></a></li>
-            <li><a href="#same_city" data-toggle="tab"  class="text-center" > 58同城&nbsp; <span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_58">{$total_58}</small></span></span></a></li>
-            <li><a href="#music" data-toggle="tab"  class="text-center" > 抖音&nbsp; <span class="pull-right-container"></span><small class="badge pull-right bg-red" id="badge_new_douyin">{$douyin_total}</small></span></a></li>
+        {:build_heading(null,FALSE)}
+        <ul class="nav nav-tabs" data-field="status">
+            <li class="active"><a href="#t-all" data-value="" data-toggle="tab">{:__('All')}</a></li>
+            {foreach name="statusList" item="vo"}
+            <li><a href="#t-{$key}" data-value="{$key}" data-toggle="tab">{$vo}</a></li>
+            {/foreach}
         </ul>
     </div>
+
+
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="one">
+                <div class="widget-body no-padding">
+                    <div id="toolbar" class="toolbar">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('promote/customertabs/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
+                        
+                        <a href="{$config['upload']['cdnurl']}/jyzj.junyiqiche.com/customer_templte/58客户导入模板.xlsx" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
+                            <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
+                        <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
+                        <a class="btn btn-info btn-disabled disabled btn-selected" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
+                      
 
-
-
-            <!--头条-->
-            <div class="tab-pane fade active in" id="headline">
-                <div id="toolbar1" class="toolbar">
-                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-success add-headline {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
-
-                    <a href="{$config['upload']['cdnurl']}/customer_templte/头条、百度、抖音等其他平台客户导入模板.xlsx" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
-                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
-                    <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected-headline" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
-                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled " title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
-
-                    <!-- 导出新客户信息 -->
-                    <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
-
+                    </div>
+                    <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
+                           data-operate-edit="{:$auth->check('promote/customertabs/edit')}" 
+                           data-operate-del="{:$auth->check('promote/customertabs/del')}" 
+                           width="100%">
+                    </table>
                 </div>
-                <table id="headlines" class="table table-striped table-bordered table-hover table-nowrap"
-
-                        width="100%">
-                </table>
             </div>
 
-
-            <!--百度-->
-            <div class="tab-pane fade" id="baidu">
-                <div id="toolbar5" class="toolbar">
-                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-success add-baidu {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
-
-                    <a href="{$config['upload']['cdnurl']}/customer_templte/头条、百度、抖音等其他平台客户导入模板.xlsx" class="btn btn-embossed btn-primary " title="{:__('下载导入模板')}">
-                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
-                    <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-baidu" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected-baidu" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
-                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled " title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
-
-                    <!-- 导出新客户信息 -->
-                    <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-baidu"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
-
-                </div>
-                <table id="baidus" class="table table-striped table-bordered table-hover table-nowrap"
-
-                       width="100%">
-                </table>
-
-            </div>
-
-            <!--58同城-->
-
-            <div class="tab-pane fade" id="same_city">
-                <div id="toolbar6" class="toolbar">
-                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-success add-same_city {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
-
-                    <a href="{$config['upload']['cdnurl']}/customer_templte/58客户导入模板.xlsx" class="btn btn-embossed btn-primary  " title="{:__('下载导入模板')}">
-                        <i class="fa fa-download"></i> {:__('下载58导入模板')}</a>
-                    <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-same_city" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected-same_city" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
-                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled " title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
-
-                    <!-- 导出新客户信息 -->
-                    <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-same_city"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
-
-                </div>
-                <table id="sameCity" class="table table-striped table-bordered table-hover table-nowrap"
-
-                       width="100%">
-                </table>
-
-            </div>
-
-            <!--抖音-->
-
-            <div class="tab-pane fade" id="music">
-                <div id="toolbar7" class="toolbar">
-                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-success add-music {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
-
-                    <a href="{$config['upload']['cdnurl']}/customer_templte/头条、百度、抖音等其他平台客户导入模板.xlsx" class="btn btn-embossed btn-primary" title="{:__('下载导入模板')}">
-                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
-                    <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-music" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected-music" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
-                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled " title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
-
-                    <!-- 导出新客户信息 -->
-                    <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-music"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
-
-                </div>
-                <table id="musics" class="table table-striped table-bordered table-hover table-nowrap"
-
-                       width="100%">
-                </table>
-
-            </div>
         </div>
     </div>
 </div>

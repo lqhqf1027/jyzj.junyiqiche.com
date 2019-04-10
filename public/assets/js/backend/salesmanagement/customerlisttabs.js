@@ -85,7 +85,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
@@ -227,7 +227,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
@@ -362,7 +362,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
@@ -492,7 +492,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
@@ -628,7 +628,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
 
 
                             {field: 'username', title: __('客户姓名')},
@@ -692,7 +692,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
-                            {field: 'platform.name', title: __('客户来源')},
+                            {field: 'status', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }

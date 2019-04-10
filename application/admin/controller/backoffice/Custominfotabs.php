@@ -30,45 +30,12 @@ class Custominfotabs extends Backend
     }
 
     /**
-     * 得到可行管理员ID
-     * @return array
-     */
-    public static function getUserId()
-    {
-        $back = Admin::where("rule_message", 'in', ['message13', 'message20', 'message24'])
-            ->field("id")
-            ->select();
-
-        $backArray = array();
-        $backArray['back'] = array();
-        $backArray['admin'] = array();
-        $backArray['manager'] = Db::name('admin')
-            ->where('rule_message', 'in', ['message3', 'message4', 'message22'])
-            ->column('id');
-
-        foreach ($back as $value) {
-            array_push($backArray['back'], $value['id']);
-        }
-
-        $superAdmin = Admin::where("rule_message", "message21")
-            ->field("id")
-            ->select();
-
-        foreach ($superAdmin as $value) {
-            array_push($backArray['admin'], $value['id']);
-        }
-
-        return $backArray;
-    }
-
-    /**
      * 查看
      */
     public function index()
     {
         $this->model = model('CustomerResource');
         $this->loadlang('backoffice/custominfotabs');
-
 
         return $this->view->fetch();
     }
@@ -80,15 +47,9 @@ class Custominfotabs extends Backend
      */
     public function newCustomer()
     {
-        $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
 
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        $get_id = null;
-        if (in_array($this->auth->id, $canUseId['manager'])) {
-            $get_id = $this->get_manager();
-
-        }
 
         //当前是否为关联查询
         $this->relationSearch = true;
@@ -104,50 +65,31 @@ class Custominfotabs extends Backend
 
 
             $total = $this->model
-                ->with(['platform', 'backoffice' => function ($query) {
+                ->with(['backoffice' => function ($query) {
                     $query->withField(['nickname', 'avatar']);
                 }])
                 ->where($where)
-                ->where(function ($query) use ($canUseId, $get_id) {
-                    if (in_array($this->auth->id, $canUseId['back'])) {
-                        $query->where('backoffice_id', $this->auth->id);
-
-                    } else if (in_array($this->auth->id, $canUseId['manager'])) {
-                        $query->where('backoffice_id', 'in', $get_id);
-                    } else if (in_array($this->auth->id, $canUseId['admin'])) {
-                        $query->where('backoffice_id', 'not null');
-
-                    }
-                    $query->where('sales_id', 'null')
-                        ->where('platform_id', 'in', [2, 3, 4, 8]);
-
-                })
+                ->where('backoffice_id', 'not null')
+                ->where('sales_id', null)
                 ->order($sort, $order)
                 ->count();
 
 
             $list = $this->model
-                ->with(['platform', 'backoffice' => function ($query) {
+                ->with(['backoffice' => function ($query) {
                     $query->withField(['nickname', 'avatar']);
                 }])
                 ->where($where)
+                ->where('backoffice_id', 'not null')
+                ->where('sales_id', null)
                 ->order($sort, $order)
-                ->where(function ($query) use ($canUseId, $get_id) {
-                    if (in_array($this->auth->id, $canUseId['back'])) {
-                        $query->where('backoffice_id', $this->auth->id);
-
-                    } else if (in_array($this->auth->id, $canUseId['manager'])) {
-                        $query->where('backoffice_id', 'in', $get_id);
-                    } else if (in_array($this->auth->id, $canUseId['admin'])) {
-                        $query->where('backoffice_id', 'not null');
-
-                    }
-                    $query->where('sales_id', 'null')
-                        ->where('platform_id', 'in', [2, 3, 4, 8]);
-
-                })
                 ->limit($offset, $limit)
                 ->select();
+
+            foreach ($list as $k => $v) {
+
+                $list[$k]['avatar_url'] = Config::get('upload')['cdnurl'];
+            }
 
 
             $list = collection($list)->toArray();
@@ -166,9 +108,7 @@ class Custominfotabs extends Backend
      */
     public function assignedCustomers()
     {
-        $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
-
 
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         //当前是否为关联查询
@@ -183,55 +123,26 @@ class Custominfotabs extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
             $total = $this->model
-                ->with(['platform', 'backoffice' => function ($query) {
+                ->with(['backoffice' => function ($query) {
                     $query->withField(['nickname', 'avatar']);
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }])
                 ->where($where)
-                ->where(function ($query) use ($canUseId) {
-                    $where = [
-                        'sales_id' => ['neq', 'null'],
-                        'platform_id' => ['in', [2, 3, 4, 8]]
-                    ];
-                    if (in_array($this->auth->id, $canUseId['back'])) {
-                        $where['backoffice_id'] = $this->auth->id;
-                    } else if (in_array($this->auth->id, $canUseId['manager'])) {
-                        $where['backoffice_id'] = ['in', $this->get_manager()];
-                    } else if (in_array($this->auth->id, $canUseId['admin'])) {
-                        $where['backoffice_id'] = ['neq', 'null'];
-                    }
-
-                    $query->where($where);
-                })
+                ->where(['sales_id' => ['neq', 'null']])
                 ->order($sort, $order)
                 ->count();
 
 
             $list = $this->model
-                ->with(['platform', 'backoffice' => function ($query) {
+                ->with(['backoffice' => function ($query) {
                     $query->withField(['nickname', 'avatar']);
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }])
                 ->where($where)
+                ->where(['sales_id' => ['neq', 'null']])
                 ->order($sort, $order)
-                ->where(function ($query) use ($canUseId) {
-                    $where = [
-                        'sales_id' => ['neq', 'null'],
-                        'platform_id' => ['in', [2, 3, 4, 8]]
-                    ];
-                    if (in_array($this->auth->id, $canUseId['back'])) {
-                        $where['backoffice_id'] = $this->auth->id;
-                    } else if (in_array($this->auth->id, $canUseId['manager'])) {
-                        $where['backoffice_id'] = ['in', $this->get_manager()];
-                    } else if (in_array($this->auth->id, $canUseId['admin'])) {
-                        $where['backoffice_id'] = ['neq', 'null'];
-                    }
-
-                    $query->where($where);
-
-                })
                 ->limit($offset, $limit)
                 ->select();
 
@@ -244,6 +155,7 @@ class Custominfotabs extends Backend
                     ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
+                $list[$k]['avatar_url'] = Config::get('upload')['cdnurl'];
             }
 
             $result = array("total" => $total, "rows" => $list);
@@ -267,18 +179,16 @@ class Custominfotabs extends Backend
     {
         $this->model = model('CustomerResource');
         $id = $this->model->get(['id' => $ids]);
+        //销售顾问
         $saleList = $this->salesList();
+        // pr($saleList);
+        // die;
         $this->view->assign([
-            'firstSale' => $saleList['message8'] ? $saleList['message8'] : null,
-            'secondSale' => $saleList['message9'] ? $saleList['message9'] : null,
-            'thirdSale' => $saleList['message23'] ? $saleList['message23'] : null
+            'Sale' => $saleList
         ]);
-
-
-        $this->assignconfig('id', $id->id);
+        // $this->assignconfig('id', $id->id);
 
         if ($this->request->isPost()) {
-
 
             $params = $this->request->post('row/a');
 
@@ -290,21 +200,21 @@ class Custominfotabs extends Backend
             });
             if ($result) {
 
-                $data = sales_inform();
+                // $data = sales_inform();
 
-                $email = new Email;
-                // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
-                $result_s = $email
-                    ->to($receiver)
-                    ->subject($data['subject'])
-                    ->message($data['message'])
-                    ->send();
-                if ($result_s) {
+                // $email = new Email;
+                // // $receiver = "haoqifei@cdjycra.club";
+                // $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
+                // $result_s = $email
+                //     ->to($receiver)
+                //     ->subject($data['subject'])
+                //     ->message($data['message'])
+                //     ->send();
+                // if ($result_s) {
                     $this->success('', '', 3);
-                } else {
-                    $this->error('邮箱发送失败');
-                }
+                // } else {
+                //     $this->error('邮箱发送失败');
+                // }
 
             } else {
                 $this->error();
@@ -327,13 +237,10 @@ class Custominfotabs extends Backend
     public function batch($ids = null)
     {
         $this->model = model('CustomerResource');
-
+        //销售顾问
         $saleList = $this->salesList();
-
         $this->view->assign([
-            'firstSale' => $saleList['message8'] ? $saleList['message8'] : null,
-            'secondSale' => $saleList['message9'] ? $saleList['message9'] : null,
-            'thirdSale' => $saleList['message23'] ? $saleList['message23'] : null
+            'Sale' => $saleList
         ]);
 
         if ($this->request->isPost()) {
@@ -345,20 +252,20 @@ class Custominfotabs extends Backend
             });
             if ($result) {
 
-                $data = sales_inform();
+                // $data = sales_inform();
 
-                $email = new Email;
-                $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
-                $result_s = $email
-                    ->to($receiver)
-                    ->subject($data['subject'])
-                    ->message($data['message'])
-                    ->send();
-                if ($result_s) {
+                // $email = new Email;
+                // $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
+                // $result_s = $email
+                //     ->to($receiver)
+                //     ->subject($data['subject'])
+                //     ->message($data['message'])
+                //     ->send();
+                // if ($result_s) {
                     $this->success();
-                } else {
-                    $this->error('邮箱发送失败');
-                }
+                // } else {
+                //     $this->error('邮箱发送失败');
+                // }
 
             } else {
 
@@ -368,11 +275,12 @@ class Custominfotabs extends Backend
         return $this->view->fetch();
     }
 
+    //得到销售顾问
     public function salesList()
     {
         $sale = Admin::field('id,nickname,rule_message')->where(function ($query) {
             $query->where([
-                'rule_message' => ['in', ['message8', 'message9', 'message23']],
+                'rule_message' => 'message8',
                 'status' => 'normal'
             ]);
         })->select();
@@ -382,37 +290,12 @@ class Custominfotabs extends Backend
         if (count($sale) > 0) {
 
             foreach ($sale as $k => $v) {
-                $saleList[$v['rule_message']][] = ['id' => $v['id'], 'nickname' => $v['nickname']];
+                $saleList[] = ['id' => $v['id'], 'nickname' => $v['nickname']];
             }
 
         }
 
         return $saleList;
-    }
-
-
-    /**
-     * 销售经理获取自己部门内勤
-     * @return array
-     */
-    public function get_manager()
-    {
-        $message = Db::name('admin')
-            ->where('id', $this->auth->id)
-            ->value('rule_message');
-
-        return $this->getAdmin([
-            'rule_message' => $message,
-        ]);
-
-    }
-
-    public static function getAdmin($where)
-    {
-        return Db::name('admin')
-            ->where($where)
-            ->where('status', 'normal')
-            ->column('id');
     }
 
 

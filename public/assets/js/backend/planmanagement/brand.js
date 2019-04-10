@@ -1,9 +1,6 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
     var Controller = {
-        /**
-         * 品牌
-         */
         index: function () {
             // 初始化表格参数配置
             Table.api.init({
@@ -11,9 +8,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     index_url: 'planmanagement/brand/index',
                     add_url: 'planmanagement/brand/add',
                     edit_url: 'planmanagement/brand/edit',
-                    del_url: 'planmanagement/brand/del',
+                    // del_url: 'planmanagement/brand/del',
                     multi_url: 'planmanagement/brand/multi',
-                    table: 'brand',
+                    table: 'brand_cate',
                 }
             });
 
@@ -28,25 +25,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'name', title: __('name')},
-                        {field: 'brand_logoimage', title: __('Brand_logoimage'), formatter: Table.api.formatter.image},
-                         
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'status', title: __('Status'), formatter: Table.api.formatter.status},
-
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: function (value,row,index) {
-                                if(row.name==='二手车专用车型'){
-                                     return '';
-                                }
-                                else {
-                                    return Table.api.formatter.operate.call(this, value, row, index);
-                                }
-                            }}
+                        {field: 'name', title: __('Name')},
+                        {field: 'bfirstletter', title: __('Bfirstletter')},
+                        {field: 'thumb', title: __('Thumb'), formatter: Table.api.formatter.image},
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
             });
-
             // 为表格绑定事件
             Table.api.bindevent(table);
         },
