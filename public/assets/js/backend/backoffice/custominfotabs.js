@@ -1,9 +1,5 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    // var goeasy = new GoEasy({
-    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    // });
-
     var Controller = {
         index: function () {
 
@@ -113,9 +109,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'),operate:false},
-                            // {field: 'platform_id', title: __('Platform_id')},
-                            // {field: 'backoffice_id', title: __('Backoffice_id')},
-                            {field: 'platform.name', title: __('所属平台')},
+                            {field: 'status', title: __('所属平台')},
                             {field: 'backoffice.nickname', title: __('所属内勤'),operate:false,formatter:Controller.api.formatter.backoffice},
 
                             {field: 'username', title: __('Username')},
@@ -156,29 +150,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
 
-                //实时消息
-                //推广平台分配给内勤
-                // goeasy.subscribe({
-                //     channel: 'demo-platform',
-                //     onMessage: function(message){
-                //
-                //         var contents = message.content;
-                //
-                //         contents = contents.split('|');
-                //
-                //         if(Config.ADMIN_JS.id == contents[1]){
-                //             Layer.alert('新消息：'+contents[0],{ icon:0},function(index){
-                //                 Layer.close(index);
-                //                 $(".btn-refresh").trigger("click");
-                //             });
-                //         }
-                //
-                //
-                //
-                //     }
-                // });
-
-
                 /**
                  * 批量分配
                  */
@@ -189,7 +160,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
-                        area: ['60%', '60%'],
+                        area: ['30%', '30%'],
                         callback: function (value) {
 
                         }
@@ -230,7 +201,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: __('Id'),operate:false},
 
-                            {field: 'platform.name', title: __('所属平台')},
+                            {field: 'status', title: __('所属平台')},
                             {field: 'backoffice.nickname', title: __('所属内勤'),operate:false,formatter:Controller.api.formatter.backoffice},
                             {field: 'admin.nickname', title: __('所属销售'),formatter:Controller.api.formatter.sales},
 
@@ -297,6 +268,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * @param index
                  */
                 'click .btn-newCustomer': function (e, value, row, index) {
+                    $(".btn-newCustomer").data("area", ["30%", "30%"]);
                     e.stopPropagation();
                     e.preventDefault();
                     var table = $(this).closest('table');
@@ -321,7 +293,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
                 backoffice: function (value, row, index) {
                     if (value) {
-                        row.backoffice.avatar = "https://static.aicheyide.com" + row.backoffice.avatar;
+                        row.backoffice.avatar = row.avatar_url + row.backoffice.avatar;
                     }
 
                     return value != null ? "<img src=" + row.backoffice.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value : value;
@@ -330,7 +302,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sales: function (value, row, index) {
 
                     if (value) {
-                        row.admin.avatar = "https://static.aicheyide.com" + row.admin.avatar;
+                        row.admin.avatar = row.avatar_url + row.admin.avatar;
                     }
                     return value != null ? "<img src=" + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+ value : value;
 
