@@ -29,8 +29,9 @@ class Creditreview extends Backend
      * @var \app\admin\model\Ordertabs
      */
     protected $model = null;
-    protected $userid = Env::get('bigdata.userid'); //用户id
-    protected $Rc4 = Env::get('bigdata.rc4'); //apikey
+
+    protected $userid =''; //用户id
+    protected $Rc4 = ''; //apikey
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
     protected $noNeedRight = ['*'];
@@ -42,6 +43,8 @@ class Creditreview extends Backend
         $this->view->assign('genderdataList', $this->model->getGenderdataList());
         $this->view->assign('customerSourceList', $this->model->getCustomerSourceList());
         $this->view->assign('reviewTheDataList', $this->model->getReviewTheDataList());
+        $this->userid =  Env::get('bigdata.userid');
+        $this->Rc4 =  Env::get('bigdata.rc4');
         //共享userid 、sign
         $this->sign = md5($this->userid . $this->Rc4);
     }

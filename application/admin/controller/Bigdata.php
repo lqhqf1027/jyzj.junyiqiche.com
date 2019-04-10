@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use app\common\controller\Backend;
 use think\Db;
 use think\Env;
+
 /**
  * 以租代购
  *
@@ -12,25 +13,28 @@ use think\Env;
  */
 class Bigdata extends Backend
 {
- 
-    protected $model = null; 
-    protected $userid = Env::get('bigdata_test.userid'); //用户id
-    protected $Rc4 = Env::get('bigdata_test.rc4'); //apik
+
+    protected $model = null;
+    protected $userid = ''; //用户id
+    protected $Rc4 = ''; //apik
     protected $sign = null; //sign  md5加密
-    protected $noNeedRight =['toViewBigData','getBigData'];
+    protected $noNeedRight = ['toViewBigData', 'getBigData'];
     // protected $bigData = array();
     // protected $table,$ids,$username,$id_card,$phone;
     public function _initialize()
 
     {
         parent::_initialize();
+        $this->userid = Env::get('bigdata_test.userid');
+        $this->userid = Env::get('bigdata_test.rc4');
+
         $this->sign = md5($this->userid . $this->Rc4);
     }
 
- 
-    public  function toViewBigData($ids,$table)
+
+    public function toViewBigData($ids, $table)
     {
-       
+
         $row = Db::name($table)->find(function ($query) use ($ids) {
             $query->field('id,username,id_card,phone')->where('id', $ids);
         });
@@ -51,14 +55,14 @@ class Bigdata extends Backend
         );
         // return $this->bigDataHtml(); 
         //判断数据库里是否有当前用户的大数据
-        $data = $this->getBigData($row['id'],$table);
+        $data = $this->getBigData($row['id'], $table);
         if (empty($data)) {
             //如果数据为空，调取大数据接口
-            $result[$table.'_id'] = $row['id'];
+            $result[$table . '_id'] = $row['id'];
             $result['name'] = $row['username'];
             $result['phone'] = $row['phone'];
             $result['id_card'] = $row['id_card'];
-            $result['createtime'] = time(); 
+            $result['createtime'] = time();
             // pr($result);die;
             $result['share_data'] = posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params);
             /**共享数据接口 */
@@ -70,8 +74,8 @@ class Bigdata extends Backend
                  * 收费验证环节
                  * 1-身份信息认证
                  * 2-手机号实名验证
-                 * 3-银行卡三要素验证 
-                 * 4-银行卡四要素 
+                 * 3-银行卡三要素验证
+                 * 4-银行卡四要素
                  * 当提交 3、4时 银行卡为必填项
                  */
                 $params_risk['sign'] = $this->sign;
@@ -100,31 +104,32 @@ class Bigdata extends Backend
                     $writeDatabases = Db::name('big_data')->insert($result);
                     if ($writeDatabases) {
 
-                        return $this->getBigData($row['id'],$table);
-            // $this->view->assign('bigdata', $this->getBigData($row['id']));
+                        return $this->getBigData($row['id'], $table);
+                        // $this->view->assign('bigdata', $this->getBigData($row['id']));
 
                     } else {
-                        die('<h1><center>数据写入失败</center></h1>') ;
+                        die('<h1><center>数据写入失败</center></h1>');
                     }
                 } else {
-                    die("<h1><center>风险接口-》{$result['risk_data']['message']}</center></h1>") ;
+                    die("<h1><center>风险接口-》{$result['risk_data']['message']}</center></h1>");
 
                 }
 
             } else {
-                 die("<h1><center>共享接口-》{$result['share_data']['message']}</center></h1>");
+                die("<h1><center>共享接口-》{$result['share_data']['message']}</center></h1>");
 
             }
         } else {
             return $data;
         }
     }
+
     /**
      * 查询大数据表
      * @param int $order_id
      * @return data
      */
-    public function getBigData($order_id,$table)
+    public function getBigData($order_id, $table)
     {
         $bigData = Db::name('big_data')->alias('a')
             ->join("{$table} b", "a.{$table}_id = b.id")
@@ -141,7 +146,6 @@ class Bigdata extends Backend
             return [];
         }
     }
-
 
 
 }
