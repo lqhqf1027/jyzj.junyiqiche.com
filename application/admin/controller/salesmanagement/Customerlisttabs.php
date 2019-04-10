@@ -109,7 +109,7 @@ class Customerlisttabs extends Backend
      */
     public function noPhone()
     {
-        $phone = Db::table("crm_sales_order")
+        $phone = Db::name("sales_order")
             ->field("phone")
             ->select();
 

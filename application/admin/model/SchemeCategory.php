@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class SchemeCategory extends Model
+class Schemecategory extends Model
 {
     // 表名
     protected $name = 'scheme_category';
@@ -18,23 +18,17 @@ class SchemeCategory extends Model
     
     // 追加属性
     protected $append = [
-        'status_text'
+
     ];
     
-
-    
-    public function getStatusList()
+    public function cities()
     {
-        return ['normal' => __('Normal'),'hidden' => __('Hidden')];
-    }     
-
-
-    public function getStatusTextAttr($value, $data)
-    {        
-        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
-        $list = $this->getStatusList();
-        return isset($list[$value]) ? $list[$value] : '';
+        return $this->belongsTo('Cities', 'city_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+    
+
+
+
 
 
 

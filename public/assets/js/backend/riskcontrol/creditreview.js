@@ -213,22 +213,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                                             }
                                         }
                                     },
-                                    {
-                                        name: 'bigData',
-                                        text: '查看大数据',
-                                        title: '查看大数据征信',
-                                        icon: 'fa fa-eye',
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
-                                        url: 'riskcontrol/creditreview/toViewBigData',
-                                        /**查看大数据 */
-                                        hidden: function (row) {
-                                            if (row.bigdata) {
-                                                return true;
-                                            }
-                                        }
-
-                                    },
+                                    // {
+                                    //     name: 'bigData',
+                                    //     text: '查看大数据',
+                                    //     title: '查看大数据征信',
+                                    //     icon: 'fa fa-eye',
+                                    //     extend: 'data-toggle="tooltip"',
+                                    //     classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
+                                    //     url: 'riskcontrol/creditreview/toViewBigData',
+                                    //     /**查看大数据 */
+                                    //     hidden: function (row) {
+                                    //         if (row.bigdata) {
+                                    //             return true;
+                                    //         }
+                                    //     }
+                                    //
+                                    // },
                                     {
                                         name: 'for_the_car',
                                         text: '金融已通过，提交给销售，通知客户签订金融合同',
@@ -1901,7 +1901,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                  * @returns {string}
                  */
                 sales: function (value, row, index) {
-                    return value == null ? value : "<img src=" + Config.cdn_url + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + row.admin.department + ' - ' + value;
+                    return value == null ? value : "<img src=" + Config.cdn_url + row.admin.avatar + " style='height:25px;width:25px;border-radius:50%'></img>&nbsp;" + value;
                 },
                 /**
                  * 提车返回√

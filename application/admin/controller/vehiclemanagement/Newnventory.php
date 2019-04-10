@@ -65,18 +65,18 @@ class Newnventory extends Backend
 
             foreach ($list as $key=>$row) {
                 // $list[$key]['aaa'] = 11;
-                $row->visible(['id', 'carnumber', 'reservecar','open_fare', 'licensenumber', 'presentationcondition', 'note', 'frame_number', 'engine_number', 'household', '4s_shop', 'createtime', 'updatetime','the_car_username']);
-                $row->visible(['models']);
-                $row->getRelation('models')->visible(['name', 'models_name']); 
-
-                if ($list[$key]['models']['models_name']) {
-                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
-                }
+//                $row->visible(['id', 'carnumber', 'reservecar','open_fare', 'licensenumber', 'presentationcondition', 'note', 'frame_number', 'engine_number', 'household', '4s_shop', 'createtime', 'updatetime','the_car_username']);
+//                $row->visible(['models']);
+//                $row->getRelation('models')->visible(['name', 'models_name']);
+//
+//                if ($list[$key]['models']['models_name']) {
+//                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
+//                }
 
                 foreach((array)$this->getOrderName($row['id']) as $k=>$v){
                     foreach($v as $rows){
                         if($rows['licensenumber']==$row['licensenumber']){
-                           
+
                             $list[$key]['the_car_username']= $rows['username'];
                         }
                     }

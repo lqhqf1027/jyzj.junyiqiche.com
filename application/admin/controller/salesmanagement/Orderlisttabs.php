@@ -735,12 +735,11 @@ class Orderlisttabs extends Backend
         if($rules =='message8' || $rules == 'message9'){
             $category = Db::name('scheme_category')
                 ->where('id', 'in', $ids)
-                ->where('city_id', '38')
                 ->where('status',0)
                 ->field('id,name')
                 ->select();
         }else{
-            $category = Db::name('scheme_category')->where('city_id', '38')->where('id', 'in', $ids)->field('id,name')->select();
+            $category = Db::name('scheme_category')->where('id', 'in', $ids)->field('id,name')->select();
         }
 
 
@@ -1063,15 +1062,13 @@ class Orderlisttabs extends Backend
             if($rules =='message8' || $rules == 'message9'){
                 $category = $this->model
                     ->where('id', 'in', $ids)
-                    ->where('store_ids', 'in', $custom['store_id'])
                     ->where('status',0)
                     ->field('id,name')
                     ->select();
             }else{
-                $category = Db::name('scheme_category')->where('id', 'in', $ids)->where('store_ids', 'in', $custom['store_id'])->field('id,name')->select();
+                $category = Db::name('scheme_category')->where('id', 'in', $ids)->field('id,name')->select();
             }
-            // pr($category);
-            // die;
+
             $result = array("list" => $category);
 
             return json($result);
@@ -1353,7 +1350,7 @@ class Orderlisttabs extends Backend
                 ->join('scheme_category s', 'a.category_id = s.id')
                 ->where([
                     'a.category_id' => $category_id,
-                    'a.acar_status' => 1
+//                    'a.acar_status' => 1
                 ])
                 //   ->where('sales_id', NULL)
                 //   ->whereOr('sales_id', $this->auth->id)

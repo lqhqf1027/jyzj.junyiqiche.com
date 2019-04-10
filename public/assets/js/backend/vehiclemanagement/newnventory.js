@@ -33,10 +33,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id'),operate:false},
-                        {field: 'models.name', title: __('车型名称'),formatter:function(v,r,i){
-                            return r.the_car_username ? v+ ' <span class="label label-info"><i class="fa fa-user"> '+r.the_car_username+'</i></span>':v;
-                        }},
+                        {field: 'id', title: __('Id'), operate: false},
+                        {
+                            field: 'models.name', title: __('车型名称'), formatter: function (v, r, i) {
+                                return r.the_car_username ? v + ' <span class="label label-info"><i class="fa fa-user"> ' + r.the_car_username + '</i></span>' : v;
+                            }
+                        },
                         // {field: 'carnumber', title: __('Carnumber')},
                         // {field: 'reservecar', title: __('Reservecar')},
                         {field: 'licensenumber', title: __('车牌号')},
@@ -45,58 +47,80 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'household', title: __('所属户')},
                         {field: '4s_shop', title: __('4S店')},
                         {field: 'open_fare', title: __('开票价(元)')},
-                        {field: 'note', title: __('备注'),operate:false},
-                        {field: 'createtime', title: __('创建时间'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('更新时间'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'operate', title: __('Operate'), table: table, 
-                        buttons: [
-                            /**删除 */
-                            {
-                                name: 'del',
-                                icon: 'fa fa-trash',  
-                                icon: 'fa fa-trash', 
-                                extend: 'data-toggle="tooltip"', 
-                                title: __('Del'), 
-                                classname: 'btn btn-xs btn-danger btn-delone',
-                                hidden: function (row) { 
-                                    if (!row.the_car_username) {
-                                        return false;
-                                    }
-                                    else if (row.the_car_username) {
-                                        return true;
-                                    }
-                                }
-                            },
-                            /**编辑 */
-                            {
-                                name: 'edit', 
-                                text: '', 
-                                icon: 'fa fa-pencil', 
-                                extend: 'data-toggle="tooltip"', 
-                                title: __('编辑'), 
-                                classname: 'btn btn-xs btn-success btn-editone',
-                                
-                            },
-                            /**车辆已出售 */
-                            {
-                                name: '车辆已出售', 
-                                text: '车辆已出售',  
-                                icon: 'fa fa-automobile', 
-                                classname: 'text text-success',
-                                hidden: function (row) { 
-                                    if (row.the_car_username) {
-                                        return false;
-                                    }
-                                    else if (!row.the_car_username) {
-                                        return true;
-                                    }
-                                }
-                            }
-                        
-                        ],
-                        events: Controller.api.events.operate,
+                        {field: 'note', title: __('备注'), operate: false},
+                        {
+                            field: 'createtime',
+                            title: __('创建时间'),
+                            operate: false,
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime
+                        },
+                        {
+                            field: 'updatetime',
+                            title: __('更新时间'),
+                            operate: false,
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime
+                        },
+                        {
+                            field: 'operate', title: __('Operate'), table: table,
+                            buttons: [
+                                /**待出库 */
+                                {
+                                    name: '',
+                                    // icon: 'fa fa-trash',
 
-                        formatter: Controller.api.formatter.operate
+                                    extend: 'data-toggle="tooltip"',
+                                    // title:'待出库',
+                                    text: '待出库',
+                                    classname: 'text-info',
+                                    hidden: function (row) {
+                                        return row.the_car_username ? true : false;
+                                    }
+                                },
+                                /**删除 */
+                                {
+                                    name: 'del',
+                                    icon: 'fa fa-trash',
+
+                                    extend: 'data-toggle="tooltip"',
+                                    title: __('Del'),
+                                    classname: 'btn btn-xs btn-danger btn-delone',
+                                    hidden: function (row) {
+                                        return row.the_car_username ? true : false;
+                                    }
+                                },
+
+                                /**编辑 */
+                                {
+                                    name: 'edit',
+                                    text: '',
+                                    icon: 'fa fa-pencil',
+                                    extend: 'data-toggle="tooltip"',
+                                    title: __('编辑'),
+                                    classname: 'btn btn-xs btn-success btn-editone',
+
+                                },
+                                /**车辆已出售 */
+                                {
+                                    name: '车辆已出售',
+                                    text: '车辆已出售',
+                                    icon: 'fa fa-automobile',
+                                    classname: 'text text-success',
+                                    hidden: function (row) {
+                                        if (row.the_car_username) {
+                                            return false;
+                                        }
+                                        else if (!row.the_car_username) {
+                                            return true;
+                                        }
+                                    }
+                                }
+
+                            ],
+                            events: Controller.api.events.operate,
+
+                            formatter: Controller.api.formatter.operate
                         }
                     ]
                 ]
@@ -146,7 +170,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             events: {
                 operate: {
                     //编辑按钮
-                    'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */
+                    'click .btn-editone': function (e, value, row, index) {
+                        /**编辑按钮 */
                         $(".btn-editone").data("area", ["55%", "60%"]);
 
                         e.stopPropagation();
@@ -154,12 +179,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
                     //删除按钮
-                    'click .btn-delone': function (e, value, row, index) {  /**删除按钮 */
+                    'click .btn-delone': function (e, value, row, index) {
+                        /**删除按钮 */
 
                         e.stopPropagation();
                         e.preventDefault();
@@ -174,7 +200,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
                         Layer.confirm(
                             __('Are you sure you want to delete this item?'),
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
                             function (index) {
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
