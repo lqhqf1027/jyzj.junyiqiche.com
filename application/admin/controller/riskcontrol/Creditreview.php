@@ -142,21 +142,19 @@ class Creditreview extends Backend
 
             $list = collection($list)->toArray();
 
-            foreach ($list as $k => $v) {
-                $department = Db::name('auth_group_access')
-                    ->alias('a')
-                    ->join('auth_group b', 'a.group_id = b.id')
-                    ->where('a.uid', $v['admin']['id'])
-                    ->value('b.name');
-                $list[$k]['admin']['department'] = $department;
-                //是否有da数据
-                $list[$k]['bigdata'] = self::matchBigData($v['id']);
-            }
+//            foreach ($list as $k => $v) {
+//                $department = Db::name('auth_group_access')
+//                    ->alias('a')
+//                    ->join('auth_group b', 'a.group_id = b.id')
+//                    ->where('a.uid', $v['admin']['id'])
+//                    ->value('b.name');
+////                $list[$k]['admin']['department'] = $department;
+//                //是否有da数据
+////                $list[$k]['bigdata'] = self::matchBigData($v['id']);
+//            }
             $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
-
-        return $this->view->fetch("index");
 
     }
 
@@ -248,8 +246,6 @@ class Creditreview extends Backend
             $result = array("total" => $total, "rows" => $list);
             return json($result);
         }
-
-        return $this->view->fetch('index');
 
     }
 

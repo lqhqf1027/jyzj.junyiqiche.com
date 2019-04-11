@@ -79,6 +79,7 @@ class Upyun extends Addons
             'multipart' => $multipart,
             'multiple'  => $multiple,
         ];
+
     }
 
 }

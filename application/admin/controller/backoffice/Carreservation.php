@@ -28,6 +28,7 @@ class Carreservation extends Backend
     public function _initialize()
     {
         parent::_initialize();
+        $this->model = model('SalesOrder');
     }
 
     public function index()
@@ -636,6 +637,10 @@ class Carreservation extends Backend
     {
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+
+            $sales_order = $this->request->post("sales_order/a");
+
+            $this->model->allowField(true)->save($sales_order,['id'=>$ids]);
 
             //得到首期款
             $downpayment = Db::name("sales_order")
