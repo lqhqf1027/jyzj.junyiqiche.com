@@ -1,0 +1,238 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Archival_coding')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-archival_coding" class="form-control" name="row[archival_coding]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Signdate')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-signdate" class="form-control" name="row[signdate]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-username" class="form-control" name="row[username]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-id_card" class="form-control" name="row[id_card]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-phone" class="form-control" name="row[phone]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Contract_total')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-contract_total" class="form-control" step="0.01" name="row[contract_total]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Payment')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-payment" class="form-control" step="0.01" name="row[payment]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly" class="form-control" step="0.01" name="row[monthly]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Nperlist')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-nperlist" class="form-control selectpicker" name="row[nperlist]">
+                {foreach name="nperlistList" item="vo"}
+                    <option value="{$key}" {in name="key" value="36"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('End_money')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-end_money" class="form-control" name="row[end_money]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Margin')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-margin" class="form-control" step="0.01" name="row[margin]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Hostdate')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-hostdate" class="form-control" name="row[hostdate]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Models_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-models_name" class="form-control" name="row[models_name]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Licensenumber')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-licensenumber" class="form-control" name="row[licensenumber]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Frame_number')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-frame_number" class="form-control" name="row[frame_number]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Engine_number')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-engine_number" class="form-control" name="row[engine_number]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Mortgage_people')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-mortgage_people" class="form-control" name="row[mortgage_people]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Ticketdate')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-ticketdate" class="form-control" name="row[ticketdate]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Supplier')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-supplier" class="form-control" name="row[supplier]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Tax_amount')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tax_amount" class="form-control" step="0.01" name="row[tax_amount]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('No_tax_amount')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-no_tax_amount" class="form-control" step="0.01" name="row[no_tax_amount]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pay_taxesdate')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-pay_taxesdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[pay_taxesdate]" type="text" value="{:date('Y-m-d')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Purchase_of_taxes')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-purchase_of_taxes" class="form-control" step="0.01" name="row[purchase_of_taxes]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('House_fee')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-house_fee" class="form-control" step="0.01" name="row[house_fee]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Luqiao_fee')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-luqiao_fee" class="form-control" step="0.01" name="row[luqiao_fee]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Insurance_buydate')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-insurance_buydate" class="form-control" name="row[insurance_buydate]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Insurance_policy')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-insurance_policy" class="form-control" name="row[insurance_policy]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Insurance')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-insurance" class="form-control" name="row[insurance]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_boat_tax')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_boat_tax" class="form-control" step="0.01" name="row[car_boat_tax]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Commercial_insurance_policy')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-commercial_insurance_policy" class="form-control" name="row[commercial_insurance_policy]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Business_risks')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-business_risks" class="form-control" name="row[business_risks]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Subordinate_branch')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-subordinate_branch" class="form-control" name="row[subordinate_branch]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Saler')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-saler" class="form-control" name="row[saler]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Transfer_time')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-transfer_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[transfer_time]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-note" class="form-control" name="row[note]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Classification')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-classification" class="form-control selectpicker" name="row[classification]">
+                {foreach name="classificationList" item="vo"}
+                    <option value="{$key}" {in name="key" value=""}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

@@ -403,12 +403,11 @@ class Creditreview extends Backend
 
     {
 
-
-        if ($bigdatatype == 'sales_order') $bigdatatype = 'sales_order_id';
-        if ($bigdatatype == 'rental_order') $bigdatatype = 'rental_order_id';
-        if ($bigdatatype == 'second_sales_order') $bigdatatype = 'second_sales_order_id';
-        $result = model('BigData')->get([$bigdatatype => $ids]);
-        if (empty($result)) $this->error('请先查看一次大数据', '', $result);
+        // if ($bigdatatype == 'sales_order') $bigdatatype = 'sales_order_id';
+        // if ($bigdatatype == 'rental_order') $bigdatatype = 'rental_order_id';
+        // if ($bigdatatype == 'second_sales_order') $bigdatatype = 'second_sales_order_id';
+        // $result = model('BigData')->get([$bigdatatype => $ids]);
+        // if (empty($result)) $this->error('请先查看一次大数据', '', $result);
         $row = model('SalesOrder')->get($ids);
         if (!$row) {
             $this->error(__('No Results were found'));
