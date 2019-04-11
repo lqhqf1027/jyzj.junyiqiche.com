@@ -123,8 +123,7 @@ class Violation extends Backend
                 $insert[] = $row;
             }
         }
-        // pr($insert);
-        // die;
+
         if (!$insert) {
             $this->error(__('No rows were updated'));
         }

@@ -60,7 +60,12 @@ class CarNewInventory extends Model
 
     public function salesorder()
     {
-        return $this->belongsTo('SalesOrder', 'sales_order_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->hasOne('SalesOrder', 'car_new_inventory_id', 'id', [], 'RIGHT')->setEagerlyType(1);
+    }
+
+    public function fullorder()
+    {
+        return $this->hasOne('FullParmentOrder', 'car_new_inventory_id', 'id', [], 'RIGHT')->setEagerlyType(1);
     }
 
 }

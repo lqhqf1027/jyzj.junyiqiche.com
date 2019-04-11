@@ -330,8 +330,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                                      */
                                     {
                                         name: 'is_reviewing_pass',
-                                        text: '通知车管 采购车辆入库',
-                                        title: '通知车管 采购车辆入库',
+                                        text: '审核已通过，进行车辆入库',
+                                        title: '下一步：车辆管理->新车库存->入库',
                                         icon: 'fa fa-share',
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-info btn-submit_newtube_finance',

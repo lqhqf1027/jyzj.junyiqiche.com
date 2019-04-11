@@ -57,33 +57,24 @@ class Newnventory extends Backend
             $list = $this->model
                 ->with(['models' => function ($query) {
                     $query->withField('name,models_name');
+                }, 'salesorder' => function ($q) {
+                    $q->withField('username,car_new_inventory_id');
+                }, 'fullorder' => function ($q) {
+                    $q->withField('username,car_new_inventory_id');
                 }])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
 
-            foreach ($list as $key=>$row) {
-                // $list[$key]['aaa'] = 11;
-//                $row->visible(['id', 'carnumber', 'reservecar','open_fare', 'licensenumber', 'presentationcondition', 'note', 'frame_number', 'engine_number', 'household', '4s_shop', 'createtime', 'updatetime','the_car_username']);
-//                $row->visible(['models']);
-//                $row->getRelation('models')->visible(['name', 'models_name']);
-//
-//                if ($list[$key]['models']['models_name']) {
-//                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
-//                }
+            foreach ($list as $key => $row) {
 
-                foreach((array)$this->getOrderName($row['id']) as $k=>$v){
-                    foreach($v as $rows){
-                        if($rows['licensenumber']==$row['licensenumber']){
-
-                            $list[$key]['the_car_username']= $rows['username'];
-                        }
-                    }
-                }
+                $list[$key]['order'] = $row['salesorder'] ? $row['salesorder'] : $row['fullorder'];
+//                $list[$key]['order_type'] = $row['salesorder'] ? 'sales_order' : $row['fullorder'] ? 'full_order' : null;
+//                 unset($list[$key]['salesorder'],$list[$key]['fullorder']);
             }
             $list = collection($list)->toArray();
-            
+
             // pr($this->getOrderName());
             $result = array("total" => $total, "rows" => $list);
 
@@ -92,22 +83,22 @@ class Newnventory extends Backend
         return $this->view->fetch();
     }
 
-    public function getOrderName($NewnventoryId = null){
-      
-        $name= [
-            Db::name('sales_order')->alias('a')
-                ->join('car_new_inventory b','a.car_new_inventory_id = b.id')
-                ->field('a.username,a.car_new_inventory_id,b.id,b.licensenumber')
-                ->where(['a.car_new_inventory_id'=>$NewnventoryId,'a.review_the_data'=>'the_car'])
-                ->select(),
-            Db::name('full_parment_order')->alias('a')
-                ->join('car_new_inventory b','a.car_new_inventory_id = b.id')
-                ->field('a.username,a.car_new_inventory_id,b.id,b.licensenumber')
-                ->where(['a.car_new_inventory_id'=>$NewnventoryId,'a.review_the_data'=>'for_the_car'])
-                ->select()
-        ]; 
-       
-        return $name;
+    /**
+     * 根据库存ID查出订单表信息
+     * @param null $NewnventoryId
+     * @param $table
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getOrderName($NewnventoryId = null, $table)
+    {
+        return Db::name($table)->alias('a')
+            ->join('car_new_inventory b', 'a.car_new_inventory_id = b.id')
+            ->field('a.username,a.car_new_inventory_id,b.id,b.licensenumber')
+            ->where(['a.car_new_inventory_id' => $NewnventoryId, 'a.review_the_data' => $table == 'sales_order' ? 'the_car' : 'for_the_car'])
+            ->select();
     }
 
     /**添加
@@ -218,14 +209,14 @@ class Newnventory extends Backend
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
- /*   public static function getInvoiceMoney($inventoryId){
-        return Db::name('sales_order')->alias('a')
-                ->join('car_new_inventory b','a.car_new_inventory_id=b.id')
-                ->join('mortgage c','a.mortgage_id = c.id')
-                ->field('a.id as sales_id,c.invoice_monney,a.id as mortgage_id')
-                ->where(['b.id'=>$inventoryId])
-                ->find();
-    }*/
+    /*   public static function getInvoiceMoney($inventoryId){
+           return Db::name('sales_order')->alias('a')
+                   ->join('car_new_inventory b','a.car_new_inventory_id=b.id')
+                   ->join('mortgage c','a.mortgage_id = c.id')
+                   ->field('a.id as sales_id,c.invoice_monney,a.id as mortgage_id')
+                   ->where(['b.id'=>$inventoryId])
+                   ->find();
+       }*/
 
     /**
      * 得到车型信息
@@ -256,12 +247,12 @@ class Newnventory extends Backend
         $models = Db::name("models")
             ->field("id as models_id,models_name as model_name,name as models_name,brand_id")
             ->select();
-            
+
         //品牌下没有车型，就不显示在下拉列表
         foreach ($models as $key => $value) {
             $ids[] = $value['brand_id'];
         }
-        
+
         $brand = Db::name("brand")
             ->where('pid', '0')
             ->where('id', 'in', $ids)

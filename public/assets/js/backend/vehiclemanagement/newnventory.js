@@ -36,7 +36,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id'), operate: false},
                         {
                             field: 'models.name', title: __('车型名称'), formatter: function (v, r, i) {
-                                return r.the_car_username ? v + ' <span class="label label-info"><i class="fa fa-user"> ' + r.the_car_username + '</i></span>' : v;
+                                let s =  r.salesorder ?'按揭' : '全款';
+                                if (r.order) {
+                                    return v +' <span class="label label-info"><i class="fa fa-user"> ' + r.order.username + '</i></span>' + '&nbsp;<span class="label label-success"><i class="fa fa-check"></i>' +s+ '</span>'
+                                }
+                                return v;
+
                             }
                         },
                         // {field: 'carnumber', title: __('Carnumber')},
@@ -75,7 +80,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     text: '待出库',
                                     classname: 'text-info',
                                     hidden: function (row) {
-                                        return row.the_car_username ? true : false;
+                                        return !row.order ? false : true;
+                                    }
+                                },
+                                /**车辆已出售 */
+                                {
+                                    name: '车辆已出售',
+                                    text: '车辆已出售',
+                                    icon: 'fa fa-automobile',
+                                    classname: 'text text-success',
+                                    hidden: function (row) {
+                                        return row.order ? false : true;
                                     }
                                 },
                                 /**删除 */
@@ -101,21 +116,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     classname: 'btn btn-xs btn-success btn-editone',
 
                                 },
-                                /**车辆已出售 */
-                                {
-                                    name: '车辆已出售',
-                                    text: '车辆已出售',
-                                    icon: 'fa fa-automobile',
-                                    classname: 'text text-success',
-                                    hidden: function (row) {
-                                        if (row.the_car_username) {
-                                            return false;
-                                        }
-                                        else if (!row.the_car_username) {
-                                            return true;
-                                        }
-                                    }
-                                }
+
 
                             ],
                             events: Controller.api.events.operate,

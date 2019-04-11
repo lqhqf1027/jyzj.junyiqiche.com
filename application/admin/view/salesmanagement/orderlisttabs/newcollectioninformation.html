@@ -289,8 +289,9 @@
         }
 
     </script>
-    <div id="introduce-view" {if condition="$row.customer_source eq direct_the_guest" } style="display: none" {else /} style="display: block"
-        {/if}>
+
+
+    <div id="introduce-view" style="display:{$row.customer_source=='direct_the_guest'?'none':'block'}">
 
 
         <div class="form-group">
