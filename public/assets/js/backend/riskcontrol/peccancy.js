@@ -776,7 +776,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             icon: 'fa fa-pencil',
                             title: __('Edit'),
                             extend: 'data-toggle="tooltip"',
-                            classname: 'btn btn-xs btn-success btn-editone',
+                            classname: 'btn btn-xs btn-success btn-editone ',
                             url: 'riskcontrol/peccancy/edit'
                         },
                         {
