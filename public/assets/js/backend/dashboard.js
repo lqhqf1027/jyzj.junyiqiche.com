@@ -1,7 +1,7 @@
 define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echarts-theme', 'template'], function ($, undefined, Backend, Datatable, Table, Echarts, undefined, Template) {
 
     var Controller = {
-        index: function () {
+       /* index: function () {
 
             //新车表
             // 基于准备好的dom，初始化echarts实例
@@ -130,7 +130,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // 使用刚指定的配置项和数据显示图表。
             newEchart.setOption(option);
             
-        }
+        }*/
     };
 
     return Controller;
