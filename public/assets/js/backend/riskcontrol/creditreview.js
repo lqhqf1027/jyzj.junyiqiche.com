@@ -779,13 +779,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                     // var newcarAudit = $('#badge_newcar_audit').text(data.total);
                     newcarAudit = parseInt($('#badge_newcar_audit').text());
 
-                    var td = $("#newcarAudit td:nth-child(6)");
-    
-                    for (var i = 0; i < td.length; i++) {
-    
-                        td[i].style.textAlign = "left";
-    
-                    }
                 })
 
             },

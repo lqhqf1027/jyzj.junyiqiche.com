@@ -4,23 +4,29 @@ namespace app\admin\model;
 
 use think\Model;
 
-class FinancialPlatform extends Model
+class Schemecategory extends Model
 {
     // 表名
-    protected $name = 'financial_platform';
-    
-    // 自动写入时间戳字段
+    protected $name = 'scheme_category';
+
+    // 自动写入时间戳字段222
     protected $autoWriteTimestamp = 'int';
 
     // 定义时间戳字段名
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
-    
+
     // 追加属性
     protected $append = [
         'status_text'
     ];
-    
+
+
+    public function cities()
+    {
+        return $this->belongsTo('Cities', 'city_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
 
     
     public function getStatusList()
@@ -31,7 +37,7 @@ class FinancialPlatform extends Model
 
     public function getStatusTextAttr($value, $data)
     {        
-        $value = $value ? $value : $data['status'];
+        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
         $list = $this->getStatusList();
         return isset($list[$value]) ? $list[$value] : '';
     }
