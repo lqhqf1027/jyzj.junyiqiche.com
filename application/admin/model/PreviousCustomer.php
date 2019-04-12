@@ -26,7 +26,7 @@ class PreviousCustomer extends Model
     
     public function getTypeList()
     {
-        return ['full_amount' => __('Type full_amount'),'mortgage' => __('Type mortgage')];
+        return ['mortgage' => __('Type mortgage'),'full_amount' => __('Type full_amount')];
     }     
 
 
