@@ -13,17 +13,16 @@ class Previouscustomer extends Backend
 {
     
     /**
-     * Customer模型对象
-     * @var \app\admin\model\previous\Customer
+     * PreviousCustomer模型对象
+     * @var \app\admin\model\PreviousCustomer
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\previous\Customer;
-        $this->view->assign("nperlistList", $this->model->getNperlistList());
-        $this->view->assign("classificationList", $this->model->getClassificationList());
+        $this->model = new \app\admin\model\PreviousCustomer;
+        $this->view->assign("typeList", $this->model->getTypeList());
     }
     
     /**
@@ -31,7 +30,6 @@ class Previouscustomer extends Backend
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-    
 
     /**
      * 导入
@@ -114,5 +112,4 @@ class Previouscustomer extends Backend
 
         $this->success();
     }
-
 }

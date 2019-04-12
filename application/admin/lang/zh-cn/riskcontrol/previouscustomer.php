@@ -7,7 +7,7 @@ return [
     'Id_card'  =>  '身份证号',
     'Phone'  =>  '联系方式',
     'Contract_total'  =>  '合同总价',
-    'Payment'  =>  '首付（元）',
+    'Payment'  =>  '首付',
     'Monthly'  =>  '月租',
     'Nperlist'  =>  '期限',
     'End_money'  =>  '末期租金',
@@ -36,5 +36,7 @@ return [
     'Saler'  =>  '销售员',
     'Transfer_time'  =>  '过户时间',
     'Note'  =>  '备注',
-    'Classification'  =>  '购车类型'
+    'Type'  =>  '购车类型',
+    'Type full_amount'  =>  '全款',
+    'Type mortgage'  =>  '按揭'
 ];
