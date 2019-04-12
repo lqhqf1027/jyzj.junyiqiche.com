@@ -1,0 +1,2359 @@
+---------------------------------------------------------------
+[ 2019-04-09T17:05:52+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=dashboard&v=1554800744
+[运行时间：0.812147s] [吞吐率：1.23req/s] [内存消耗：3,288.76kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000019s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002323s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/dashboard?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'dashboard',
+  'v' => '1554800744',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001258s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.476607s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000420s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.126352s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.084249s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.083962s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:05:53+08:00 ] 127.0.0.1 GET jyzj.com/admin/auth/rule/index?sort=weigh&order=desc&_=1554800745347
+[运行时间：0.920853s] [吞吐率：1.09req/s] [内存消耗：4,162.68kb] [文件加载：85]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001692s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'auth.rule',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/auth/rule?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'weigh',
+  'order' => 'desc',
+  '_' => '1554800745347',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001291s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.001185s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/auth/rule.php
+[ info ] [ RUN ] app\admin\controller\auth\Rule->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\auth\Rule.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000271s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.097218s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.064985s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.062407s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.064362s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.131508s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.062310s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.065132s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_auth_rule` ORDER BY `weigh` DESC [ RunTime:0.159830s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:05:55+08:00 ] 127.0.0.1 GET jyzj.com/admin/backoffice/referee?addtabs=1
+[运行时间：1.132462s] [吞吐率：0.88req/s] [内存消耗：3,805.52kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000067s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002480s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'backoffice.referee',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/backoffice/referee?ref=addtabs',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.002658s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.002268s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/backoffice/referee.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\backoffice\Referee->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\backoffice\Referee.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\backoffice\referee\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001176s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.118054s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.078420s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.077911s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_admin` [ RunTime:0.077003s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message13','message20','message24') [ RunTime:0.076903s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message3','message4','message22') [ RunTime:0.075802s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message21','message1') [ RunTime:0.075750s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.078155s ]
+[ sql ] [ SQL ] SELECT `title`,`remark` FROM `jyzj_auth_rule` WHERE  `name` = 'backoffice/referee' LIMIT 1 [ RunTime:0.078106s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.078135s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.078292s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.157729s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:05:55+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=backoffice.referee&v=1554800754
+[运行时间：0.272008s] [吞吐率：3.68req/s] [内存消耗：3,286.84kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001741s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/backoffice/referee?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'backoffice.referee',
+  'v' => '1554800754',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001320s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.001098s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/backoffice/referee.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001178s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.099273s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.065453s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.063942s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:05:56+08:00 ] 127.0.0.1 GET jyzj.com/admin/backoffice/referee/index?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1554800755255
+[运行时间：0.895012s] [吞吐率：1.12req/s] [内存消耗：3,405.00kb] [文件加载：89]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001756s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'backoffice.referee',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/backoffice/referee?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1554800755255',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.002560s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000550s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/backoffice/referee.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\backoffice\Referee->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\backoffice\Referee.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001163s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.118149s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.078516s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.077959s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_admin` [ RunTime:0.077809s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message13','message20','message24') [ RunTime:0.077258s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message3','message4','message22') [ RunTime:0.075682s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message21','message1') [ RunTime:0.077711s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_referee` [ RunTime:0.078943s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_referee` `referee` LEFT JOIN `jyzj_models` `models` ON `referee`.`models_id`=`models`.`id` LEFT JOIN `jyzj_admin` `admin` ON `referee`.`admin_id`=`admin`.`id` ORDER BY `referee`.`id` DESC LIMIT 1 [ RunTime:0.077900s ]
+[ sql ] [ SQL ] SELECT `referee`.`id`,`referee`.`models_id`,`referee`.`admin_id`,`referee`.`referee_name`,`referee`.`referee_phone`,`referee`.`referee_idcard`,`referee`.`customer_name`,`referee`.`customer_phone`,`referee`.`referee_bonus`,`referee`.`bank_account`,`referee`.`make_moneytime`,`referee`.`request_fundstime`,`referee`.`introduction_note`,`referee`.`buy_way`,models.name AS models__name,admin.nickname AS admin__nickname,admin.avatar AS admin__avatar FROM `jyzj_referee` `referee` LEFT JOIN `jyzj_models` `models` ON `referee`.`models_id`=`models`.`id` LEFT JOIN `jyzj_admin` `admin` ON `referee`.`admin_id`=`admin`.`id` ORDER BY `referee`.`id` DESC LIMIT 0,10 [ RunTime:0.078969s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:06:13+08:00 ] 127.0.0.1 GET jyzj.com/admin/backoffice/referee?ref=addtabs
+[运行时间：0.029375s] [吞吐率：34.04req/s] [内存消耗：2,350.48kb] [文件加载：70]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001765s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'backoffice.referee',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'ref' => 'addtabs',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001284s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000272s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2019-04-09T17:06:14+08:00 ] 127.0.0.1 GET jyzj.com/admin/index/index
+[运行时间：0.772876s] [吞吐率：1.29req/s] [内存消耗：4,013.13kb] [文件加载：94]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002813s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001272s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000579s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Index->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Index.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\index\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'menulist',
+  8 => 'navlist',
+  9 => 'fixedmenu',
+  10 => 'referermenu',
+  11 => 'title',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000265s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.117435s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.078610s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.075475s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.077325s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.076984s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.077319s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.152668s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:06:19+08:00 ] 127.0.0.1 GET jyzj.com/admin/dashboard?addtabs=1
+[运行时间：5.095810s] [吞吐率：0.20req/s] [内存消耗：4,065.25kb] [文件加载：88]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001928s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'dashboard',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/index/index',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001622s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.001595s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ RUN ] app\admin\controller\Dashboard->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Dashboard.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\dashboard\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'count',
+  8 => 'todayorder',
+  9 => 'todaytake',
+  10 => 'guest',
+  11 => 'introduce',
+  12 => 'rentaltakecar',
+  13 => 'rentalcar',
+  14 => 'secondcar',
+  15 => 'newsales',
+  16 => 'rentalsales',
+  17 => 'secondsales',
+  18 => 'fullsales',
+  19 => 'fullsecondsales',
+  20 => 'violation_inquiry',
+  21 => 'strong_status',
+  22 => 'strong_status_past',
+  23 => 'business_status',
+  24 => 'business_status_past',
+  25 => 'year_status',
+  26 => 'year_status_past',
+  27 => 'total_deduction_little',
+  28 => 'total_deduction_more',
+  29 => 'total_deduction_many',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001270s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.098641s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.062711s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.063002s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.066210s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.131025s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.064173s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.063995s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_sales_order` [ RunTime:0.066384s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car' ) LIMIT 1 [ RunTime:0.061976s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066357s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` <> 'the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065297s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065560s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064831s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_rental_order` [ RunTime:0.064103s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.065106s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065480s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064742s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064859s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064762s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_second_sales_order` [ RunTime:0.066568s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car' ) LIMIT 1 [ RunTime:0.065077s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064708s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` <> 'the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.062608s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065086s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064784s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_full_parment_order` [ RunTime:0.066052s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.067813s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064034s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064783s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065723s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065002s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_second_full_order` [ RunTime:0.063147s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.062900s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063999s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063321s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065469s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.069696s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.065386s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.065465s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.067203s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.068912s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.064845s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.065500s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.093675s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.064914s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.067220s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.068699s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065961s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066919s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065392s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065835s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063295s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.062737s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.065951s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.066490s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.068616s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.064115s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_violation_inquiry` [ RunTime:0.064044s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `year_status` = -2 ) LIMIT 1 [ RunTime:0.062048s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `year_status` = -3 ) LIMIT 1 [ RunTime:0.064827s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `strong_status` = '1' ) LIMIT 1 [ RunTime:0.067489s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `strong_status` = '2' ) LIMIT 1 [ RunTime:0.065564s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `business_status` = '1' ) LIMIT 1 [ RunTime:0.064988s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `business_status` = '2' ) LIMIT 1 [ RunTime:0.068544s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2 ) LIMIT 1 [ RunTime:0.067138s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 1 AND 20 ) LIMIT 1 [ RunTime:0.065392s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 21 AND 50 ) LIMIT 1 [ RunTime:0.064625s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 51 AND 200 ) LIMIT 1 [ RunTime:0.064255s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_car_rental_models_info` [ RunTime:0.066065s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_car_rental_models_info` WHERE  (  `status_data` = 'the_car' ) LIMIT 1 [ RunTime:0.065853s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_car_rental_models_info` WHERE  (  `status_data` = ' '  AND `shelfismenu` = 1 ) LIMIT 1 [ RunTime:0.065469s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_secondcar_rental_models_info` [ RunTime:0.066176s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_secondcar_rental_models_info` WHERE  `status_data` <> 'the_car'  AND `shelfismenu` = 1 LIMIT 1 [ RunTime:0.064764s ]
+[ sql ] [ SQL ] SELECT `title`,`remark` FROM `jyzj_auth_rule` WHERE  `name` = 'dashboard' LIMIT 1 [ RunTime:0.065258s ]
+[ error ] [8]未定义变量: rentalosales[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Dashboard.php:130]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:758]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:833]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:902]
+---------------------------------------------------------------
+[ 2019-04-09T17:06:20+08:00 ] 127.0.0.1 GET jyzj.com/admin/backoffice/referee?addtabs=1
+[运行时间：6.267967s] [吞吐率：0.16req/s] [内存消耗：3,666.18kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001806s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'backoffice.referee',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/index/index',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001578s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.001070s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/backoffice/referee.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\backoffice\Referee->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\backoffice\Referee.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\backoffice\referee\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001222s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.139521s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.083789s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.083571s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_admin` [ RunTime:0.084282s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message13','message20','message24') [ RunTime:0.082744s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message3','message4','message22') [ RunTime:0.083228s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message21','message1') [ RunTime:0.079828s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.083099s ]
+[ sql ] [ SQL ] SELECT `title`,`remark` FROM `jyzj_auth_rule` WHERE  `name` = 'backoffice/referee' LIMIT 1 [ RunTime:0.082989s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.081087s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.082727s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.164087s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:06:21+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=index&v=1554800773
+[运行时间：6.484304s] [吞吐率：0.15req/s] [内存消耗：3,290.03kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002040s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/index/index',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'index',
+  'v' => '1554800773',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001255s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:6.157723s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001143s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.117003s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.077342s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.074151s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:06:21+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=dashboard&v=1554800774
+[运行时间：1.708843s] [吞吐率：0.59req/s] [内存消耗：3,288.84kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001744s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/dashboard?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'dashboard',
+  'v' => '1554800774',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001247s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:1.365697s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000274s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.125751s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.082935s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.084610s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:06:21+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=backoffice.referee&v=1554800774
+[运行时间：0.841180s] [吞吐率：1.19req/s] [内存消耗：3,286.84kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001769s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/backoffice/referee?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'backoffice.referee',
+  'v' => '1554800774',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001266s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.521538s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/backoffice/referee.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001186s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.118033s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.078180s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.077472s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:06:22+08:00 ] 127.0.0.1 GET jyzj.com/admin/backoffice/referee/index?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1554800780836
+[运行时间：0.929158s] [吞吐率：1.08req/s] [内存消耗：3,405.00kb] [文件加载：89]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000023s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001852s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'backoffice.referee',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/backoffice/referee?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1554800780836',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001613s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000620s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/backoffice/referee.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\backoffice\Referee->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\backoffice\Referee.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000268s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.126357s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj_test;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.085333s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.083919s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_admin` [ RunTime:0.084096s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message13','message20','message24') [ RunTime:0.082692s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message3','message4','message22') [ RunTime:0.083444s ]
+[ sql ] [ SQL ] SELECT `id` FROM `jyzj_admin` WHERE  `rule_message` IN ('message21','message1') [ RunTime:0.081982s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_referee` [ RunTime:0.083731s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_referee` `referee` LEFT JOIN `jyzj_models` `models` ON `referee`.`models_id`=`models`.`id` LEFT JOIN `jyzj_admin` `admin` ON `referee`.`admin_id`=`admin`.`id` ORDER BY `referee`.`id` DESC LIMIT 1 [ RunTime:0.082404s ]
+[ sql ] [ SQL ] SELECT `referee`.`id`,`referee`.`models_id`,`referee`.`admin_id`,`referee`.`referee_name`,`referee`.`referee_phone`,`referee`.`referee_idcard`,`referee`.`customer_name`,`referee`.`customer_phone`,`referee`.`referee_bonus`,`referee`.`bank_account`,`referee`.`make_moneytime`,`referee`.`request_fundstime`,`referee`.`introduction_note`,`referee`.`buy_way`,models.name AS models__name,admin.nickname AS admin__nickname,admin.avatar AS admin__avatar FROM `jyzj_referee` `referee` LEFT JOIN `jyzj_models` `models` ON `referee`.`models_id`=`models`.`id` LEFT JOIN `jyzj_admin` `admin` ON `referee`.`admin_id`=`admin`.`id` ORDER BY `referee`.`id` DESC LIMIT 0,10 [ RunTime:0.083621s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:06:54+08:00 ] 127.0.0.1 GET jyzj.com/admin/backoffice/referee?ref=addtabs
+[运行时间：0.043378s] [吞吐率：23.05req/s] [内存消耗：2,350.52kb] [文件加载：70]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000022s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001811s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'backoffice.referee',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'ref' => 'addtabs',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001203s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000787s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2019-04-09T17:06:54+08:00 ] 127.0.0.1 GET jyzj.com/admin/index/index
+[运行时间：0.236581s] [吞吐率：4.23req/s] [内存消耗：3,220.88kb] [文件加载：83]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000022s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001726s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001208s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000596s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.113210s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ error ] [10501]SQLSTATE[42S02]: Base table or view not found: 1146 Table 'jyzj.junyiqiche.com.jyzj_config' doesn't exist[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\library\think\db\Connection.php:385]
+---------------------------------------------------------------
+[ 2019-04-09T17:07:17+08:00 ] 127.0.0.1 GET jyzj.com/
+[运行时间：0.254580s] [吞吐率：3.93req/s] [内存消耗：3,218.58kb] [文件加载：83]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001733s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001202s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000543s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.125810s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ error ] [10501]SQLSTATE[42S02]: Base table or view not found: 1146 Table 'jyzj.junyiqiche.com.jyzj_config' doesn't exist[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\library\think\db\Connection.php:385]
+---------------------------------------------------------------
+[ 2019-04-09T17:54:57+08:00 ] 127.0.0.1 GET jyzj.com/
+[运行时间：0.820726s] [吞吐率：1.22req/s] [内存消耗：4,013.15kb] [文件加载：94]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000108s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.012808s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001425s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.001293s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Index->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Index.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\index\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'menulist',
+  8 => 'navlist',
+  9 => 'fixedmenu',
+  10 => 'referermenu',
+  11 => 'title',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000359s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.117166s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.078618s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.076127s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.077853s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.077603s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.078396s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.117342s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:03+08:00 ] 127.0.0.1 GET jyzj.com/admin/dashboard?addtabs=1
+[运行时间：6.395167s] [吞吐率：0.16req/s] [内存消耗：4,067.95kb] [文件加载：88]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001769s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'dashboard',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001643s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000825s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ RUN ] app\admin\controller\Dashboard->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Dashboard.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\dashboard\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'count',
+  8 => 'todayorder',
+  9 => 'todaytake',
+  10 => 'guest',
+  11 => 'introduce',
+  12 => 'rentaltakecar',
+  13 => 'rentalcar',
+  14 => 'secondcar',
+  15 => 'newsales',
+  16 => 'rentalsales',
+  17 => 'secondsales',
+  18 => 'fullsales',
+  19 => 'fullsecondsales',
+  20 => 'violation_inquiry',
+  21 => 'strong_status',
+  22 => 'strong_status_past',
+  23 => 'business_status',
+  24 => 'business_status_past',
+  25 => 'year_status',
+  26 => 'year_status_past',
+  27 => 'total_deduction_little',
+  28 => 'total_deduction_more',
+  29 => 'total_deduction_many',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001172s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.127115s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.082972s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.084348s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.083465s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.127403s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.084409s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.083471s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_sales_order` [ RunTime:0.085058s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car' ) LIMIT 1 [ RunTime:0.083115s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.082943s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` <> 'the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083954s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083851s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083599s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_rental_order` [ RunTime:0.084929s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.082775s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.084558s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083249s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083824s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083289s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_second_sales_order` [ RunTime:0.082992s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car' ) LIMIT 1 [ RunTime:0.082548s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.082925s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` <> 'the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083765s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083873s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083717s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_full_parment_order` [ RunTime:0.084141s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.083292s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.082983s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.082923s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.082685s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083076s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_second_full_order` [ RunTime:0.083587s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.082547s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.082819s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083313s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083018s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083648s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.083302s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.083158s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.082843s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.082910s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.087666s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.082991s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.082773s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.081055s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.084684s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.082874s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083274s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.082955s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083085s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.083062s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.082972s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.083748s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.083135s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.083763s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.083338s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.083812s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_violation_inquiry` [ RunTime:0.082794s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `year_status` = -2 ) LIMIT 1 [ RunTime:0.083162s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `year_status` = -3 ) LIMIT 1 [ RunTime:0.083344s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `strong_status` = '1' ) LIMIT 1 [ RunTime:0.083491s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `strong_status` = '2' ) LIMIT 1 [ RunTime:0.084006s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `business_status` = '1' ) LIMIT 1 [ RunTime:0.082788s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `business_status` = '2' ) LIMIT 1 [ RunTime:0.083237s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2 ) LIMIT 1 [ RunTime:0.084672s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 1 AND 20 ) LIMIT 1 [ RunTime:0.083037s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 21 AND 50 ) LIMIT 1 [ RunTime:0.083836s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 51 AND 200 ) LIMIT 1 [ RunTime:0.081851s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_car_rental_models_info` [ RunTime:0.084527s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_car_rental_models_info` WHERE  (  `status_data` = 'the_car' ) LIMIT 1 [ RunTime:0.083762s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_car_rental_models_info` WHERE  (  `status_data` = ' '  AND `shelfismenu` = 1 ) LIMIT 1 [ RunTime:0.083488s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_secondcar_rental_models_info` [ RunTime:0.083945s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_secondcar_rental_models_info` WHERE  `status_data` <> 'the_car'  AND `shelfismenu` = 1 LIMIT 1 [ RunTime:0.082425s ]
+[ sql ] [ SQL ] SELECT `title`,`remark` FROM `jyzj_auth_rule` WHERE  `name` = 'dashboard' LIMIT 1 [ RunTime:0.083436s ]
+[ error ] [8]未定义变量: rentalosales[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Dashboard.php:130]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:758]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:833]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:902]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:04+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=index&v=1554803696
+[运行时间：5.477868s] [吞吐率：0.18req/s] [内存消耗：3,290.45kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000096s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.012441s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'index',
+  'v' => '1554803696',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.003677s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:5.095430s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001277s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.128087s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.084865s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.084557s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:04+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=dashboard&v=1554803697
+[运行时间：0.491815s] [吞吐率：2.03req/s] [内存消耗：3,289.20kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001690s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/dashboard?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'dashboard',
+  'v' => '1554803697',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001251s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.207242s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001118s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.102024s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.066647s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.067874s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:06+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/wipecache?type=all&_=1554803697768
+[运行时间：0.403863s] [吞吐率：2.48req/s] [内存消耗：3,427.38kb] [文件加载：98]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001857s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'wipecache',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/dashboard?ref=addtabs',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'type' => 'all',
+  '_' => '1554803697768',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001326s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000589s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->wipecache[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000254s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.119097s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.078284s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.078092s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:08+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/wipecache?type=all&_=1554803697769
+[运行时间：0.350266s] [吞吐率：2.85req/s] [内存消耗：3,427.38kb] [文件加载：98]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002280s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'wipecache',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/dashboard?ref=addtabs',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'type' => 'all',
+  '_' => '1554803697769',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001326s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000548s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->wipecache[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000189s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.125650s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.083605s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.082714s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:11+08:00 ] 127.0.0.1 GET jyzj.com/admin/dashboard?ref=addtabs
+[运行时间：0.551344s] [吞吐率：1.81req/s] [内存消耗：3,330.48kb] [文件加载：77]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002236s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'dashboard',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'ref' => 'addtabs',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001252s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000300s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.126242s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.082830s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.082660s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.083092s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.124846s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:12+08:00 ] 127.0.0.1 GET jyzj.com/admin/index/index
+[运行时间：0.854752s] [吞吐率：1.17req/s] [内存消耗：4,115.49kb] [文件加载：96]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002197s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001257s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000609s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Index->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Index.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\index\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'menulist',
+  8 => 'navlist',
+  9 => 'fixedmenu',
+  10 => 'referermenu',
+  11 => 'title',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000142s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.116050s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.077021s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.076744s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.076477s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.077005s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.077348s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.115768s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_auth_rule` WHERE  `status` = 'normal'  AND `ismenu` = 1 ORDER BY `weigh` DESC [ RunTime:0.078003s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:17+08:00 ] 127.0.0.1 GET jyzj.com/admin/dashboard?addtabs=1
+[运行时间：5.185126s] [吞吐率：0.19req/s] [内存消耗：4,262.35kb] [文件加载：90]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000021s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002281s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'dashboard',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/index/index',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.002248s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.002497s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ RUN ] app\admin\controller\Dashboard->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Dashboard.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\dashboard\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'count',
+  8 => 'todayorder',
+  9 => 'todaytake',
+  10 => 'guest',
+  11 => 'introduce',
+  12 => 'rentaltakecar',
+  13 => 'rentalcar',
+  14 => 'secondcar',
+  15 => 'newsales',
+  16 => 'rentalsales',
+  17 => 'secondsales',
+  18 => 'fullsales',
+  19 => 'fullsecondsales',
+  20 => 'violation_inquiry',
+  21 => 'strong_status',
+  22 => 'strong_status_past',
+  23 => 'business_status',
+  24 => 'business_status_past',
+  25 => 'year_status',
+  26 => 'year_status_past',
+  27 => 'total_deduction_little',
+  28 => 'total_deduction_more',
+  29 => 'total_deduction_many',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000142s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.101750s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.066543s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.067337s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.067613s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.101846s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.067703s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.066726s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_sales_order` [ RunTime:0.068301s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car' ) LIMIT 1 [ RunTime:0.065859s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066498s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` <> 'the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066977s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.067557s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065454s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_rental_order` [ RunTime:0.068251s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.066525s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066872s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065092s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066706s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065985s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_second_sales_order` [ RunTime:0.066546s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car' ) LIMIT 1 [ RunTime:0.065647s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066077s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` <> 'the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066277s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066493s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066740s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_full_parment_order` [ RunTime:0.067836s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.066289s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065488s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066136s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066777s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066707s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_second_full_order` [ RunTime:0.068203s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.067234s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066762s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066308s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.073292s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.069399s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.067462s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.066981s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.069398s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.065139s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.066604s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.066346s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.066722s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.067005s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.066894s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.067435s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.079098s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066577s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066844s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066987s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.066579s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.066181s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.066939s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.066943s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.066462s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.066965s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_violation_inquiry` [ RunTime:0.066641s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `year_status` = -2 ) LIMIT 1 [ RunTime:0.069997s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `year_status` = -3 ) LIMIT 1 [ RunTime:0.073631s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `strong_status` = '1' ) LIMIT 1 [ RunTime:0.072662s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `strong_status` = '2' ) LIMIT 1 [ RunTime:0.066192s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `business_status` = '1' ) LIMIT 1 [ RunTime:0.066908s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `business_status` = '2' ) LIMIT 1 [ RunTime:0.066513s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2 ) LIMIT 1 [ RunTime:0.066558s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 1 AND 20 ) LIMIT 1 [ RunTime:0.066106s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 21 AND 50 ) LIMIT 1 [ RunTime:0.064980s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 51 AND 200 ) LIMIT 1 [ RunTime:0.064909s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_car_rental_models_info` [ RunTime:0.067260s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_car_rental_models_info` WHERE  (  `status_data` = 'the_car' ) LIMIT 1 [ RunTime:0.066463s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_car_rental_models_info` WHERE  (  `status_data` = ' '  AND `shelfismenu` = 1 ) LIMIT 1 [ RunTime:0.066275s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_secondcar_rental_models_info` [ RunTime:0.068697s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_secondcar_rental_models_info` WHERE  `status_data` <> 'the_car'  AND `shelfismenu` = 1 LIMIT 1 [ RunTime:0.072844s ]
+[ sql ] [ SQL ] SELECT `title`,`remark` FROM `jyzj_auth_rule` WHERE  `name` = 'dashboard' LIMIT 1 [ RunTime:0.068727s ]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:758]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:833]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:902]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:18+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=index&v=1554803711
+[运行时间：5.324584s] [吞吐率：0.19req/s] [内存消耗：3,290.39kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000020s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002317s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/index/index',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'index',
+  'v' => '1554803711',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001401s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:5.036069s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000293s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.099950s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.065815s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.066091s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:18+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=dashboard&v=1554803712
+[运行时间：0.482659s] [吞吐率：2.07req/s] [内存消耗：3,289.20kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002221s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/dashboard?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'dashboard',
+  'v' => '1554803712',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001245s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.110652s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000374s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.113315s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.120706s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.078527s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:19+08:00 ] 127.0.0.1 GET jyzj.com/admin/promote/platform?addtabs=1
+[运行时间：0.026293s] [吞吐率：38.03req/s] [内存消耗：1,871.91kb] [文件加载：59]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000095s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002522s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'promote',
+    2 => 'platform',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/promote/platform?ref=addtabs',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001256s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2019-04-09T17:55:24+08:00 ] 127.0.0.1 GET jyzj.com/admin/promote/customertabs?addtabs=1
+[运行时间：0.524653s] [吞吐率：1.91req/s] [内存消耗：3,415.36kb] [文件加载：87]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000019s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002315s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'promote.customertabs',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/promote/customertabs?ref=addtabs',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001265s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000548s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/promote/customertabs.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\promote\Customertabs->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\promote\Customertabs.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/customer/customerresource.php
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.231724s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.124591s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.088364s ]
+[ error ] [0]致命错误: Class 'app\admin\model\Platform' not found[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\library\think\model\relation\BelongsTo.php:37]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:45+08:00 ] 127.0.0.1 GET jyzj.com/admin/dashboard?ref=addtabs
+[运行时间：0.502195s] [吞吐率：1.99req/s] [内存消耗：3,330.48kb] [文件加载：77]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000020s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001858s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'dashboard',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'ref' => 'addtabs',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001324s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000301s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.116084s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.073852s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.076839s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.074447s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.116778s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:46+08:00 ] 127.0.0.1 GET jyzj.com/admin/index/index
+[运行时间：0.638038s] [吞吐率：1.57req/s] [内存消耗：4,016.96kb] [文件加载：94]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001933s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001509s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000535s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Index->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Index.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\index\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'menulist',
+  8 => 'navlist',
+  9 => 'fixedmenu',
+  10 => 'referermenu',
+  11 => 'title',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000266s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.102502s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.066773s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.067012s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.065163s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.066311s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.066781s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.101546s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:51+08:00 ] 127.0.0.1 GET jyzj.com/admin/dashboard?addtabs=1
+[运行时间：4.968451s] [吞吐率：0.20req/s] [内存消耗：4,068.09kb] [文件加载：88]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001770s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'dashboard',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/index/index',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.002626s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000674s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ RUN ] app\admin\controller\Dashboard->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Dashboard.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\dashboard\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'count',
+  8 => 'todayorder',
+  9 => 'todaytake',
+  10 => 'guest',
+  11 => 'introduce',
+  12 => 'rentaltakecar',
+  13 => 'rentalcar',
+  14 => 'secondcar',
+  15 => 'newsales',
+  16 => 'rentalsales',
+  17 => 'secondsales',
+  18 => 'fullsales',
+  19 => 'fullsecondsales',
+  20 => 'violation_inquiry',
+  21 => 'strong_status',
+  22 => 'strong_status_past',
+  23 => 'business_status',
+  24 => 'business_status_past',
+  25 => 'year_status',
+  26 => 'year_status_past',
+  27 => 'total_deduction_little',
+  28 => 'total_deduction_more',
+  29 => 'total_deduction_many',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001178s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.097542s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.065115s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.065628s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.065215s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.098657s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.064740s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.065200s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_sales_order` [ RunTime:0.065919s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car' ) LIMIT 1 [ RunTime:0.064245s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065034s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` <> 'the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063116s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064594s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064533s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_rental_order` [ RunTime:0.065622s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.063993s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064515s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064764s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064238s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064852s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_second_sales_order` [ RunTime:0.065018s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car' ) LIMIT 1 [ RunTime:0.064855s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064702s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` <> 'the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064681s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064696s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064101s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_full_parment_order` [ RunTime:0.065532s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.064087s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063014s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064972s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064044s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064340s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_second_full_order` [ RunTime:0.065837s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car' ) LIMIT 1 [ RunTime:0.064548s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064814s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` <> 'for_the_car'  AND `createtime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065249s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'direct_the_guest'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.065210s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `customer_source` = 'turn_to_introduce'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063314s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.065177s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.064636s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.063924s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.064593s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1548950400 AND 1551369600 ) LIMIT 1 [ RunTime:0.064739s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.063831s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.064460s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.065043s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.064670s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1551369600 AND 1554048000 ) LIMIT 1 [ RunTime:0.064811s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063074s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063354s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.063889s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064428s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1554048000 AND 1556640000 ) LIMIT 1 [ RunTime:0.064765s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.064668s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_rental_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.064697s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_sales_order` WHERE  (  `review_the_data` = 'the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.064693s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_full_parment_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.064701s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_second_full_order` WHERE  (  `review_the_data` = 'for_the_car'  AND `delivery_datetime` BETWEEN 1556640000 AND 1559318400 ) LIMIT 1 [ RunTime:0.064722s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_violation_inquiry` [ RunTime:0.064350s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `year_status` = -2 ) LIMIT 1 [ RunTime:0.063934s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `year_status` = -3 ) LIMIT 1 [ RunTime:0.063844s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `strong_status` = '1' ) LIMIT 1 [ RunTime:0.064359s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `strong_status` = '2' ) LIMIT 1 [ RunTime:0.064656s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `business_status` = '1' ) LIMIT 1 [ RunTime:0.064126s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `business_status` = '2' ) LIMIT 1 [ RunTime:0.064763s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2 ) LIMIT 1 [ RunTime:0.064535s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 1 AND 20 ) LIMIT 1 [ RunTime:0.065149s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 21 AND 50 ) LIMIT 1 [ RunTime:0.063982s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_violation_inquiry` WHERE  (  `peccancy_status` = 2  AND `total_deduction` BETWEEN 51 AND 200 ) LIMIT 1 [ RunTime:0.064999s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_car_rental_models_info` [ RunTime:0.065690s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_car_rental_models_info` WHERE  (  `status_data` = 'the_car' ) LIMIT 1 [ RunTime:0.063112s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_car_rental_models_info` WHERE  (  `status_data` = ' '  AND `shelfismenu` = 1 ) LIMIT 1 [ RunTime:0.063487s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_secondcar_rental_models_info` [ RunTime:0.066005s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_secondcar_rental_models_info` WHERE  `status_data` <> 'the_car'  AND `shelfismenu` = 1 LIMIT 1 [ RunTime:0.064913s ]
+[ sql ] [ SQL ] SELECT `title`,`remark` FROM `jyzj_auth_rule` WHERE  `name` = 'dashboard' LIMIT 1 [ RunTime:0.064021s ]
+[ error ] [8]未定义变量: rentalosales[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Dashboard.php:130]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:758]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:833]
+[ error ] [8]Array to string conversion[D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\runtime\temp\20c0108a08b2037ae46859cf7f9d9108.php:902]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:51+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=index&v=1554803745
+[运行时间：5.173851s] [吞吐率：0.19req/s] [内存消耗：3,290.39kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002192s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/index/index',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'index',
+  'v' => '1554803745',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001327s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:4.859071s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000147s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.115324s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.076345s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.074178s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:51+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=dashboard&v=1554803746
+[运行时间：0.466917s] [吞吐率：2.14req/s] [内存消耗：3,289.20kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000018s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001707s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/dashboard?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'dashboard',
+  'v' => '1554803746',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001257s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.163141s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/dashboard.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001154s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.114951s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.071690s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.072497s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:54+08:00 ] 127.0.0.1 GET jyzj.com/admin/promote/platform?addtabs=1
+[运行时间：0.719974s] [吞吐率：1.39req/s] [内存消耗：3,740.62kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001764s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'promote.platform',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/promote/platform?ref=addtabs',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001263s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000541s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/promote/platform.php
+[ info ] [ RUN ] app\admin\controller\promote\Platform->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\promote\Platform.php ]
+[ info ] [ VIEW ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\promote\platform\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'rule_message',
+  6 => 'version',
+  7 => 'statusList',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000506s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.112348s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.073974s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.072702s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.074303s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.112644s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.073717s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.073363s ]
+[ sql ] [ SQL ] SELECT `title`,`remark` FROM `jyzj_auth_rule` WHERE  `name` = 'promote/platform' LIMIT 1 [ RunTime:0.073650s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:55+08:00 ] 127.0.0.1 GET jyzj.com/admin/ajax/lang?callback=define&controllername=promote.platform&v=1554803754
+[运行时间：0.305298s] [吞吐率：3.28req/s] [内存消耗：3,286.48kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001728s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/promote/platform?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'promote.platform',
+  'v' => '1554803754',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001257s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.001092s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/promote/platform.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001177s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.114772s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.073353s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.076266s ]
+---------------------------------------------------------------
+[ 2019-04-09T17:55:56+08:00 ] 127.0.0.1 GET jyzj.com/admin/promote/platform/index?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1554803754801
+[运行时间：0.895614s] [吞吐率：1.12req/s] [内存消耗：3,574.10kb] [文件加载：85]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000032s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002384s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'promote.platform',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1554256493; PHPSESSID=ln8fhhbptraaft5tducqgudhs4',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://jyzj.com/admin/promote/platform?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'jyzj.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1554803754801',
+)
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001481s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.001068s ]
+[ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin/lang/zh-cn/promote/platform.php
+[ info ] [ RUN ] app\admin\controller\promote\Platform->index[ D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\controller\promote\Platform.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000278s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.099968s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_group_access` [ RunTime:0.063063s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `jyzj_auth_group_access` `aga` LEFT JOIN `jyzj_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='19' and ag.status='normal' ) [ RunTime:0.065102s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_auth_rule` [ RunTime:0.087891s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `jyzj_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.097755s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_config` [ RunTime:0.077066s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_config` WHERE  `name` = 'version' LIMIT 1 [ RunTime:0.100432s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `jyzj_platform` [ RunTime:0.064882s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `jyzj_platform` WHERE  `id` NOT IN (5,6,7) ORDER BY `id` DESC LIMIT 1 [ RunTime:0.088137s ]
+[ sql ] [ SQL ] SELECT * FROM `jyzj_platform` WHERE  `id` NOT IN (5,6,7) ORDER BY `id` DESC LIMIT 0,10 [ RunTime:0.080407s ]

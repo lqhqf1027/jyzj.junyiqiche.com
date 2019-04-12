@@ -1,0 +1,178 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Customer_source')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[customer_source]">
+                {foreach name="customerSourceList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.customer_source"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Financial_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-financial_name" class="form-control" name="row[financial_name]" type="text" value="{$row.financial_name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="{$row.username}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-phone" data-rule="required" class="form-control" name="row[phone]" type="text" value="{$row.phone}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-id_card" data-rule="required" class="form-control" name="row[id_card]" type="text" value="{$row.id_card}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            
+            <div class="radio">
+            {foreach name="genderdataList" item="vo"}
+            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"}checked{/in} /> {$vo}</label> 
+            {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('City')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class='control-relative'><input id="c-city" data-rule="required" class="form-control" data-toggle="city-picker" name="row[city]" type="text" value="{$row.city}"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Models_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-models_name" data-rule="required" class="form-control" name="row[models_name]" type="text" value="{$row.models_name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Payment')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-payment" class="form-control" step="0.01" name="row[payment]" type="number" value="{$row.payment}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Monthly')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-monthly" class="form-control" step="0.01" name="row[monthly]" type="number" value="{$row.monthly}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Nperlist')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-nperlist" class="form-control selectpicker" name="row[nperlist]">
+                {foreach name="nperlistList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.nperlist"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Gps')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-gps" class="form-control" step="0.01" name="row[gps]" type="number" value="{$row.gps}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Decoration')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-decoration" class="form-control" name="row[decoration]" type="text" value="{$row.decoration}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Rent')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-rent" class="form-control" step="0.01" name="row[rent]" type="number" value="{$row.rent}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Deposit')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-deposit" class="form-control" step="0.01" name="row[deposit]" type="number" value="{$row.deposit}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Family_members')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-family_members" class="form-control" name="row[family_members]" type="text" value="{$row.family_members}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Detailed_address')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-detailed_address" class="form-control" name="row[detailed_address]" type="text" value="{$row.detailed_address}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Family_members2')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-family_members2" class="form-control" name="row[family_members2]" type="text" value="{$row.family_members2}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]" type="text" value="{$row.turn_to_introduce_name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_phone')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-turn_to_introduce_phone" class="form-control" name="row[turn_to_introduce_phone]" type="text" value="{$row.turn_to_introduce_phone}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_card')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-turn_to_introduce_card" class="form-control" name="row[turn_to_introduce_card]" type="text" value="{$row.turn_to_introduce_card}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Delivery_datetime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-delivery_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[delivery_datetime]" type="text" value="{:$row.delivery_datetime?datetime($row.delivery_datetime):''}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Note_sales')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-note_sales" class="form-control" name="row[note_sales]" type="text" value="{$row.note_sales}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Type')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-type" class="form-control selectpicker" name="row[type]">
+                {foreach name="typeList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.type"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
