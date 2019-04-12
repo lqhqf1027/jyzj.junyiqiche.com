@@ -37,6 +37,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'nperlist', title: __('Nperlist')},
                         {field: 'end_money', title: __('End_money')},
                         {field: 'margin', title: __('Margin')},
+                        {field: 'tail_money', title: __('尾款')},
                         {field: 'hostdate', title: __('Hostdate')},
                         {field: 'models_name', title: __('Models_name')},
                         {field: 'licensenumber', title: __('Licensenumber')},

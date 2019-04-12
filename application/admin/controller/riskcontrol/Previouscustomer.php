@@ -96,6 +96,22 @@ class Previouscustomer extends Backend
                 }
             }
             if ($row) {
+                $row['payment'] = $row['payment']?$row['payment']:0;
+                $row['monthly'] = $row['monthly']?$row['monthly']:0;
+                $row['end_money'] = $row['end_money']?$row['end_money']:0;
+                $row['tail_money'] = $row['tail_money']?$row['tail_money']:0;
+                $row['margin'] = $row['margin']?$row['margin']:0;
+                $row['tax_amount'] = $row['tax_amount']?$row['tax_amount']:0;
+                $row['no_tax_amount'] = $row['no_tax_amount']?$row['no_tax_amount']:0;
+                $row['purchase_of_taxes'] = $row['purchase_of_taxes']?$row['purchase_of_taxes']:0;
+                $row['house_fee'] = $row['house_fee']?$row['house_fee']:0;
+                $row['luqiao_fee'] = $row['luqiao_fee']?$row['luqiao_fee']:0;
+                $row['house_fee'] = $row['house_fee']?$row['house_fee']:0;
+                $row['insurance'] = $row['insurance']?$row['insurance']:0;
+                $row['car_boat_tax'] = $row['car_boat_tax']?$row['car_boat_tax']:0;
+                $row['business_risks'] = $row['business_risks']?$row['business_risks']:0;
+                $row['type'] = trim($row['type']);
+                if($row['type']!='full_amount') $row['contract_total'] = floatval($row['payment'])+floatval($row['monthly'])*floatval($row['nperlist'])+floatval($row['end_money'])+floatval($row['tail_money']);
                 $insert[] = $row;
             }
         }
