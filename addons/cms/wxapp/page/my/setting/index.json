@@ -1,6 +1,0 @@
-{
-    "navigationBarTitleText": "授权设定",
-    "usingComponents": {
-        "wux-button": "../../../assets/libs/wux/button/index"
-    }
-}

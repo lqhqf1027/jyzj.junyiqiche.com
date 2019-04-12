@@ -1,7 +1,0 @@
-{
-    "navigationBarTitleText": "门店",
-    "enablePullDownRefresh": true,
-    "usingComponents": {
-        "wux-search-bar": "../../../assets/libs/wux/search-bar/index"
-    }
-}

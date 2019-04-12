@@ -1,8 +1,0 @@
-{
-    "navigationBarTitleText": "友车友家",
-    "usingComponents": {
-    	"wux-tag": "../../assets/libs/wux/tag/index",
-        "wux-cell-group": "../../../assets/libs/wux/cell-group/index",
-        "wux-cell": "../../../assets/libs/wux/cell/index"
-    }
-}

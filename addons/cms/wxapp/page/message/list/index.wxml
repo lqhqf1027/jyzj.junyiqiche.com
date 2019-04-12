@@ -1,9 +1,0 @@
-<wux-cell-group wx:if="{{ messageList.length }}">
-	<block wx:for="{{ messageList }}" wx:key="">
-		<wux-cell extra="{{ item.timeago }}" is-link url="/page/message/detail/index?id={{ item.id }}&read={{ item.isRead }}">
-			<view slot="header" class="dot" wx:if="{{ item.isRead === 0 }}"></view>
-			<view class="title">{{ item.title }}</view>
-		</wux-cell>
-	</block>
-</wux-cell-group>
-<wux-prompt visible icon="" title="暂无记录~" wx:else />
