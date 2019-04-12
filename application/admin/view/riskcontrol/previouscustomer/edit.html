@@ -33,43 +33,37 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Contract_total')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-contract_total" class="form-control" step="0.01" name="row[contract_total]" type="number" value="{$row.contract_total}">
+            <input id="c-contract_total" class="form-control" name="row[contract_total]" type="text" value="{$row.contract_total}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Payment')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-payment" class="form-control" step="0.01" name="row[payment]" type="number" value="{$row.payment}">
+            <input id="c-payment" class="form-control" name="row[payment]" type="text" value="{$row.payment}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Monthly')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-monthly" class="form-control" step="0.01" name="row[monthly]" type="number" value="{$row.monthly}">
+            <input id="c-monthly" class="form-control" name="row[monthly]" type="text" value="{$row.monthly}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Nperlist')}:</label>
         <div class="col-xs-12 col-sm-8">
-                        
-            <select  id="c-nperlist" class="form-control selectpicker" name="row[nperlist]">
-                {foreach name="nperlistList" item="vo"}
-                    <option value="{$key}" {in name="key" value="$row.nperlist"}selected{/in}>{$vo}</option>
-                {/foreach}
-            </select>
-
+            <input id="c-nperlist" class="form-control" name="row[nperlist]" type="text" value="{$row.nperlist}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('End_money')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-end_money" class="form-control" name="row[end_money]" type="number" value="{$row.end_money}">
+            <input id="c-end_money" class="form-control" name="row[end_money]" type="text" value="{$row.end_money}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Margin')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-margin" class="form-control" step="0.01" name="row[margin]" type="number" value="{$row.margin}">
+            <input id="c-margin" class="form-control" name="row[margin]" type="text" value="{$row.margin}">
         </div>
     </div>
     <div class="form-group">
@@ -123,37 +117,37 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Tax_amount')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-tax_amount" class="form-control" step="0.01" name="row[tax_amount]" type="number" value="{$row.tax_amount}">
+            <input id="c-tax_amount" class="form-control" name="row[tax_amount]" type="text" value="{$row.tax_amount}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('No_tax_amount')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-no_tax_amount" class="form-control" step="0.01" name="row[no_tax_amount]" type="number" value="{$row.no_tax_amount}">
+            <input id="c-no_tax_amount" class="form-control" name="row[no_tax_amount]" type="text" value="{$row.no_tax_amount}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Pay_taxesdate')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-pay_taxesdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[pay_taxesdate]" type="text" value="{$row.pay_taxesdate}">
+            <input id="c-pay_taxesdate" class="form-control" name="row[pay_taxesdate]" type="text" value="{$row.pay_taxesdate}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Purchase_of_taxes')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-purchase_of_taxes" class="form-control" step="0.01" name="row[purchase_of_taxes]" type="number" value="{$row.purchase_of_taxes}">
+            <input id="c-purchase_of_taxes" class="form-control" name="row[purchase_of_taxes]" type="text" value="{$row.purchase_of_taxes}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('House_fee')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-house_fee" class="form-control" step="0.01" name="row[house_fee]" type="number" value="{$row.house_fee}">
+            <input id="c-house_fee" class="form-control" name="row[house_fee]" type="text" value="{$row.house_fee}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Luqiao_fee')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-luqiao_fee" class="form-control" step="0.01" name="row[luqiao_fee]" type="number" value="{$row.luqiao_fee}">
+            <input id="c-luqiao_fee" class="form-control" name="row[luqiao_fee]" type="text" value="{$row.luqiao_fee}">
         </div>
     </div>
     <div class="form-group">
@@ -171,13 +165,13 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Insurance')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-insurance" class="form-control" name="row[insurance]" type="number" value="{$row.insurance}">
+            <input id="c-insurance" class="form-control" name="row[insurance]" type="text" value="{$row.insurance}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Car_boat_tax')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-car_boat_tax" class="form-control" step="0.01" name="row[car_boat_tax]" type="number" value="{$row.car_boat_tax}">
+            <input id="c-car_boat_tax" class="form-control" name="row[car_boat_tax]" type="text" value="{$row.car_boat_tax}">
         </div>
     </div>
     <div class="form-group">
@@ -189,7 +183,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Business_risks')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-business_risks" class="form-control" name="row[business_risks]" type="number" value="{$row.business_risks}">
+            <input id="c-business_risks" class="form-control" name="row[business_risks]" type="text" value="{$row.business_risks}">
         </div>
     </div>
     <div class="form-group">
@@ -217,12 +211,12 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Classification')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('Type')}:</label>
         <div class="col-xs-12 col-sm-8">
                         
-            <select  id="c-classification" class="form-control selectpicker" name="row[classification]">
-                {foreach name="classificationList" item="vo"}
-                    <option value="{$key}" {in name="key" value="$row.classification"}selected{/in}>{$vo}</option>
+            <select  id="c-type" class="form-control selectpicker" name="row[type]">
+                {foreach name="typeList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.type"}selected{/in}>{$vo}</option>
                 {/foreach}
             </select>
 
