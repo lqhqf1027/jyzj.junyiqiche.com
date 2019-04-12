@@ -18,9 +18,9 @@ return [
     // 应用命名空间
     'app_namespace'          => 'app',
     // 应用调试模式
-    'app_debug'              => Env::get('app.debug', false),
+    'app_debug'              => Env::get('app.debug'),
     // 应用Trace
-    'app_trace'              => Env::get('app.trace', false),
+    'app_trace'              => Env::get('app.trace'),
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -55,7 +55,7 @@ return [
     // | 模块设置
     // +----------------------------------------------------------------------
     // 默认模块名
-    'default_module'         => 'index',
+    'default_module'         => 'admin',
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名
@@ -260,7 +260,7 @@ return [
         //是否开启前台会员中心
         'usercenter'          => true,
         //登录验证码
-        'login_captcha'       => true,
+        'login_captcha'       => false,
         //登录失败超过10次则1天后重试
         'login_failure_retry' => true,
         //是否同一账号同一时间只能在一个地方登录
