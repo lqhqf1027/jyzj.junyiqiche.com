@@ -1,0 +1,9 @@
+[ 2019-04-11T15:04:48+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000121s ]
+[ info ] [ LOG ] INIT File
+[ 2019-04-11T15:04:48+08:00 ][ info ] [ CACHE ] INIT Memcache
+[ 2019-04-11T15:04:48+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.003490s ]
+[ 2019-04-11T15:04:48+08:00 ][ info ] [ DB ] INIT mysql
+[ 2019-04-11T15:04:48+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.125982s ] mysql:host=120.78.135.109;port=3306;dbname=jyzj.junyiqiche.com;charset=utf8
+[ 2019-04-11T15:04:48+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'previous_customer' [ RunTime:0.097242s ]
+[ 2019-04-11T15:04:48+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'jyzj_previous_customer' [ RunTime:0.084845s ]
+[ 2019-04-11T15:04:48+08:00 ][ sql ] [ SQL ] SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = 'jyzj.junyiqiche.com' AND table_name = 'jyzj_previous_customer' ORDER BY ORDINAL_POSITION [ RunTime:0.095899s ]

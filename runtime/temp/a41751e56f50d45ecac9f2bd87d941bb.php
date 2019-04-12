@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:85:"D:\phpStudy\WWW\jyzj.junyiqiche.com\public/../application/admin\view\addon\index.html";i:1554882264;s:78:"D:\phpStudy\WWW\jyzj.junyiqiche.com\application\admin\view\layout\default.html";i:1554882264;s:75:"D:\phpStudy\WWW\jyzj.junyiqiche.com\application\admin\view\common\meta.html";i:1554882264;s:77:"D:\phpStudy\WWW\jyzj.junyiqiche.com\application\admin\view\common\script.html";i:1554882264;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:97:"D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\public/../application/admin\view\addon\index.html";i:1555062052;s:90:"D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\view\layout\default.html";i:1553824689;s:87:"D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\view\common\meta.html";i:1555062052;s:89:"D:\phpStudy\PHPTutorial\WWW\jyzj.junyiqiche.com\application\admin\view\common\script.html";i:1553824689;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
