@@ -12,6 +12,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use think\Db;
 use think\exception\PDOException;
 
+
 /**
  *
  *
@@ -77,7 +78,6 @@ class Order extends Backend
                 $row->getRelation('orderdetails')->visible(['admin_id', 'licensenumber']);
                 $row->getRelation('orderimg')->visible(['id_cardimages', 'driving_licenseimages']);
                 $row->getRelation('admin')->visible(['avatar','username']);
-
             }
 
             $list = collection($list)->toArray();
@@ -96,6 +96,9 @@ class Order extends Backend
     {
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $params['order_createtime'] = strtotime($params['order_createtime']);
+            // pr($params);
+            // die;
             if ($params) {
                 $params = $this->preExcludeFields($params);
                 if ($params['customer_source'] === 'turn_to_introduce') {
@@ -115,9 +118,7 @@ class Order extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                         $this->model->validate($validate);
                     }
-                    $result = $this->model->allowField(
-                        ['']
-                    )->save($params);
+                    $result = $this->model->allowField(true)->save($params);
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
