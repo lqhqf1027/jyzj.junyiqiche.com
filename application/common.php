@@ -3,6 +3,57 @@
 // 公共助手函数
 
 if (!function_exists('__')) {
+    /**
+     * 打印变量
+     */
+    function pr($var)
+    {
+        $template = PHP_SAPI !== 'cli' ? '<pre>%s</pre>' : "\n%s\n";
+        printf($template, print_r($var, true));
+    }
+}
+
+
+if (!function_exists('emoji_encode')) {
+    /**
+     * emoji 表情转义
+     * @param $nickname
+     * @return string
+     */
+    function emoji_encode($nickname)
+    {
+        $strEncode = '';
+        $length = mb_strlen($nickname, 'utf-8');
+        for ($i = 0; $i < $length; $i++) {
+            $_tmpStr = mb_substr($nickname, $i, 1, 'utf-8');
+            if (strlen($_tmpStr) >= 4) {
+                $strEncode .= '[[EMOJI:' . rawurlencode($_tmpStr) . ']]';
+            } else {
+                $strEncode .= $_tmpStr;
+            }
+        }
+        return $strEncode;
+    }
+}
+if (!function_exists('emoji_decode')) {
+    /**
+     * emoji 表情解密
+     * @param $nickname
+     * @return string
+     */
+    function emoji_decode($str)
+    {
+        $strDecode = preg_replace_callback('|\[\[EMOJI:(.*?)\]\]|', function ($matches) {
+            return rawurldecode($matches[1]);
+        }, $str);
+        return $strDecode;
+    }
+}
+
+
+
+
+if (!function_exists('__')) {
 
     /**
      * 获取语言变量值

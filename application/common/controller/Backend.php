@@ -194,16 +194,16 @@ class Backend extends Controller
 
         // 配置信息
         $config = [
-            'site'           => array_intersect_key($site, array_flip(['name', 'indexurl', 'cdnurl', 'version', 'timezone', 'languages'])),
-            'upload'         => $upload,
-            'modulename'     => $modulename,
+            'site' => array_intersect_key($site, array_flip(['name', 'indexurl', 'cdnurl', 'version', 'timezone', 'languages'])),
+            'upload' => $upload,
+            'modulename' => $modulename,
             'controllername' => $controllername,
-            'actionname'     => $actionname,
-            'jsname'         => 'backend/' . str_replace('.', '/', $controllername),
-            'moduleurl'      => rtrim(url("/{$modulename}", '', false), '/'),
-            'language'       => $lang,
-            'fastadmin'      => Config::get('fastadmin'),
-            'referer'        => Session::get("referer")
+            'actionname' => $actionname,
+            'jsname' => 'backend/' . str_replace('.', '/', $controllername),
+            'moduleurl' => rtrim(url("/{$modulename}", '', false), '/'),
+            'language' => $lang,
+            'fastadmin' => Config::get('fastadmin'),
+            'referer' => Session::get("referer")
         ];
         $config = array_merge($config, Config::get("view_replace_str"));
 
@@ -217,6 +217,8 @@ class Backend extends Controller
         $this->assign('site', $site);
         //渲染配置信息
         $this->assign('config', $config);
+        //渲染配置信息到js
+        $this->assignconfig('cdn',   $config['upload']['cdnurl']);
         //渲染权限对象
         $this->assign('auth', $this->auth);
         //渲染管理员对象
@@ -234,7 +236,7 @@ class Backend extends Controller
 
     /**
      * 渲染配置信息
-     * @param mixed $name  键名或数组
+     * @param mixed $name 键名或数组
      * @param mixed $value 值
      */
     protected function assignconfig($name, $value = '')
@@ -244,7 +246,7 @@ class Backend extends Controller
 
     /**
      * 生成查询所需要的条件,排序方式
-     * @param mixed   $searchfields   快速查询的字段
+     * @param mixed $searchfields 快速查询的字段
      * @param boolean $relationSearch 是否关联查询
      * @return array
      */
@@ -487,8 +489,8 @@ class Backend extends Controller
                 unset($item['password'], $item['salt']);
                 $list[] = [
                     $primarykey => isset($item[$primarykey]) ? $item[$primarykey] : '',
-                    $field      => isset($item[$field]) ? $item[$field] : '',
-                    'pid'       => isset($item['pid']) ? $item['pid'] : 0
+                    $field => isset($item[$field]) ? $item[$field] : '',
+                    'pid' => isset($item['pid']) ? $item['pid'] : 0
                 ];
             }
             if ($istree) {
