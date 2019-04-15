@@ -1,11 +1,11 @@
 <?php
 
-namespace app\admin\model;
+namespace app\admin\model\vehicle;
 
 use think\Model;
 
 
-class Order extends Model
+class Vehiclemanagement extends Model
 {
 
     
@@ -27,9 +27,10 @@ class Order extends Model
     protected $append = [
         'customer_source_text',
         'genderdata_text',
-        'nperlist_text',
+        'order_createtime_text',
         'delivery_datetime_text',
-        'type_text'
+        'type_text',
+        'lift_car_status_text'
     ];
     
 
@@ -41,15 +42,7 @@ class Order extends Model
 
     public function getGenderdataList()
     {
-        return ['male' => __('男'), 'female' => __('女')];
-    }
-
-    public function getNperlistList()
-    {
-        return ['12' => __('Nperlist 12'), '24' => __('Nperlist 24'), '36' => __('Nperlist 36'), '48' => __('Nperlist 48'), '60' => __('Nperlist 60')];
-    }
-    public function marriageList(){
-
+        return ['male' => __('Male'), 'female' => __('Female')];
     }
 
     public function getTypeList()
@@ -79,11 +72,10 @@ class Order extends Model
     }
 
 
-    public function getNperlistTextAttr($value, $data)
+    public function getOrderCreatetimeTextAttr($value, $data)
     {
-        $value = $value ? $value : (isset($data['nperlist']) ? $data['nperlist'] : '');
-        $list = $this->getNperlistList();
-        return isset($list[$value]) ? $list[$value] : '';
+        $value = $value ? $value : (isset($data['order_createtime']) ? $data['order_createtime'] : '');
+        return is_numeric($value) ? date("Y-m-d H:i:s", $value) : $value;
     }
 
 
@@ -101,6 +93,19 @@ class Order extends Model
         return isset($list[$value]) ? $list[$value] : '';
     }
 
+
+    public function getLiftCarStatusTextAttr($value, $data)
+    {
+        $value = $value ? $value : (isset($data['lift_car_status']) ? $data['lift_car_status'] : '');
+        $list = $this->getLiftCarStatusList();
+        return isset($list[$value]) ? $list[$value] : '';
+    }
+
+    protected function setOrderCreatetimeAttr($value)
+    {
+        return $value === '' ? null : ($value && !is_numeric($value) ? strtotime($value) : $value);
+    }
+
     protected function setDeliveryDatetimeAttr($value)
     {
         return $value === '' ? null : ($value && !is_numeric($value) ? strtotime($value) : $value);
@@ -109,17 +114,6 @@ class Order extends Model
 
     public function orderdetails()
     {
-        return $this->hasOne('OrderDetails', 'order_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->hasOne('app\admin\model\OrderDetails', 'order_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
-
-
-    public function orderimg()
-    {
-        return $this->hasOne('OrderImg', 'order_id', 'id', [], 'LEFT')->setEagerlyType(0);
-    }
-    public function admin()
-    {
-        return $this->belongsTo('Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(1);
-    }
-
 }
