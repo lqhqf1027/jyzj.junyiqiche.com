@@ -119,7 +119,7 @@ class Ajax extends Backend
                 'uploadtime'  => time(),
                 'storage'     => 'local',
                 'sha1'        => $sha1,
-                'extparam'    => json_encode($extparam),
+//                'extparam'    => json_encode($extparam),
             );
             $attachment = model("attachment");
             $attachment->data(array_filter($params));

@@ -10,6 +10,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     edit_url: 'sales/order/edit',
                     del_url: 'sales/order/del',
                     multi_url: 'sales/order/multi',
+                    import_url: 'sales/order/import',
                     table: 'order',
                 }
             });
