@@ -1,13 +1,18 @@
 /nbproject/
 /thinkphp/
-#/vendor/
+ 
+/vendor/
 /runtime/*
+#/addons/*
 /application/admin/command/Install/*.lock
-
+#/public/assets/libs/
+#/public/assets/addons/*
+/public/uploads/*
 #/application/config.php
 
 .idea
-#composer.lock
+composer.lock
+ 
 *.log
 *.css.map
 !.gitkeep
@@ -16,6 +21,9 @@
 #/application/extra/addons.php
 #/public/assets/js/addons.js
 
- 
+
+/.idea
 /runtime
-/public/uploads
+/.env
+/runtime
+
