@@ -1,0 +1,55 @@
+
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle!important;
+    }
+</style>
+
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+    <tr>
+
+        <th>反馈时间</th>
+        <th>反馈内容</th>
+        <th>下次跟进时间</th>
+        <th>客户等级</th>
+
+        <!--<th>邮编</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="feedback_data" id="vo" key="k"}
+
+
+    {if condition="$k==$vo.count"}
+    <tr class="danger">
+        <td>{$vo.feedbacktime}</td>
+        <td>{$vo.feedbackcontent}</td>
+        <td>{$vo.followupdate}</td>
+        <td>{$vo.customerlevel}</td>
+
+
+    </tr>
+
+    {else/}
+    <tr class="danger">
+        <td>{$vo.feedbacktime}</td>
+        <td>{$vo.feedbackcontent}</td>
+        <td>{$vo.followupdate}</td>
+        <td>{$vo.customerlevel}</td>
+    </tr>
+
+    <tr>
+        <td colspan="4"><i class="fa fa-long-arrow-down"></i></td>
+    </tr>
+    {/if}
+
+
+    {/volist}
+
+
+
+    </tbody>
+</table>

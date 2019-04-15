@@ -1,0 +1,167 @@
+<style>
+    #relations tr td:nth-child(10),
+    #intention tr td:nth-child(10),
+    #nointention tr td:nth-child(10)
+    {
+        text-align: left!important;
+    }
+</style>
+
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>客户列表</em>
+
+        </div>
+        <ol>
+            <li>
+                新客户：数据来源由推广分配给各部门内勤 ，再由各部门内勤分配给具体的销售，在新客户列表中也可以添加自己的客户渠道。
+            </li>
+            <p></p>
+            <li>
+                待联系：以下几种客户跟进状态可以归纳等级为待联系（如：客户电话无法接通、忙、占线、关机等。。。），仅供参考，具体以沟通内容/结果酌情判断客户等级。
+            </li>
+            <p></p>
+            <li>
+                <span class="text-success">有意向</span>：以下几种客户跟进状态可以归纳等级为有意向（客户有考虑购/租车的意向、约定时间可以到店看车等。。。），仅供参考，具体以沟通内容/结果酌情判断客户等级。
+            </li>
+            <p></p>
+            <li>
+                暂无意向：以下几种客户跟进状态可以归纳等级为暂无意向（客户目前/短期时间内不会考虑购/租车、持观望状态等。。。），仅供参考，具体以沟通内容/结果酌情判断客户等级。
+            </li>
+            <p></p>
+            <li>
+                已放弃：销售员已放弃的客户。
+            </li>
+            <p></p>
+            <li>
+                <span class="text-danger">跟进时间过期客户：</span> 系统自动判断 当前时间大于销售员反馈的下次跟进时间，如果大于这个时间，那么就存在未及时跟进客户，需要尽快与客户取得联系。
+            </li>
+            <p></p>
+            <li>
+                <span class="text-danger">针对58同城的客户：</span> 需要尽快与客户取得联系，获取客户的其他联系方式。
+            </li>
+            <p></p>
+            <li>
+                <span class="text-danger">关于客户姓名前的字母：</span> 姓名前“S”表示意向是私家车，“U”表示意向是新能源货车，无字母表示意向网约车 
+            </li>
+        </ol>
+        <ul class="nav nav-tabs" >
+            <li class="active text-center" style=""><a href="#new_customer" data-toggle="tab" style="font-weight: bold"><span class="tabs-text">新客户</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_customer"></small></span></a></li>
+            <li><a href="#relation" data-toggle="tab" style="font-weight: bold" class="text-center" ><span class="tabs-text">待联系</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_relation"></small></span></a></li>
+            <li><a href="#intention" data-toggle="tab" style="color:#18bc9c;font-weight: bold" class="text-center"><span class="tabs-text">有意向</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_intention"></small></span></a></li>
+            <li><a href="#nointention" data-toggle="tab" style="font-weight: bold" class="text-center"><span class="tabs-text">暂无意向</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_no_intention"></small></span></a></li>
+            <li><a href="#giveup" data-toggle="tab" style="font-weight: bold" class="text-center"><span class="tabs-text">已放弃</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_give_up"></small></span></a></li>
+            <li><a href="#overdue" data-toggle="tab" style="color:#e74c3c;font-size:15px;font-weight: bold" class="text-center"><span class="tabs-text">跟进时间过期客户</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_overdue"></small></span></a></li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <!--新客户-->
+
+            <div class="tab-pane fade active in" id="new_customer">
+                <div id="toolbar1" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-success btn-add " title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('添加新客户')}</a>
+                    <a href="javascript:;" class="btn btn-info btn-batch-feedback-1 btn-disabled  disabled " title="{:__('Batchfeedback')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
+                    <a class="btn btn-danger   btn-disabled disabled btn-selected1" href="javascript:;" data-params="batch"><i class="fa fa-trash"></i> 批量放弃</a>
+                    <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
+
+                </div>
+
+                <table id="newCustomer" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+
+            <!--待联系用户-->
+
+            <div class="tab-pane fade" id="relation">
+                <div id="toolbar2" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-info btn-batch-feedback-2 btn-disabled disabled " title="{:__('Batchfeedback')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
+                    <a class="btn btn-danger   btn-disabled disabled btn-selected2" href="javascript:;" data-params="batch"><i class="fa fa-trash"></i> 批量放弃</a>
+
+                </div>
+
+                <table id="relations" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+
+            <!--有意向用户-->
+
+            <div class="tab-pane fade" id="intention">
+                <div id="toolbar3" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-info btn-batch-feedback-3 btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
+                    <a class="btn btn-danger   btn-disabled disabled btn-selected3" href="javascript:;" data-params="batch"><i class="fa fa-trash"></i> 批量放弃</a>
+
+                </div>
+
+                <table id="intentions" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+            <!--暂无意向用户-->
+
+            <div class="tab-pane fade" id="nointention">
+                <div id="toolbar4" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-info btn-batch-feedback-4 btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
+                    <a class="btn btn-danger   btn-disabled disabled btn-selected4" href="javascript:;" data-params="batch"><i class="fa fa-trash"></i> 批量放弃</a>
+
+                </div>
+
+                <table id="nointentions" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+
+            <!--放弃用户-->
+
+            <div class="tab-pane fade" id="giveup">
+                <div id="toolbar5" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+
+                </div>
+
+                <table id="giveups" class="table table-striped table-bordered table-hover table-nowrap"
+
+                       width="100%">
+                </table>
+            </div>
+
+            <!--跟进时间过期用户-->
+
+            <div class="tab-pane fade" id="overdue">
+                <div id="toolbar6" class="toolbar">
+
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-info btn-batch-feedback-5 btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
+                    <a class="btn btn-danger   btn-disabled disabled btn-selected5" href="javascript:;" data-params="batch"><i class="fa fa-trash"></i> 批量放弃</a>
+
+                </div>
+
+                <table id="overdues" class="table table-striped table-bordered table-hover table-nowrap"
+                       
+                       width="100%">
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+

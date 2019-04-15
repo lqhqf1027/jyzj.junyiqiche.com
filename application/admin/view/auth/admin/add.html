@@ -6,6 +6,13 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('所属角色')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:build_select('row[rule_message]', $siteList, null, ['class'=>'form-control selectpicker', 'multiple'=>'', 'data-rule'=>'required'])}
+        </div>
+    </div>
+    <div class="form-group">
+
         <label for="username" class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8">
             <input type="text" class="form-control" id="username" name="row[username]" value="" data-rule="required;username" />
