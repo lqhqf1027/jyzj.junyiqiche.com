@@ -1,10 +1,30 @@
 <style>
-    .relation-item {margin-top:10px;}
-    legend {padding-bottom:5px;font-size:14px;font-weight:600;}
-    label {font-weight:normal;}
-    .form-control{padding:6px 8px;}
-    #extend-zone .col-xs-2 {margin-top:10px;padding-right:0;}
-    #extend-zone .col-xs-2:nth-child(6n+0) {padding-right:15px;}
+    .relation-item {
+        margin-top: 10px;
+    }
+
+    legend {
+        padding-bottom: 5px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    label {
+        font-weight: normal;
+    }
+
+    .form-control {
+        padding: 6px 8px;
+    }
+
+    #extend-zone .col-xs-2 {
+        margin-top: 10px;
+        padding-right: 0;
+    }
+
+    #extend-zone .col-xs-2:nth-child(6n+0) {
+        padding-right: 15px;
+    }
 </style>
 <div class="panel panel-default panel-intro">
     <div class="panel-heading">
@@ -21,19 +41,21 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <form role="form">
-                            <input type="hidden" name="commandtype" value="crud" />
+                            <input type="hidden" name="commandtype" value="crud"/>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <input checked="" name="isrelation" type="hidden" value="0">
-                                        <label class="control-label" data-toggle="tooltip" title="当前只支持生成1对1关联模型,选中后请配置关联表和字段">
+                                        <label class="control-label" data-toggle="tooltip"
+                                               title="当前只支持生成1对1关联模型,选中后请配置关联表和字段">
                                             <input name="isrelation" type="checkbox" value="1">
                                             关联模型
                                         </label>
                                     </div>
                                     <div class="col-xs-3">
                                         <input checked="" name="local" type="hidden" value="1">
-                                        <label class="control-label" data-toggle="tooltip" title="默认模型生成在application/admin/model目录下,选中后将生成在application/common/model目录下">
+                                        <label class="control-label" data-toggle="tooltip"
+                                               title="默认模型生成在application/admin/model目录下,选中后将生成在application/common/model目录下">
                                             <input name="local" type="checkbox" value="0"> 全局模型类
                                         </label>
                                     </div>
@@ -45,7 +67,8 @@
                                     </div>
                                     <div class="col-xs-3">
                                         <input checked="" name="force" type="hidden" value="0">
-                                        <label class="control-label" data-toggle="tooltip" title="选中后,如果已经存在同名文件将被覆盖。如果是删除将不再提醒">
+                                        <label class="control-label" data-toggle="tooltip"
+                                               title="选中后,如果已经存在同名文件将被覆盖。如果是删除将不再提醒">
                                             <input name="force" type="checkbox" value="1">
                                             强制覆盖模式
                                         </label>
@@ -70,15 +93,18 @@
                                     </div>
                                     <div class="col-xs-3">
                                         <label>自定义控制器名</label>
-                                        <input type="text" class="form-control" name="controller" data-toggle="tooltip" title="默认根据表名自动生成,如果需要放在二级目录请手动填写" placeholder="支持目录层级,以/分隔">
+                                        <input type="text" class="form-control" name="controller" data-toggle="tooltip"
+                                               title="默认根据表名自动生成,如果需要放在二级目录请手动填写" placeholder="支持目录层级,以/分隔">
                                     </div>
                                     <div class="col-xs-3">
                                         <label>自定义模型名</label>
-                                        <input type="text" class="form-control" name="model" data-toggle="tooltip" title="默认根据表名自动生成" placeholder="不支持目录层级">
+                                        <input type="text" class="form-control" name="model" data-toggle="tooltip"
+                                               title="默认根据表名自动生成" placeholder="不支持目录层级">
                                     </div>
                                     <div class="col-xs-3">
                                         <label>请选择显示字段(默认全部)</label>
-                                        <select name="fields[]" id="fields" multiple style="height:30px;" class="form-control selectpicker"></select>
+                                        <select name="fields[]" id="fields" multiple style="height:30px;"
+                                                class="form-control selectpicker"></select>
                                     </div>
 
                                 </div>
@@ -90,66 +116,80 @@
 
                                 <div class="row" style="margin-top:15px;">
                                     <div class="col-xs-12">
-                                        <a href="javascript:;" class="btn btn-primary btn-sm btn-newrelation" data-index="1">追加关联模型</a>
+                                        <a href="javascript:;" class="btn btn-primary btn-sm btn-newrelation"
+                                           data-index="1">追加关联模型</a>
                                     </div>
                                 </div>
                             </div>
 
                             <hr>
                             <div class="form-group" id="extend-zone">
-                                <legend>字段识别设置 <span style="font-size:12px;font-weight: normal;">(与之匹配的字段都将生成相应组件)</span></legend>
+                                <legend>字段识别设置 <span
+                                        style="font-size:12px;font-weight: normal;">(与之匹配的字段都将生成相应组件)</span></legend>
                                 <div class="row">
                                     <div class="col-xs-2">
                                         <label>复选框后缀</label>
-                                        <input type="text" class="form-control" name="setcheckboxsuffix" placeholder="默认为set类型" />
+                                        <input type="text" class="form-control" name="setcheckboxsuffix"
+                                               placeholder="默认为set类型"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>单选框后缀</label>
-                                        <input type="text" class="form-control" name="enumradiosuffix" placeholder="默认为enum类型" />
+                                        <input type="text" class="form-control" name="enumradiosuffix"
+                                               placeholder="默认为enum类型"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>图片类型后缀</label>
-                                        <input type="text" class="form-control" name="imagefield" placeholder="默认为image,images,avatar,avatars" />
+                                        <input type="text" class="form-control" name="imagefield"
+                                               placeholder="默认为image,images,avatar,avatars"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>文件类型后缀</label>
-                                        <input type="text" class="form-control" name="filefield" placeholder="默认为file,files" />
+                                        <input type="text" class="form-control" name="filefield"
+                                               placeholder="默认为file,files"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>日期时间后缀</label>
-                                        <input type="text" class="form-control" name="intdatesuffix" placeholder="默认为time" />
+                                        <input type="text" class="form-control" name="intdatesuffix"
+                                               placeholder="默认为time"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>开关后缀</label>
-                                        <input type="text" class="form-control" name="switchsuffix" placeholder="默认为switch" />
+                                        <input type="text" class="form-control" name="switchsuffix"
+                                               placeholder="默认为switch"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>城市选择后缀</label>
-                                        <input type="text" class="form-control" name="citysuffix" placeholder="默认为city" />
+                                        <input type="text" class="form-control" name="citysuffix"
+                                               placeholder="默认为city"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>动态下拉后缀(单)</label>
-                                        <input type="text" class="form-control" name="selectpagesuffix" placeholder="默认为_id" />
+                                        <input type="text" class="form-control" name="selectpagesuffix"
+                                               placeholder="默认为_id"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>动态下拉后缀(多)</label>
-                                        <input type="text" class="form-control" name="selectpagessuffix" placeholder="默认为_ids" />
+                                        <input type="text" class="form-control" name="selectpagessuffix"
+                                               placeholder="默认为_ids"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>忽略的字段</label>
-                                        <input type="text" class="form-control" name="ignorefields" placeholder="默认无" />
+                                        <input type="text" class="form-control" name="ignorefields" placeholder="默认无"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>排序字段</label>
-                                        <input type="text" class="form-control" name="sortfield" placeholder="默认为weigh" />
+                                        <input type="text" class="form-control" name="sortfield"
+                                               placeholder="默认为weigh"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>富文本编辑器</label>
-                                        <input type="text" class="form-control" name="editorsuffix" placeholder="默认为content" />
+                                        <input type="text" class="form-control" name="editorsuffix"
+                                               placeholder="默认为content"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <label>选项卡过滤字段</label>
-                                        <input type="text" class="form-control" name="headingfilterfield" placeholder="默认为status" />
+                                        <input type="text" class="form-control" name="headingfilterfield"
+                                               placeholder="默认为status"/>
                                     </div>
 
                                 </div>
@@ -158,7 +198,8 @@
 
                             <div class="form-group">
                                 <legend>生成命令行</legend>
-                                <textarea class="form-control" data-toggle="tooltip" title="如果在线执行命令失败,可以将命令复制到命令行进行执行" rel="command" rows="1" placeholder="请点击生成命令行"></textarea>
+                                <textarea class="form-control" data-toggle="tooltip" title="如果在线执行命令失败,可以将命令复制到命令行进行执行"
+                                          rel="command" rows="1" placeholder="请点击生成命令行"></textarea>
                             </div>
 
                             <div class="form-group">
@@ -167,8 +208,10 @@
                             </div>
 
                             <div class="form-group">
-                                    <button type="button" class="btn btn-info btn-embossed btn-command">{:__('生成命令行')}</button>
-                                    <button type="button" class="btn btn-success btn-embossed btn-execute">{:__('立即执行')}</button>
+                                <button type="button" class="btn btn-info btn-embossed btn-command">{:__('生成命令行')}
+                                </button>
+                                <button type="button" class="btn btn-success btn-embossed btn-execute">{:__('立即执行')}
+                                </button>
                             </div>
 
                         </form>
@@ -179,13 +222,14 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <form role="form">
-                            <input type="hidden" name="commandtype" value="menu" />
+                            <input type="hidden" name="commandtype" value="menu"/>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <input checked="" name="allcontroller" type="hidden" value="0">
                                         <label class="control-label">
-                                            <input name="allcontroller" data-toggle="collapse" data-target="#controller" type="checkbox" value="1"> 一键生成全部控制器
+                                            <input name="allcontroller" data-toggle="collapse" data-target="#controller"
+                                                   type="checkbox" value="1"> 一键生成全部控制器
                                         </label>
                                     </div>
                                     <div class="col-xs-3">
@@ -208,7 +252,9 @@
 
                                 <div class="row" style="margin-top:15px;">
                                     <div class="col-xs-12">
-                                        <input type="text" name="controllerfile" class="form-control selectpage" style="width:720px;" data-source="command/get_controller_list" data-multiple="true" name="controller" placeholder="请选择控制器" />
+                                        <input type="text" name="controllerfile" class="form-control selectpage"
+                                               style="width:720px;" data-source="command/get_controller_list"
+                                               data-multiple="true" name="controller" placeholder="请选择控制器"/>
                                     </div>
                                 </div>
                             </div>
@@ -224,8 +270,10 @@
                             </div>
 
                             <div class="form-group">
-                                <button type="button" class="btn btn-info btn-embossed btn-command">{:__('生成命令行')}</button>
-                                <button type="button" class="btn btn-success btn-embossed btn-execute">{:__('立即执行')}</button>
+                                <button type="button" class="btn btn-info btn-embossed btn-command">{:__('生成命令行')}
+                                </button>
+                                <button type="button" class="btn btn-success btn-embossed btn-execute">{:__('立即执行')}
+                                </button>
                             </div>
 
                         </form>
@@ -236,7 +284,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <form role="form">
-                            <input type="hidden" name="commandtype" value="min" />
+                            <input type="hidden" name="commandtype" value="min"/>
                             <div class="form-group">
                                 <legend>基础设置</legend>
                                 <div class="row">
@@ -288,8 +336,10 @@
                             </div>
 
                             <div class="form-group">
-                                <button type="button" class="btn btn-info btn-embossed btn-command">{:__('生成命令行')}</button>
-                                <button type="button" class="btn btn-success btn-embossed btn-execute">{:__('立即执行')}</button>
+                                <button type="button" class="btn btn-info btn-embossed btn-command">{:__('生成命令行')}
+                                </button>
+                                <button type="button" class="btn btn-success btn-embossed btn-execute">{:__('立即执行')}
+                                </button>
                             </div>
 
                         </form>
@@ -300,7 +350,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <form role="form">
-                            <input type="hidden" name="commandtype" value="api" />
+                            <input type="hidden" name="commandtype" value="api"/>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-xs-3">
@@ -317,25 +367,28 @@
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <label>请输入接口URL</label>
-                                        <input type="text" name="url" class="form-control" placeholder="API URL,可留空" />
+                                        <input type="text" name="url" class="form-control" placeholder="API URL,可留空"/>
                                     </div>
                                     <div class="col-xs-3">
                                         <label>接口生成文件</label>
-                                        <input type="text" name="output" class="form-control" placeholder="留空则使用api.html" />
+                                        <input type="text" name="output" class="form-control"
+                                               placeholder="留空则使用api.html"/>
                                     </div>
                                     <div class="col-xs-3">
                                         <label>模板文件</label>
-                                        <input type="text" name="template" class="form-control" placeholder="如果不清楚请留空" />
+                                        <input type="text" name="template" class="form-control" placeholder="如果不清楚请留空"/>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top:10px;">
                                     <div class="col-xs-3">
                                         <label>文档标题</label>
-                                        <input type="text" name="title" class="form-control" placeholder="默认为FastAdmin" />
+                                        <input type="text" name="title" class="form-control"
+                                               placeholder="默认为FastAdmin"/>
                                     </div>
                                     <div class="col-xs-3">
                                         <label>文档作者</label>
-                                        <input type="text" name="author" class="form-control" placeholder="默认为FastAdmin" />
+                                        <input type="text" name="author" class="form-control"
+                                               placeholder="默认为FastAdmin"/>
                                     </div>
                                     <div class="col-xs-3">
                                         <label>文档语言</label>
@@ -359,8 +412,10 @@
                             </div>
 
                             <div class="form-group">
-                                <button type="button" class="btn btn-info btn-embossed btn-command">{:__('生成命令行')}</button>
-                                <button type="button" class="btn btn-success btn-embossed btn-execute">{:__('立即执行')}</button>
+                                <button type="button" class="btn btn-info btn-embossed btn-command">{:__('生成命令行')}
+                                </button>
+                                <button type="button" class="btn btn-success btn-embossed btn-execute">{:__('立即执行')}
+                                </button>
                             </div>
 
                         </form>

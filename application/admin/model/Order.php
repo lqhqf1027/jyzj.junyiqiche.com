@@ -41,12 +41,15 @@ class Order extends Model
 
     public function getGenderdataList()
     {
-        return ['male' => __('Male'), 'female' => __('Female')];
+        return ['male' => __('男'), 'female' => __('女')];
     }
 
     public function getNperlistList()
     {
         return ['12' => __('Nperlist 12'), '24' => __('Nperlist 24'), '36' => __('Nperlist 36'), '48' => __('Nperlist 48'), '60' => __('Nperlist 60')];
+    }
+    public function marriageList(){
+
     }
 
     public function getTypeList()
@@ -109,4 +112,9 @@ class Order extends Model
     {
         return $this->hasOne('OrderImg', 'order_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+    public function admin()
+    {
+        return $this->belongsTo('Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(1);
+    }
+
 }
