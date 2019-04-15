@@ -1,5 +1,6 @@
 /nbproject/
 /thinkphp/
+ 
 /vendor/
 /runtime/*
 #/addons/*
@@ -11,6 +12,7 @@
 
 .idea
 composer.lock
+ 
 *.log
 *.css.map
 !.gitkeep
@@ -19,7 +21,9 @@ composer.lock
 #/application/extra/addons.php
 #/public/assets/js/addons.js
 
+
 /.idea
 /runtime
 /.env
 /runtime
+
