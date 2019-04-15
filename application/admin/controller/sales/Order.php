@@ -101,11 +101,12 @@ class Order extends Backend
             // die;
             if ($params) {
                 $params = $this->preExcludeFields($params);
-                if ($params['customer_source'] === 'turn_to_introduce') {
-                    if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
-                        $this->error('转介绍人信息不能为空');
-                    }
-                }
+//                if ($params['customer_source'] === 'turn_to_introduce') {
+//                    if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
+//                        $this->error('转介绍人信息不能为空');
+//                    }
+//                }
+                pr($params);die;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
