@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /nbproject/
 /thinkphp/
  
@@ -27,3 +28,7 @@ composer.lock
 /.env
 /runtime
 
+=======
+/runtime
+>>>>>>> Stashed changes
+/runtime

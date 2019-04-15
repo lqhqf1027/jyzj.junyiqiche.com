@@ -54,7 +54,7 @@ class Ajax extends Backend
 
         //判断是否已经存在附件
         $sha1 = $file->hash();
-        $extparam = $this->request->post();
+        // $extparam = $this->request->post();
 
         $upload = Config::get('upload');
 
@@ -119,7 +119,7 @@ class Ajax extends Backend
                 'uploadtime'  => time(),
                 'storage'     => 'local',
                 'sha1'        => $sha1,
-                'extparam'    => json_encode($extparam),
+                // 'extparam'    => json_encode($extparam),
             );
             $attachment = model("attachment");
             $attachment->data(array_filter($params));

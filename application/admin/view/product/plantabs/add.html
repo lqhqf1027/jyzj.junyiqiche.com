@@ -1,0 +1,407 @@
+<style>
+    .relation-item {
+        margin-top: 10px;
+    }
+
+    legend {
+        padding-bottom: 5px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    label {
+        font-weight: normal;
+    }
+
+    .form-control {
+        padding: 6px 8px;
+    }
+
+    #extend-zone .col-xs-2 {
+        margin-top: 10px;
+        padding-right: 0;
+    }
+
+    #extend-zone .col-xs-2:nth-child(6n+0) {
+        padding-right: 15px;
+    }
+</style>
+<div class="panel panel-default panel-intro">
+    <div class="bg-info" style="padding:10px   ">
+        <h3>请选择签单类型</h3>
+    </div>
+    <div class="panel-heading">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#mortgage" data-toggle="tab">{:__('按揭（新车）')}</a></li>
+            <li><a href="#used_car_mortgage" data-toggle="tab">{:__('按揭（二手车）')}</a></li>
+            <li><a href="#car_rental" data-toggle="tab">{:__('租车')}</a></li>
+
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <!--按揭新车-->
+            <div class="tab-pane fade active in" id="mortgage">
+                <h2>
+                    <center>录入按揭（新车）方案信息</center>
+                </h2>
+                <br>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST"
+                            action="">
+
+                            <div class="form-group">
+                                <div class="col-xs-12 col-sm-8">
+                                    <input type="hidden" id="c-type" class="form-control" name="row[type]" type="text" value="mortgage">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Category_id')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-category_id" data-rule="required" data-source="product/category/index"
+                                        class="form-control selectpage" name="row[category_id]" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-models_id" data-rule="required" data-source="product/models/index"
+                                        class="form-control selectpage" name="row[models_id]" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Financial_platform_name')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-financial_platform_name" class="form-control"
+                                        name="row[financial_platform_name]" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Payment')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-payment" data-rule="required" class="form-control" step="0.01"
+                                        name="row[payment]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Monthly')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-monthly" data-rule="required" class="form-control" step="0.01"
+                                        name="row[monthly]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Nperlist')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <select id="c-nperlist" data-rule="required" class="form-control selectpicker" name="row[nperlist]">
+
+                                        {foreach name="nperlistList" item="vo"}
+                                        <option value="{$key}" {in name="key" value="36" }selected{/in}>{$vo} </option>
+                                        {/foreach} 
+                                        
+                                    </select> 
+                                </div> 
+                            </div> 
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Margin')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-margin" class="form-control" step="0.01" name="row[margin]"type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Tail_section')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-tail_section" class="form-control" step="0.01"
+                                            name="row[tail_section]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Gps')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-gps" class="form-control" step="0.01" name="row[gps]"
+                                            type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Full_total_price')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-full_total_price" class="form-control" step="0.01"
+                                        name="row[full_total_price]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Working_insurance')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <select id="c-working_insurance" class="form-control selectpicker" name="row[working_insurance]">
+                                        {foreach name="workingInsuranceList" item="vo"}
+                                        <option value="{$key}" {in name="key" value="" }selected{/in}>{$vo} </option>
+                                        {/foreach} 
+                                    </select> 
+                                </div> 
+                            </div> 
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <textarea id="c-note" class="form-control " rows="5" name="row[note]" cols="50"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group layer-footer">
+                                <label class="control-label col-xs-12 col-sm-2"></label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+                                    <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--按揭（二手车）-->
+            <div class="tab-pane fade " id="used_car_mortgage">
+                <h2>
+                    <center>录入按揭（二手车）方案信息</center>
+                </h2>
+                <br>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST"
+                            action="">
+
+                            <div class="form-group">
+                                <div class="col-xs-12 col-sm-8">
+                                    <input type="hidden" id="c-type" class="form-control" name="row[type]" type="text" value="used_car_mortgage">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Category_id')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-category_id" data-rule="required" data-source="product/category/index"
+                                        class="form-control selectpage" name="row[category_id]" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-models_id" data-rule="required" data-source="product/models/index"
+                                        class="form-control selectpage" name="row[models_id]" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Financial_platform_name')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-financial_platform_name" class="form-control"
+                                        name="row[financial_platform_name]" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Payment')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-payment" data-rule="required" class="form-control" step="0.01"
+                                        name="row[payment]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Monthly')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-monthly" data-rule="required" class="form-control" step="0.01"
+                                        name="row[monthly]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Nperlist')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <select id="c-nperlist" data-rule="required" class="form-control selectpicker" name="row[nperlist]">
+
+                                        {foreach name="nperlistList" item="vo"}
+                                        <option value="{$key}" {in name="key" value="36" }selected{/in}>{$vo} </option>
+                                        {/foreach} 
+                                        
+                                    </select> 
+                                </div> 
+                            </div> 
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Margin')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-margin" class="form-control" step="0.01" name="row[margin]"type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Tail_section')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-tail_section" class="form-control" step="0.01"
+                                            name="row[tail_section]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Gps')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-gps" class="form-control" step="0.01" name="row[gps]"
+                                            type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Full_total_price')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-full_total_price" class="form-control" step="0.01"
+                                        name="row[full_total_price]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Working_insurance')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <select id="c-working_insurance" class="form-control selectpicker" name="row[working_insurance]">
+                                        {foreach name="workingInsuranceList" item="vo"}
+                                        <option value="{$key}" {in name="key" value="" }selected{/in}>{$vo} </option>
+                                        {/foreach} 
+                                    </select> 
+                                </div> 
+                            </div> 
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Companyaccount')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-companyaccount" class="form-control" name="row[companyaccount]" type="text"
+                                        >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Licenseplatenumber')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-licenseplatenumber" class="form-control" name="row[licenseplatenumber]" type="text"
+                                                >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Vin')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-vin" class="form-control" name="row[vin]" type="text" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Engine_no')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-engine_no" class="form-control" name="row[engine_no]" type="text" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Kilometres')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-kilometres" class="form-control" name="row[kilometres]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <textarea id="c-note" class="form-control " rows="5" name="row[note]" cols="50"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group layer-footer">
+                                <label class="control-label col-xs-12 col-sm-2"></label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+                                    <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--纯租-->
+            <div class="tab-pane fade " id="car_rental">
+                <h2>
+                    <center>录入租车方案信息</center>
+                </h2>
+                <br>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST"
+                            action="">
+
+                            <div class="form-group">
+                                <div class="col-xs-12 col-sm-8">
+                                    <input type="hidden" id="c-type" class="form-control" name="row[type]" type="text" value="car_rental">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Category_id')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-category_id" data-rule="required" data-source="product/category/index"
+                                        class="form-control selectpage" name="row[category_id]" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-models_id" data-rule="required" data-source="product/models/index"
+                                        class="form-control selectpage" name="row[models_id]" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Kilometres')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-kilometres" class="form-control" name="row[kilometres]" type="number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Cashpledge')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-cashpledge" class="form-control" step="0.01" name="row[cashpledge]" type="number"
+                                        >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Rent_price')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-rent_price" class="form-control" step="0.01" name="row[rent_price]" type="number"
+                                        >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Car_licensetime')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-car_licensetime" data-rule="required" class="form-control datetimepicker"
+                                        data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[car_licensetime]" type="text"
+                                        >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Emission_standard')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-emission_standard" class="form-control" name="row[emission_standard]" type="number"
+                                        >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Emission_load')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-emission_load" class="form-control" name="row[emission_load]" type="text"
+                                        >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Speed_changing_box')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <input id="c-speed_changing_box" class="form-control" name="row[speed_changing_box]" type="text"
+                                        >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <textarea id="c-note" class="form-control " rows="5" name="row[note]" cols="50"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group layer-footer">
+                                <label class="control-label col-xs-12 col-sm-2"></label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+                                    <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
