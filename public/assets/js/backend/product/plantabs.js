@@ -31,6 +31,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id')},
 
                         {field: 'schemecategory.name', title: __('Schemecategory.name')},
+                        {field: 'brand_name', title: __('所属品牌')},
                         {field: 'models.name', title: __('Models.name')},
 
                         {field: 'financial_platform_name', title: __('Financial_platform_name')},
@@ -54,8 +55,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'emission_standard', title: __('Emission_standard')},
                         {field: 'emission_load', title: __('Emission_load')},
                         {field: 'speed_changing_box', title: __('Speed_changing_box')},
-                        {field: 'drivinglicenseimages', title: __('Drivinglicenseimages'), events: Table.api.events.image, formatter: Table.api.formatter.images},
-                        {field: 'ismenu', title: __('Ismenu')},
+                        // {field: 'drivinglicenseimages', title: __('Drivinglicenseimages'), events: Table.api.events.image, formatter: Table.api.formatter.images},
+                        {field: 'ismenu', title: __('Ismenu'), formatter: Controller.api.formatter.toggle},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'type', title: __('Type'), searchList: {"mortgage":__('Type mortgage'),"used_car_mortgage":__('Type used_car_mortgage'),"car_rental":__('Type car_rental'),"full_new_car":__('Type full_new_car'),"full_used_car":__('Type full_used_car')}, formatter: Table.api.formatter.normal},
@@ -93,7 +94,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // return row.match_plan == 'match_success' ? '正在销售或已出售' : "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
                     //     + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
 
-                    return row.sales_id?'正在销售或已出售':"<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                    return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
                         + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
 
                 },
