@@ -51,6 +51,16 @@ class Random
     {
         return self::build('nozero', $len);
     }
+    /**
+     * 邀请码
+     *
+     * @param int $len 长度
+     * @return string
+     */
+    public static function invite_code($len = 6)
+    {
+        return self::build('invite_code', $len);
+    }
 
     /**
      * 能用的随机数生成
@@ -65,6 +75,7 @@ class Random
             case 'alnum':
             case 'numeric':
             case 'nozero':
+            case 'invite_code':
                 switch ($type) {
                     case 'alpha':
                         $pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -78,6 +89,8 @@ class Random
                     case 'nozero':
                         $pool = '123456789';
                         break;
+                    case 'invite_code':
+                        $pool = '123456789abcdefghjkmnpqrstuvwxyz';
                 }
                 return substr(str_shuffle(str_repeat($pool, ceil($len / strlen($pool)))), 0, $len);
             case 'unique':
