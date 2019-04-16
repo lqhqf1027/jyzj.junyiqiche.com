@@ -4,6 +4,7 @@ namespace app\admin\controller\sales;
 
 use app\admin\library\Auth;
 use app\admin\model\OrderDetails;
+use app\admin\model\OrderImg;
 use app\common\controller\Backend;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
@@ -45,68 +46,162 @@ class Order extends Backend
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
 
+    /**
+     * 查看
+     */
 
     /**
      * 查看
      */
-    public function index()
+    public function commit($type)
+    {
+        //如果发送的来源是Selectpage，则转发到Selectpage
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+        $total = $this->model
+            ->with(['orderdetails', 'orderimg'])
+            ->where($where)
+            ->where('type', $type)
+            ->order($sort, $order)
+            ->count();
+
+        $list = $this->model
+            ->with(['orderdetails', 'orderimg','admin'])
+            ->where($where)
+            ->where('type', $type)
+            ->order($sort, $order)
+            ->limit($offset, $limit)
+            ->select();
+        foreach ($list as $key=>$row) {
+            $row->getRelation('orderdetails')->visible(['admin_id', 'licensenumber']);
+            $row->getRelation('orderimg')->visible(['id_cardimages', 'driving_licenseimages']);
+            $row->getRelation('admin')->visible(['avatar','username']);
+        }
+
+        $list = collection($list)->toArray();
+        return array("total" => $total, "rows" => $list);
+    }
+
+    /**
+     * 查看按揭（新车）单
+     */
+    public function newmortgage()
     {
         //当前是否为关联查询
         $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = $this->model
-                ->with(['orderdetails', 'orderimg'])
-                ->where($where)
-                ->order($sort, $order)
-                ->count();
-
-            $list = $this->model
-                ->with(['orderdetails', 'orderimg','admin'])
-
-                ->where($where)
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-            foreach ($list as $key=>$row) {
-                $row->getRelation('orderdetails')->visible(['admin_id', 'licensenumber']);
-                $row->getRelation('orderimg')->visible(['id_cardimages', 'driving_licenseimages']);
-                $row->getRelation('admin')->visible(['avatar','username']);
-            }
-
-            $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
+            
+            $result = $this->commit('mortgage');
 
             return json($result);
         }
         return $this->view->fetch();
     }
 
+    /**
+     * 查看按揭（二手车）单
+     */
+    public function usedCarMortgage()
+    {
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $result = $this->commit('used_car_mortgage');
+
+            return json($result);
+
+        }
+        return $this->view->fetch();
+    }
 
     /**
-     * 添加
+     * 查看租车单
      */
-    public function add()
+    public function carRental()
+    {
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $result = $this->commit('car_rental');
+
+            return json($result);
+    
+        }
+        return $this->view->fetch();
+    }
+
+    /**
+     * 查看全款（新车）单
+     */
+    public function fullNewCar()
+    {
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $result = $this->commit('full_new_car');
+
+            return json($result);
+           
+        }
+        return $this->view->fetch();
+    }
+
+    /**
+     * 查看全款（二手车）单
+     */
+    public function fullUsedCar()
+    {
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $result = $this->commit('full_used_car');
+
+            return json($result);
+            
+        }
+        return $this->view->fetch();
+    }
+
+
+    /**
+     * 新增
+     */
+
+    /**
+     * 新增
+     */
+    public function commitadd($type)
     {
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             $params['order_createtime'] = strtotime($params['order_createtime']);
+            $params['type'] = $type;
             // pr($params);
             // die;
             if ($params) {
                 $params = $this->preExcludeFields($params);
-//                if ($params['customer_source'] === 'turn_to_introduce') {
-//                    if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
-//                        $this->error('转介绍人信息不能为空');
-//                    }
-//                }
-                pr($params);die;
+               if ($params['customer_source'] === 'turn_to_introduce') {
+                   if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
+                       $this->error('转介绍人信息不能为空');
+                   }
+               }
+                // pr($params);die;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
@@ -120,6 +215,17 @@ class Order extends Backend
                         $this->model->validate($validate);
                     }
                     $result = $this->model->allowField(true)->save($params);
+           
+                    $params['order_id'] = $this->model->id;
+                    
+                    $order_details = new OrderDetails();
+        
+                    $order_details->allowField(true)->save($params); 
+                    
+                    $order_img = new OrderImg();
+        
+                    $order_img->allowField(true)->save($params);   
+
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
@@ -139,9 +245,237 @@ class Order extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
+    }
+
+
+    /**
+     * 新增按揭（新车）单
+     */
+    public function newadd()
+    {
+        $this->commitadd('mortgage');
         return $this->view->fetch();
     }
 
+    /**
+     * 新增按揭（二手车）单
+     */
+    public function usedcaradd()
+    {
+        $this->commitadd('used_car_mortgage');
+        return $this->view->fetch();
+    }
+
+    /**
+     * 新增租车单
+     */
+    public function rentaladd()
+    {
+        $this->commitadd('car_rental');
+        return $this->view->fetch();
+    }
+
+    /**
+     * 新增全款新车单
+     */
+    public function fulladd()
+    {
+        $this->commitadd('full_new_car');
+        return $this->view->fetch();
+    }
+
+    /**
+     * 新增全款（二手车）单
+     */
+    public function fullusedadd()
+    {
+        $this->commitadd('full_used_car');
+        return $this->view->fetch();
+    }
+
+
+    /**
+     * 修改
+     */
+
+    /**
+     * 编辑
+     */
+    public function commitedit($row, $type)
+    {
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            $params['order_createtime'] = strtotime($params['order_createtime']);
+            $params['type'] = $type;
+            // pr($params);
+            // die;
+            if ($params) {
+                $params = $this->preExcludeFields($params);
+                if ($params['customer_source'] === 'turn_to_introduce') {
+                   if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
+                       $this->error('转介绍人信息不能为空');
+                   }
+                }
+                // pr($params);die;
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                $result = false;
+                Db::startTrans();
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+
+                    $params['order_id'] = $row->id;
+
+                    $order_details = new OrderDetails();
+        
+                    $order_details->allowField(true)->save($params, ['order_id' => $row->id]); 
+                    
+                    $order_img = new OrderImg();
+        
+                    $order_img->allowField(true)->save($params, ['order_id' => $row->id]);   
+        
+                    Db::commit();
+                } catch (ValidateException $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                } catch (PDOException $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                } catch (Exception $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                }
+                if ($result) {
+                    $this->success();
+                } else {
+                    $this->error();
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+    }
+
+    /**
+     * 修改按揭（新车）单
+     */
+    public function newedit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        //相关信息
+        $OrderDetails = OrderDetails::where('order_id', $ids)->find();
+        //相关图片
+        $OrderImg = OrderImg::where('order_id', $ids)->find();
+        
+        $this->commitedit($row, 'mortgage');
+    
+        $this->view->assign([
+            'row' => $row,
+            'OrderDetails' => $OrderDetails,
+            'OrderImg' => $OrderImg
+            ]);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 修改按揭（二手车）单
+     */
+    public function usedcaredit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        //相关信息
+        $OrderDetails = OrderDetails::where('order_id', $ids)->find();
+        //相关图片
+        $OrderImg = OrderImg::where('order_id', $ids)->find();
+        
+        $this->commitedit($row, 'used_car_mortgage');
+    
+        $this->view->assign([
+            'row' => $row,
+            'OrderDetails' => $OrderDetails,
+            'OrderImg' => $OrderImg
+            ]);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 修改租车单
+     */
+    public function rentaledit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        //相关信息
+        $OrderDetails = OrderDetails::where('order_id', $ids)->find();
+        //相关图片
+        $OrderImg = OrderImg::where('order_id', $ids)->find();
+        
+        $this->commitedit($row, 'car_rental');
+    
+        $this->view->assign([
+            'row' => $row,
+            'OrderDetails' => $OrderDetails,
+            'OrderImg' => $OrderImg
+            ]);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 修改全款新车单
+     */
+    public function fulledit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        //相关信息
+        $OrderDetails = OrderDetails::where('order_id', $ids)->find();
+        //相关图片
+        $OrderImg = OrderImg::where('order_id', $ids)->find();
+        
+        $this->commitedit($row, 'full_new_car');
+    
+        $this->view->assign([
+            'row' => $row,
+            'OrderDetails' => $OrderDetails,
+            'OrderImg' => $OrderImg
+            ]);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 修改全款（二手车）单
+     */
+    public function fullusededit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        //相关信息
+        $OrderDetails = OrderDetails::where('order_id', $ids)->find();
+        //相关图片
+        $OrderImg = OrderImg::where('order_id', $ids)->find();
+        
+        $this->commitedit($row, 'full_used_car');
+    
+        $this->view->assign([
+            'row' => $row,
+            'OrderDetails' => $OrderDetails,
+            'OrderImg' => $OrderImg
+            ]);
+        return $this->view->fetch();
+    }
 
 
     /**
