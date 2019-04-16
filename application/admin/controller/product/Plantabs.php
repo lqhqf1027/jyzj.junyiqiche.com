@@ -3,6 +3,7 @@
 namespace app\admin\controller\product;
 
 use app\common\controller\Backend;
+use think\Db;
 
 /**
  * 以租代购
@@ -17,6 +18,7 @@ class Plantabs extends Backend
      * @var \app\admin\model\Plantabs
      */
     protected $model = null;
+    protected $multiFields = 'ismenu';
 
     public function _initialize()
     {
@@ -64,9 +66,9 @@ class Plantabs extends Backend
                     ->limit($offset, $limit)
                     ->select();
 
-            foreach ($list as $row) {
+            foreach ($list as $key => $row) {
                 
-                
+                $list[$key]['brand_name'] = Db::name('brand_cate')->where('id', $row['models']['brand_id'])->value('name');
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
