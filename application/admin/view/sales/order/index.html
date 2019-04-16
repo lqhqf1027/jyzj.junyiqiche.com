@@ -1,45 +1,129 @@
 <div class="panel panel-default panel-intro">
+        <div class="panel-heading">
+            <div class="panel-lead"><em>销售订单中心&客户资料录入</em></div>
+            <div>
+                <ol>
+                    <li class="text-danger ">请根据客户实际购车方案选择对应购车方式</li>
+                    <p></p>
     
-    <div class="panel-heading">
-        {:build_heading(null,FALSE)}
-        <ul class="nav nav-tabs" data-field="type">
-            <li class="active"><a href="#t-all" data-value="" data-toggle="tab">{:__('All')}</a></li>
-            {foreach name="typeList" item="vo"}
-            <li><a href="#t-{$key}" data-value="{$key}" data-toggle="tab">{$vo}</a></li>
-            {/foreach}
-        </ul>
-    </div>
-
-
-    <div class="panel-body">
-        <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade active in" id="one">
-                <div class="widget-body no-padding">
-                    <div id="toolbar" class="toolbar">
-                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                        <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('sales/order/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
-                        <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('sales/order/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>
-                        <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('sales/order/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>
-
-
-                        <!--<div class="dropdown btn-group {:$auth->check('sales/order/multi')?'':'hide'}">-->
-                            <!--<a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> {:__('More')}</a>-->
-                            <!--<ul class="dropdown-menu text-left" role="menu">-->
-                                <!--<li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=normal"><i class="fa fa-eye"></i> {:__('Set to normal')}</a></li>-->
-                                <!--<li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=hidden"><i class="fa fa-eye-slash"></i> {:__('Set to hidden')}</a></li>-->
-                            <!--</ul>-->
-                        <!--</div>-->
-
-                        
+                    <li class="text-danger">
+                        请事先尽量在线下通知客户需要准备齐全购/租的所有资料，包括审核资料、提车资料等
+                    </li>
+                    
+                </ol>
+            </div>
+            <ul class="nav nav-tabs" >
+                <li class="active text-center"><a href="#new_mortgage" data-toggle="tab" >按揭（新车） &nbsp;
+                    <span class="pull-right-container"></span></a>
+    
+                </li>
+                <li><a href="#used_car_mortgage" data-toggle="tab"  class="text-center"> 按揭（二手车） &nbsp;
+                    <span class="pull-right-container"></span></a>
+    
+                </li>
+                <li><a href="#car_rental" data-toggle="tab" class="text-center"> 租车 &nbsp;
+                    <span class="pull-right-container"></span></a>
+    
+                </li>
+                <li><a href="#full_new_car" data-toggle="tab"  class="text-center">全款（新车）&nbsp;
+                    <span class="pull-right-container"></span></a>
+            
+                </li>
+                <li><a href="#full_used_car" data-toggle="tab"  class="text-center">全款（二手车）&nbsp;
+                    <span class="pull-right-container"></span></a>
+                    
+                </li>
+    
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div id="myTabContent" class="tab-content">
+                <!--按揭(新车)-->
+                <div class="tab-pane fade active in" id="new_mortgage">
+                    <div id="toolbar1" class="toolbar">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"><i
+                                class="fa fa-refresh"></i> </a>
+        
+                        <a href="javascript:;" class="btn btn-info btn-newadd" data-params="newadd"
+                                title="{:__('新增按揭（新车）单')}"><i class="fa fa-plus"></i> {:__('新增按揭（新车）单')}</a>
+                        <a href="javascript:;" class="btn btn-info btn-danger" title="{:__('如需退车，请及时联系管理员')}"><i class="fa fa-hand-o-right"></i>
+                                {:__('如需退车，请及时联系管理员')}</a>
+                        <a href="javascript:;" class="btn btn-danger btn-import"
+                                title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx"
+                                data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>
+        
                     </div>
-                    <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
-                           data-operate-edit="{:$auth->check('sales/order/edit')}" 
-                           data-operate-del="{:$auth->check('sales/order/del')}" 
-                           width="100%">
+                    <table id="newMortgage" class="table table-striped table-bordered table-hover table-nowrap" width="100%">
                     </table>
                 </div>
-            </div>
 
+                <!--按揭(二手车)-->
+                <div class="tab-pane fade" id="used_car_mortgage">
+                    <div id="toolbar2" class="toolbar">
+        
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"><i
+                                class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-info btn-usedcaradd" title="{:__('新增按揭（二手车）单')}"><i
+                                class="fa fa-plus"></i> {:__('新增按揭（二手车）单')}</a>
+                        <a href="javascript:;" class="btn btn-info btn-danger" title="{:__('如需退车，请及时联系管理员')}"><i
+                                class="fa fa-hand-o-right"></i> {:__('如需退车，请及时联系管理员')}</a>
+                        
+                    </div>
+                    <table id="usedCarMortgage" class="table table-striped table-bordered table-hover table-nowrap" width="100%">
+                    </table>
+        
+                </div>
+        
+                <!--=租车-->
+                <div class="tab-pane fade" id="car_rental">
+                    <div id="toolbar3" class="toolbar">
+        
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"><i
+                                class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-info btn-rentaladd" data-params="rentaladd" title="{:__('新增租车单')}"><i
+                                class="fa fa-plus"></i> {:__('新增租车单')}</a>
+                        <a href="javascript:;" class="btn btn-info btn-danger" title="{:__('如需退车，请及时联系管理员')}"><i
+                                class="fa fa-hand-o-right"></i> {:__('如需退车，请及时联系管理员')}</a>
+                        
+                    </div>
+                    <table id="carRental" class="table table-striped table-bordered table-hover table-nowrap" width="100%">
+                    </table>
+                </div>
+        
+                <!--全款(新车)-->
+                <div class="tab-pane fade" id="full_new_car">
+                    <div id="toolbar4" class="toolbar">
+        
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"><i
+                                class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-info btn-fulladd" title="{:__('新增全款(新车)单')}"><i
+                                class="fa fa-plus"></i> {:__('新增全款单')}</a>
+                        <a href="javascript:;" class="btn btn-info btn-danger" title="{:__('如需退车，请及时联系管理员')}"><i
+                                class="fa fa-hand-o-right"></i> {:__('如需退车，请及时联系管理员')}</a>
+                       
+                    </div>
+                    <table id="fullNewCar" class="table table-striped table-bordered table-hover table-nowrap" width="100%">
+                    </table>
+        
+                </div>
+
+                <!--全款(二手车)-->
+                <div class="tab-pane fade" id="full_used_car">
+                    <div id="toolbar5" class="toolbar">
+        
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"><i
+                                class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-info btn-fullusedadd" title="{:__('新增全款（二手车）单')}"><i
+                                class="fa fa-plus"></i> {:__('新增全款（二手车）单')}</a>
+                        <a href="javascript:;" class="btn btn-info btn-danger" title="{:__('如需退车，请及时联系管理员')}"><i
+                                class="fa fa-hand-o-right"></i> {:__('如需退车，请及时联系管理员')}</a>
+        
+                    </div>
+                    <table id="fullUsedCar" class="table table-striped table-bordered table-hover table-nowrap"
+                        width="100%">
+                    </table>
+        
+                </div>
+            </div>
         </div>
     </div>
-</div>
