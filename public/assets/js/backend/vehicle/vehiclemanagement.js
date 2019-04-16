@@ -8,13 +8,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     index_url: 'vehicle/vehiclemanagement/index' + location.search,
                     add_url: 'vehicle/vehiclemanagement/add',
                     // edit_url: 'vehicle/vehiclemanagement/edit',
-                    del_url: 'vehicle/vehiclemanagement/del',
+                    // del_url: 'vehicle/vehiclemanagement/del',
                     multi_url: 'vehicle/vehiclemanagement/multi',
                     table: 'order',
                 }
             });
 
             var table = $("#table");
+
+            $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索：客户姓名";};
 
             // 初始化表格
             table.bootstrapTable({
@@ -92,6 +94,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             formatter: Table.api.formatter.operate,
                             buttons: [
                                 {
+                                    name: 'view_information',
+                                    icon: 'fa fa-eye',
+                                    title: __('查看提车资料'),
+                                    text: '查看提车资料',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-primary btn-view_information',
+                                    visible: function (row) {
+                                        return row.lift_car_status == 'no' ? true : false;
+                                    }
+                                },
+                                {
                                     name: 'edits',
                                     icon: 'fa fa-pencil',
                                     title: __('提车'),
@@ -112,6 +125,39 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     visible: function (row) {
                                         return row.lift_car_status == 'yes' ? true : false;
                                     }
+                                },
+                                {
+                                    name: 'modifying_data',
+                                    icon: 'fa fa-pencil',
+                                    title: __('修改资料'),
+                                    text: '修改资料',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-success btn-modifying_data',
+                                    visible: function (row) {
+                                        return row.lift_car_status == 'yes'? true : false;
+                                    }
+                                },
+                                {
+                                    name: 'search',
+                                    icon: 'fa fa-search',
+                                    title: __('查询违章'),
+                                    text: '查询违章',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-danger btn-search',
+                                    visible: function (row) {
+                                        return row.lift_car_status == 'yes' && row.orderdetails.licensenumber && row.orderdetails.frame_number && row.orderdetails.engine_number ? true : false;
+                                    }
+                                },
+                                {
+                                    name: 'violation_details',
+                                    icon: 'fa fa-eye',
+                                    title: __('查看未处理违章详情'),
+                                    text: '查看违章详情',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-primary btn-violation_details',
+                                    visible: function (row) {
+                                        return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
+                                    }
                                 }
 
                             ]
@@ -119,6 +165,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ]
             });
+
+            table.on('load-success.bs.table', function (e, data) {
+                table.bootstrapTable('hideColumn',['id','username']);
+                // console.log(data);
+                //                 // console.log(Config.tables);
+            });
+
 
             // 为表格绑定事件
             Table.api.bindevent(table);
@@ -128,15 +181,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
-            let type = $('input[type=hidden]').val();
-            let mortgage = $('#c-is_mortgage').val();
-            type == 'full_new_car' || type == 'full_used_car' ? $('.full').show() : $('.full').hide();
-            mortgage == 'yes' ? $('#mortgage-people').show() : $('#mortgage-people').hide();
+            Controller.api.show_and_hide();
 
-            $('#c-is_mortgage').on('change', function () {
-                $(this).val() == 'yes' ? $('#mortgage-people').show() : $('#mortgage-people').hide();
-            });
-
+            Controller.api.bindevent();
+        },
+        modifying_data: function () {
+            Controller.api.show_and_hide();
+            Controller.api.bindevent();
+        },
+        view_information:function (){
             Controller.api.bindevent();
         },
         api: {
@@ -147,6 +200,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             events: {
                 operate: {
                     'click .btn-lift-car': function (e, value, row, index) {
+                        $(".btn-lift-car").data("area", ["80%", "80%"]);
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -155,6 +209,96 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'vehicle/vehiclemanagement/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('提车'), $(this).data() || {});
+                    },
+                    'click .btn-modifying_data': function (e, value, row, index) {
+                        $(".btn-modifying_data").data("area", ["80%", "80%"]);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'vehicle/vehiclemanagement/modifying_data';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('修改资料'), $(this).data() || {});
+                    },
+                    'click .btn-view_information': function (e, value, row, index) {
+                        $(".btn-view_information").data("area", ["80%", "80%"]);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'vehicle/vehiclemanagement/view_information';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看提车资料'), $(this).data() || {});
+                    },
+                    'click .btn-violation_details': function (e, value, row, index) {
+                        $(".btn-violation_details").data("area", ["80%", "80%"]);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'vehicle/vehiclemanagement/violation_details';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看未处理违章详情'), $(this).data() || {});
+                    },
+                    /**
+                     * 查询违章
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-search': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        // console.log(row);return;
+                        Layer.confirm('是否查询违章?', {icon: 3, title: '提示'}, function (index) {
+
+
+                            if (!row.orderdetails.licensenumber || row.orderdetails.licensenumber == '') {
+                                Layer.msg('请补全车牌号');
+                                return;
+                            }
+
+                            if (!row.orderdetails.engine_number || row.orderdetails.engine_number == '') {
+                                Layer.msg('请补全发动机号');
+                                return;
+                            }
+
+                            if (!row.orderdetails.frame_number || row.orderdetails.frame_number == '') {
+                                Layer.msg('请补全车架号');
+                                return;
+                            }
+
+
+                            var table = $(that).closest('table');
+                            var ids = [{
+                                hphm: row.orderdetails.licensenumber.substr(0, 2),
+                                hphms: row.orderdetails.licensenumber,
+                                engineno: row.orderdetails.engine_number,
+                                classno: row.orderdetails.frame_number,
+                                order_id:row.id
+                            }];
+
+                            Fast.api.ajax({
+                                url: 'vehicle/vehiclemanagement/sendMessagePerson',
+                                data: {ids}
+
+                            }, function (data, ret) {
+
+                                Layer.close(index);
+                                table.bootstrapTable('refresh');
+
+
+                            });
+
+
+                        });
+
+
                     },
                     'click .btn-delone': function (e, value, row, index) {
                         e.stopPropagation();
@@ -181,6 +325,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 }
             },
+            show_and_hide: function () {
+                let type = $('input[type=hidden]').val();
+                let mortgage = $('#c-is_mortgage').val();
+
+                type == 'full_new_car' || type == 'full_used_car' ? $('.full').show() : $('.full').hide();
+                mortgage == '是' ? $('#mortgage-people').show() : $('#mortgage-people').hide();
+
+                $('#c-is_mortgage').on('change', function () {
+                    $(this).val() == '是' ? $('#mortgage-people').show() : $('#mortgage-people').hide();
+                });
+            }
         }
     };
     return Controller;
