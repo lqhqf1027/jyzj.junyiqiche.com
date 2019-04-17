@@ -48,19 +48,26 @@ Page({
     wx.chooseImage({
       success: function (res) {
         var tempFilePaths = res.tempFilePaths;
+        var formData = app.globalData.config.upload.multipart;
+        formData.token = app.globalData.userInfo.token;
         wx.uploadFile({
-          url: app.globalData.uploadConfig.uploadurl,
+          url: app.globalData.config.upload.uploadurl,
           filePath: tempFilePaths[0],
           name: 'file',
-          formData: app.globalData.uploadConfig.multipart,
+          formData: formData,
           success: function (res) {
             var data = JSON.parse(res.data);
             if (data.code == 200) {
               app.success('头像上传成功');
               that.setData({ ["userInfo.avatar"]: app.globalData.uploadConfig.cdnurl + data.url });
             }
+          },
+          error: function (e) {
+            console.log(e);
           }
         });
+      }, error: function () {
+        console.log(e);
       }
     });
   }

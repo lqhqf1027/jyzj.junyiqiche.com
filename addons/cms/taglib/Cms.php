@@ -34,6 +34,8 @@ class Cms extends TagLib
         'pagefilter'  => ['attr' => 'id,empty,key,mod', 'close' => 1],
         'pageorder'   => ['attr' => 'id,empty,key,mod', 'close' => 1],
         'pagelist'    => ['attr' => 'id,empty,key,mod,imgwidth,imgheight', 'close' => 1],
+        'spagelist'   => ['attr' => 'id,row,limit,empty,key,mod,cache,orderby,orderway,imgwidth,imgheight,condition,type', 'close' => 1],
+        'spageinfo'   => ['attr' => 'id,sid,empty,cache,imgwidth,imgheight,orderby,orderway,condition', 'close' => 1],
         'pageinfo'    => ['attr' => 'type', 'close' => 0],
         'commentinfo' => ['attr' => 'type', 'close' => 0],
     ];
@@ -52,6 +54,7 @@ class Cms extends TagLib
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
         return $parse;
     }
 
@@ -81,11 +84,12 @@ class Cms extends TagLib
         }
         $var = Random::alnum(10);
         $parse = '<?php ';
-        $parse .= '$__LIST__ = \addons\cms\model\Archives::getQueryList([' . implode(',', $params) . ']);';
+        $parse .= '$__' . $var . '__ = \addons\cms\model\Archives::getQueryList([' . implode(',', $params) . ']);';
         $parse .= ' ?>';
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
         return $parse;
     }
 
@@ -175,6 +179,7 @@ class Cms extends TagLib
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
         return $parse;
     }
 
@@ -204,6 +209,7 @@ class Cms extends TagLib
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
         return $parse;
     }
 
@@ -228,6 +234,7 @@ class Cms extends TagLib
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
         return $parse;
     }
 
@@ -253,6 +260,57 @@ class Cms extends TagLib
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
+        return $parse;
+    }
+
+    public function tagSpagelist($tag, $content)
+    {
+        $id = $tag['id'];
+        $empty = isset($tag['empty']) ? $tag['empty'] : '';
+        $key = !empty($tag['key']) ? $tag['key'] : 'i';
+        $mod = isset($tag['mod']) ? $tag['mod'] : '2';
+
+        $params = [];
+        foreach ($tag as $k => & $v) {
+            if (in_array($k, ['condition'])) {
+                $v = $this->autoBuildVar($v);
+            }
+            $v = '"' . $v . '"';
+            $params[] = '"' . $k . '"=>' . $v;
+        }
+        $var = Random::alnum(10);
+        $parse = '<?php ';
+        $parse .= '$__' . $var . '__ = \addons\cms\model\Page::getPageList([' . implode(',', $params) . ']);';
+        $parse .= ' ?>';
+        $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
+        $parse .= $content;
+        $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
+        return $parse;
+    }
+
+    public function tagSpageinfo($tag, $content)
+    {
+        $id = $tag['id'];
+        $empty = isset($tag['empty']) ? $tag['empty'] : '';
+
+        $params = [];
+        foreach ($tag as $k => & $v) {
+            if (in_array($k, ['condition'])) {
+                $v = $this->autoBuildVar($v);
+            }
+            $v = '"' . $v . '"';
+            $params[] = '"' . $k . '"=>' . $v;
+        }
+        $parse = '<?php ';
+        $parse .= '$' . $id . ' = \addons\cms\model\Page::getPageInfo([' . implode(',', $params) . ']);';
+        $parse .= ' ?>';
+        $parse .= '{if $' . $id . '}';
+        $parse .= $content;
+        $parse .= '{else /}';
+        $parse .= '{$' . $empty . '}';
+        $parse .= '{/if}';
         return $parse;
     }
 
@@ -272,8 +330,9 @@ class Cms extends TagLib
 
     /**
      * 标签列表
-     * @param array $tag
+     * @param array  $tag
      * @param string $content
+     * @return string
      */
     public function tagTagslist($tag, $content)
     {
@@ -296,13 +355,15 @@ class Cms extends TagLib
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
         return $parse;
     }
 
     /**
      * 评论列表
-     * @param array $tag
+     * @param array  $tag
      * @param string $content
+     * @return string
      */
     public function tagCommentlist($tag, $content)
     {
@@ -324,12 +385,13 @@ class Cms extends TagLib
         $parse .= '{volist name="$__COMMENTLIST__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__COMMENTLIST__;{/php}';
         return $parse;
     }
 
     /**
      * 评论分页
-     * @param array $tag
+     * @param array  $tag
      * @param string $content
      * @return string
      */
@@ -349,8 +411,9 @@ class Cms extends TagLib
 
     /**
      * 栏目标签
-     * @param array $tag
+     * @param array  $tag
      * @param string $content
+     * @return string
      */
     public function tagChannellist($tag, $content)
     {
@@ -377,6 +440,7 @@ class Cms extends TagLib
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
         return $parse;
     }
 
@@ -405,6 +469,7 @@ class Cms extends TagLib
         $parse .= '{volist name="$__' . $var . '__" id="' . $id . '" empty="' . $empty . '" key="' . $key . '" mod="' . $mod . '"}';
         $parse .= $content;
         $parse .= '{/volist}';
+        $parse .= '{php}$__LASTLIST__=$__' . $var . '__;{/php}';
         return $parse;
     }
 
@@ -416,5 +481,4 @@ class Cms extends TagLib
         $parse .= ' ?>';
         return $parse;
     }
-
 }

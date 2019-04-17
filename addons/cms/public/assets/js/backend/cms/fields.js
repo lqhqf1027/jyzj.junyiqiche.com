@@ -22,22 +22,66 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'weigh',
+                pagination: false,
+                search: false,
+                commonSearch: false,
                 columns: [
                     [
-                        {checkbox: true},
+                        {
+                            field: 'state', checkbox: true, formatter: function (value, row, index) {
+                                if (row.state === false) {
+                                    return {
+                                        disabled: true,
+                                    }
+                                } else {
+                                    return {
+                                        disabled: false,
+                                    }
+                                }
+                            }
+                        },
                         {field: 'id', sortable: true, title: __('Id')},
                         {field: 'model_id', visible: false, operate: false, title: __('Model_id')},
                         {field: 'diyform_id', visible: false, operate: false, title: __('Diyform_id')},
-                        {field: 'name', title: __('Name')},
-                        {field: 'type', title: __('Type')},
-                        {field: 'title', title: __('Title')},
-                        {field: 'isfilter', title: __('Isfilter'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: Table.api.formatter.toggle},
-                        {field: 'iscontribute', title: __('Iscontribute'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: Table.api.formatter.toggle},
+                        {
+                            field: 'name', title: __('Name'), formatter: function (value, row, index) {
+                                return row.issystem ? "<span class='text-muted'>" + value + "</span>" : value;
+                            }
+                        },
+                        {
+                            field: 'type', title: __('Type'), formatter: function (value, row, index) {
+                                return row.issystem ? "<span class='text-muted'>" + value + "</span>" : value;
+                            }
+                        },
+                        {
+                            field: 'title', title: __('Title'), formatter: function (value, row, index) {
+                                return row.issystem ? "<span class='text-muted'>" + value + "</span>" : value;
+                            }
+                        },
+                        {
+                            field: 'isfilter', title: __('Isfilter'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: function (value, row, index) {
+                                return row.issystem ? "-" : Table.api.formatter.toggle.call(this, value, row, index);
+                            }
+                        },
+                        {
+                            field: 'iscontribute', title: __('Iscontribute'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: function (value, row, index) {
+                                return row.issystem ? "-" : Table.api.formatter.toggle.call(this, value, row, index);
+                            }
+                        },
                         {field: 'weigh', title: __('Weigh'), visible: false},
                         {field: 'createtime', title: __('Createtime'), visible: false, operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), visible: false, operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'status', title: __('Status'), formatter: Table.api.formatter.status},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {
+                            field: 'status', title: __('Status'), formatter: function (value, row, index) {
+                                return row.issystem ? "-" : Table.api.formatter.status.call(this, value, row, index);
+                            }
+                        },
+                        {
+                            field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate,
+                            formatter: function (value, row, index) {
+                                return row.issystem ? "<div style='height:26px;line-height:26px;'>-</div>" : Table.api.formatter.operate.call(this, value, row, index);
+                            }
+                        }
                     ]
                 ],
             });

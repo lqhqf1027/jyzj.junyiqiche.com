@@ -21,6 +21,7 @@ class Fields extends Backend
     protected $modelSceneValidate = true;
 
     protected $noNeedRight = ['rulelist'];
+    protected $multiFields = 'isfilter,iscontribute';
 
     public function _initialize()
     {
@@ -56,6 +57,44 @@ class Fields extends Backend
                 ->limit($offset, $limit)
                 ->select();
 
+            $nameArr = [
+                'id'          => '主键',
+                'user_id'     => '会员ID',
+                'channel_id'  => '栏目ID',
+                'model_id'    => '模型ID',
+                'title'       => '标题',
+                'style'       => '样式',
+                'flag'        => '标志',
+                'image'       => '缩略图',
+                'keywords'    => '关键字',
+                'description' => '描述',
+                'tags'        => '标签',
+                'weigh'       => '权重',
+                'views'       => '浏览次数',
+                'comments'    => '评论次数',
+                'likes'       => '点赞次数',
+                'dislikes'    => '点踩次数',
+                'diyname'     => '自定义名称',
+                'createtime'  => '创建时间',
+                'updatetime'  => '更新时间',
+                'publishtime' => '发布时间',
+                'deletetime'  => '删除时间',
+                'memo'        => '备注',
+                'status'      => '状态'
+            ];
+            if ($model_id) {
+                $list = collection($list)->toArray();
+                $tableInfoList = \think\Db::name('cms_archives')->getTableInfo();
+                $tableInfoList['fields'] = array_reverse($tableInfoList['fields']);
+                foreach ($tableInfoList['fields'] as $index => $field) {
+                    $type = isset($tableInfoList['type'][$field]) ? substr($tableInfoList['type'][$field], 0, stripos($tableInfoList['type'][$field], '(')) : 'unknown';
+                    $item = [
+                        'state' => false, 'model_id' => $model_id, 'diyform_id' => '-', 'name' => $field, 'title' => isset($nameArr[$field]) ? $nameArr[$field] : '',
+                        'type'  => $type, 'issystem' => true, 'isfilter' => 0, 'iscontribute' => 0, 'status' => 'normal', 'createtime' => 0, 'updatetime' => 0
+                    ];
+                    $list[] = $item;
+                }
+            }
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -127,5 +166,4 @@ class Fields extends Backend
         }
         return json(['list' => $list]);
     }
-
 }

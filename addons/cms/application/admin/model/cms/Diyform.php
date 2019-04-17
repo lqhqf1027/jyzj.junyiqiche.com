@@ -44,6 +44,7 @@ class Diyform extends Model
     {
         return is_array($value) ? $value : ($value ? explode(',', $value) : []);
     }
+
     public function getStatusList()
     {
         return ['normal' => __('Normal'), 'hidden' => __('Hidden')];
@@ -55,5 +56,4 @@ class Diyform extends Model
         $list = $this->getStatusList();
         return isset($list[$value]) ? $list[$value] : '';
     }
-
 }

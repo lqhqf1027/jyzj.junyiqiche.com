@@ -48,6 +48,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             title: __('Weigh'),
                             formatter: function (value, row, index) {
                                 return '<input type="text" class="form-control text-center text-weigh" data-id="' + row.id + '" value="' + value + '" style="width:50px;margin:0 auto;" />';
+                            },
+                            events: {
+                                "dblclick .text-weigh": function (e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return false;
+                                }
                             }
                         },
                         {
@@ -67,6 +74,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             formatter: Table.api.formatter.datetime
                         },
                         {field: 'iscontribute', title: __('Iscontribute'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: Table.api.formatter.toggle},
+                        {field: 'isnav', title: __('Isnav'), searchList: {"1": __('Yes'), "0": __('No')}, formatter: Table.api.formatter.toggle},
                         {field: 'status', title: __('Status'), formatter: Table.api.formatter.status},
                         {
                             field: 'operate',
@@ -296,7 +304,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         $("select[name='row[model_id]']").trigger("change");
                     }
                     if ($(this).val() == 'link') {
-                        $("#parent_id option[data-model]").prop("disabled", false);
+                        $("#parent_id option").prop("disabled", false);
                     }
                 });
                 Form.api.bindevent($("form[role=form]"));
@@ -313,6 +321,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         $("input[name='row[listtpl]']").val(data.listtpl).prev().val(data.listtpl);
                         $("input[name='row[showtpl]']").val(data.showtpl).prev().val(data.showtpl);
                     }
+                });
+                $(document).on("click", ".btn-select-page", function () {
+                    var url = $(this).data("url");
+                    parent.Fast.api.open(url, "选择单页", {
+                        callback: function (data) {
+                            $("#c-outlink").val(data.url);
+                        }
+                    });
                 });
 
             }

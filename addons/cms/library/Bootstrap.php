@@ -23,7 +23,6 @@ class Bootstrap extends Paginator
      */
     protected function getPreviousButton($text = "&laquo;")
     {
-
         if ($this->currentPage() <= 1) {
             return $this->getDisabledTextWrapper($text);
         }
@@ -57,8 +56,9 @@ class Bootstrap extends Paginator
      */
     protected function getLinks()
     {
-        if ($this->simple)
+        if ($this->simple) {
             return '';
+        }
 
         $block = [
             'first'  => null,
@@ -66,21 +66,21 @@ class Bootstrap extends Paginator
             'last'   => null
         ];
 
-        $side   = 3;
+        $side = 3;
         $window = $side * 2;
 
         if ($this->lastPage < $window + 6) {
             $block['first'] = $this->getUrlRange(1, $this->lastPage);
         } elseif ($this->currentPage <= $window) {
             $block['first'] = $this->getUrlRange(1, $window + 2);
-            $block['last']  = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
+            $block['last'] = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
         } elseif ($this->currentPage > ($this->lastPage - $window)) {
             $block['first'] = $this->getUrlRange(1, 2);
-            $block['last']  = $this->getUrlRange($this->lastPage - ($window + 2), $this->lastPage);
+            $block['last'] = $this->getUrlRange($this->lastPage - ($window + 2), $this->lastPage);
         } else {
-            $block['first']  = $this->getUrlRange(1, 2);
+            $block['first'] = $this->getUrlRange(1, 2);
             $block['slider'] = $this->getUrlRange($this->currentPage - $side, $this->currentPage + $side);
-            $block['last']   = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
+            $block['last'] = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
         }
 
         $html = '';
@@ -108,8 +108,8 @@ class Bootstrap extends Paginator
      */
     public function render($params = null)
     {
-        if(is_array($params)){
-            if(isset($params['type'])){
+        if (is_array($params)) {
+            if (isset($params['type'])) {
                 $this->simple = $params['type'] === 'simple';
             }
         }
@@ -130,7 +130,7 @@ class Bootstrap extends Paginator
             }
         }
     }
-    
+
     /**
      * 生成一个可点击的按钮
      *

@@ -10,7 +10,6 @@ use think\Exception;
  */
 class Comment extends Base
 {
-
     protected $noNeedLogin = ['index'];
 
     public function _initialize()
@@ -43,5 +42,4 @@ class Comment extends Base
         }
         $this->success(__('评论成功'));
     }
-
 }

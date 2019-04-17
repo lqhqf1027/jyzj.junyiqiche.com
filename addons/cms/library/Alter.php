@@ -4,7 +4,6 @@ namespace addons\cms\library;
 
 class Alter
 {
-
     protected static $instance = null;
     protected $config = [];
     protected $data = [
@@ -118,14 +117,15 @@ class Alter
             } else {
                 $this->data['length'] = "({$this->data['length']})";
             }
-        } else if (in_array($this->data['type'], ['SET', 'ENUM'])) {
+            $this->data['defaultvalue'] = $this->data['defaultvalue'] == '' ? 'NULL' : $this->data['defaultvalue'];
+        } elseif (in_array($this->data['type'], ['SET', 'ENUM'])) {
             $content = \app\common\model\Config::decode($this->data['content']);
             $this->data['length'] = "('" . implode("','", array_keys($content)) . "')";
             $this->data['defaultvalue'] = in_array($this->data['defaultvalue'], array_keys($content)) ? $this->data['defaultvalue'] : ($this->data['type'] == 'ENUM' ? key($content) : '');
-        } else if (in_array($this->data['type'], ['DATE', 'TIME', 'DATETIME'])) {
+        } elseif (in_array($this->data['type'], ['DATE', 'TIME', 'DATETIME'])) {
             $this->data['length'] = '';
             $this->data['defaultvalue'] = "NULL";
-        } else if (in_array($this->data['type'], ['TEXT'])) {
+        } elseif (in_array($this->data['type'], ['TEXT'])) {
             $this->data['length'] = "(0)";
             $this->data['defaultvalue'] = 'NULL';
         } else {
@@ -172,5 +172,4 @@ class Alter
             . "DROP `{$this->data['name']}`";
         return $sql;
     }
-
 }

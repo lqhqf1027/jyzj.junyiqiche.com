@@ -12,7 +12,6 @@ use think\Config;
  */
 class Page extends Base
 {
-
     public function index()
     {
         $diyname = $this->request->param('diyname');
@@ -25,6 +24,7 @@ class Page extends Base
         if (!$page || $page['status'] != 'normal') {
             $this->error(__('No specified page found'));
         }
+        $page->setInc('views');
         $this->view->assign("__PAGE__", $page);
         Config::set('cms.title', $page['title']);
         Config::set('cms.keywords', $page['keywords']);
@@ -33,4 +33,22 @@ class Page extends Base
         return $this->view->fetch('/' . $template);
     }
 
+    /**
+     * 赞与踩
+     */
+    public function vote()
+    {
+        $id = (int)$this->request->post("id");
+        $type = trim($this->request->post("type", ""));
+        if (!$id || !$type) {
+            $this->error(__('Operation failed'));
+        }
+        $page = \addons\cms\model\Page::get($id);
+        if (!$page) {
+            $this->error(__('No specified page found'));
+        }
+        $page->where('id', $id)->setInc($type === 'like' ? 'likes' : 'dislikes', 1);
+        $page = \addons\cms\model\Page::get($id);
+        $this->success(__('Operation completed'), null, ['likes' => $page->likes, 'dislikes' => $page->dislikes, 'likeratio' => $page->likeratio]);
+    }
 }

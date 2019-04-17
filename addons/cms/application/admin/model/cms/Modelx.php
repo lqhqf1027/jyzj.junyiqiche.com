@@ -32,5 +32,4 @@ class Modelx extends Model
     {
         return is_array($value) ? $value : ($value ? explode(',', $value) : []);
     }
-
 }

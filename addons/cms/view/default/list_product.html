@@ -1,78 +1,84 @@
 {layout name="common/layout" /}
 
 <div class="container" id="content-container">
-    <h1>
+
+    <h1 class="category-title">
         {cms:channel name="name" /}
-        <ol class="breadcrumb pull-right">
-            <!-- S 面包屑导航 -->
-            {cms:breadcrumb id="item"}
-            <li><a href="{$item.url}">{$item.name}</a></li>
-            {/cms:breadcrumb}
-            <!-- E 面包屑导航 -->
-        </ol>
+        <div class="more pull-right">
+            <ol class="breadcrumb">
+                <!-- S 面包屑导航 -->
+                {cms:breadcrumb id="item"}
+                <li><a href="{$item.url}">{$item.name}</a></li>
+                {/cms:breadcrumb}
+                <!-- E 面包屑导航 -->
+            </ol>
+        </div>
     </h1>
-    <div class="tabs-wrapper">
-        <!-- S 分类列表 -->
-        <div class="tabs-mark-group plm ptm">
-            <div class="title">{:__('All categories')}：</div>
-
-            <ul class="content list-unstyled list-inline">
-                <li class="classify"></li>
-                <li class="classify"></li>
-                <li class="classify"></li>
-            </ul>
-
+    {if $__FILTERLIST__}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                筛选
+            </h3>
         </div>
-        {cms:pagefilter id="filter" exclude=""}
-        <div class="tabs-group">
-            <div class="title">{$filter.title}:</div>
-            <ul class="content clearfix">
-                {volist name="$filter.content" id="item"}
-                <li class="{$item.active?'active':''}"><a class="nav-link" href="{$item.url}">{$item.title}</a></li>
-                {/volist}
-            </ul>
+        <div class="panel-body">
+            <div class="tabs-wrapper">
+                {cms:pagefilter id="filter" exclude=""}
+                <div class="tabs-group">
+                    <div class="title">{$filter.title}:</div>
+                    <ul class="content clearfix">
+                        {volist name="$filter.content" id="item"}
+                        <li class="{$item.active?'active':''}"><a href="{$item.url}">{$item.title}</a></li>
+                        {/volist}
+                    </ul>
+                </div>
+                {/cms:pagefilter}
+                <!-- E 分类列表 -->
+            </div>
         </div>
-        {/cms:pagefilter}
-        <!-- E 分类列表 -->
     </div>
+    {/if}
 
-    <div class="article-filter">
-        <ul class="nav nav-sort clearfix">
-            <!-- S 排序 -->
-            {cms:pageorder id="order"}
-            <li>
-                <a href="{$order.url}" class="{$order.active?'active':''}">
-                    {$order.title}
-                </a>
-            </li>
-            {/cms:pageorder}
-            <!-- S 排序 -->
-        </ul>
-    </div>
+    <div class="row">
 
-    <div class="product-list">
-        <div class="row">
-            <!-- S 列表 -->
-            {cms:pagelist id="item"}
-            <div class="col-sm-4 col-md-3 product">
-                <div class="card">
-                    <a href="{$item.url}"><div class="image" style="background-image:url('{$item.image}')"></div></a>
-                    <div class="title">
-                        <h2><a href="{$item.url}">{$item.title}</a></h2>
-                    </div>
-                    <div class="operate">
-                        <a href="{$item.url}" class="detail">{:__('View detail')}</a>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span>列表</span>
+
+                        <div class="more">
+                            <ul class="list-unstyled list-inline category-order clearfix">
+                                <!-- S 排序 -->
+                                {cms:pageorder id="order"}
+                                <li><a href="{$order.url}" class="{$order.active?'active':''}">{$order.title}</a></li>
+                                {/cms:pageorder}
+                                <!-- E 排序 -->
+                            </ul>
+                        </div>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="product-list">
+                        <div class="row">
+                            <!-- S 列表 -->
+                            {cms:pagelist id="item"}
+                            {include file="common/item_product" /}
+                            {/cms:pagelist}
+                            <!-- S 列表 -->
+                        </div>
+                        <!-- S 分页栏 -->
+                        <div class="text-center pager">
+                            {cms:pageinfo type="full" /}
+                        </div>
+                        <!-- E 分页栏 -->
+
+                        {if $__PAGELIST__->isEmpty()}
+                        <div class="loadmore loadmore-line loadmore-nodata"><span class="loadmore-tips">暂无数据</span></div>
+                        {/if}
                     </div>
                 </div>
-
             </div>
-            {/cms:pagelist}
-            <!-- S 列表 -->
         </div>
-        <!-- S 分页栏 -->
-        <div class="text-center">
-            {cms:pageinfo type="full" /}
-        </div>
-        <!-- E 分页栏 -->
     </div>
 </div>

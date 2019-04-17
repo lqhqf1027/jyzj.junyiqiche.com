@@ -34,6 +34,24 @@ class Fields extends Model
     {
         $beforeUpdateCallback = function ($row) {
 
+            if (!preg_match("/^([a-zA-Z0-9_]+)$/i", $row['name'])) {
+                throw new Exception("字段只支持字母数字下划线");
+            }
+            if (is_numeric(substr($row['name'], 0, 1))) {
+                throw new Exception("字段不能以数字开始");
+            }
+
+            if ($row->model_id) {
+                $tableFields = \think\Db::name('cms_archives')->getTableFields();
+                if (in_array(strtolower($row['name']), $tableFields)) {
+                    throw new Exception("字段已经在主表存在了");
+                }
+            } else {
+                $tableFields = ['id', 'user_id', 'createtime', 'updatetime'];
+                if (in_array(strtolower($row['name']), $tableFields)) {
+                    throw new Exception("字段为保留字段，请使用其它字段");
+                }
+            }
         };
 
         $afterInsertCallback = function ($row) {
@@ -104,8 +122,10 @@ class Fields extends Model
                     ->getDropSql();
                 try {
                     db()->query($sql);
+                    $fields = Fields::where($field, $model['id'])->field('name')->column('name');
+                    $model->fields = implode(',', $fields);
+                    $model->save();
                 } catch (PDOException $e) {
-
                 }
             }
         });
@@ -137,5 +157,4 @@ class Fields extends Model
     {
         return $this->belongsTo('Diyform', 'diyform_id')->setEagerlyType(0);
     }
-
 }

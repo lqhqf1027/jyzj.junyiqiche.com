@@ -23,5 +23,4 @@ class Comment extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }

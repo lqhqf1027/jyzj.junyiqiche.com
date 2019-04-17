@@ -23,5 +23,4 @@ class Tags extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }

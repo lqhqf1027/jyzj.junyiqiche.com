@@ -7,9 +7,8 @@ use think\Model;
 /**
  * 单页模型
  */
-class Page Extends Model
+class Page extends Model
 {
-
     protected $name = "cms_page";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -46,6 +45,11 @@ class Page Extends Model
         return addon_url('cms/page/index', [':diyname' => $data['diyname']], true, true);
     }
 
+    public function getLikeratioAttr($value, $data)
+    {
+        return ($data['dislikes'] > 0 ? min(1, $data['likes'] / ($data['dislikes'] + $data['likes'])) : ($data['likes'] ? 1 : 0.5)) * 100;
+    }
+
     /**
      * 获取单页列表
      * @param $params
@@ -56,7 +60,7 @@ class Page Extends Model
      */
     public static function getPageList($params)
     {
-        $name = empty($params['name']) ? '' : $params['name'];
+        $type = empty($params['type']) ? '' : $params['type'];
         $condition = empty($params['condition']) ? '' : $params['condition'];
         $field = empty($params['field']) ? '*' : $params['field'];
         $row = empty($params['row']) ? 10 : (int)$params['row'];
@@ -67,10 +71,11 @@ class Page Extends Model
         $imgwidth = empty($params['imgwidth']) ? '' : $params['imgwidth'];
         $imgheight = empty($params['imgheight']) ? '' : $params['imgheight'];
         $orderway = in_array($orderway, ['asc', 'desc']) ? $orderway : 'desc';
+        $cache = !$cache ? false : $cache;
 
-        $where = [];
-        if ($name !== '') {
-            $where['name'] = $name;
+        $where = ['status' => 'normal'];
+        if ($type !== '') {
+            $where['type'] = $type;
         }
         $order = $orderby == 'rand' ? 'rand()' : (in_array($orderby, ['name', 'id', 'createtime', 'updatetime']) ? "{$orderby} {$orderway}" : "id {$orderway}");
 
@@ -85,6 +90,43 @@ class Page Extends Model
         return $list;
     }
 
+    public static function getPageInfo($params)
+    {
+        $sid = empty($params['sid']) ? '' : $params['sid'];
+        $condition = empty($params['condition']) ? '' : $params['condition'];
+        $field = empty($params['field']) ? '*' : $params['field'];
+        $row = empty($params['row']) ? 10 : (int)$params['row'];
+        $orderby = empty($params['orderby']) ? 'nums' : $params['orderby'];
+        $orderway = empty($params['orderway']) ? 'desc' : strtolower($params['orderway']);
+        $limit = empty($params['limit']) ? $row : $params['limit'];
+        $cache = !isset($params['cache']) ? true : (int)$params['cache'];
+        $imgwidth = empty($params['imgwidth']) ? '' : $params['imgwidth'];
+        $imgheight = empty($params['imgheight']) ? '' : $params['imgheight'];
+        $orderway = in_array($orderway, ['asc', 'desc']) ? $orderway : 'desc';
+        $cache = !$cache ? false : $cache;
+        $where = [];
+
+        if ($sid !== '') {
+            $where['id'] = $sid;
+        }
+        $order = $orderby == 'rand' ? 'rand()' : (in_array($orderby, ['name', 'id', 'createtime', 'updatetime']) ? "{$orderby} {$orderway}" : "id {$orderway}");
+
+        $data = self::where($where)
+            ->where($condition)
+            ->field($field)
+            ->order($order)
+            ->limit($limit)
+            ->cache($cache)
+            ->find();
+        if ($data) {
+            $list = [$data];
+            self::render($list, $imgwidth, $imgheight);
+            return reset($list);
+        } else {
+            return false;
+        }
+    }
+
     public static function render(&$list, $imgwidth, $imgheight)
     {
         $width = $imgwidth ? 'width="' . $imgwidth . '"' : '';
@@ -97,5 +139,4 @@ class Page Extends Model
         }
         return $list;
     }
-
 }

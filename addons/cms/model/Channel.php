@@ -5,25 +5,30 @@ namespace addons\cms\model;
 use think\Cache;
 use think\Db;
 use think\Model;
+use think\View;
 
 /**
  * 栏目模型
  */
-class Channel Extends Model
+class Channel extends Model
 {
-
     protected $name = "cms_channel";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
     // 定义时间戳字段名
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
+
     // 追加属性
     protected $append = [
         'url',
         'fullurl'
     ];
     protected static $config = [];
+
+    protected static $parentIds = null;
+
+    protected static $outlinkParentIds = null;
 
     protected static function init()
     {
@@ -49,20 +54,90 @@ class Channel Extends Model
         return cdnurl($value);
     }
 
+    public function getOutlinkAttr($value, $data)
+    {
+        $indexUrl = $view_replace_str = config('view_replace_str.__PUBLIC__');
+        $indexUrl = rtrim($indexUrl, '/');
+        return str_replace('__INDEX__', $indexUrl, $value);
+    }
+
+    public function getTagcolorAttr($value, $data)
+    {
+        $color = ['primary', 'default', 'success', 'warning', 'danger'];
+        $index = $data['id'] % count($color);
+        return isset($color[$index]) ? $color[$index] : $color[0];
+    }
+
+    /**
+     * 判断是否拥有子列表
+     * @param $value
+     * @param $data
+     * @return bool|mixed
+     */
     public function getHasChildAttr($value, $data)
     {
         static $checked = [];
         if (isset($checked[$data['id']])) {
             return $checked[$data['id']];
         }
-        $list = self::where('parent_id', '>', 0)->field('parent_id')->cache(true)->select();
-        foreach ($list as $k => $v) {
-            $checked[$v['parent_id']] = true;
+        if (is_null(self::$parentIds)) {
+            self::$parentIds = self::where('parent_id', '>', 0)->cache(false)->where('status', 'normal')->column('parent_id');
         }
-        if (isset($checked[$data['id']])) {
-            return $checked[$data['id']];
+        if (self::$parentIds && in_array($data['id'], self::$parentIds)) {
+            return true;
         }
         return false;
+    }
+
+    /**
+     * 判断是否当前页面
+     * @param $value
+     * @param $data
+     * @return bool
+     */
+    public function getIsActiveAttr($value, $data)
+    {
+        $url = request()->url();
+        $channel = View::instance()->__CHANNEL__;
+        if (($channel && ($channel['id'] == $this->id || $channel['parent_id'] == $this->id)) || $this->url == $url) {
+            return true;
+        } else if ($this->has_child) {
+            if (is_null(self::$outlinkParentIds)) {
+                self::$outlinkParentIds = self::where('type', 'link')->where('status', 'normal')->column('outlink,parent_id');
+            }
+            if (self::$outlinkParentIds && isset(self::$outlinkParentIds[$url]) && self::$outlinkParentIds[$url] == $this->id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取栏目所有子级的ID
+     * @param mixed $ids      栏目ID或集合ID
+     * @param bool  $withself 是否包含自身
+     * @return array
+     */
+    public static function getChannelChildrenIds($ids, $withself = true)
+    {
+        $cacheName = 'childrens-' . $ids . '-' . $withself;
+        $result = Cache::get($cacheName);
+        if ($result === false) {
+            $channelList = Channel::where('status', 'normal')
+                ->order('weigh desc,id desc')
+                ->cache(true)
+                ->select();
+
+            $result = [];
+            $tree = \fast\Tree::instance();
+            $tree->init(collection($channelList)->toArray(), 'parent_id');
+            $channelIds = is_array($ids) ? $ids : explode(',', $ids);
+            foreach ($channelIds as $index => $channelId) {
+                $result = array_merge($result, $tree->getChildrenIds($channelId, $withself));
+            }
+            Cache::set($cacheName, $result);
+        }
+        return $result;
     }
 
     /**
@@ -88,21 +163,23 @@ class Channel Extends Model
         $imgwidth = empty($tag['imgwidth']) ? '' : $tag['imgwidth'];
         $imgheight = empty($tag['imgheight']) ? '' : $tag['imgheight'];
         $orderway = in_array($orderway, ['asc', 'desc']) ? $orderway : 'desc';
+        $cache = !$cache ? false : $cache;
         $where = ['status' => 'normal'];
 
         if ($type === 'top') {
             //顶级分类
             $where['parent_id'] = 0;
-        } else if ($type === 'brother') {
+        } elseif ($type === 'brother') {
             $subQuery = self::where('id', 'in', $typeid)->field('parent_id')->buildSql();
             //同级
-            $where['parent_id'] = ['exp', Db::raw(' IN ' . $subQuery)];
-        } else if ($type === 'son') {
+            $where['parent_id'] = ['exp', Db::raw(' IN ' . '(' . $subQuery . ')')];
+        } elseif ($type === 'son') {
             $subQuery = self::where('parent_id', 'in', $typeid)->field('id')->buildSql();
             //子级
-            $where['id'] = ['exp', Db::raw(' IN ' . $subQuery)];
-        } else if ($type === 'sons') {
+            $where['id'] = ['exp', Db::raw(' IN ' . '(' . $subQuery . ')')];
+        } elseif ($type === 'sons') {
             //所有子级
+            $where['id'] = ['in', self::getChannelChildrenIds($typeid)];
         } else {
             if ($typeid !== '') {
                 $where['id'] = ['in', $typeid];
@@ -126,8 +203,8 @@ class Channel Extends Model
     /**
      * 渲染数据
      * @param array $list
-     * @param int $imgwidth
-     * @param int $imgheight
+     * @param int   $imgwidth
+     * @param int   $imgheight
      * @return array
      */
     public static function render(&$list, $imgwidth, $imgheight)
@@ -138,6 +215,7 @@ class Channel Extends Model
             $v['hasimage'] = $v->getData('image') ? true : false;
             $v['textlink'] = '<a href="' . $v['url'] . '">' . $v['name'] . '</a>';
             $v['channellink'] = '<a href="' . $v['url'] . '">' . $v['name'] . '</a>';
+            $v['outlink'] = $v['outlink'];
             $v['imglink'] = '<a href="' . $v['url'] . '"><img src="' . $v['image'] . '" border="" ' . $width . ' ' . $height . ' /></a>';
             $v['img'] = '<img src="' . $v['image'] . '" border="" ' . $width . ' ' . $height . ' />';
         }
@@ -172,7 +250,7 @@ class Channel Extends Model
             $list[] = ['name' => $channel['name'], 'url' => $channel['url']];
         }
         if ($archives) {
-            $list[] = ['name' => $archives['title'], 'url' => $archives['url']];
+            //$list[] = ['name' => $archives['title'], 'url' => $archives['url']];
         }
         if ($tags) {
             $list[] = ['name' => $tags['name'], 'url' => $tags['url']];
@@ -185,7 +263,7 @@ class Channel Extends Model
 
     /**
      * 获取导航栏目列表HTML
-     * @param $channel
+     * @param       $channel
      * @param array $tag
      * @return mixed|string
      * @throws \think\db\exception\DataNotFoundException
@@ -199,7 +277,7 @@ class Channel Extends Model
         $maxLevel = !isset($tag['maxlevel']) ? 0 : $tag['maxlevel'];
         $cacheName = 'nav-' . md5(serialize($tag));
         $result = Cache::get($cacheName);
-        if (!$result) {
+        if ($result === false) {
             $channelList = Channel::where($condition)
                 ->where('status', 'normal')
                 ->order('weigh desc,id desc')
@@ -249,5 +327,4 @@ class Channel Extends Model
     {
         return $this->belongsTo('Modelx', 'model_id')->setEagerlyType(0);
     }
-
 }

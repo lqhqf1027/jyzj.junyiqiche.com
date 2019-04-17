@@ -9,9 +9,8 @@ use think\Model;
 /**
  * 文章模型
  */
-class Archives Extends Model
+class Archives extends Model
 {
-
     protected $name = "cms_archives";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -64,14 +63,22 @@ class Archives Extends Model
         return cdnurl($value, true);
     }
 
+    /**
+     * 获取格式化的内容
+     * @param $value
+     * @param $data
+     * @return mixed|null|string|string[]
+     */
     public function getContentAttr($value, $data)
     {
         //如果内容中包含有付费标签
+        $value = $data['content'];
         $value = str_replace(['##paidbegin##', '##paidend##'], ['<paid>', '</paid>'], $value);
+        $value = str_replace(['$$paidbegin$$', '$$paidend$$'], ['<paid>', '</paid>'], $value);
         $pattern = '/<paid>(.*?)<\/paid>/is';
-        if (preg_match($pattern, $value) && !$this->getAttr('ispay')) {
+        if (preg_match($pattern, $value) && !$this->getAttr('ispaid')) {
             $payurl = addon_url('cms/order/submit', ['id' => $data['id']]);
-            $value = preg_replace($pattern, "<div class='alert alert-warning alert-paid'><a href='{$payurl}' target='_blank'>内容已经隐藏，点击付费后查看</a></div>", $value);
+            $value = preg_replace($pattern, "<div class='alert alert-warning alert-paid'><a href='{$payurl}' class='btn-paynow' target='_blank'>内容已经隐藏，点击付费后查看</a></div>", $value);
         }
         return $value;
     }
@@ -100,11 +107,56 @@ class Archives Extends Model
      */
     public function getIspayAttr($value, &$data)
     {
-        if (isset($data['ispay'])) {
-            return $data['ispay'];
+        return $this->getAttr('ispaid');
+    }
+
+    /**
+     * 判断是否支付
+     */
+    public function getIspaidAttr($value, &$data)
+    {
+        if (isset($data['ispaid'])) {
+            return $data['ispaid'];
         }
-        $data['ispay'] = Order::checkOrder($data['id']);
-        return $data['ispay'];
+        $data['ispaid'] = Order::checkOrder($data['id']);
+        return $data['ispaid'];
+    }
+
+    /**
+     * 判断是否是部分内容付费
+     * @param $value
+     * @param $data
+     * @return bool
+     */
+    public function getIsPaidPartOfContentAttr($value, $data)
+    {
+        $value = $data['content'];
+        $result = preg_match('/\$\$paidbegin\$\$(.*?)\$\$paidend\$\$/is', $value)
+            || preg_match('/##paidbegin##(.*?)##paidend##/is', $value)
+            || preg_match('/<paid>(.*?)<\/paid>/is', $value);
+        return $result;
+    }
+
+    /**
+     * 获取下载地址列表
+     * @param $value
+     * @param $data
+     * @return array
+     */
+    public function getDownloadurlListAttr($value, $data)
+    {
+        $titleArr = ['baidu' => '百度网盘', 'local' => '本地'];
+        $downloadurl = (array)json_decode($data['downloadurl'], true);
+        $list = [];
+        foreach ($downloadurl as $index => $item) {
+            $urlArr = explode(' ', $item);
+            $result['name'] = $index;
+            $result['title'] = isset($titleArr[$index]) ? $titleArr[$index] : '其它';
+            $result['url'] = $urlArr[0];
+            $result['password'] = isset($urlArr[1]) ? $urlArr[1] : '';
+            $list[] = $result;
+        }
+        return $list;
     }
 
     public function getTagslistAttr($value, $data)
@@ -133,13 +185,30 @@ class Archives Extends Model
         return ($data['dislikes'] > 0 ? min(1, $data['likes'] / ($data['dislikes'] + $data['likes'])) : ($data['likes'] ? 1 : 0.5)) * 100;
     }
 
+    public function getStyleTextAttr($value, $data)
+    {
+        $color = $this->getAttr("style_color");
+        $color = $color ? $color : "inherit";
+        $bold = $this->getAttr("style_bold") ? "bold" : "normal";
+        return "color:{$color};font-weight:{$bold};";
+    }
+
+
+    public function getStyleBoldAttr($value, $data)
+    {
+        return in_array('b', explode('|', $data['style']));
+    }
+
+    public function getStyleColorAttr($value, $data)
+    {
+        $result = preg_match("/(#([0-9a-z]{6}))/i", $data['style'], $matches);
+        return $result ? $matches[1] : '';
+    }
+
     /**
      * 获取文档列表
      * @param $tag
      * @return array|false|\PDOStatement|string|\think\Collection
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
     public static function getArchivesList($tag)
     {
@@ -159,6 +228,7 @@ class Archives Extends Model
         $imgheight = empty($tag['imgheight']) ? '' : $tag['imgheight'];
         $addon = empty($tag['addon']) ? false : $tag['addon'];
         $orderway = in_array($orderway, ['asc', 'desc']) ? $orderway : 'desc';
+        $cache = !$cache ? false : $cache;
         $where = ['status' => 'normal'];
 
         $where['deletetime'] = ['exp', Db::raw('IS NULL')]; //by erastudio
@@ -166,7 +236,16 @@ class Archives Extends Model
             $where['model_id'] = ['in', $model];
         }
         if ($channel !== '') {
-            $where['channel_id'] = ['in', $channel];
+            if ($type === 'son') {
+                $subQuery = Channel::where('parent_id', 'in', $channel)->field('id')->buildSql();
+                //子级
+                $where['channel_id'] = ['exp', Db::raw(' IN ' . '(' . $subQuery . ')')];
+            } elseif ($type === 'sons') {
+                //所有子级
+                $where['channel_id'] = ['in', Channel::getChannelChildrenIds($channel)];
+            } else {
+                $where['channel_id'] = ['in', $channel];
+            }
         }
         //如果有设置标志,则拆分标志信息并构造condition条件
         if ($flag !== '') {
@@ -175,19 +254,22 @@ class Archives Extends Model
                 foreach (explode('&', $flag) as $k => $v) {
                     $arr[] = "FIND_IN_SET('{$v}', flag)";
                 }
-                if ($arr)
+                if ($arr) {
                     $condition .= "(" . implode(' AND ', $arr) . ")";
+                }
             } else {
                 $condition .= ($condition ? ' AND ' : '');
                 $arr = [];
                 foreach (array_merge(explode(',', $flag), explode('|', $flag)) as $k => $v) {
                     $arr[] = "FIND_IN_SET('{$v}', flag)";
                 }
-                if ($arr)
+                if ($arr) {
                     $condition .= "(" . implode(' OR ', $arr) . ")";
+                }
             }
         }
         $order = $orderby == 'rand' ? 'rand()' : (in_array($orderby, ['createtime', 'updatetime', 'views', 'weigh', 'id']) ? "{$orderby} {$orderway}" : "createtime {$orderway}");
+        $order = $orderby == 'weigh' ? $order . ',id DESC' : $order;
 
         $archivesModel = self::with('channel');
         // 如果有筛选标签,则采用子查询
@@ -225,7 +307,7 @@ class Archives Extends Model
                 if ($addon == 'true') {
                     $query->field('content', true);
                 } else {
-                    $query->field($addon);
+                    $query->field("id," . $addon);
                 }
                 $addonList = $query
                     ->where('id', 'in', array_map(function ($value) {
@@ -243,9 +325,7 @@ class Archives Extends Model
                     //循环副表
                     foreach ($addonList as $subindex => $subitem) {
                         if ($subitem['id'] == $item['id']) {
-                            array_walk($fieldsContentList, function ($content, $field) use (&$subitem) {
-                                $subitem[$field . '_text'] = isset($content[$subitem[$field]]) ? $content[$subitem[$field]] : $subitem[$field];
-                            });
+                            self::appendTextAttr($fieldsContentList, $subitem);
                             //$item = array_merge($item, $subitem);
                             $item->setData($subitem);
                             unset($addonList[$subindex]);
@@ -264,10 +344,36 @@ class Archives Extends Model
     }
 
     /**
+     * 追加_text属性值
+     * @param $fieldsContentList
+     * @param $addon
+     */
+    public static function appendTextAttr(&$fieldsContentList, &$addon)
+    {
+        //附加列表字段
+        array_walk($fieldsContentList, function ($content, $field) use (&$addon) {
+            if (isset($addon[$field])) {
+                if (isset($content[$addon[$field]])) {
+                    $value = $content[$addon[$field]];
+                } else {
+                    $arr = explode(',', $addon[$field]);
+                    foreach ($arr as $index => &$item) {
+                        $item = isset($content[$item]) ? $content[$item] : $item;
+                    }
+                    $value = implode(',', $arr);
+                }
+            } else {
+                $value = '';
+            }
+            $addon[$field . '_text'] = $value;
+        });
+    }
+
+    /**
      * 渲染数据
      * @param array $list
-     * @param int $imgwidth
-     * @param int $imgheight
+     * @param int   $imgwidth
+     * @param int   $imgheight
      * @return array
      */
     public static function render(&$list, $imgwidth, $imgheight)
@@ -295,17 +401,6 @@ class Archives Extends Model
         $imgwidth = empty($tag['imgwidth']) ? '' : $tag['imgwidth'];
         $imgheight = empty($tag['imgheight']) ? '' : $tag['imgheight'];
         return self::render($list, $imgwidth, $imgheight);
-    }
-
-    /**
-     * 获取分页信息
-     * @param array $list
-     * @param array $tag
-     * @return string
-     */
-    public static function getPageInfo($list, $tag)
-    {
-        return '';
     }
 
     /**
@@ -368,11 +463,18 @@ class Archives Extends Model
     }
 
     /**
+     * 关联模型
+     */
+    public function model()
+    {
+        return $this->belongsTo("Modelx", 'model_id')->setEagerlyType(1);
+    }
+
+    /**
      * 关联栏目模型
      */
     public function channel()
     {
         return $this->belongsTo("Channel")->field('id,name,image,diyname,items')->setEagerlyType(1);
     }
-
 }

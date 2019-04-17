@@ -27,7 +27,7 @@
   <view class="archives-list">
     <view class="zan-panel">
       <block wx:for="{{ archivesList }}" wx:key="key">
-        <navigator url="{{ $item.model_id==2 ? '../product/detail?id='+item.id : '../news/detail?id='+item.id }}">
+        <navigator url="{{ item.model_id == 2 ? '../product/detail?id='+item.id : '../news/detail?id='+item.id }}">
           <view class="zan-card">
             <view class="zan-card__thumb">
               <view class="image" style="background-image:url('{{item.image}}')"></view>

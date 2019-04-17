@@ -13,14 +13,13 @@ use think\Exception;
 /**
  * 栏目表
  *
- * @icon fa fa-circle-o
+ * @icon fa fa-list
  */
 class Channel extends Backend
 {
-
     protected $channelList = [];
     protected $modelList = [];
-    protected $multiFields = ['weigh', 'status'];
+    protected $multiFields = ['weigh', 'status', 'iscontribute', 'isnav'];
 
     /**
      * Channel模型对象
@@ -50,7 +49,6 @@ class Channel extends Backend
      */
     public function index()
     {
-
         if ($this->request->isAjax()) {
             $search = $this->request->request("search");
             $model_id = $this->request->request("model_id");
@@ -139,7 +137,7 @@ class Channel extends Backend
         if ($act == 'remove') {
             ChannelAdmin::where('admin_id', $ids)->delete();
             $this->success('删除成功！');
-        } else if ($act == 'authorization') {
+        } elseif ($act == 'authorization') {
             $selected = ChannelAdmin::getAdminChanneIds($ids);
             $all = collection(ChannelModel::order("weigh desc,id desc")->select())->toArray();
             foreach ($all as $k => $v) {
@@ -160,7 +158,7 @@ class Channel extends Backend
                 ];
             }
             $this->success('成功', '', $channelList);
-        } else if ($act == 'save') {
+        } elseif ($act == 'save') {
             \think\Db::startTrans();
             try {
                 ChannelAdmin::where('admin_id', $ids)->delete();
@@ -181,7 +179,6 @@ class Channel extends Backend
                 $this->error($e->getMessage());
             }
             $this->success("保存成功!");
-
         }
 
         if ($this->request->isAjax()) {
@@ -242,7 +239,7 @@ class Channel extends Backend
             } else {
                 $this->success();
             }
-        } else if ($name == 'name') {
+        } elseif ($name == 'name') {
             $nameArr = array_filter(explode("\n", str_replace("\r\n", "\n", $value)));
             if (count($nameArr) > 1) {
                 foreach ($nameArr as $index => $item) {
@@ -261,5 +258,4 @@ class Channel extends Backend
             }
         }
     }
-
 }

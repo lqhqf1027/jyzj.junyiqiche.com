@@ -14,7 +14,6 @@ use think\Validate;
  */
 class Archives extends Frontend
 {
-
     protected $layout = 'default';
     protected $noNeedLogin = [];
     protected $noNeedRight = ['*'];
@@ -133,7 +132,7 @@ class Archives extends Frontend
             }
         }
         $tree = Tree::instance()->init($channelList, 'parent_id');
-        $channelOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", $archives ? $archives['channel_id'] : '', $disabledIds);
+        $channelOptions = $tree->getTree(0, "<option model='@model_id' value=@id @selected @disabled>@spacer@name</option>", $archives ? $archives['channel_id'] : '', $disabledIds);
         $this->view->assign('channelOptions', $channelOptions);
         $this->view->assign([
             'archives'       => $archives,
@@ -190,7 +189,6 @@ class Archives extends Frontend
         $archives_id = $this->request->post('archives_id');
         $channel = Channel::get($channel_id, 'model');
         if ($channel && $channel['type'] === 'list') {
-
             $values = [];
             if ($archives_id) {
                 $values = db($channel['model']['table'])->where('id', $archives_id)->find();
@@ -207,14 +205,16 @@ class Archives extends Frontend
                 $v->rule = str_replace(',', '; ', $v->rule);
                 if (in_array($v->type, ['checkbox', 'lists', 'images'])) {
                     $checked = '';
-                    if ($v['minimum'] && $v['maximum'])
+                    if ($v['minimum'] && $v['maximum']) {
                         $checked = "{$v['minimum']}~{$v['maximum']}";
-                    else if ($v['minimum'])
+                    } elseif ($v['minimum']) {
                         $checked = "{$v['minimum']}~";
-                    else if ($v['maximum'])
+                    } elseif ($v['maximum']) {
                         $checked = "~{$v['maximum']}";
-                    if ($checked)
+                    }
+                    if ($checked) {
                         $v->rule .= (';checked(' . $checked . ')');
+                    }
                 }
                 if (in_array($v->type, ['checkbox', 'radio']) && stripos($v->rule, 'required') !== false) {
                     $v->rule = str_replace('required', 'checked', $v->rule);
@@ -231,5 +231,13 @@ class Archives extends Frontend
             $this->error(__('请选择栏目'));
         }
         $this->error(__('参数不能为空', 'ids'));
+    }
+
+    public function tags_autocomplete()
+    {
+        $q = $this->request->request('q');
+        $list = \addons\cms\model\Tags::where('name', 'like', '%' . $q . '%')->column('name');
+        echo json_encode($list);
+        return;
     }
 }

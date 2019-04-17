@@ -8,6 +8,7 @@ use app\common\library\Auth;
 use app\common\library\Menu;
 use fast\Tree;
 use think\Addons;
+use think\exception\PDOException;
 use think\Request;
 use think\View;
 
@@ -74,9 +75,10 @@ class Cms extends Addons
                                     ['name' => 'cms/fields/add', 'title' => '添加'],
                                     ['name' => 'cms/fields/edit', 'title' => '修改'],
                                     ['name' => 'cms/fields/del', 'title' => '删除'],
+                                    ['name' => 'cms/fields/duplicate', 'title' => '复制'],
                                     ['name' => 'cms/fields/multi', 'title' => '批量更新'],
                                 ],
-                                'remark'  => '用于管理模型或表单的字段，进行相关的增删改操作'
+                                'remark'  => '用于管理模型或表单的字段，进行相关的增删改操作，灰色为主表字段无法修改'
                             ]
                         ],
                         'remark'  => '在线添加修改删除模型，管理模型字段和相关模型数据'
@@ -157,6 +159,7 @@ class Cms extends Addons
                             ['name' => 'cms/diydata/edit', 'title' => '修改'],
                             ['name' => 'cms/diydata/del', 'title' => '删除'],
                             ['name' => 'cms/diydata/multi', 'title' => '批量更新'],
+                            ['name' => 'cms/diydata/import', 'title' => '导入'],
                         ],
                         'remark'  => '可在线管理自定义表单的数据列表'
                     ],
@@ -205,6 +208,37 @@ class Cms extends Addons
     public function disable()
     {
         Menu::disable('cms');
+    }
+
+    /**
+     * 应用初始化
+     */
+    public function appInit()
+    {
+        // 自定义路由变量规则
+        \think\Route::pattern([
+            'diyname' => '\w+',
+            'id'      => '\d+',
+        ]);
+    }
+
+    /**
+     * 脚本替换
+     * @param \think\Response $response
+     */
+    public function responseSend(\think\Response $response)
+    {
+        $style = '';
+        $script = '';
+        $content = $response->getContent();
+        $result = preg_replace_callback("/<(script|style)\s(data\-render=\"(script|style)\")([\s\S]*?)>([\s\S]*?)<\/(script|style)>/i", function ($match) use (&$style, &$script) {
+            if (isset($match[1]) && in_array($match[1], ['style', 'script'])) {
+                ${$match[1]} .= str_replace($match[2], '', $match[0]);
+            }
+            return '';
+        }, $content);
+        $content = str_replace(['{__STYLE__}', '{__SCRIPT__}'], [$style, $script], $result ? $result : $content);
+        $response->content($content);
     }
 
     /**
