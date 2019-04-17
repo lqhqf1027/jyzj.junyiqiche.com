@@ -28,6 +28,7 @@ return array (
     'user' => 'User',
     'example' => 'Example',
     'message' => '员工权限配置',
+    'shares' => '分享配置',
   ),
   'mail_type' => '1',
   'mail_smtp_host' => 'smtp.qq.com',
@@ -45,5 +46,10 @@ return array (
     'message5' => '内勤',
     'message6' => '销售顾问',
     'message7' => '销售经理',
+    'message8' => '车管',
   ),
+  'invite_bg_img' => '/jyzj.junyiqiche.com/uploads/20190417/50c0d3bf5e7bedcb8fcd81fc80c6ab61.jpg',
+  'card_share_title' => '',
+  'card_share_body' => '',
+  'card_share_img' => '',
 );
