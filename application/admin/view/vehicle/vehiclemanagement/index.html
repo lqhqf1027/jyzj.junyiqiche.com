@@ -1,6 +1,275 @@
+<style type="text/css">
+    .sm-st {
+        background: #fff;
+        padding: 20px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        margin-bottom: 20px;
+        -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    .sm-st-icon {
+        width: 60px;
+        height: 60px;
+        display: inline-block;
+        line-height: 60px;
+        text-align: center;
+        font-size: 30px;
+        background: #eee;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        float: left;
+        margin-right: 10px;
+        color: #fff;
+    }
+
+    .sm-st-info {
+        font-size: 12px;
+        padding-top: 2px;
+    }
+
+    .sm-st-info span {
+        display: block;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .orange {
+        background: #fa8564 !important;
+    }
+
+    .tar {
+        background: #45cf95 !important;
+    }
+
+    .sm-st .green {
+        background: #86ba41 !important;
+    }
+
+    .pink {
+        background: #AC75F0 !important;
+    }
+
+    .yellow-b {
+        background: #fdd752 !important;
+    }
+
+    .stat-elem {
+
+        background-color: #fff;
+        padding: 18px;
+        border-radius: 40px;
+
+    }
+
+    .stat-info {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 5px;
+        margin-top: -5px;
+        padding: 8px;
+        -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+        font-style: italic;
+    }
+
+    .stat-icon {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .st-red {
+        background-color: #F05050;
+    }
+
+    .st-green {
+        background-color: #27C24C;
+    }
+
+    .st-violet {
+        background-color: #7266ba;
+    }
+
+    .st-blue {
+        background-color: #23b7e5;
+    }
+
+    .stats .stat-icon {
+        color: #28bb9c;
+        display: inline-block;
+        font-size: 26px;
+        text-align: center;
+        vertical-align: middle;
+        width: 50px;
+        float: left;
+    }
+
+    .stat {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .stat .value {
+        font-size: 20px;
+        line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 500;
+    }
+
+    .stat .name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .stat.lg .value {
+        font-size: 26px;
+        line-height: 28px;
+    }
+
+    .stat.lg .name {
+        font-size: 16px;
+    }
+
+    .stat-col .progress {
+        height: 2px;
+    }
+
+    .stat-col .progress-bar {
+        line-height: 2px;
+        height: 2px;
+    }
+
+    .item {
+        padding: 30px 0;
+    }
+
+    .carStatus {
+        border-right: 2px solid black;
+        /* border-radius: 5px; */
+    }
+
+    .carStatus h3 {
+        font-weight: 600;
+    }
+</style>
+
 <div class="panel panel-default panel-intro">
-    
+
     <div class="panel-heading">
+        <div class="row">
+            <div class="col-sm-3 col-xs-6">
+                <div class="sm-st clearfix">
+                    <span class="sm-st-icon st-red"><i class="fa fa-car"></i></span>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info">
+                                <span class="text-danger" id="peccancy">{$total_violation}</span>
+                                {:__('车辆总违章数（台）')}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-6">
+                <div class="sm-st clearfix">
+                    <span class="sm-st-icon st-violet"><i class="fa fa-car"></i></span>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info" style="border-right: 1px solid gray" >
+                                <span class="text-warning" id="year_inspect">0</span>
+                                {:__('即需年检车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info">
+                                <span class="text-danger" id="year_overdue">0</span>
+                                {:__('年检已过期车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-6">
+                <div class="sm-st clearfix">
+                    <span class="sm-st-icon st-blue"><i class="fa fa-car"></i></span>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info" style="border-right: 1px solid gray">
+                                <span class="text-warning" id="strong">0</span>
+                                {:__('交强险即需续保车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info">
+                                <span class="text-danger" id="strong_overdue">0</span>
+                                {:__('交强险已过期车辆（台）')}
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-6">
+                <div class="sm-st clearfix">
+                    <span class="sm-st-icon st-green"><i class="fa fa-car"></i></span>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info" style="border-right: 1px solid gray">
+                                <span class="text-warning" id="business">0</span>
+                                {:__('商业险即需续保车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12 col-xs-6 col-md-4" >
+
+
+                            <div class="sm-st-info">
+                                <span class="text-danger" id="business_overdue">0</span>
+                                {:__('商业险已过期车辆（台）')}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {:build_heading(null,FALSE)}
         <ul class="nav nav-tabs" data-field="type">
             <li class="active"><a href="#t-all" data-value="" data-toggle="tab">{:__('All')}</a></li>
@@ -8,7 +277,7 @@
             <li><a href="#t-{$key}" data-value="{$key}" data-toggle="tab">{$vo}</a></li>
             {/foreach}
         </ul>
-    </div>
+</div>
 
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
@@ -16,6 +285,8 @@
                 <div class="widget-body no-padding">
                     <div id="toolbar" class="toolbar">
                         <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-info btn-peccancy" title="{:__('查询')}"><i
+                                class="fa fa-search"></i> {:__('批量查询违章')}</a>
                         <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('vehicle/vehiclemanagement/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
                         <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('vehicle/vehiclemanagement/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
                         <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('vehicle/vehiclemanagement/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->

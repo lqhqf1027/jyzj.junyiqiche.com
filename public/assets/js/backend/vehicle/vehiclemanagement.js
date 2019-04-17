@@ -15,8 +15,38 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             var table = $("#table");
+            // 绑定TAB事件
+            $('.panel-heading ul[data-field] li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                switch (e.currentTarget.innerHTML) {
+                    case '按揭（新车）':
+                        Controller.api.show_and_hide_table(table, 'show', ['payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin']);
+                        Controller.api.show_and_hide_table(table, 'hide', ['orderdetails.subordinate_branch']);
+                        break;
+                    case '按揭（二手车）':
+                        break;
+                    case '纯租':
+                        break;
+                    case '全款（新车）':
+                        table.bootstrapTable('showColumn', 'orderdetails.subordinate_branch');
+                        Controller.api.show_and_hide_table(table, 'show', ['orderdetails.subordinate_branch']);
+                        Controller.api.show_and_hide_table(table, 'hide', ['payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin']);
+                        break;
+                    case '全款（二手车）':
+                        break;
+                    case '转租':
+                        break;
+                    case '挂靠':
+                        break;
+                    case '全部':
+                        Controller.api.show_and_hide_table(table, 'show', ['orderdetails.subordinate_branch', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin']);
+                        break;
+                }
 
-            $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索：客户姓名";};
+            });
+
+            $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                return "快速搜索：客户姓名";
+            };
 
             // 初始化表格
             table.bootstrapTable({
@@ -26,8 +56,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
-                        {field: 'username', title: __('Username')},
+                        {field: 'id', title: __('Id'),},
+                        {
+                            field: 'username', title: __('Username'), formatter: function (value, row, index) {
+                                // if(!row.orderdetails.is_it_illegal){
+                                //     return value;
+                                // }
+                                return row.orderdetails.is_it_illegal == 'no_queries' ? value : row.orderdetails.is_it_illegal == 'violation_of_regulations' ? value + ' <span class=\'label label-danger\' style=\'cursor: pointer\'>有违章</span>' : value + ' <span class=\'label label-success\' style=\'cursor: pointer\'>无违章</span>';
+                            }
+                        },
                         {field: 'phone', title: __('Phone')},
                         {field: 'id_card', title: __('Id_card')},
                         {field: 'models_name', title: __('Models_name')},
@@ -134,9 +171,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     extend: 'data-toggle="tooltip"',
                                     classname: 'btn btn-xs btn-success btn-modifying_data',
                                     visible: function (row) {
-                                        return row.lift_car_status == 'yes'? true : false;
+                                        return row.lift_car_status == 'yes' ? true : false;
                                     }
                                 },
+
                                 {
                                     name: 'search',
                                     icon: 'fa fa-search',
@@ -167,9 +205,171 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             table.on('load-success.bs.table', function (e, data) {
-                table.bootstrapTable('hideColumn',['id','username']);
-                // console.log(data);
-                //                 // console.log(Config.tables);
+
+            });
+            /**
+             * 批量查询违章
+             */
+            $('.btn-peccancy').on("click", function () {
+                var ids = [];
+                var tableRow = Controller.api.selectIdsRow(table);//获取选中的行数据
+                var flag = -1;
+                var page = table.bootstrapTable('getData');
+
+                var closeLay = Layer.confirm("请选择要查询的客户数据", {
+                    title: '查询数据',
+                    btn: ["选中项(" + tableRow.length + "条)", "本页(" + page.length + "条)"],
+                    success: function (layero, index) {
+                        $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                    }
+                    ,
+                    //选中项
+                    yes: function (index, layero) {
+
+                        if (tableRow.length < 1) {
+                            Layer.alert('数据不能为空!', {icon: 5});
+                            return false;
+                        }
+                        ids = [];
+                        for (var i in tableRow) {
+                            if (!tableRow[i]['orderdetails']['licensenumber'] || tableRow[i]['orderdetails']['licensenumber'] == '') {
+                                layer.open({
+                                    type: 0,
+                                    content: '选中行中，客户姓名为<span class="text-danger">' + tableRow[i]['username'] + '</span>的用户没有填写车牌号，请添加后查询' //这里content是一个普通的String
+                                });
+                                return;
+                            }
+
+                            if (!tableRow[i]['orderdetails']['engine_number'] || tableRow[i]['orderdetails']['engine_number'] == '') {
+                                layer.open({
+                                    type: 0,
+                                    content: '选中行中，客户姓名为<span class="text-danger">' + tableRow[i]['username'] + '</span>的用户没有填写发动机号，请添加后查询' //这里content是一个普通的String
+                                });
+                                return;
+                            }
+
+                            if (!tableRow[i]['orderdetails']['frame_number'] || tableRow[i]['orderdetails']['frame_number'] == '') {
+                                layer.open({
+                                    type: 0,
+                                    content: '选中行中，客户姓名为<span class="text-danger">' + tableRow[i]['username'] + '</span>的用户没有填写车架号，请添加后查询' //这里content是一个普通的String
+                                });
+                                return;
+                            }
+                            ids.push({
+                                hphm: Controller.api.trim(tableRow[i]['orderdetails']['licensenumber']).substr(0, 2),
+                                hphms: Controller.api.trim(tableRow[i]['orderdetails']['licensenumber']),
+                                engineno: Controller.api.trim(tableRow[i]['orderdetails']['engine_number']),
+                                classno: Controller.api.trim(tableRow[i]['orderdetails']['frame_number']),
+                                order_id: tableRow[i]['id'],
+                                username: tableRow[i]['username'],
+                            });
+                        }
+
+
+                        Fast.api.ajax({
+                            url: 'vehicle/vehiclemanagement/sendMessagePerson',
+                            data: {ids}
+
+                        }, function (data, ret) {
+                            var html = '';
+                            html += '<h3 style="text-align: center">总成功数：' + data['success_num'] + '，总失败数：' + data['error_num'] + '</h3>';
+
+                            html += '<table class="table table-bordered table-striped table-hover">\n' +
+                                '    <thead>\n' +
+                                '\n' +
+                                '    <tr>\n' +
+                                '\n' +
+                                '        <th style="text-align: center;vertical-align: middle !important;">客户姓名</th>\n' +
+                                '        <th style="text-align: center;vertical-align: middle !important;">车牌号</th>\n' +
+                                '        <th style="text-align: center;vertical-align: middle !important;">查询是否成功</th>\n' +
+                                '        <th style="text-align: center;vertical-align: middle !important;">原因</th>\n' +
+                                '\n' +
+                                '\n' +
+                                '        <!--<th>邮编</th>-->\n' +
+                                '    </tr>\n' +
+                                '    </thead><tbody>';
+
+                            for (let i in data['query_record']) {
+                                html += '<tr>' +
+                                    '<td style="text-align: center;vertical-align: middle !important;">' + data['query_record'][i]['username'] + '</td>' +
+                                    '<td style="text-align: center;vertical-align: middle !important;">' + data['query_record'][i]['license_plate_number'] + '</td>';
+                                if (data['query_record'][i]['status'] == 'success') {
+                                    html += '<td style="text-align: center;vertical-align: middle !important;color: green">成功</td>';
+                                } else {
+                                    html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">失败</td>';
+                                }
+
+                                html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">' + data['query_record'][i]['msg'] + '</td>' +
+                                    '</tr>';
+                            }
+
+
+                            html += '</tbody></table>';
+                            layer.open({
+                                type: 1,
+                                area: ['800px', '600px'],
+                                title: ['查询违章结果', 'font-size:18px;text-align: center'],
+                                content: html
+                            });
+                            Layer.close(closeLay);
+                            table.bootstrapTable('refresh');
+                        });
+                    }
+                    ,
+                    //本页
+                    btn2: function (index, layero) {
+                        ids = [];
+                        for (var i in page) {
+
+                            if (!page[i]['orderdetails']['licensenumber'] || page[i]['orderdetails']['licensenumber'] == '') {
+                                layer.open({
+                                    type: 0,
+                                    content: '本页中，客户姓名为<span class="text-danger">' + page[i]['username'] + '</span>的用户没有填写车牌号，请添加后查询' //这里content是一个普通的String
+                                });
+                                return;
+                            }
+
+                            if (!page[i]['orderdetails']['engine_number'] || page[i]['orderdetails']['engine_number'] == '') {
+                                // layer.msg('本页中，客户姓名为<span class="text-danger">'+page[i]['username']+'</span>的用户没有填写发动机号，请添加后查询');
+                                layer.open({
+                                    type: 0,
+                                    content: '本页中，客户姓名为<span class="text-danger">' + page[i]['username'] + '</span>的用户没有填写发动机号，请添加后查询' //这里content是一个普通的String
+                                });
+                                return;
+                            }
+
+                            if (!page[i]['orderdetails']['frame_number'] || page[i]['orderdetails']['frame_number'] == '') {
+                                layer.open({
+                                    type: 0,
+                                    content: '本页中，客户姓名为<span class="text-danger">' + page[i]['username'] + '</span>的用户没有填写车架号，请添加后查询' //这里content是一个普通的String
+                                });
+                                return;
+                            }
+
+
+                            ids.push({
+                                hphm: Controller.api.trim(page[i]['orderdetails']['licensenumber']).substr(0, 2),
+                                hphms: Controller.api.trim(page[i]['orderdetails']['licensenumber']),
+                                engineno: Controller.api.trim(page[i]['orderdetails']['engine_number']),
+                                classno: Controller.api.trim(page[i]['orderdetails']['frame_number']),
+                                order_id: page[i]['id'],
+                                username: page[i]['username']
+                            });
+                        }
+
+                        Fast.api.ajax({
+                            url: 'vehicle/vehiclemanagement/sendMessagePerson',
+                            data: {ids}
+                        }, function (data, ret) {
+                            console.log(data);
+                            Layer.close(closeLay);
+
+                            table.bootstrapTable('refresh');
+                        });
+                    }
+
+
+                });
             });
 
 
@@ -189,9 +389,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.show_and_hide();
             Controller.api.bindevent();
         },
-        view_information:function (){
+        view_information: function () {
+            // alert($('#p-mate_id_cardimages').find('.btn-trash').css('display', 'block'));
             Controller.api.bindevent();
         },
+
+
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
@@ -211,7 +414,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('提车'), $(this).data() || {});
                     },
                     'click .btn-modifying_data': function (e, value, row, index) {
-                        $(".btn-modifying_data").data("area", ["80%", "80%"]);
+                        $(".btn-modifying_data").data("area", ["95%", "95%"]);
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -276,11 +479,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             var table = $(that).closest('table');
                             var ids = [{
-                                hphm: row.orderdetails.licensenumber.substr(0, 2),
-                                hphms: row.orderdetails.licensenumber,
-                                engineno: row.orderdetails.engine_number,
-                                classno: row.orderdetails.frame_number,
-                                order_id:row.id
+                                hphm: Controller.api.trim(row.orderdetails.licensenumber).substr(0, 2),
+                                hphms: Controller.api.trim(row.orderdetails.licensenumber),
+                                engineno: Controller.api.trim(row.orderdetails.engine_number),
+                                classno: Controller.api.trim(row.orderdetails.frame_number),
+                                order_id: row.id,
+                                username: row.username
                             }];
 
                             Fast.api.ajax({
@@ -335,7 +539,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $('#c-is_mortgage').on('change', function () {
                     $(this).val() == '是' ? $('#mortgage-people').show() : $('#mortgage-people').hide();
                 });
-            }
+            },
+            /**
+             * 得到选中行信息
+             * @param table
+             * @returns {*}
+             */
+            selectIdsRow: function (table) {
+                var options = table.bootstrapTable('getOptions');
+                if (options.templateView) {
+                    return $.map($("input[data-id][name='checkbox']:checked"), function (dom) {
+                        return $(dom)
+                    });
+                } else {
+                    return $.map(table.bootstrapTable('getSelections'), function (row) {
+                        return row;
+                    });
+                }
+            },
+            //去左右空格;
+            trim: function (s) {
+                return s.replace(/(^\s*)|(\s*$)/g, "");
+            },
+            show_and_hide_table: function (table, type, data) {
+
+                var types = type == 'show' ? 'showColumn' : 'hideColumn';
+                for (var i in data) {
+                    table.bootstrapTable(types, data[i]);
+                }
+            },
         }
     };
     return Controller;

@@ -13,5 +13,6 @@ use think\Model;
 
 class OrderDetails extends Model
 {
-         protected $name = 'order_details';
+    protected $name = 'order_details';
+
 }
