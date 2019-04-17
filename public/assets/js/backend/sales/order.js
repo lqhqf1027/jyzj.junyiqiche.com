@@ -68,7 +68,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             {field: 'id', title: __('Id')},
                             {
                                 field: 'admin_id', title: __('销售员'), formatter: function (v, r, i) {
-                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.username : '';
+                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.nickname : '';
                                 }
                             },
                             {
@@ -143,7 +143,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                         extend: 'data-toggle="tooltip"', 
                                         title: __('按揭（新车）单编辑'), 
                                         classname: 'btn btn-xs btn-success btn-newedit',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
                                        
+                                    },
+                                    /**
+                                     * 已提车
+                                     */
+                                    {
+                                        name: 'success',
+                                        icon: 'fa fa-check',
+                                        title: __('已提车'),
+                                        text: '已提车',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'text-info',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'yes' ? true : false;
+                                        }
                                     },
 
                            
@@ -208,7 +225,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             {field: 'id', title: __('Id')},
                             {
                                 field: 'admin_id', title: __('销售员'), formatter: function (v, r, i) {
-                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.username : '';
+                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.nickname : '';
                                 }
                             },
                             {
@@ -285,7 +302,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                         extend: 'data-toggle="tooltip"', 
                                         title: __('按揭（二手车）单编辑'), 
                                         classname: 'btn btn-xs btn-success btn-usedcaredit',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
                                        
+                                    },
+                                    /**
+                                     * 已提车
+                                     */
+                                    {
+                                        name: 'success',
+                                        icon: 'fa fa-check',
+                                        title: __('已提车'),
+                                        text: '已提车',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'text-info',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'yes' ? true : false;
+                                        }
                                     },
 
                            
@@ -354,7 +388,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             {field: 'id', title: __('Id')},
                             {
                                 field: 'admin_id', title: __('销售员'), formatter: function (v, r, i) {
-                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.username : '';
+                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.nickname : '';
                                 }
                             },
                             {
@@ -431,7 +465,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                         extend: 'data-toggle="tooltip"', 
                                         title: __('租车单编辑'), 
                                         classname: 'btn btn-xs btn-success btn-rentaledit',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
                                        
+                                    },
+                                    /**
+                                     * 已提车
+                                     */
+                                    {
+                                        name: 'success',
+                                        icon: 'fa fa-check',
+                                        title: __('已提车'),
+                                        text: '已提车',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'text-info',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'yes' ? true : false;
+                                        }
                                     },
 
                            
@@ -501,7 +552,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             {field: 'id', title: __('Id')},
                             {
                                 field: 'admin_id', title: __('销售员'), formatter: function (v, r, i) {
-                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.username : '';
+                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.nickname : '';
                                 }
                             },
                             {
@@ -578,7 +629,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                         extend: 'data-toggle="tooltip"', 
                                         title: __('全款（新车）单编辑'), 
                                         classname: 'btn btn-xs btn-success btn-fulledit',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
                                        
+                                    },
+                                    /**
+                                     * 已提车
+                                     */
+                                    {
+                                        name: 'success',
+                                        icon: 'fa fa-check',
+                                        title: __('已提车'),
+                                        text: '已提车',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'text-info',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'yes' ? true : false;
+                                        }
                                     },
 
                            
@@ -648,7 +716,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             {field: 'id', title: __('Id')},
                             {
                                 field: 'admin_id', title: __('销售员'), formatter: function (v, r, i) {
-                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.username : '';
+                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.nickname : '';
                                 }
                             },
                             {
@@ -725,7 +793,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                         extend: 'data-toggle="tooltip"', 
                                         title: __('全款（二手车）单编辑'), 
                                         classname: 'btn btn-xs btn-success btn-fullusededit',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
                                        
+                                    },
+                                    /**
+                                     * 已提车
+                                     */
+                                    {
+                                        name: 'success',
+                                        icon: 'fa fa-check',
+                                        title: __('已提车'),
+                                        text: '已提车',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'text-info',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'yes' ? true : false;
+                                        }
                                     },
 
                            
@@ -799,14 +884,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
          */
         newedit: function () {
 
+            var turn = $('#c-customer_source').val();
+
+            turn == 'turn_to_introduce' ? $('.turn').toggleClass('hidden') : $('.turn').toggleClass('show');
+
+            var marriage = $('.marriage').val();
+           
+            marriage == 'no' ? $('.marriage_block').toggleClass('hidden') : $('.marriage_block').toggleClass('show');
+
             $('#c-customer_source').on('change', function (e) {  //客户资源
                 $('.turn').toggleClass('hidden');
-                // var v =  $(this).children('option:selected').val();
             })
             $('.marriage').on('change',function () {   //配偶身份证反面
                 $('.marriage_block').toggleClass('hidden');
             })
-            
+
             Table.api.init({
                
             });
@@ -857,6 +949,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
          * 二手车资料修改
          */
         usedcaredit:function(){
+
+            var turn = $('#c-customer_source').val();
+
+            turn == 'turn_to_introduce' ? $('.turn').toggleClass('hidden') : $('.turn').toggleClass('show');
+
+            var marriage = $('.marriage').val();
+           
+            marriage == 'no' ? $('.marriage_block').toggleClass('hidden') : $('.marriage_block').toggleClass('show');
 
             $('#c-customer_source').on('change', function (e) {  //客户资源
                 $('.turn').toggleClass('hidden');
@@ -918,6 +1018,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
          */
         rentaledit:function(){
 
+            var turn = $('#c-customer_source').val();
+
+            turn == 'turn_to_introduce' ? $('.turn').toggleClass('hidden') : $('.turn').toggleClass('show');
+
+            var marriage = $('.marriage').val();
+           
+            marriage == 'no' ? $('.marriage_block').toggleClass('hidden') : $('.marriage_block').toggleClass('show');
+
             $('#c-customer_source').on('change', function (e) {  //客户资源
                 $('.turn').toggleClass('hidden');
                 // var v =  $(this).children('option:selected').val();
@@ -978,6 +1086,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
          */
         fulledit:function(){
 
+            var turn = $('#c-customer_source').val();
+
+            turn == 'turn_to_introduce' ? $('.turn').toggleClass('hidden') : $('.turn').toggleClass('show');
+
+            var marriage = $('.marriage').val();
+           
+            marriage == 'no' ? $('.marriage_block').toggleClass('hidden') : $('.marriage_block').toggleClass('show');
+
             $('#c-customer_source').on('change', function (e) {  //客户资源
                 $('.turn').toggleClass('hidden');
                 // var v =  $(this).children('option:selected').val();
@@ -1037,6 +1153,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
          * 全款二手车资料编辑
          */
         fullusededit:function(){
+
+            var turn = $('#c-customer_source').val();
+
+            turn == 'turn_to_introduce' ? $('.turn').toggleClass('hidden') : $('.turn').toggleClass('show');
+
+            var marriage = $('.marriage').val();
+           
+            marriage == 'no' ? $('.marriage_block').toggleClass('hidden') : $('.marriage_block').toggleClass('show');
 
             $('#c-customer_source').on('change', function (e) {  //客户资源
                 $('.turn').toggleClass('hidden');

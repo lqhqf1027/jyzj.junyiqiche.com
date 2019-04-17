@@ -192,8 +192,15 @@
                 <label class="control-label col-xs-12 col-sm-2">{:__('是否已婚')}:</label>
                 <div class="col-xs-12 col-sm-8">
                     <select id=" "  class="form-control selectpicker marriage"  >
-                        <option value="yes" selected>是</option>
-                        <option value="no">否</option>
+                        
+                            {empty name="$OrderImg.mate_id_cardimages"}
+                            <option value="yes">是</option>
+                            <option value="no" selected>否</option>
+                            {else /}
+                            <option value="yes" selected>是</option>
+                            <option value="no">否</option>
+                            {/empty}
+        
     
                     </select>
                 </div>
@@ -202,7 +209,7 @@
                 <label class="control-label col-xs-12 col-sm-2">{:__('配偶身份正反面')}:</label>
                 <div class="col-xs-12 col-sm-8">
                     <div class="input-group">
-                        <input id="c-mate_id_cardimages" data-rule="required" class="form-control form-control" size="50" name="row[mate_id_cardimages]" type="text" value="{$OrderImg.mate_id_cardimages}">
+                        <input id="c-mate_id_cardimages" class="form-control form-control" size="50" name="row[mate_id_cardimages]" type="text" value="{$OrderImg.mate_id_cardimages}">
                         <div class="input-group-addon no-border no-padding">
                             <span><button type="button" id="plupload-mate_id_cardimages" class="btn btn-danger plupload" data-input-id="c-mate_id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-mate_id_cardimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                         </div>

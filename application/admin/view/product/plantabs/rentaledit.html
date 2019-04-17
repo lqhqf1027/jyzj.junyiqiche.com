@@ -1,0 +1,94 @@
+<form id="rentaledit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Category_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-category_id" data-rule="required" data-source="product/category/index" class="form-control selectpage" name="row[category_id]" type="text" value="{$row.category_id}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-models_id" data-rule="required" data-source="product/models/index" class="form-control selectpage" name="row[models_id]" type="text" value="{$row.models_id}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Companyaccount')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-companyaccount" class="form-control" name="row[companyaccount]" type="text" value="{$row.companyaccount}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Licenseplatenumber')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-licenseplatenumber" class="form-control" name="row[licenseplatenumber]" type="text" value="{$row.licenseplatenumber}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Vin')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-vin" class="form-control" name="row[vin]" type="text" value="{$row.vin}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Engine_no')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-engine_no" class="form-control" name="row[engine_no]" type="text" value="{$row.engine_no}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Kilometres')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-kilometres" class="form-control" name="row[kilometres]" type="number" value="{$row.kilometres}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Cashpledge')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-cashpledge" class="form-control" step="0.01" name="row[cashpledge]" type="number" value="{$row.cashpledge}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Rent_price')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-rent_price" class="form-control" step="0.01" name="row[rent_price]" type="number" value="{$row.rent_price}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_licensetime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_licensetime" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[car_licensetime]" type="text" value="{:$row.car_licensetime?datetime($row.car_licensetime):''}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Emission_standard')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-emission_standard" class="form-control" name="row[emission_standard]" type="number" value="{$row.emission_standard}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Emission_load')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-emission_load" class="form-control" name="row[emission_load]" type="text" value="{$row.emission_load}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Speed_changing_box')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-speed_changing_box" class="form-control" name="row[speed_changing_box]" type="text" value="{$row.speed_changing_box}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-note" class="form-control " rows="5" name="row[note]" cols="50">{$row.note}</textarea>
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
