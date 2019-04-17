@@ -77,4 +77,86 @@ class Plantabs extends Backend
         }
         return $this->view->fetch();
     }
+
+    /**
+     * 编辑
+     */
+    public function commitedit($row)
+    {
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                $params = $this->preExcludeFields($params);
+                $result = false;
+                Db::startTrans();
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    Db::commit();
+                } catch (ValidateException $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                } catch (PDOException $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                } catch (Exception $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                }
+                if ($result) {
+                    $this->success();
+                } else {
+                    $this->error();
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+    }
+
+    /**
+     * 新车方案编辑
+     */
+    public function newedit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        $this->commitedit($row);
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 二手方案编辑
+     */
+    public function usedcaredit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        $this->commitedit($row);
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 租车方案编辑
+     */
+    public function rentaledit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        $this->commitedit($row);
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
 }

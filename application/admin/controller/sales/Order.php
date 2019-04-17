@@ -27,6 +27,7 @@ class Order extends Backend
      * @var \app\admin\model\Order
      */
     protected $model = null;
+    protected $noNeedRight = ['*'];
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
     protected $dataLimitField = 'admin_id';
 
@@ -77,7 +78,7 @@ class Order extends Backend
         foreach ($list as $key=>$row) {
             $row->getRelation('orderdetails')->visible(['admin_id', 'licensenumber']);
             $row->getRelation('orderimg')->visible(['id_cardimages', 'driving_licenseimages']);
-            $row->getRelation('admin')->visible(['avatar','username']);
+            $row->getRelation('admin')->visible(['avatar','nickname']);
         }
 
         $list = collection($list)->toArray();

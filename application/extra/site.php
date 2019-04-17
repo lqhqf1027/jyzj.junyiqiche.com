@@ -45,5 +45,6 @@ return array (
     'message5' => '内勤',
     'message6' => '销售顾问',
     'message7' => '销售经理',
+    'message8' => '车管',
   ),
 );
