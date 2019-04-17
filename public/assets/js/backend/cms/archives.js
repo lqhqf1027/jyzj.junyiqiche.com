@@ -37,7 +37,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
-                sortName: 'weigh',
+                sortName: 'weigh DESC,id DESC',
                 searchFormVisible: Fast.api.query("model_id") ? true : false,
                 columns: [
                     [
@@ -56,7 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             field: 'channel_id',
                             title: __('Channel_id'),
                             visible: false,
-                            operate: false,
+                            operate: 'in',
                             formatter: Table.api.formatter.search
                         },
                         {
@@ -68,17 +68,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             }
                         },
                         {
-                            field: 'model_id', title: __('Model'), visible: false, align: 'left', addclass:"selectpage", extend:"data-source='cms/modelx/index' data-field='name'"
+                            field: 'model_id', title: __('Model'), visible: false, align: 'left', addclass: "selectpage", extend: "data-source='cms/modelx/index' data-field='name'"
                         },
                         {
                             field: 'title', title: __('Title'), align: 'left', formatter: function (value, row, index) {
-                                return '<div class="tdtitle"><a href="' + row.url + '" target="_blank">' + value + '</a></div>' + Table.api.formatter.flag.call(this, row['flag'], row, index);
+                                return '<div class=""><a href="' + row.url + '" target="_blank"><span style="color:' + (row.style_color ? row.style_color : 'inherit') + ';font-weight:' + (row.style_bold ? 'bold' : 'normal') + '">' + value + '</span></a></div>' + Table.api.formatter.flag.call(this, row['flag'], row, index);
                             }
                         },
+                        {field: 'flag', title: __('Flag'), operate: '=', visible: false, searchList: Config.flagList, formatter: Table.api.formatter.flag},
                         {field: 'image', title: __('Image'), operate: false, formatter: Table.api.formatter.image},
                         {field: 'views', title: __('Views'), operate: 'BETWEEN', sortable: true},
                         {field: 'comments', title: __('Comments'), operate: 'BETWEEN', sortable: true},
-                        {field: 'weigh', title: __('Weigh'), operate: false},
+                        {field: 'weigh', title: __('Weigh'), operate: false, sortable: true},
                         {
                             field: 'createtime',
                             title: __('Createtime'),
@@ -132,13 +133,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     $("#channeltree").jstree($(this).prop("checked") ? "open_all" : "close_all");
                 });
                 $('#channeltree').on("changed.jstree", function (e, data) {
-                    var options = table.bootstrapTable('getOptions');
-                    options.pageNumber = 1;
-                    options.queryParams = function (params) {
-                        params.filter = JSON.stringify(data.selected.length > 0 ? {channel_id: data.selected.join(",")} : {});
-                        params.op = JSON.stringify(data.selected.length > 0 ? {channel_id: 'in'} : {});
-                        return params;
-                    };
+                    $(".commonsearch-table input[name=channel_id]").val(data.selected.join(","));
                     table.bootstrapTable('refresh', {});
                     return false;
                 });
@@ -227,6 +222,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 //这里因为涉及到关联多个表,因为用了两个字段来操作,一个隐藏,一个搜索
                 {field: 'main.id', title: __('Id'), visible: false},
                 {field: 'id', title: __('Id'), operate: false},
+                {field: 'title', title: __('Title'), operate: 'like'},
                 {
                     field: 'channel_id',
                     title: __('Channel_id'),
@@ -244,9 +240,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     data.formatter = Table.api.formatter.image;
                 } else if (j.type == 'images') {
                     data.formatter = Table.api.formatter.images;
-                } else if (j.type == 'radio' || j.type == 'check' || j.type == 'select' || j.type == 'selects') {
+                } else if (j.type == 'radio' || j.type == 'checkbox' || j.type == 'select' || j.type == 'selects') {
                     data.formatter = Controller.api.formatter.content;
                     data.extend = j.content;
+                    data.searchList = j.content;
                 }
                 columns.push(data);
             });
@@ -411,34 +408,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
             });
         },
         add: function () {
-            $(document).on('change', '#c-channel_id', function () {
-                Fast.api.ajax({
-                    url: 'cms/archives/get_channel_fields',
-                    data: {channel_id: $(this).val()}
-                }, function (data) {
-                    $("#extend").html(data.html);
-                    Form.api.bindevent($("#extend"));
-                    return false;
-                });
-                localStorage.setItem('last_channel_id', $(this).val());
-            });
             var last_channel_id = localStorage.getItem('last_channel_id');
             if (last_channel_id) {
                 $("#c-channel_id option[value='" + last_channel_id + "']").prop("selected", true);
             }
-            $("#c-channel_id").trigger("change");
             Controller.api.bindevent();
+            $("#c-channel_id").trigger("change");
         },
         edit: function () {
             Controller.api.bindevent();
-            Fast.api.ajax({
-                url: 'cms/archives/get_channel_fields',
-                data: {channel_id: $("#c-channel_id").val(), archives_id: $("#archive-id").val()}
-            }, function (data) {
-                $("#extend").html(data.html);
-                Form.api.bindevent($("#extend"));
-                return false;
-            });
+            $("#c-channel_id").trigger("change");
         },
         api: {
             formatter: {
@@ -456,6 +435,82 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 }
             },
             bindevent: function () {
+                var refreshStyle = function () {
+                    var style = [];
+                    if ($(".btn-bold").hasClass("active")) {
+                        style.push("b");
+                    }
+                    if ($(".btn-color").hasClass("active")) {
+                        style.push($(".btn-color").data("color"));
+                    }
+                    $("input[name='row[style]']").val(style.join("|"));
+                };
+                require(['jquery-colorpicker'], function () {
+                    $('.colorpicker').colorpicker({
+                        color: function () {
+                            var color = "#000000";
+                            var rgb = $("#c-title").css('color').match(/^rgb\(((\d+),\s*(\d+),\s*(\d+))\)$/);
+                            if (rgb) {
+                                color = rgb[1];
+                            }
+                            return color;
+                        }
+                    }, function (event, obj) {
+                        $("#c-title").css('color', '#' + obj.hex);
+                        $(event).addClass("active").data("color", '#' + obj.hex);
+                        refreshStyle();
+                    }, function (event) {
+                        $("#c-title").css('color', 'inherit');
+                        $(event).removeClass("active");
+                        refreshStyle();
+                    });
+                });
+                require(['jquery-tagsinput'], function () {
+                    //标签输入
+                    var elem = "#c-tags";
+                    var tags = $(elem);
+                    tags.tagsInput({
+                        width: 'auto',
+                        defaultText: '输入后回车确认',
+                        minInputWidth: 110,
+                        height: '36px',
+                        placeholderColor: '#999',
+                        onChange: function (row) {
+                            if (typeof callback === 'function') {
+
+                            } else {
+                                $(elem + "_addTag").focus();
+                                $(elem + "_tag").trigger("blur.autocomplete").focus();
+                            }
+                        },
+                        autocomplete: {
+                            url: 'cms/tags/autocomplete',
+                            minChars: 1,
+                            menuClass: 'autocomplete-tags'
+                        }
+                    });
+                });
+
+                $(document).on('click', '.btn-bold', function () {
+                    $("#c-title").toggleClass("text-bold", !$(this).hasClass("active"));
+                    $(this).toggleClass("text-bold active");
+                    refreshStyle();
+                });
+                $(document).on('change', '#c-channel_id', function () {
+                    var model = $("option:selected", this).attr("model");
+                    Fast.api.ajax({
+                        url: 'cms/archives/get_channel_fields',
+                        data: {channel_id: $(this).val(), archives_id: $("#archive-id").val()}
+                    }, function (data) {
+                        if ($("#extend").data("model") != model) {
+                            $("#extend").html(data.html).data("model", model);
+                            Form.api.bindevent($("#extend"));
+                        }
+                        return false;
+                    });
+                    localStorage.setItem('last_channel_id', $(this).val());
+                });
+
                 $.validator.config({
                     rules: {
                         diyname: function (element) {

@@ -10,7 +10,6 @@ use addons\cms\model\Page;
  */
 class My extends Base
 {
-
     protected $noNeedLogin = ['aboutus'];
 
     public function _initialize()
@@ -25,7 +24,7 @@ class My extends Base
     {
         $page = (int)$this->request->request('page');
         $commentList = Comment::
-            with('archives')
+        with('archives')
             ->where(['user_id' => $this->auth->id])
             ->order('id desc')
             ->page($page, 10)
@@ -46,6 +45,8 @@ class My extends Base
         if (!$pageInfo || $pageInfo['status'] != 'normal') {
             $this->error(__('单页未找到'));
         }
+        $pageInfo = $pageInfo->toArray();
+        unset($pageInfo['status'], $pageInfo['showtpl']);
         $this->success('', ['pageInfo' => $pageInfo]);
     }
 }

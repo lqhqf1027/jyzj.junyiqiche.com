@@ -57,5 +57,4 @@ class Page extends Model
         $list = $this->getFlagList();
         return implode(',', array_intersect_key($list, array_flip($valueArr)));
     }
-
 }

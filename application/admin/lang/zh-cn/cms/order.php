@@ -1,9 +1,10 @@
 <?php
 
 return [
-    'Id'             => '订单ID',
+    'Orderid'        => '订单ID',
     'User_id'        => '会员ID',
     'Archives_id'    => '文档ID',
+    'Archives_title' => '文档标题',
     'Title'          => '订单标题',
     'Amount'         => '订单金额',
     'Payamount'      => '支付金额',

@@ -35,5 +35,4 @@ class ChannelAdmin extends Model
     {
         return $this->belongsTo('\app\admin\model\cms\Channel', 'channel_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
-
 }

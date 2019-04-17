@@ -45,4 +45,13 @@ class Order extends Model
         return $value && !is_numeric($value) ? strtotime($value) : $value;
     }
 
+    public function user()
+    {
+        return $this->belongsTo("\app\common\model\User", 'user_id', 'id', 'LEFT')->setEagerlyType(0);
+    }
+
+    public function archives()
+    {
+        return $this->belongsTo("Archives", 'archives_id', 'id', 'LEFT')->setEagerlyType(0);
+    }
 }

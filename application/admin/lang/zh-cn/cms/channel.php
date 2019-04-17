@@ -29,6 +29,7 @@ return [
     'You must choose at least one channel'       => '必须选择一个栏目',
     'Are you sure you want to remove this item?' => '确认要取消此管理员的所有栏目授权？',
     'Iscontribute'                               => '是否允许投稿',
+    'Isnav'                                      => '是否导航显示',
     'Status'                                     => '状态',
     'Channel'                                    => '栏目',
     'List'                                       => '列表',

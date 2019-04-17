@@ -45,15 +45,21 @@ Page({
   },
   //点击头像上传
   uploadAvatar: function () {
+    if (!app.globalData.userInfo) {
+      app.error("请登录后再操作");
+      return false;
+    }
     var that = this;
     wx.chooseImage({
       success: function (res) {
         var tempFilePaths = res.tempFilePaths;
+        var formData = app.globalData.config.upload.multipart;
+        formData.token = app.globalData.userInfo.token;
         wx.uploadFile({
           url: app.globalData.config.upload.uploadurl,
           filePath: tempFilePaths[0],
           name: 'file',
-          formData: app.globalData.config.upload.multipart,
+          formData: formData,
           success: function (res) {
             var data = JSON.parse(res.data);
             if (data.code == 200) {
@@ -69,6 +75,8 @@ Page({
             app.error("上传头像失败!");
           }
         });
+      }, error: function (res) {
+        app.error("上传头像失败!");
       }
     });
   }

@@ -23,5 +23,4 @@ class Page extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }

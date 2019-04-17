@@ -9,6 +9,7 @@ return [
     'Hot news'                         => '热门资讯',
     'Hot tags'                         => '热门标签',
     'Recommend news'                   => '推荐资讯',
+    'Recommend download'               => '推荐下载',
     'Comments'                         => '评论',
     'Tags'                             => '标签',
     'View more'                        => '查看更多',

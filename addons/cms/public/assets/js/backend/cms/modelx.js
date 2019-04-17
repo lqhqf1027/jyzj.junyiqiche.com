@@ -50,11 +50,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         },
                         {
                             field: 'datalist', title: __('Operate'), table: table,
+                            events: {
+                                'click .btn-duplicate': function (e, value, row) {
+                                    Layer.prompt({
+                                        title: "请输入你需要新复制的模型表名",
+                                        success: function (layero) {
+                                            $("input", layero).prop("placeholder", "例如：cms_addontest，请不要加前缀");
+                                        }
+                                    }, function (value) {
+                                        Fast.api.ajax({
+                                            url: "cms/modelx/duplicate/ids/" + row.id,
+                                            data: {table: value},
+                                        }, function (data, ret) {
+                                            Layer.closeAll();
+                                            table.bootstrapTable('refresh');
+                                            return false;
+                                        });
+                                    });
+                                    return false;
+                                }
+                            },
                             buttons: [
                                 {
                                     name: 'index',
                                     text: __('Main list'),
-                                    classname: 'btn btn-xs btn-success btn-addtabs',
+                                    classname: 'btn btn-xs btn-primary btn-addtabs',
                                     icon: 'fa fa-file',
                                     url: 'cms/archives/index?model_id={ids}'
                                 },
@@ -71,6 +91,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     classname: 'btn btn-xs btn-info btn-fields btn-addtabs',
                                     icon: 'fa fa-list',
                                     url: 'cms/fields/index/model_id/{ids}'
+                                },
+                                {
+                                    name: 'duplicate',
+                                    text: __('Duplicate'),
+                                    classname: 'btn btn-xs btn-warning btn-duplicate',
+                                    icon: 'fa fa-copy',
                                 },
                             ],
                             formatter: Table.api.formatter.buttons

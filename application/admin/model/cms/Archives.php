@@ -2,13 +2,13 @@
 
 namespace app\admin\model\cms;
 
+use addons\cms\library\Service;
 use app\common\model\Config;
 use think\Model;
 use traits\model\SoftDelete;
 
 class Archives extends Model
 {
-
     use SoftDelete;
 
     // 表名
@@ -25,6 +25,8 @@ class Archives extends Model
         'status_text',
         'publishtime_text',
         'url',
+        'style_bold',
+        'style_color',
     ];
 
     public function getUrlAttr($value, $data)
@@ -33,19 +35,41 @@ class Archives extends Model
         return addon_url('cms/archives/index', [':id' => $data['id'], ':diyname' => $diyname, ':channel' => $data['channel_id']]);
     }
 
+    /**
+     * 批量设置数据
+     * @param $data
+     * @return $this
+     */
+    public function setData($data)
+    {
+        if (is_object($data)) {
+            $data = get_object_vars($data);
+        }
+        $this->data = array_merge($this->data, $data);
+        return $this;
+    }
+
     protected static function init()
     {
         self::afterInsert(function ($row) {
             $pk = $row->getPk();
             $channel = Channel::get($row['channel_id']);
-            $row->getQuery()->where($pk, $row[$pk])->update(['model_id' => $channel ? $channel['model_id'] : 0, 'weigh' => $row[$pk]]);
+            $row->getQuery()->where($pk, $row[$pk])->update(['model_id' => $channel ? $channel['model_id'] : 0]);
             Channel::where('id', $row['channel_id'])->setInc('items');
         });
         self::beforeWrite(function ($row) {
+            $changedData = $row->getChangedData();
+            if (isset($changedData['flag']) && !isset($changedData['weigh'])) {
+                $row['weigh'] = is_array($changedData['flag']) && in_array('top', $changedData['flag']) ? 9999 : 0;
+            }
+            if (isset($row['content'])) {
+                $row['content'] = Service::autolinks($row['content']);
+            }
+
             //在更新之前对数组进行处理
             foreach ($row->getData() as $k => $value) {
-                if (is_array($value) && isset($value['field'])) {
-                    $value = json_encode(Config::getArrayData($value), JSON_UNESCAPED_UNICODE);
+                if (is_array($value) && is_array(reset($value))) {
+                    $value = json_encode(self::getArrayData($value), JSON_UNESCAPED_UNICODE);
                 } else {
                     $value = is_array($value) ? implode(',', $value) : $value;
                 }
@@ -62,7 +86,7 @@ class Archives extends Model
                         $values = array_intersect_key($row->getData(), array_flip($model->fields));
                         $values['id'] = $row['id'];
                         $values['content'] = $row['content'];
-                        db($model['table'])->insert($values, TRUE);
+                        db($model['table'])->insert($values, true);
                     }
                 }
             }
@@ -94,12 +118,23 @@ class Archives extends Model
 
     public function getFlagList()
     {
-        return ['hot' => __('Hot'), 'new' => __('New'), 'recommend' => __('Recommend')];
+        return ['hot' => __('Hot'), 'new' => __('New'), 'recommend' => __('Recommend'), 'top' => __('Top')];
     }
 
     public function getStatusList()
     {
         return ['normal' => __('Normal'), 'hidden' => __('Hidden'), 'rejected' => __('Status rejected'), 'pulloff' => __('Status pulloff')];
+    }
+
+    public function getStyleBoldAttr($value, $data)
+    {
+        return in_array('b', explode('|', $data['style']));
+    }
+
+    public function getStyleColorAttr($value, $data)
+    {
+        $result = preg_match("/(#([0-9a-z]{6}))/i", $data['style'], $matches);
+        return $result ? $matches[1] : '';
     }
 
     public function getFlagTextAttr($value, $data)
@@ -128,9 +163,30 @@ class Archives extends Model
         return $value && !is_numeric($value) ? strtotime($value) : $value;
     }
 
+    public static function getArrayData($data)
+    {
+        if (!isset($data['value'])) {
+            $result = [];
+            foreach ($data as $index => $datum) {
+                $result['field'][$index] = $datum['key'];
+                $result['value'][$index] = $datum['value'];
+            }
+            $data = $result;
+        }
+        $fieldarr = $valuearr = [];
+        $field = isset($data['field']) ? $data['field'] : (isset($data['key']) ? $data['key'] : []);
+        $value = isset($data['value']) ? $data['value'] : [];
+        foreach ($field as $m => $n) {
+            if ($n != '') {
+                $fieldarr[] = $field[$m];
+                $valuearr[] = $value[$m];
+            }
+        }
+        return $fieldarr ? array_combine($fieldarr, $valuearr) : [];
+    }
+
     public function channel()
     {
         return $this->belongsTo('Channel', 'channel_id', '', [], 'LEFT')->setEagerlyType(0);
     }
-
 }

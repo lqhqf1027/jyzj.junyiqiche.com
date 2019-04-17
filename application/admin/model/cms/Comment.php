@@ -49,10 +49,21 @@ class Comment extends Model
         return isset($list[$value]) ? $list[$value] : '';
     }
 
+    public function user()
+    {
+        return $this->belongsTo('\app\common\model\User', 'user_id', '', [], 'LEFT')->setEagerlyType(0);
+    }
 
     public function archives()
     {
         return $this->belongsTo('Archives', 'aid', '', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * 关联单页模型
+     */
+    public function spage()
+    {
+        return $this->belongsTo("addons\cms\model\Page", 'aid', '', [], 'LEFT')->field('id,title,createtime')->setEagerlyType(0);
+    }
 }

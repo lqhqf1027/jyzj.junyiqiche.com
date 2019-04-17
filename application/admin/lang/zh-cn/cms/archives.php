@@ -11,6 +11,7 @@ return [
     'User_id'                            => '发布会员',
     'Title'                              => '文章标题',
     'Flag'                               => '标志',
+    'Top'                                => '置顶',
     'Image'                              => '缩略图',
     'Keywords'                           => '关键字',
     'Description'                        => '描述',

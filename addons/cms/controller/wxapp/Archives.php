@@ -12,7 +12,6 @@ use addons\cms\model\Modelx;
  */
 class Archives extends Base
 {
-
     protected $noNeedLogin = ['*'];
 
     public function _initialize()
@@ -40,6 +39,11 @@ class Archives extends Base
         $params['limit'] = ($page - 1) * 10 . ',10';
 
         $list = ArchivesModel::getArchivesList($params);
+        $list = collection($list)->toArray();
+        foreach ($list as $index => &$item) {
+            $item['url'] = $item['fullurl'];
+            unset($item['imglink'], $item['textlink'], $item['channellink'], $item['tagslist'], $item['weigh'], $item['status'], $item['deletetime'], $item['memo'], $item['img']);
+        }
         $this->success('', ['archivesList' => $list]);
     }
 
@@ -81,11 +85,30 @@ class Archives extends Base
         } else {
             $this->error(__('No specified article addon found'));
         }
+        //小程序付费阅读将不可见
+        $content = $archives->content;
+        if ((isset($archives->price) && $archives->price <= 0) || $archives->is_paid_part_of_content || $archives->ispaid) {
+            $content = $archives->content;
+        } else {
+            if (isset($archives->price) && $archives->price > 0 && !$archives->ispaid) {
+                $content = "<div class='alert alert-warning alert-paid'><a href='' class='btn-paynow' target='_blank'>此文章为付费文章，请在PC端购买后再进行查看</a></div>";
+            }
+        }
         $archives = array_merge($archives->toArray(), $addon);
+        $archives['content'] = $content;
 
         $commentList = Comment::getCommentList(['aid' => $archives['id']]);
+        $commentList = $commentList->getCollection();
+        foreach ($commentList as $index => &$item) {
+            if ($item['user']) {
+                $item['user']['avatar'] = cdnurl($item['user']['avatar'], true);
+            }
+        }
 
-        $this->success('', ['archivesInfo' => $archives, 'channelInfo' => $channel, 'commentList' => $commentList->getCollection()]);
+        $channel = $channel->toArray();
+        $channel['url'] = $channel['fullurl'];
+        unset($channel['channeltpl'], $channel['listtpl'], $channel['showtpl'], $channel['status'], $channel['weigh'], $channel['parent_id']);
+        $this->success('', ['archivesInfo' => $archives, 'channelInfo' => $channel, 'commentList' => $commentList]);
     }
 
     /**
@@ -106,5 +129,4 @@ class Archives extends Base
         $archives = ArchivesModel::get($id);
         $this->success(__('Operation completed'), ['likes' => $archives->likes, 'dislikes' => $archives->dislikes, 'likeratio' => $archives->likeratio]);
     }
-
 }

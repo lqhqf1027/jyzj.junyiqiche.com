@@ -9,6 +9,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     add_url: 'cms/diydata/add/diyform_id/' + Config.diyform_id,
                     edit_url: 'cms/diydata/edit/diyform_id/' + Config.diyform_id,
                     del_url: 'cms/diydata/del/diyform_id/' + Config.diyform_id,
+                    import_url: 'cms/diydata/import/diyform_id/' + Config.diyform_id,
                     multi_url: '',
                     table: '',
                 }

@@ -4,13 +4,42 @@ define(['jquery', 'bootstrap', 'frontend', 'template', 'form'], function ($, und
 
         },
         post: function () {
+
+            require(['jquery-tagsinput'], function () {
+                //标签输入
+                var elem = "#c-tags";
+                var tags = $(elem);
+                tags.tagsInput({
+                    width: 'auto',
+                    defaultText: '输入后回车确认',
+                    minInputWidth: 110,
+                    height: '36px',
+                    placeholderColor: '#999',
+                    onChange: function (row) {
+                        if (typeof callback === 'function') {
+
+                        } else {
+                            $(elem + "_addTag").focus();
+                            $(elem + "_tag").trigger("blur.autocomplete").focus();
+                        }
+                    },
+                    autocomplete: {
+                        url: 'cms.archives/tags_autocomplete',
+                        minChars: 1,
+                        menuClass: 'autocomplete-tags'
+                    }
+                });
+            });
             $(document).on('change', '#c-channel_id', function () {
+                var model = $("option:selected", this).attr("model");
                 Fast.api.ajax({
                     url: 'cms.archives/get_channel_fields',
                     data: {channel_id: $(this).val(), archives_id: Config.archives_id}
                 }, function (data) {
-                    $("#extend").html(data.html);
-                    Form.api.bindevent($("#extend"));
+                    if ($("#extend").data("model") != model) {
+                        $("#extend").html(data.html).data("model", model);
+                        Form.api.bindevent($("#extend"));
+                    }
                     return false;
                 });
                 localStorage.setItem('last_channel_id', $(this).val());

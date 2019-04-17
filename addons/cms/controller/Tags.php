@@ -12,7 +12,6 @@ use addons\cms\model\Tags as TagsModel;
  */
 class Tags extends Base
 {
-
     public function index()
     {
         $tags = null;
@@ -30,10 +29,12 @@ class Tags extends Base
         $orderby = $this->request->get('orderby', '');
         $orderway = $this->request->get('orderway', '', 'strtolower');
         $params = [];
-        if ($orderby)
+        if ($orderby) {
             $params['orderby'] = $orderby;
-        if ($orderway)
+        }
+        if ($orderway) {
             $params['orderway'] = $orderway;
+        }
         $sortrank = [
             ['name' => 'default', 'field' => 'weigh', 'title' => __('Default')],
             ['name' => 'views', 'field' => 'views', 'title' => __('Views')],
@@ -49,7 +50,7 @@ class Tags extends Base
             $v['url'] = $url;
             $orderlist[] = $v;
         }
-        $orderby = $orderby == 'default' ? 'weigh' : $orderby;
+        $orderby = $orderby == 'default' ? 'weigh DESC,id DESC' : $orderby;
         $pagelist = Archives::with(['channel'])
             ->where('status', 'normal')
             ->where('id', 'in', explode(',', $tags['archives']))
@@ -63,5 +64,4 @@ class Tags extends Base
         \think\Config::set('cms.title', $tags['name']);
         return $this->view->fetch('/tags');
     }
-
 }

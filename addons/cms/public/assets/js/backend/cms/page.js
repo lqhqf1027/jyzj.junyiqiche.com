@@ -48,6 +48,53 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 为表格绑定事件
             Table.api.bindevent(table);
         },
+        select: function () {
+            // 初始化表格参数配置
+            Table.api.init({
+                extend: {
+                    index_url: 'cms/page/select',
+                    add_url: 'cms/page/add',
+                    edit_url: 'cms/page/edit',
+                    table: 'page',
+                }
+            });
+
+            var table = $("#table");
+
+            // 初始化表格
+            table.bootstrapTable({
+                url: $.fn.bootstrapTable.defaults.extend.index_url,
+                pk: 'id',
+                sortName: 'weigh',
+                columns: [
+                    [
+                        {checkbox: true},
+                        {field: 'id', sortable: true, title: __('Id')},
+                        {field: 'title', title: __('Title')},
+                        {field: 'image', title: __('Image'), formatter: Table.api.formatter.image},
+                        {field: 'status', title: __('Status'), formatter: Table.api.formatter.status},
+                        {
+                            field: 'select', title: __('Operate'), table: table, formatter: Table.api.formatter.buttons,
+                            events: {
+                                'click .btn-select-one': function (e, value, row) {
+                                    Fast.api.close(row);
+                                }
+                            },
+                            buttons: [
+                                {
+                                    name: "select",
+                                    text: __("Select"),
+                                    classname: "btn btn-xs btn-success btn-select-one"
+                                }
+                            ]
+                        },
+                    ]
+                ]
+            });
+
+            // 为表格绑定事件
+            Table.api.bindevent(table);
+        },
         add: function () {
             Controller.api.bindevent();
         },

@@ -10,7 +10,6 @@ use addons\cms\model\Diyform as DiyformModel;
  */
 class Diyform extends Frontend
 {
-
     protected $layout = 'default';
     protected $noNeedLogin = [];
     protected $noNeedRight = ['*'];

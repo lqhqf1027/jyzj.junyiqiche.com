@@ -122,7 +122,5 @@ class Diyform extends Base
             $this->success($diyform['successtips'] ? $diyform['successtips'] : '提交成功！', $diyform['redirecturl'] ? url($diyform['redirecturl']) : addon_url('cms/index/index'));
         }
         return;
-
     }
-
 }

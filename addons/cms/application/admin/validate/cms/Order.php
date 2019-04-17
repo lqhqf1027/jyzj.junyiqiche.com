@@ -23,5 +23,4 @@ class Order extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }

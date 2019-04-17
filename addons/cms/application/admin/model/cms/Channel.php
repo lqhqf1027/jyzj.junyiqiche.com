@@ -29,6 +29,11 @@ class Channel extends Model
 
     protected static function init()
     {
+        self::beforeInsert(function ($row) {
+            if ($row->getData('type') == 'link') {
+                $row->model_id = 0;
+            }
+        });
         self::afterInsert(function ($row) {
             //创建时自动添加权重值
             $pk = $row->getPk();
@@ -62,6 +67,16 @@ class Channel extends Model
                 $childIds = $tree->getChildrenIds($row['id']);
                 db('cms_channel')->where('id', 'in', $childIds)->update(['status' => 'hidden']);
             }
+            //隐藏栏目显示时判断是否有子节点
+            if (isset($changed['isnav']) && !$changed['isnav']) {
+                static $tree;
+                if (!$tree) {
+                    $tree = \fast\Tree::instance();
+                    $tree->init(collection(Channel::order('weigh desc,id desc')->field('id,parent_id,name,type,diyname,isnav,status')->select())->toArray(), 'parent_id');
+                }
+                $childIds = $tree->getChildrenIds($row['id']);
+                db('cms_channel')->where('id', 'in', $childIds)->update(['isnav' => 0]);
+            }
         });
     }
 
@@ -93,5 +108,4 @@ class Channel extends Model
     {
         return $this->belongsTo('Modelx', 'model_id')->setEagerlyType(0);
     }
-
 }

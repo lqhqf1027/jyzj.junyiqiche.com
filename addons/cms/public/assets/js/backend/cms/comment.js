@@ -29,7 +29,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'aid', sortable: true, title: __('Aid'), formatter: Table.api.formatter.search},
                         {field: 'pid', sortable: true, title: __('Pid'), formatter: Table.api.formatter.search, visible: false},
                         {field: 'user_id', sortable: true, title: __('User_id'), formatter: Table.api.formatter.search},
-                        {field: 'archives.title', title: __('Title'), operate: false},
+                        {field: 'user.nickname', operate: false, title: __('Nickname')},
+                        {
+                            field: 'title', title: __('Title'), operate: false, formatter: function (value, row, index) {
+                                return row.spage && row.spage.id ? row.spage.title : (row.archives && row.archives.id ? row.archives.title : __('None'));
+                            }
+                        },
                         {field: 'comments', sortable: true, title: __('Comments')},
                         {field: 'ip', title: __('Ip'), formatter: Table.api.formatter.search},
                         {field: 'useragent', title: __('Useragent'), visible: false},

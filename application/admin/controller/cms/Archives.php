@@ -13,7 +13,7 @@ use think\db\Query;
 /**
  * 内容表
  *
- * @icon fa fa-circle-o
+ * @icon fa fa-file-text-o
  */
 class Archives extends Backend
 {
@@ -31,6 +31,7 @@ class Archives extends Backend
     {
         parent::_initialize();
         $this->model = new \app\admin\model\cms\Archives;
+        $cms = get_addon_config('cms');
 
         //是否超级管理员
         $this->isSuperAdmin = $this->auth->isSuperAdmin();
@@ -39,7 +40,7 @@ class Archives extends Backend
         $all = collection(Channel::order("weigh desc,id desc")->select())->toArray();
 
         //允许的栏目
-        $this->channelIds = $this->isSuperAdmin ? Channel::column('id') : ChannelAdmin::getAdminChanneIds();
+        $this->channelIds = $this->isSuperAdmin || !$cms['channelallocate'] ? Channel::column('id') : ChannelAdmin::getAdminChanneIds();
         $parentChannelIds = Channel::where('id', 'in', $this->channelIds)->column('parent_id');
         foreach ($all as $k => $v) {
             $state = ['opened' => true];
@@ -64,16 +65,15 @@ class Archives extends Backend
             ];
         }
         $tree = Tree::instance()->init($all, 'parent_id');
-        $channelOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
+        $channelOptions = $tree->getTree(0, "<option model='@model_id' value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
         $this->view->assign('channelOptions', $channelOptions);
         $this->assignconfig('channelList', $channelList);
 
+        $this->assignconfig("flagList", $this->model->getFlagList());
         $this->view->assign("flagList", $this->model->getFlagList());
         $this->view->assign("statusList", $this->model->getStatusList());
 
-        $cms = get_addon_config('cms');
         $this->assignconfig('cms', ['archiveseditmode' => $cms['archiveseditmode']]);
-
     }
 
     /**
@@ -84,7 +84,7 @@ class Archives extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            $this->relationSearch = TRUE;
+            $this->relationSearch = true;
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
@@ -196,11 +196,12 @@ class Archives extends Backend
      * @param mixed $ids
      * @return string
      */
-    public function edit($ids = NULL)
+    public function edit($ids = null)
     {
         $row = $this->model->get($ids);
-        if (!$row)
+        if (!$row) {
             $this->error(__('No Results were found'));
+        }
         $adminIds = $this->getDataLimitAdminIds();
         if (is_array($adminIds)) {
             if (!in_array($row[$this->dataLimitField], $adminIds)) {
@@ -223,7 +224,7 @@ class Archives extends Backend
         }
         $addon = db($model['table'])->where('id', $row['id'])->find();
         if ($addon) {
-            $row = array_merge($row->toArray(), $addon);
+            $row->setData($addon);
         }
 
         $disabledIds = [];
@@ -234,7 +235,7 @@ class Archives extends Backend
             }
         }
         $tree = Tree::instance()->init($all, 'parent_id');
-        $channelOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", $row['channel_id'], $disabledIds);
+        $channelOptions = $tree->getTree(0, "<option model='@model_id' value=@id @selected @disabled>@spacer@name</option>", $row['channel_id'], $disabledIds);
         $this->view->assign('channelOptions', $channelOptions);
         $this->view->assign("row", $row);
         return $this->view->fetch();
@@ -297,7 +298,6 @@ class Archives extends Backend
             $this->success();
         }
         $this->error(__('No rows were updated'));
-
     }
 
     /**
@@ -358,7 +358,6 @@ class Archives extends Backend
         $archives_id = $this->request->post('archives_id');
         $channel = Channel::get($channel_id, 'model');
         if ($channel && $channel['type'] === 'list') {
-
             $values = [];
             if ($archives_id) {
                 $values = db($channel['model']['table'])->where('id', $archives_id)->find();
@@ -373,14 +372,16 @@ class Archives extends Backend
                 $v->rule = str_replace(',', '; ', $v->rule);
                 if (in_array($v->type, ['checkbox', 'lists', 'images'])) {
                     $checked = '';
-                    if ($v['minimum'] && $v['maximum'])
+                    if ($v['minimum'] && $v['maximum']) {
                         $checked = "{$v['minimum']}~{$v['maximum']}";
-                    else if ($v['minimum'])
+                    } elseif ($v['minimum']) {
                         $checked = "{$v['minimum']}~";
-                    else if ($v['maximum'])
+                    } elseif ($v['maximum']) {
                         $checked = "~{$v['maximum']}";
-                    if ($checked)
+                    }
+                    if ($checked) {
                         $v->rule .= (';checked(' . $checked . ')');
+                    }
                 }
                 if (in_array($v->type, ['checkbox', 'radio']) && stripos($v->rule, 'required') !== false) {
                     $v->rule = str_replace('required', 'checked', $v->rule);
@@ -422,5 +423,4 @@ class Archives extends Backend
             $this->success();
         }
     }
-
 }

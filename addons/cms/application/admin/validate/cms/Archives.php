@@ -23,5 +23,4 @@ class Archives extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }

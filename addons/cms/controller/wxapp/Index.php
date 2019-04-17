@@ -12,13 +12,7 @@ use app\common\model\Addon;
  */
 class Index extends Base
 {
-
     protected $noNeedLogin = '*';
-
-    public function _initialize()
-    {
-        parent::_initialize();
-    }
 
     /**
      * 首页
@@ -26,7 +20,7 @@ class Index extends Base
     public function index()
     {
         $bannerList = [];
-        $list = Block::getBlockList(['name' => 'focus', 'row' => 5]);
+        $list = Block::getBlockList(['name' => 'indexfocus', 'row' => 5]);
         foreach ($list as $index => $item) {
             $bannerList[] = ['image' => cdnurl($item['image'], true), 'url' => '/', 'title' => $item['title']];
         }
@@ -44,14 +38,16 @@ class Index extends Base
             $tabList[] = ['id' => $item['id'], 'title' => $item['name']];
         }
         $archivesList = Archives::getArchivesList([]);
+        $archivesList = collection($archivesList)->toArray();
+        foreach ($archivesList as $index => &$item) {
+            $item['url'] = $item['fullurl'];
+            unset($item['imglink'], $item['textlink'], $item['channellink'], $item['tagslist'], $item['weigh'], $item['status'], $item['deletetime'], $item['memo'], $item['img']);
+        }
         $data = [
             'bannerList'   => $bannerList,
             'tabList'      => $tabList,
             'archivesList' => $archivesList,
         ];
         $this->success('', $data);
-
     }
-
-
 }

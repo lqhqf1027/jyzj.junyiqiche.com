@@ -12,7 +12,6 @@ use think\Config;
  */
 class Common extends Base
 {
-
     protected $noNeedLogin = '*';
 
     public function _initialize()
@@ -27,7 +26,7 @@ class Common extends Base
     {
         //焦点图
         $bannerList = [];
-        $list = Block::getBlockList(['name' => 'focus', 'row' => 5]);
+        $list = Block::getBlockList(['name' => 'indexfocus', 'row' => 5]);
         foreach ($list as $index => $item) {
             $bannerList[] = ['image' => cdnurl($item['image'], true), 'url' => '/', 'title' => $item['title']];
         }
@@ -53,7 +52,8 @@ class Common extends Base
         //配置信息
         $upload = Config::get('upload');
         $upload['cdnurl'] = $upload['cdnurl'] ? $upload['cdnurl'] : cdnurl('', true);
-        $upload['uploadurl'] = $upload['uploadurl'] == 'ajax/upload' ? cdnurl('/ajax/upload', true) : $upload['cdnurl'];
+        $upload['uploadurl'] = $upload['uploadurl'] == 'ajax/upload' ? url('api/ajax/upload', [], '', true) : $upload['cdnurl'];
+
         $config = [
             'upload' => $upload
         ];
@@ -66,8 +66,5 @@ class Common extends Base
             'config'         => $config
         ];
         $this->success('', $data);
-
     }
-
-
 }

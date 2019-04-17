@@ -1,4 +1,6 @@
 $(function () {
+    window.isMobile = !!("ontouchstart" in window);
+
     function AddFavorite(sURL, sTitle) {
         if (/firefox/i.test(navigator.userAgent)) {
             return false;
@@ -10,10 +12,11 @@ $(function () {
             return true;
         } else {
             var touch = (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Command' : 'CTRL');
-            alert('请使用 ' + touch + ' + D 添加到收藏夹.');
+            layer.msg('请使用 ' + touch + ' + D 添加到收藏夹.');
             return false;
         }
     }
+
     var len = function (str) {
         if (!str)
             return 0;
@@ -27,43 +30,46 @@ $(function () {
         }
         return length;
     };
-    //搜索框
-    $("input[name='search']").on("focus", function(){
-       $(this).closest(".form-search").addClass("focused");
-    }).on("blur", function(){
-        var that = this;
-        setTimeout(function(){
-            $(that).closest(".form-search").removeClass("focused");
-        }, 1000);
-    });
+
+    //new LazyLoad({elements_selector: ".lazy"});
+
+    if (!isMobile) {
+        // 搜索框
+        $("input[name='search']").on("focus", function () {
+            $(this).closest(".form-search").addClass("focused");
+        }).on("blur", function (e) {
+            var that = this;
+            setTimeout(function () {
+                $(that).closest(".form-search").removeClass("focused");
+            }, 500);
+        });
+    }
     // 点击收藏
     $(".addbookbark").attr("rel", "sidebar").click(function () {
         return !AddFavorite(window.location.href, $(this).attr("title"));
     });
+
     // 点赞
-    $(document).on("click", ".product-like-wrapper > a", function () {
-        var ids = JSON.parse(localStorage.getItem("vote"));
-        ids = $.isArray(ids) ? ids : [];
+    $(document).on("click", ".btn-like", function () {
+        var that = this;
         var id = $(this).data("id");
-        if ($.inArray(id, ids) > -1) {
-            alert("你已经投过票了");
+        var type = $(this).data("type");
+        if (CMS.api.storage(type + "vote." + id)) {
+            layer.msg("你已经点过赞了");
             return false;
         }
-        $.ajax({
-            type: "post",
-            data: $(this).data(),
-            dataType: 'json',
-            success: function (ret) {
-                if (ret.code === 1) {
-                    ids.push(id);
-                    $(".like-bar-wrapper .bar span").css("width", ret.data.likeratio + "%");
-                    $(".like-bar-wrapper .num i").text(ret.data.likes);
-                    $(".like-bar-wrapper .num span").text(ret.data.dislikes);
-                    localStorage.setItem("vote", JSON.stringify(ids));
-                }
-            }
+        CMS.api.ajax({
+            data: $(this).data()
+        }, function (data, ret) {
+            $("span", that).text(ret.data.likes);
+            CMS.api.storage(type + "vote." + id, true);
+            return false;
+        }, function () {
+            return false;
         });
     });
+
+    //评论列表
     if ($("#comment-container").size() > 0) {
         var ci, si;
         $("#commentlist dl dd div,#commentlist dl dd dl dd").on({
@@ -167,53 +173,71 @@ $(function () {
             scrollTop: 0
         }, 700);
     });
-    // 如果是PC则移除navbar的dropdown点击事件
+
+    //如果是PC则移除navbar的dropdown点击事件
     if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(navigator.userAgent)) {
         $("#navbar-collapse [data-toggle='dropdown']").removeAttr("data-toggle");
     } else {
         $(".navbar-nav ul li:not(.dropdown-submenu):not(.dropdown) a").removeAttr("data-toggle");
     }
+
     $.fn.typeahead.Constructor.prototype.click = function (e) {
 
     };
-    // 搜索自动完成
-    $("#searchinput").typeahead({
-        onSelect: function (item) {
-            console.log(item);
-            location.href = item.value.url;
-        },
-        grepper: function (data) {
-            return data;
-        },
-        render: function (items) {
-            var that = this;
-            items = $(items).map(function (i, item) {
-                var i = $(that.options.item);
-                i.data("value", item);
-                i.find('a').attr('href', item.url);
-                i.find('a').html('<h5>' + item.title + '</h5>');
-                return i[0];
-            });
-            items.first().addClass('active');
-            that.$menu.css("width", "250px");
-            that.$menu.html(items);
-            return that;
-        },
-        alignWidth: false,
-        ajax: {
-            url: $("#searchinput").data("typeahead-url"),
-            valueField: "url",
-            method: "post",
-            dataType: "JSON",
-            preDispatch: function (query) {
-                return {
-                    search: query
-                };
+    if (!isMobile) {
+        // 搜索自动完成
+        $("#searchinput").typeahead({
+            onSelect: function (item) {
+                console.log(item);
+                location.href = item.value.url;
             },
-            preProcess: function (data) {
+            grepper: function (data) {
                 return data;
+            },
+            render: function (items) {
+                var that = this;
+                items = $(items).map(function (i, item) {
+                    var i = $(that.options.item);
+                    i.data("value", item);
+                    i.find('a').attr('href', item.url);
+                    i.find('a').html('<h5>' + item.title + '</h5>');
+                    return i[0];
+                });
+                items.first().addClass('active');
+                that.$menu.css("width", "250px");
+                that.$menu.html(items);
+                return that;
+            },
+            alignWidth: false,
+            ajax: {
+                url: $("#searchinput").data("typeahead-url"),
+                valueField: "url",
+                method: "post",
+                dataType: "JSON",
+                preDispatch: function (query) {
+                    return {
+                        search: query
+                    };
+                },
+                preProcess: function (data) {
+                    return data;
+                }
             }
+        });
+    }
+    // 打赏
+    $(".btn-donate").popover({
+        trigger: 'hover',
+        placement: 'top',
+        html: true,
+        content: function () {
+            return "<img src='" + $(this).data("image") + "' width='250' height='250'/>";
         }
+    });
+    $(document).on("click", ".btn-paynow", function () {
+        layer.confirm("请根据支付状态选择下面的操作按钮", {title: "温馨提示", icon: 0, btn: ["支付成功", "支付失败"]}, function () {
+            location.reload();
+        });
     });
     // 百度分享
     if ($(".bdsharebuttonbox").size() > 0) {
