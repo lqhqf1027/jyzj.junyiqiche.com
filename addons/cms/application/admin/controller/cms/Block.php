@@ -7,7 +7,7 @@ use app\common\controller\Backend;
 /**
  * 区块表
  *
- * @icon fa fa-th-large
+ * @icon fa fa-circle-o
  */
 class Block extends Backend
 {
@@ -59,4 +59,5 @@ class Block extends Backend
     {
         return parent::import();
     }
+
 }

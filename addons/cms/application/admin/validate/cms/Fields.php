@@ -39,9 +39,11 @@ class Fields extends Validate
     {
         //如果是编辑模式，则排除下主键
         $ids = request()->param("ids");
-        if ($ids) {
+        if ($ids)
+        {
             $this->rule['name|名称'] .= ",{$ids}";
         }
         parent::__construct($rules, $message, $field);
     }
+
 }

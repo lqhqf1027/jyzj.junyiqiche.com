@@ -11,8 +11,9 @@ use think\Validate;
 /**
  * 评论模型
  */
-class Comment extends Model
+class Comment Extends Model
 {
+
     protected $name = "cms_comment";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -27,6 +28,7 @@ class Comment extends Model
     //自定义初始化
     protected static function init()
     {
+
     }
 
     public function getCreateDateAttr($value, $data)
@@ -58,7 +60,6 @@ class Comment extends Model
         $params['user_id'] = $auth->id;
         $params['type'] = isset($params['type']) ? $params['type'] : 'archives';
         $params['content'] = nl2br($params['content']);
-        $params['content'] = preg_replace("/(@([\s\S]*?))\s+/i", '<em>$1</em> ', $params['content']);
 
         $archives = $params['type'] == 'archives' ? Archives::get($params['aid']) : Page::get($params['aid']);
         if (!$archives || $archives['status'] == 'hidden') {
@@ -114,6 +115,7 @@ class Comment extends Model
                         ->message('<div style="min-height:550px; padding: 100px 55px 200px;">' . $content . '</div>')
                         ->send();
                 } catch (\think\Exception $e) {
+
                 }
             }
         }
@@ -140,7 +142,6 @@ class Comment extends Model
         $pagesize = empty($params['pagesize']) ? $row : $params['pagesize'];
         $cache = !isset($params['cache']) ? false : (int)$params['cache'];
         $orderway = in_array($orderway, ['asc', 'desc']) ? $orderway : 'desc';
-        $cache = !$cache ? false : $cache;
 
         $where = [];
         if ($type) {
@@ -168,6 +169,7 @@ class Comment extends Model
     public static function render(&$list)
     {
         foreach ($list as $k => &$v) {
+
         }
         return $list;
     }
@@ -188,11 +190,4 @@ class Comment extends Model
         return $this->belongsTo("addons\cms\model\Archives", 'aid')->field('id,title,image,diyname,model_id,channel_id,likes,dislikes,tags,createtime')->setEagerlyType(1);
     }
 
-    /**
-     * 关联单页模型
-     */
-    public function spage()
-    {
-        return $this->belongsTo("addons\cms\model\Page", 'aid')->field('id,title,createtime')->setEagerlyType(1);
-    }
 }

@@ -7,8 +7,9 @@ use think\Model;
 /**
  * 模型
  */
-class Modelx extends Model
+class Modelx Extends Model
 {
+
     protected $name = "cms_model";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -26,7 +27,7 @@ class Modelx extends Model
 
     public function getSettingAttr($value, $data)
     {
-        return (array)json_decode($value, true);
+        return (array)json_decode($value, TRUE);
     }
 
     public function getFieldsListAttr($value, $data)
@@ -50,4 +51,5 @@ class Modelx extends Model
         }
         return $fieldsList;
     }
+
 }

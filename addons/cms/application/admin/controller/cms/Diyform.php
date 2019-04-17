@@ -7,7 +7,7 @@ use app\common\controller\Backend;
 /**
  * 自定义表单表
  *
- * @icon fa fa-list
+ * @icon fa fa-circle-o
  */
 class Diyform extends Backend
 {
@@ -23,4 +23,5 @@ class Diyform extends Backend
         $this->model = new \app\admin\model\cms\Diyform;
         $this->view->assign("statusList", $this->model->getStatusList());
     }
+
 }

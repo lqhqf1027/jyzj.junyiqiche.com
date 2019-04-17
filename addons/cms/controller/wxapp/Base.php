@@ -9,10 +9,11 @@ use think\Lang;
 
 class Base extends Api
 {
+
     protected $noNeedLogin = [];
     protected $noNeedRight = ['*'];
     //设置返回的会员字段
-    protected $allowFields = ['id', 'username', 'nickname', 'mobile', 'avatar', 'score', 'level', 'bio', 'balance', 'money'];
+    protected $allowFields = ['id', 'username', 'nickname', 'mobile', 'avatar', 'score', 'level', 'bio', 'balance'];
 
     public function _initialize()
     {
@@ -25,4 +26,6 @@ class Base extends Api
         Lang::load(ROOT_PATH . '/addons/cms/lang/zh-cn.php');
         Lang::load(APP_PATH . '/index/lang/zh-cn/user.php');
     }
+
+
 }

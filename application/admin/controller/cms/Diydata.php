@@ -84,12 +84,11 @@ class Diydata extends Backend
     /**
      * 编辑
      */
-    public function edit($ids = null)
+    public function edit($ids = NULL)
     {
         $row = $this->model->where('id', $ids)->find();
-        if (!$row) {
+        if (!$row)
             $this->error(__('No Results were found'));
-        }
         $adminIds = $this->getDataLimitAdminIds();
         if (is_array($adminIds)) {
             if (!in_array($row[$this->dataLimitField], $adminIds)) {
@@ -155,16 +154,14 @@ class Diydata extends Backend
             $v->rule = str_replace(',', '; ', $v->rule);
             if (in_array($v->type, ['checkbox', 'lists', 'images'])) {
                 $checked = '';
-                if ($v['minimum'] && $v['maximum']) {
+                if ($v['minimum'] && $v['maximum'])
                     $checked = "{$v['minimum']}~{$v['maximum']}";
-                } elseif ($v['minimum']) {
+                else if ($v['minimum'])
                     $checked = "{$v['minimum']}~";
-                } elseif ($v['maximum']) {
+                else if ($v['maximum'])
                     $checked = "~{$v['maximum']}";
-                }
-                if ($checked) {
+                if ($checked)
                     $v->rule .= (';checked(' . $checked . ')');
-                }
             }
             if (in_array($v->type, ['checkbox', 'radio']) && stripos($v->rule, 'required') !== false) {
                 $v->rule = str_replace('required', 'checked', $v->rule);
@@ -178,12 +175,4 @@ class Diydata extends Backend
         $this->view->assign('values', $values);
     }
 
-    /**
-     * 导入
-     */
-    public function import($ids = "")
-    {
-        $this->model = new \addons\cms\model\Diydata($this->diyform->table);
-        return parent::import();
-    }
 }

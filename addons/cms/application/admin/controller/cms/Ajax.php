@@ -44,12 +44,10 @@ class Ajax extends Backend
             $themeDir = ADDON_PATH . 'cms' . DS . 'view' . DS . $config['theme'] . DS;
             $dh = opendir($themeDir);
             while (false !== ($filename = readdir($dh))) {
-                if ($filename == '.' || $filename == '..') {
+                if ($filename == '.' || $filename == '..')
                     continue;
-                }
                 if ($type) {
-                    $rule = $type == 'channel' ? '(channel|list)' : $type;
-                    if (!preg_match("/^{$rule}(.*)/i", $filename)) {
+                    if (!preg_match("/^{$type}(.*)/i", $filename)) {
                         continue;
                     }
                 }
@@ -60,4 +58,5 @@ class Ajax extends Backend
         }
         return $result = ['total' => count($files), 'list' => $files];
     }
+
 }

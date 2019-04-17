@@ -1,15 +1,16 @@
 <?php
 
 namespace addons\cms\controller\wxapp;
-use think\Db;
-use Endroid\QrCode\QrCode;
-use fast\Random;
-use think\Exception;
+
+use addons\cms\model\Comment;
+use addons\cms\model\Page;
+
 /**
  * 我的
  */
 class My extends Base
 {
+
     protected $noNeedLogin = ['aboutus'];
 
     public function _initialize()
@@ -18,29 +19,33 @@ class My extends Base
     }
 
     /**
-     * 生成二维码
-     * @throws \Endroid\QrCode\Exceptions\ImageTypeInvalidException
+     * 我发表的评论
      */
-    public function setQrcode()
+    public function comment()
     {
-        $user_id = $this->request->post('user_id');
-        if (!(int)$user_id) $this->error('参数错误');
-        $time = date('YmdHis');
-        $qrCode = new QrCode();
-        $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?user_id=' . $user_id)
-            ->setSize(150)
-            ->setPadding(10)
-            ->setErrorCorrection('high')
-            ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
-            ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
-            ->setLabel(' ')
-            ->setLabelFontSize(10)
-            ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
-        $fileName = DS . 'uploads' . DS . 'qrcode' . DS . $time . '_' . $user_id . '.png';
-        $qrCode->save(ROOT_PATH . 'public' . $fileName);
-        if ($qrCode) {
-            User::update(['id' => $user_id, 'invitation_code_img' => $fileName]) ? $this->success('创建成功', $fileName) : $this->error('创建失败');
+        $page = (int)$this->request->request('page');
+        $commentList = Comment::
+            with('archives')
+            ->where(['user_id' => $this->auth->id])
+            ->order('id desc')
+            ->page($page, 10)
+            ->select();
+        foreach ($commentList as $index => $item) {
+            $item->create_date = human_date($item->createtime);
         }
-        $this->error('未知错误');
+
+        $this->success('', ['commentList' => $commentList]);
+    }
+
+    /**
+     * 关于我们
+     */
+    public function aboutus()
+    {
+        $pageInfo = Page::getByDiyname('aboutus');
+        if (!$pageInfo || $pageInfo['status'] != 'normal') {
+            $this->error(__('单页未找到'));
+        }
+        $this->success('', ['pageInfo' => $pageInfo]);
     }
 }

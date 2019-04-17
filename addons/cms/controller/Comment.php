@@ -13,7 +13,13 @@ use think\Exception;
  */
 class Comment extends Controller
 {
+
     protected $model = null;
+
+    public function _initialize()
+    {
+        parent::_initialize();
+    }
 
     /**
      * 发表评论
@@ -50,4 +56,5 @@ class Comment extends Controller
         $comment->save();
         $this->success('取消评论订阅成功');
     }
+
 }

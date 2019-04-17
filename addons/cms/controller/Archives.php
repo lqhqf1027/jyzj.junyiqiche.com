@@ -6,7 +6,6 @@ use addons\cms\model\Archives as ArchivesModel;
 use addons\cms\model\Channel;
 use addons\cms\model\Modelx;
 use think\Config;
-use think\Exception;
 
 /**
  * 文档控制器
@@ -15,6 +14,7 @@ use think\Exception;
  */
 class Archives extends Base
 {
+
     public function index()
     {
         $action = $this->request->post("action");
@@ -43,8 +43,10 @@ class Archives extends Base
         if ($addon) {
             if ($model->fields) {
                 $fieldsContentList = $model->getFieldsContentList($model->id);
-                ArchivesModel::appendTextAttr($fieldsContentList, $addon);
-
+                //附加列表字段
+                array_walk($fieldsContentList, function ($content, $field) use (&$addon) {
+                    $addon[$field . '_text'] = isset($content[$addon[$field]]) ? $content[$addon[$field]] : $addon[$field];
+                });
             }
             $archives->setData($addon);
         } else {
@@ -79,25 +81,4 @@ class Archives extends Base
         $this->success(__('Operation completed'), null, ['likes' => $archives->likes, 'dislikes' => $archives->dislikes, 'likeratio' => $archives->likeratio]);
     }
 
-    /**
-     * 下载次数
-     */
-    public function download()
-    {
-        $id = (int)$this->request->post("id");
-        if (!$id) {
-            $this->error(__('Operation failed'));
-        }
-        $archives = ArchivesModel::get($id, ['model']);
-        if (!$archives || ($archives['user_id'] != $this->auth->id && $archives['status'] != 'normal') || $archives['deletetime']) {
-            $this->error(__('No specified article found'));
-        }
-        try {
-            $table = $archives->getRelation('model')->getData('table');
-            \think\Db::name($table)->where('id', $id)->setInc('downloads');
-        } catch (Exception $e) {
-            //
-        }
-        $this->success(__('Operation completed'), null);
-    }
 }

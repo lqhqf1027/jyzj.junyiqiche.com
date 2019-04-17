@@ -7,8 +7,9 @@ use think\Model;
 /**
  * 自定义表单模型
  */
-class Diyform extends Model
+class Diyform Extends Model
 {
+
     protected $name = "cms_diyform";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -46,16 +47,14 @@ class Diyform extends Model
             $v->rule = str_replace(',', '; ', $v->rule);
             if (in_array($v->type, ['checkbox', 'lists', 'images'])) {
                 $checked = '';
-                if ($v['minimum'] && $v['maximum']) {
+                if ($v['minimum'] && $v['maximum'])
                     $checked = "{$v['minimum']}~{$v['maximum']}";
-                } elseif ($v['minimum']) {
+                else if ($v['minimum'])
                     $checked = "{$v['minimum']}~";
-                } elseif ($v['maximum']) {
+                else if ($v['maximum'])
                     $checked = "~{$v['maximum']}";
-                }
-                if ($checked) {
+                if ($checked)
                     $v->rule .= (';checked(' . $checked . ')');
-                }
             }
             if (in_array($v->type, ['checkbox', 'radio']) && stripos($v->rule, 'required') !== false) {
                 $v->rule = str_replace('required', 'checked', $v->rule);
@@ -67,4 +66,5 @@ class Diyform extends Model
 
         return $fields;
     }
+
 }

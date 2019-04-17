@@ -13,8 +13,9 @@ use think\Request;
 /**
  * 订单模型
  */
-class Order extends Model
+class Order Extends Model
 {
+
     protected $name = "cms_order";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -39,6 +40,7 @@ class Order extends Model
     protected static function getQueryCondition()
     {
         $condition = function ($query) {
+
             $auth = Auth::instance();
             $user_id = $auth->isLogin() ? $auth->id : 0;
             $ip = Request::instance()->ip();
@@ -49,13 +51,14 @@ class Order extends Model
                 $query->where('user_id', 0)->where('ip', $ip);
                 //$query->where('ip', $ip);
             }
+
         };
         return $condition;
     }
 
     /**
      * 检查订单
-     * @param int $id
+     * @param $id
      * @return bool
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -79,7 +82,7 @@ class Order extends Model
 
     /**
      * 发起订单支付
-     * @param int    $id
+     * @param $id
      * @param string $paytype
      * @throws Exception
      * @throws \think\db\exception\DataNotFoundException
@@ -101,13 +104,11 @@ class Order extends Model
         }
         $auth = Auth::instance();
         $request = \think\Request::instance();
-        if (!$order || (time() - $order->createtime) > 1800) {
-            $orderid = date("YmdHis") . mt_rand(100000, 999999);
+        if (!$order) {
             $data = [
                 'user_id'     => $auth->id ? $auth->id : 0,
-                'orderid'     => $orderid,
                 'archives_id' => $archives->id,
-                'title'       => "付费阅读",
+                'title'       => $archives->title,
                 'amount'      => $archives->price,
                 'payamount'   => 0,
                 'paytype'     => $paytype,
@@ -133,7 +134,7 @@ class Order extends Model
             \think\Db::startTrans();
             try {
                 User::money(-$archives->price, $auth->id, '购买付费文档:' . $archives['title']);
-                self::settle($order->orderid);
+                self::settle($order->id);
                 \think\Db::commit();
             } catch (Exception $e) {
                 \think\Db::rollback();
@@ -142,31 +143,57 @@ class Order extends Model
             throw new OrderException('余额支付成功', 1);
         }
 
+        //使用企业支付
         $epay = get_addon_info('epay');
         if ($epay && $epay['state']) {
             $notifyurl = $request->root(true) . '/addons/cms/order/epay/type/notify/paytype/' . $paytype;
             $returnurl = $request->root(true) . '/addons/cms/order/epay/type/return/paytype/' . $paytype;
 
-            \addons\epay\library\Service::submitOrder($order->amount, $order->orderid, $paytype, "支付{$order->amount}元", $notifyurl, $returnurl);
+            $config = [
+                'notify_url' => $notifyurl,
+                'return_url' => $returnurl
+            ];
+            //创建支付对象
+            $pay = Service::createPay($paytype, $config);
+
+            if ($paytype == 'alipay') {
+                //支付宝支付,请根据你的需求,仅选择你所需要的即可
+                $order = [
+                    'out_trade_no' => $order->id,//你的订单号
+                    'total_amount' => $order->amount,//单位元
+                    'subject'      => $archives->title,
+                ];
+
+                $pay->web($order)->send();
+            } else {
+                //微信支付,请根据你的需求,仅选择你所需要的即可
+                $order = [
+                    'out_trade_no' => $order->id,//你的订单号
+                    'body'         => $archives->title,
+                    'total_fee'    => $order->amount * 100, //单位分
+                ];
+
+                $pay->wap($order)->send();
+            }
         } else {
             $result = \think\Hook::listen('cms_order_submit', $order);
             if (!$result) {
-                throw new OrderException("请先在后台安装配置微信支付宝整合插件");
+                throw new OrderException("请先在后台安装配置企业支付插件");
             }
         }
     }
 
     /**
      * 订单结算
-     * @param  int   $orderid
-     * @param float  $payamount
+     * @param $id
+     * @param null $payamount
      * @param string $memo
      * @return bool
      * @throws \think\exception\DbException
      */
-    public static function settle($orderid, $payamount = null, $memo = '')
+    public static function settle($id, $payamount = null, $memo = '')
     {
-        $order = Order::getByOrderid($orderid);
+        $order = Order::get($id);
         if (!$order) {
             return false;
         }
@@ -184,4 +211,5 @@ class Order extends Model
     {
         return $this->belongsTo('Archives', 'archives_id', 'id');
     }
+
 }

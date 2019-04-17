@@ -14,12 +14,14 @@ use think\Validate;
  */
 class User extends Base
 {
+
     protected $noNeedLogin = ['index', 'login'];
 
     protected $token = '';
 
     public function _initialize()
     {
+
         $this->token = $this->request->post('token');
         if ($this->request->action() == 'login' && $this->token) {
             $this->request->post(['token' => '']);
@@ -34,6 +36,7 @@ class User extends Base
         if ($ucenter && $ucenter['state']) {
             include ADDON_PATH . 'ucenter' . DS . 'uc.php';
         }
+
     }
 
     /**
@@ -48,9 +51,7 @@ class User extends Base
             $this->error("参数不正确");
         }
         $userInfo = (array)json_decode($rawData, true);
-        if ($userInfo['nickName']) {
-            $userInfo['nickName'] = emoji_encode($userInfo['nickName']);
-        }
+
         $params = [
             'appid'      => $config['wxappid'],
             'secret'     => $config['wxappsecret'],
@@ -87,9 +88,7 @@ class User extends Base
                 $ret = Service::connect($platform, $result, $extend);
                 if ($ret) {
                     $auth = Auth::instance();
-                    $users = $auth->getUserinfo();
-                    $users['nickname'] = emoji_decode($users['nickname']);
-                    $this->success("登录成功", ['userInfo' => $users, 'openid' => $json['openid'], 'session_key' => $json['session_key']]);
+                    $this->success("登录成功", ['userInfo' => $auth->getUserinfo()]);
                 } else {
                     $this->error("连接失败");
                 }
@@ -133,7 +132,7 @@ class User extends Base
         $result = $validate->check($data);
         if (!$result) {
             $this->error(__($validate->getError()));
-            return false;
+            return FALSE;
         }
         $field = Validate::is($account, 'email') ? 'email' : (Validate::regex($account, '/^1\d{10}$/') ? 'mobile' : 'username');
         $user = \app\common\model\User::get([$field => $account]);
@@ -200,4 +199,5 @@ class User extends Base
         $user->save();
         $this->success('', ['userInfo' => $this->auth->getUserInfo()]);
     }
+
 }
