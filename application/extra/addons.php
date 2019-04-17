@@ -4,14 +4,6 @@ return array (
   'autoload' => false,
   'hooks' => 
   array (
-    'app_init' => 
-    array (
-      0 => 'cms',
-    ),
-    'response_send' => 
-    array (
-      0 => 'cms',
-    ),
     'user_sidenav_after' => 
     array (
       0 => 'cms',

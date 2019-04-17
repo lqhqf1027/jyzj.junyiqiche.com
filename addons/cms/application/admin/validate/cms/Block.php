@@ -23,4 +23,5 @@ class Block extends Validate
         'add'  => [],
         'edit' => [],
     ];
+    
 }

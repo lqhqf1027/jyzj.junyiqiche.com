@@ -23,4 +23,5 @@ class Tags extends Model
     {
         return addon_url('cms/tags/index', [':name' => $data['name']]);
     }
+
 }

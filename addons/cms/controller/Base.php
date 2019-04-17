@@ -1,7 +1,6 @@
 <?php
 
 namespace addons\cms\controller;
-
 /**
  * CMS控制器基类
  */
@@ -33,4 +32,5 @@ class Base extends \think\addons\Controller
             return $this->$action();
         }
     }
+
 }

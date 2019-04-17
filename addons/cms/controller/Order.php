@@ -14,6 +14,11 @@ use think\Exception;
 class Order extends Base
 {
 
+    public function _initialize()
+    {
+        return parent::_initialize();
+    }
+
     /**
      * 创建订单并发起支付请求
      * @throws \think\exception\DbException
@@ -46,6 +51,7 @@ class Order extends Base
 
     /**
      * 企业支付通知和回调
+     * @throws \think\exception\DbException
      */
     public function epay()
     {
@@ -62,6 +68,7 @@ class Order extends Base
                 $payamount = $paytype == 'alipay' ? $data['total_amount'] : $data['total_fee'] / 100;
                 \addons\cms\model\Order::settle($data['out_trade_no'], $payamount);
             } catch (Exception $e) {
+
             }
             echo $pay->success();
         } else {
@@ -71,13 +78,14 @@ class Order extends Base
             }
             $data = $pay->verify();
 
-            $order = \addons\cms\model\Order::getByOrderid($data['out_trade_no']);
-            if (!$order->archives) {
+            $archives = Archives::get($data['out_trade_no']);
+            if (!$archives) {
                 $this->error('未找到文档信息!');
             }
             //你可以在这里定义你的提示信息,但切记不可在此编写逻辑
-            $this->success("恭喜你！支付成功!", $order->archives->url);
+            $this->success("恭喜你！支付成功!", $archives->url);
         }
         return;
     }
+
 }

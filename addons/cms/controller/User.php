@@ -10,6 +10,8 @@ use addons\cms\model\Tags as TagsModel;
  */
 class User extends Base
 {
+
+
     public function __construct()
     {
         parent::__construct();
@@ -19,6 +21,7 @@ class User extends Base
 
     public function index()
     {
-        return ;
+        return $this->view->fetch('/user/index');
     }
+
 }

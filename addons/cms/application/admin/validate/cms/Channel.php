@@ -23,4 +23,5 @@ class Channel extends Validate
         'add'  => [],
         'edit' => [],
     ];
+    
 }

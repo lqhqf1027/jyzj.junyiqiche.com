@@ -5,10 +5,11 @@ namespace addons\cms\model;
 use think\Model;
 
 /**
- * 区块模型
+ * 标签模型
  */
-class Block extends Model
+class Block Extends Model
 {
+
     protected $name = "cms_block";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -50,9 +51,8 @@ class Block extends Model
         $imgwidth = empty($params['imgwidth']) ? '' : $params['imgwidth'];
         $imgheight = empty($params['imgheight']) ? '' : $params['imgheight'];
         $orderway = in_array($orderway, ['asc', 'desc']) ? $orderway : 'desc';
-        $cache = !$cache ? false : $cache;
 
-        $where = ['status' => 'normal'];
+        $where = [];
         if ($name !== '') {
             $where['name'] = $name;
         }
@@ -88,14 +88,13 @@ class Block extends Model
         $value = isset($params[$field]) ? $params[$field] : '';
         $cache = !isset($params['cache']) ? true : (int)$params['cache'];
         $row = self::where($field, $value)
-            ->where('status', 'normal')
             ->cache($cache)
             ->find();
         $result = '';
         if ($row) {
             if ($row['content']) {
                 $result = $row['content'];
-            } elseif ($row['image']) {
+            } else if ($row['image']) {
                 $result = '<img src="' . $row['image'] . '" class="img-responsive"/>';
             } else {
                 $result = $row['title'];
@@ -106,4 +105,5 @@ class Block extends Model
         }
         return $result;
     }
+
 }

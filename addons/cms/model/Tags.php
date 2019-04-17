@@ -8,8 +8,9 @@ use think\Model;
 /**
  * 标签模型
  */
-class Tags extends Model
+class Tags Extends Model
 {
+
     protected $name = "cms_tags";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -43,6 +44,9 @@ class Tags extends Model
      * 获取标签列表
      * @param $tag
      * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public static function getTagsList($tag)
     {
@@ -54,7 +58,6 @@ class Tags extends Model
         $limit = empty($tag['limit']) ? $row : $tag['limit'];
         $cache = !isset($tag['cache']) ? true : (int)$tag['cache'];
         $orderway = in_array($orderway, ['asc', 'desc']) ? $orderway : 'desc';
-        $cache = !$cache ? false : $cache;
 
         $where = [];
 
@@ -72,4 +75,5 @@ class Tags extends Model
         }
         return $list;
     }
+
 }

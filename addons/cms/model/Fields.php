@@ -21,6 +21,7 @@ class Fields extends \think\Model
 
     protected static function init()
     {
+
     }
 
     public function getIsrequireAttr($value, $data)
@@ -46,4 +47,5 @@ class Fields extends \think\Model
     {
         return $this->belongsTo('Modelx', 'model_id')->setEagerlyType(0);
     }
+
 }

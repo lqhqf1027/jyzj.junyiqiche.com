@@ -23,4 +23,5 @@ class Modelx extends Validate
         'add'  => [],
         'edit' => [],
     ];
+    
 }

@@ -11,6 +11,7 @@ use addons\cms\model\Archives;
  */
 class Search extends Base
 {
+
     public function index()
     {
         $search = $this->request->request("search");
@@ -21,12 +22,10 @@ class Search extends Base
         $orderby = $this->request->get('orderby', '');
         $orderway = $this->request->get('orderway', '', 'strtolower');
         $params = ['search' => $search];
-        if ($orderby) {
+        if ($orderby)
             $params['orderby'] = $orderby;
-        }
-        if ($orderway) {
+        if ($orderway)
             $params['orderway'] = $orderway;
-        }
 
         $sortrank = [
             ['name' => 'default', 'field' => 'weigh', 'title' => __('Default')],
@@ -72,4 +71,5 @@ class Search extends Base
         $result[] = ['id' => 0, 'title' => __('Search more %s', $search), 'url' => addon_url("cms/search/index", [':search' => $search, 'search' => $search])];
         return json($result);
     }
+
 }
