@@ -147,7 +147,7 @@ class Auth
             'password' => $password,
             'email'    => $email,
             'mobile'   => $mobile,
-            'level'    => 1,
+            'level'    => 0,
             'score'    => 0,
             'avatar'   => '',
         ];
