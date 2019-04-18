@@ -39,6 +39,45 @@ class Vehiclemanagement extends Backend
         $this->view->assign([
             'total_violation' => OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id')
         ]);
+
+//        $query_today = OrderDetails::whereTime('last_update_check_time', 'today')->find();
+
+        $check_time = collection(OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status','neq','no_queries')->select())->toArray();
+
+//        pr($check_time);die;
+        $times = time();
+
+//        $config_time = strtotime(Db::name('config')->where('name', 'last_update_time')->value('value'));
+//
+//        if ($config_time > strtotime(date('Ymd')) && $config_time < (strtotime(date('Ymd')) + 86400)) {
+//
+//        }
+
+
+        foreach ($check_time as $value) {
+
+            $year_status = $traffic_force_status = $business_status = 'no_queries';
+            if ($value['annual_inspection_status'] != 'no_queries') {
+                $year_status = self::check_state($value['annual_inspection_time']);
+            }
+
+            if ($value['traffic_force_insurance_status'] != 'no_queries') {
+                $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
+            }
+
+            if ($value['business_insurance_status'] != 'no_queries') {
+                $business_status = self::check_state($value['business_insurance_time']);
+            }
+
+            OrderDetails::update([
+                'id' => $value['id'],
+                'annual_inspection_status' => $year_status,
+                'traffic_force_insurance_status' => $traffic_force_status,
+                'business_insurance_status' => $business_status,
+//                'last_update_check_time' => $times
+            ]);
+        }
+
     }
 
     /**
@@ -74,7 +113,7 @@ class Vehiclemanagement extends Backend
             foreach ($list as $row) {
                 $row->visible(['id', 'username', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status']);
                 $row->visible(['orderdetails']);
-                $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy', 'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal']);
+                $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy', 'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal','annual_inspection_time','traffic_force_insurance_time','business_insurance_time','annual_inspection_status','traffic_force_insurance_status','business_insurance_status']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
@@ -83,7 +122,6 @@ class Vehiclemanagement extends Backend
 
             return json($result);
         }
-
 
         return $this->view->fetch();
     }
@@ -198,21 +236,22 @@ class Vehiclemanagement extends Backend
                     $this->error($e->getMessage());
                 }
 
-                    $time = time();
-                    if($params['annual_inspection_time']){
-                        $last_month = date('Y-m-d',$params['annual_inspection_time']);
-                        $last_month = strtotime("{$last_month} -1 month");
-                        $status_year = '';
-                        if($time<$last_month){
-                            $status_year = 'normal';
-                        }else if($time>$last_month && $time<$params['annual_inspection_time']){
-                            $status_year = 'soon';
-                        }else if($time>$params['annual_inspection_time']){
-                            $status_year = 'overdue';
-                        }
-                    }
-
-                    $this->success();
+                //修改各种日期的状态
+                $year_status = $traffic_force_status = $business_status = 'no_queries';
+                if ($params['annual_inspection_time']) {
+                    $year_status = self::check_state($params['annual_inspection_time']);
+                }
+                if ($params['traffic_force_insurance_time']) {
+                    $traffic_force_status = self::check_state($params['traffic_force_insurance_time']);
+                }
+                if ($params['business_insurance_time']) {
+                    $business_status = self::check_state($params['business_insurance_time']);
+                }
+                $row->annual_inspection_status = $year_status;
+                $row->traffic_force_insurance_status = $traffic_force_status;
+                $row->business_insurance_status = $business_status;
+                $row->save();
+                $this->success();
 
             }
             $this->error(__('Parameter %s can not be empty', ''));
@@ -225,10 +264,26 @@ class Vehiclemanagement extends Backend
         return $this->view->fetch();
     }
 
-
+    /**
+     * 检查状态
+     * @param $checktime
+     * @return string
+     */
     public static function check_state($checktime)
     {
-        
+        $time = time();
+        $last_month = date('Y-m-d', $checktime);
+        $last_month = strtotime("{$last_month} -1 month");
+        $status_year = '';
+        if ($time < $last_month) {
+            $status_year = 'normal';
+        } else if ($time > $last_month && $time < $checktime) {
+            $status_year = 'soon';
+        } else if ($time > $checktime) {
+            $status_year = 'overdue';
+        }
+
+        return $status_year;
     }
 
     /**
@@ -345,15 +400,15 @@ class Vehiclemanagement extends Backend
                         $field['total_fine'] = $total_money;
 
                         $order_details->allowField(true)->save($field, ['id' => OrderDetails::getByOrder_id($v['order_id'])->id]);
-                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => ''];
+                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal']=='violation_of_regulations'?'有':'无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
                         $success_num++;
                     } else {
 //                        $this->error("客户姓名为<b>{$v['username']}</b>的用户：".$data['reason'], '', $data);
-                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $data['reason']];
+                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $data['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
                         $error_num++;
                     }
                 } else {
-                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $result['reason']];
+                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $result['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
                     $error_num++;
                 }
 //                else {

@@ -69,16 +69,16 @@ class Order extends Backend
             ->count();
 
         $list = $this->model
-            ->with(['orderdetails', 'orderimg','admin'])
+            ->with(['orderdetails', 'orderimg', 'admin'])
             ->where($where)
             ->where('type', $type)
             ->order($sort, $order)
             ->limit($offset, $limit)
             ->select();
-        foreach ($list as $key=>$row) {
+        foreach ($list as $key => $row) {
             $row->getRelation('orderdetails')->visible(['admin_id', 'licensenumber']);
             $row->getRelation('orderimg')->visible(['id_cardimages', 'driving_licenseimages']);
-            $row->getRelation('admin')->visible(['avatar','nickname']);
+            $row->getRelation('admin')->visible(['avatar', 'nickname']);
         }
 
         $list = collection($list)->toArray();
@@ -95,7 +95,7 @@ class Order extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            
+
             $result = $this->commit('mortgage');
 
             return json($result);
@@ -136,7 +136,7 @@ class Order extends Backend
             $result = $this->commit('car_rental');
 
             return json($result);
-    
+
         }
         return $this->view->fetch();
     }
@@ -155,7 +155,7 @@ class Order extends Backend
             $result = $this->commit('full_new_car');
 
             return json($result);
-           
+
         }
         return $this->view->fetch();
     }
@@ -174,7 +174,7 @@ class Order extends Backend
             $result = $this->commit('full_used_car');
 
             return json($result);
-            
+
         }
         return $this->view->fetch();
     }
@@ -197,11 +197,11 @@ class Order extends Backend
             // die;
             if ($params) {
                 $params = $this->preExcludeFields($params);
-               if ($params['customer_source'] === 'turn_to_introduce') {
-                   if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
-                       $this->error('转介绍人信息不能为空');
-                   }
-               }
+                if ($params['customer_source'] === 'turn_to_introduce') {
+                    if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
+                        $this->error('转介绍人信息不能为空');
+                    }
+                }
                 // pr($params);die;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -216,16 +216,16 @@ class Order extends Backend
                         $this->model->validate($validate);
                     }
                     $result = $this->model->allowField(true)->save($params);
-           
+
                     $params['order_id'] = $this->model->id;
-                    
+
                     $order_details = new OrderDetails();
-        
-                    $order_details->allowField(true)->save($params); 
-                    
+
+                    $order_details->allowField(true)->save($params);
+
                     $order_img = new OrderImg();
-        
-                    $order_img->allowField(true)->save($params);   
+
+                    $order_img->allowField(true)->save($params);
 
                     Db::commit();
                 } catch (ValidateException $e) {
@@ -322,9 +322,9 @@ class Order extends Backend
             if ($params) {
                 $params = $this->preExcludeFields($params);
                 if ($params['customer_source'] === 'turn_to_introduce') {
-                   if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
-                       $this->error('转介绍人信息不能为空');
-                   }
+                    if (!trim($params['turn_to_introduce_name']) || !trim($params['turn_to_introduce_phone'])) {
+                        $this->error('转介绍人信息不能为空');
+                    }
                 }
                 // pr($params);die;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
@@ -344,13 +344,13 @@ class Order extends Backend
                     $params['order_id'] = $row->id;
 
                     $order_details = new OrderDetails();
-        
-                    $order_details->allowField(true)->save($params, ['order_id' => $row->id]); 
-                    
+
+                    $order_details->allowField(true)->save($params, ['order_id' => $row->id]);
+
                     $order_img = new OrderImg();
-        
-                    $order_img->allowField(true)->save($params, ['order_id' => $row->id]);   
-        
+
+                    $order_img->allowField(true)->save($params, ['order_id' => $row->id]);
+
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
@@ -383,14 +383,14 @@ class Order extends Backend
         $OrderDetails = OrderDetails::where('order_id', $ids)->find();
         //相关图片
         $OrderImg = OrderImg::where('order_id', $ids)->find();
-        
+
         $this->commitedit($row, 'mortgage');
-    
+
         $this->view->assign([
             'row' => $row,
             'OrderDetails' => $OrderDetails,
             'OrderImg' => $OrderImg
-            ]);
+        ]);
         return $this->view->fetch();
     }
 
@@ -404,14 +404,14 @@ class Order extends Backend
         $OrderDetails = OrderDetails::where('order_id', $ids)->find();
         //相关图片
         $OrderImg = OrderImg::where('order_id', $ids)->find();
-        
+
         $this->commitedit($row, 'used_car_mortgage');
-    
+
         $this->view->assign([
             'row' => $row,
             'OrderDetails' => $OrderDetails,
             'OrderImg' => $OrderImg
-            ]);
+        ]);
         return $this->view->fetch();
     }
 
@@ -425,14 +425,14 @@ class Order extends Backend
         $OrderDetails = OrderDetails::where('order_id', $ids)->find();
         //相关图片
         $OrderImg = OrderImg::where('order_id', $ids)->find();
-        
+
         $this->commitedit($row, 'car_rental');
-    
+
         $this->view->assign([
             'row' => $row,
             'OrderDetails' => $OrderDetails,
             'OrderImg' => $OrderImg
-            ]);
+        ]);
         return $this->view->fetch();
     }
 
@@ -446,14 +446,14 @@ class Order extends Backend
         $OrderDetails = OrderDetails::where('order_id', $ids)->find();
         //相关图片
         $OrderImg = OrderImg::where('order_id', $ids)->find();
-        
+
         $this->commitedit($row, 'full_new_car');
-    
+
         $this->view->assign([
             'row' => $row,
             'OrderDetails' => $OrderDetails,
             'OrderImg' => $OrderImg
-            ]);
+        ]);
         return $this->view->fetch();
     }
 
@@ -467,14 +467,14 @@ class Order extends Backend
         $OrderDetails = OrderDetails::where('order_id', $ids)->find();
         //相关图片
         $OrderImg = OrderImg::where('order_id', $ids)->find();
-        
+
         $this->commitedit($row, 'full_used_car');
-    
+
         $this->view->assign([
             'row' => $row,
             'OrderDetails' => $OrderDetails,
             'OrderImg' => $OrderImg
-            ]);
+        ]);
         return $this->view->fetch();
     }
 
@@ -607,6 +607,32 @@ class Order extends Backend
                     $row['car_boat_tax'] = $row['car_boat_tax'] ? $row['car_boat_tax'] : 0;
                     $row['business_risks'] = $row['business_risks'] ? $row['business_risks'] : 0;
                     $row['is_mortgage'] = $row['is_mortgage'] == '是' ? '是' : '否';
+
+                    if ($row['type']) {
+                        switch ($row['type']) {
+                            case '新车按揭':
+                                $row['type'] = 'mortgage';
+                                break;
+                            case '二手车按揭':
+                                $row['type'] = 'used_car_mortgage';
+                                break;
+                            case '纯租':
+                                $row['type'] = 'car_rental';
+                                break;
+                            case '新车全款':
+                                $row['type'] = 'full_new_car';
+                                break;
+                            case '二手车全款':
+                                $row['type'] = 'full_used_car';
+                                break;
+                            case '转租':
+                                $row['type'] = 'sublet';
+                                break;
+                            case '挂靠':
+                                $row['type'] = 'affiliated';
+                                break;
+                        }
+                    }
 
                     if ($row['type'] == 'mortgage') {
                         $row['total_contract'] = floatval($row['payment']) + floatval($row['monthly'] * intval($row['nperlist'])) + floatval($row['end_money']) + floatval($row['tail_money']);

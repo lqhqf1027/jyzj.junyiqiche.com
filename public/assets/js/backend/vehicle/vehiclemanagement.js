@@ -68,12 +68,36 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {
                             field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
 
-                                return "<img src=" +Config.cdn+row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
+                                return "<img src=" + Config.cdn + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
                             }
                         },
                         {field: 'phone', title: __('Phone')},
                         {field: 'id_card', title: __('Id_card')},
                         {field: 'models_name', title: __('Models_name')},
+                        {
+                            field: 'orderdetails.annual_inspection_time',
+                            title: __('年检截至日期'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Controller.api.formatter.datetime,
+                            datetimeFormat: "YYYY-MM-DD"
+                        },
+                        {
+                            field: 'orderdetails.traffic_force_insurance_time',
+                            title: __('交强险截至日期'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime,
+                            datetimeFormat: "YYYY-MM-DD"
+                        },
+                        {
+                            field: 'orderdetails.business_insurance_time',
+                            title: __('商业险截至日期'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime,
+                            datetimeFormat: "YYYY-MM-DD"
+                        },
                         {field: 'payment', title: __('Payment')},
                         {field: 'monthly', title: __('月供'), operate: 'BETWEEN'},
                         {field: 'nperlist', title: __('期数')},
@@ -279,66 +303,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }, function (data, ret) {
                             // var arrs = [
                             //     {
-                            //         username:'企鹅啊',
-                            //         license_plate_number:'川A56554',
-                            //         status:'error',
-                            //         msg:'违法禁令指示的'
+                            //         username: '企鹅啊',
+                            //         license_plate_number: '川A56554',
+                            //         status: 'error',
+                            //         msg: '车辆信息错误',
+                            //         is_it_illegal: '-',
+                            //         total_deduction: '-',
+                            //         total_fine: '-'
                             //     },
                             //     {
-                            //         username:'的方式',
-                            //         license_plate_number:'川A56554',
-                            //         status:'error',
-                            //         msg:'违法禁令指示的'
+                            //         username: '的方式',
+                            //         license_plate_number: '川A56554',
+                            //         status: 'error',
+                            //         msg: '车辆信息错误',
+                            //         is_it_illegal: '-',
+                            //         total_deduction: '-',
+                            //         total_fine: '-'
                             //     },
                             //     {
-                            //         username:'的法国队',
-                            //         license_plate_number:'川A56554',
-                            //         status:'success',
-                            //         msg:''
+                            //         username: '的法国队',
+                            //         license_plate_number: '川A56554',
+                            //         status: 'success',
+                            //         msg: '-',
+                            //         is_it_illegal: '有',
+                            //         total_deduction: '3',
+                            //         total_fine: '300'
                             //     },
-                            // ]
+                            // ];
+                            Controller.api.layer_violation(data);
 
-                            var html = '';
-                            html += '<h3 style="text-align: center">总成功数：' + data['success_num'] + '，总失败数：' + data['error_num'] + '</h3>';
-
-                            html += '<table class="table table-bordered table-striped table-hover">\n' +
-                                '    <thead>\n' +
-                                '\n' +
-                                '    <tr>\n' +
-                                '\n' +
-                                '        <th style="text-align: center;vertical-align: middle !important;">客户姓名</th>\n' +
-                                '        <th style="text-align: center;vertical-align: middle !important;">车牌号</th>\n' +
-                                '        <th style="text-align: center;vertical-align: middle !important;">查询是否成功</th>\n' +
-                                '        <th style="text-align: center;vertical-align: middle !important;">原因</th>\n' +
-                                '\n' +
-                                '\n' +
-                                '        <!--<th>邮编</th>-->\n' +
-                                '    </tr>\n' +
-                                '    </thead><tbody>';
-
-                            for (let i of data['query_record']) {
-                                html += '<tr>' +
-                                    '<td style="text-align: center;vertical-align: middle !important;">' + i.username + '</td>' +
-                                    '<td style="text-align: center;vertical-align: middle !important;">' + i.license_plate_number + '</td>';
-                                if (i.status == 'success') {
-                                    html += '<td style="text-align: center;vertical-align: middle !important;color: green">成功</td>';
-                                } else {
-                                    html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">失败</td>';
-                                }
-
-                                html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">' + i.msg + '</td>' +
-                                    '</tr>';
-                            }
-
-
-                            html += '</tbody></table>';
-                            layer.open({
-                                type: 1,
-                                area: ['800px', '600px'],
-                                title: ['查询违章结果', 'font-size:18px;text-align:center'],
-                                maxmin: true,
-                                content: html
-                            });
                             Layer.close(closeLay);
                             table.bootstrapTable('refresh');
                         });
@@ -389,7 +382,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             url: 'vehicle/vehiclemanagement/sendMessagePerson',
                             data: {ids}
                         }, function (data, ret) {
-                            console.log(data);
+
+                            Controller.api.layer_violation(data);
+
                             Layer.close(closeLay);
 
                             table.bootstrapTable('refresh');
@@ -418,7 +413,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         view_information: function () {
-            // alert($('#p-mate_id_cardimages').find('.btn-trash').css('display', 'block'));
             Controller.api.bindevent();
         },
 
@@ -426,6 +420,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
+            },
+            formatter:{
+                datetime: function (value, row, index) {
+                    var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
+                    if (isNaN(value)) {
+                        return value ? Moment(value).format(datetimeFormat) : __('None');
+                    } else {
+                        console.log(row);
+
+                        var types = '';
+                        switch (this.field) {
+                            case 'annual_inspection_time':
+                                
+                                break;
+                            case 'traffic_force_insurance_time':
+                                break;
+                            case 'business_insurance_time':
+                                break;
+                        }
+                        console.log(this.field);
+                        return value ? Moment(parseInt(value) * 1000).format(datetimeFormat) : __('None');
+                    }
+                },
             },
             // 单元格元素事件
             events: {
@@ -532,30 +549,57 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                     },
-                    'click .btn-delone': function (e, value, row, index) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var that = this;
-                        var top = $(that).offset().top - $(window).scrollTop();
-                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                        if (top + 154 > $(window).height()) {
-                            top = top - 154;
-                        }
-                        if ($(window).width() < 480) {
-                            top = left = undefined;
-                        }
-                        Layer.confirm(
-                            __('Are you sure you want to delete this item?'),
-                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
-                            function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-                                Table.api.multi("del", row[options.pk], table, that);
-                                Layer.close(index);
-                            }
-                        );
-                    }
+
                 }
+            },
+            layer_violation: function (data) {
+                var html = '';
+                html += '<h4 style="text-align: center;color: #FF0000">如需查看违章详情，请关闭当前页面点击右侧的【查看违章详情】按钮</h4>';
+                html += '<h3 style="text-align: center">总成功数：' + data['success_num'] + '，总失败数：' + data['error_num'] + '</h3>';
+
+                html += '<table class="table table-bordered table-striped table-hover">\n' +
+                    '    <thead>\n' +
+                    '\n' +
+                    '    <tr>\n' +
+                    '\n' +
+                    '        <th style="text-align: center;vertical-align: middle !important;">客户姓名</th>\n' +
+                    '        <th style="text-align: center;vertical-align: middle !important;">车牌号</th>\n' +
+                    '        <th style="text-align: center;vertical-align: middle !important;">查询是否成功</th>\n' +
+                    '        <th style="text-align: center;vertical-align: middle !important;">原因</th>\n' +
+                    '        <th style="text-align: center;vertical-align: middle !important;">是否有违章</th>\n' +
+                    '        <th style="text-align: center;vertical-align: middle !important;">总扣分</th>\n' +
+                    '        <th style="text-align: center;vertical-align: middle !important;">总罚款</th>\n' +
+                    '\n' +
+                    '\n' +
+                    '        <!--<th>邮编</th>-->\n' +
+                    '    </tr>\n' +
+                    '    </thead><tbody>';
+
+                for (let i of data['query_record']) {
+                    html += '<tr>' +
+                        '<td style="text-align: center;vertical-align: middle !important;">' + i.username + '</td>' +
+                        '<td style="text-align: center;vertical-align: middle !important;">' + i.license_plate_number + '</td>';
+                    if (i.status == 'success') {
+                        html += '<td style="text-align: center;vertical-align: middle !important;color: green">成功</td>';
+                    } else {
+                        html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">失败</td>';
+                    }
+                    let color = i.is_it_illegal == '有' ? 'red' : 'green';
+                    html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">' + i.msg + '</td>';
+                    html += '<td style="text-align: center;vertical-align: middle !important;color: ' + color + '">' + i.is_it_illegal + '</td>';
+                    html += '<td style="text-align: center;vertical-align: middle !important">' + i.total_deduction + '</td>';
+                    html += '<td style="text-align: center;vertical-align: middle !important">' + i.total_fine + '</td></tr>';
+                }
+
+
+                html += '</tbody></table>';
+                layer.open({
+                    type: 1,
+                    area: ['1000px', '750px'],
+                    title: ['查询违章结果', 'font-size:18px;text-align:center'],
+                    maxmin: true,
+                    content: html
+                });
             },
             show_and_hide: function () {
                 let type = $('input[type=hidden]').val();

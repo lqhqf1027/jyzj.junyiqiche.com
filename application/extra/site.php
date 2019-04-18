@@ -4,7 +4,7 @@ return array (
   'name' => '君忆之家',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.0.1',
+  'version' => '1.3',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
@@ -52,4 +52,5 @@ return array (
   'card_share_title' => '',
   'card_share_body' => '',
   'card_share_img' => '',
+  'last_update_time' => '2019-04-18 11:59:23',
 );
