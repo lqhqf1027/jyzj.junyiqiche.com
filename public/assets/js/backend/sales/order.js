@@ -400,7 +400,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                 },
                                 formatter: Table.api.formatter.normal
                             },
-                            {field: 'financial_name', title: __('Financial_name')},
                             {field: 'username', title: __('Username'), formatter: Controller.api.formatter.judge},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
@@ -419,21 +418,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                 formatter: Table.api.formatter.normal
                             },
                             {field: 'models_name', title: __('Models_name')},
-                            {field: 'payment', title: __('Payment'), operate: 'BETWEEN'},
-                            {field: 'monthly', title: __('Monthly'), operate: 'BETWEEN'},
-                            {
-                                field: 'nperlist',
-                                title: __('Nperlist'),
-                                searchList: {
-                                    "12": __('Nperlist 12'),
-                                    "24": __('Nperlist 24'),
-                                    "36": __('Nperlist 36'),
-                                    "48": __('Nperlist 48'),
-                                    "60": __('Nperlist 60')
-                                },
-                                formatter: Table.api.formatter.normal
-                            },
-                            {field: 'gps', title: __('Gps'), operate: 'BETWEEN'},
+                            {field: 'rent', title: __('Rent'), operate: 'BETWEEN'},
+                            {field: 'deposit', title: __('Deposit'), operate: 'BETWEEN'},
                             {
                                 field: 'createtime',
                                 title: __('Createtime'),

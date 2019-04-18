@@ -33,9 +33,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'editable'], function
                                                                         'rent_price','car_licensetime','emission_standard','emission_load','speed_changing_box']);
                         break;
                     case '按揭（二手车）':
-                        Controller.api.show_and_hide_table(table, 'show', ['financial_platform_name', 'payment', 'monthly', 'nperlist', 'margin', 'tail_section', 'gps',
+                        Controller.api.show_and_hide_table(table, 'show', ['payment', 'monthly', 'nperlist', 'margin', 'tail_section', 'gps',
                                                                 'full_total_price','working_insurance','companyaccount','licenseplatenumber','vin','engine_no', 'kilometres']);
-                        Controller.api.show_and_hide_table(table, 'hide', ['cashpledge','rent_price','car_licensetime','emission_standard','emission_load','speed_changing_box']);
+                        Controller.api.show_and_hide_table(table, 'hide', ['financial_platform_name','cashpledge','rent_price','car_licensetime','emission_standard','emission_load','speed_changing_box']);
                         
                         break;
                     case '租车':
@@ -60,8 +60,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'editable'], function
                         {field: 'id', title: __('Id')},
 
                         {field: 'schemecategory.name', title: __('Schemecategory.name')},
-                        {field: 'brand_name', title: __('所属品牌')},
-                        {field: 'models.name', title: __('Models.name')},
+                        // {field: 'brand_name', title: __('所属品牌')},
+                        {field: 'models_name', title: __('Models.name')},
 
                         {field: 'financial_platform_name', title: __('Financial_platform_name'), editable: true},
                         {field: 'payment', title: __('Payment'), operate:'BETWEEN'},
@@ -80,14 +80,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'editable'], function
                         {field: 'kilometres', title: __('Kilometres'), operate:'BETWEEN'},
                         {field: 'cashpledge', title: __('Cashpledge'), operate:'BETWEEN'},
                         {field: 'rent_price', title: __('Rent_price'), operate:'BETWEEN'},
-                        {field: 'car_licensetime', title: __('Car_licensetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'car_licensetime', title: __('Car_licensetime'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
                         {field: 'emission_standard', title: __('Emission_standard')},
                         {field: 'emission_load', title: __('Emission_load')},
                         {field: 'speed_changing_box', title: __('Speed_changing_box')},
                         // {field: 'drivinglicenseimages', title: __('Drivinglicenseimages'), events: Table.api.events.image, formatter: Table.api.formatter.images},
                         {field: 'ismenu', title: __('Ismenu'), formatter: Controller.api.formatter.toggle},
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
+                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
                         {field: 'type', title: __('Type'), searchList: {"mortgage":__('Type mortgage'),"used_car_mortgage":__('Type used_car_mortgage'),"car_rental":__('Type car_rental'),"full_new_car":__('Type full_new_car'),"full_used_car":__('Type full_used_car')}, formatter: Table.api.formatter.normal},
           
                         {field: 'operate', title: __('Operate'), table: table, events: Controller.api.events.operate, formatter: Controller.api.formatter.operate}
@@ -223,6 +223,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'editable'], function
                     return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
                         + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
 
+                },
+                /**
+                 * 时间格式
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
+                datetime: function (value, row, index) {
+                    var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD' : this.datetimeFormat;
+                    if (isNaN(value)) {
+                        return value ? Moment(value).format(datetimeFormat) : __('None');
+                    } else {
+                        return value ? Moment(parseInt(value) * 1000).format(datetimeFormat) : __('None');
+                    }
                 },
 
             },

@@ -65,12 +65,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 return row.orderdetails.is_it_illegal == 'no_queries' ? value : row.orderdetails.is_it_illegal == 'violation_of_regulations' ? value + ' <span class=\'label label-danger\' style=\'cursor: pointer\'>有违章</span>' : value + ' <span class=\'label label-success\' style=\'cursor: pointer\'>无违章</span>';
                             }
                         },
-                        {
-                            field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
+                        // {
+                        //     field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
 
-                                return "<img src=" +Config.cdn+row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
-                            }
-                        },
+                        //         return "<img src=" +Config.cdn+row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
+                        //     }
+                        // },
                         {field: 'phone', title: __('Phone')},
                         {field: 'id_card', title: __('Id_card')},
                         {field: 'models_name', title: __('Models_name')},
@@ -202,6 +202,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     visible: function (row) {
                                         return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
                                     }
+                                },
+                                {
+                                    name: 'accredit',
+                                    icon: 'fa fa-eye',
+                                    title: __('小程序授权'),
+                                    text: '小程序授权',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-success btn-accredit',
                                 }
 
                             ]
@@ -554,7 +562,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Layer.close(index);
                             }
                         );
-                    }
+                    },
+                    /**
+                     * 小程序授权
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-accredit': function (e, value, row, index) {
+                    
+                        Fast.api.ajax({
+                            url: 'vehicle/vehiclemanagement/setqrcode',
+                            data: {order_id: JSON.stringify(row.id), username: JSON.stringify(row.username)},
+                        }, function (data, ret) {
+                                // console.log(data);      
+                        }, function (data, ret) {
+                                        
+                        });
+                    
+            
+                    },
                 }
             },
             show_and_hide: function () {

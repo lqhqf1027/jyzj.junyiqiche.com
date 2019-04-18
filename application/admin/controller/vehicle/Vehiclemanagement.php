@@ -409,4 +409,11 @@ class Vehiclemanagement extends Backend
 
         return $this->view->fetch();
     }
+
+
+    public function accredit()
+    {
+        return 123;
+    }
+
 }
