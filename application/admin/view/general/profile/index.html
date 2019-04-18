@@ -71,6 +71,10 @@
                             <input type="text" class="form-control" id="nickname" name="row[nickname]" value="{$admin.nickname}" data-rule="required"/>
                         </div>
                         <div class="form-group">
+                            <label for="nickname" class="control-label">{:__('手机号')}:</label>
+                            <input type="text" class="form-control" id="phone" name="row[phone]" value="{$admin.phone}" data-rule="required"/>
+                        </div>
+                        <div class="form-group">
                             <label for="password" class="control-label">{:__('Password')}:</label>
                             <input type="password" class="form-control" id="password" placeholder="{:__('Leave password blank if dont want to change')}" autocomplete="new-password" name="row[password]" value="" data-rule="password"/>
                         </div>

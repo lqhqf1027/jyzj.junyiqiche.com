@@ -81,7 +81,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                 formatter: Table.api.formatter.normal
                             },
                             {field: 'financial_name', title: __('Financial_name')},
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.judge},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
                             {
@@ -238,7 +238,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                 formatter: Table.api.formatter.normal
                             },
                             {field: 'financial_name', title: __('Financial_name')},
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.judge},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
                             {
@@ -401,7 +401,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                 formatter: Table.api.formatter.normal
                             },
                             {field: 'financial_name', title: __('Financial_name')},
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.judge},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
                             {
@@ -565,7 +565,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                 formatter: Table.api.formatter.normal
                             },
                             {field: 'financial_name', title: __('Financial_name')},
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.judge},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
                             {
@@ -729,7 +729,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                 formatter: Table.api.formatter.normal
                             },
                             {field: 'financial_name', title: __('Financial_name')},
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.judge},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
                             {
@@ -1284,254 +1284,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
 
-
-                    /**
-                     * 按揭（新车）提交车管
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-submit_audit': function (e, value, row, index) {
-
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var that = this;
-                        var top = $(that).offset().top - $(window).scrollTop();
-                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                        if (top + 154 > $(window).height()) {
-                            top = top - 154;
-                        }
-                        if ($(window).width() < 480) {
-                            top = left = undefined;
-                        }
-                        Layer.confirm(
-                            __('请确认资料完整，是否开始提交给内勤?'),
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
-
-                            function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-
-
-                                Fast.api.ajax({
-
-                                    url: 'salesmanagement/orderlisttabs/sedAudit',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
-
-                                    Toastr.success('操作成功');
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
-
-                                    return false;
-                                });
-
-
-                            }
-                        );
-
-                    },
-                    /**
-                     * 按揭（二手车）提交车管
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-second_audit': function (e, value, row, index) {
-
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var that = this;
-                        var top = $(that).offset().top - $(window).scrollTop();
-                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                        if (top + 154 > $(window).height()) {
-                            top = top - 154;
-                        }
-                        if ($(window).width() < 480) {
-                            top = left = undefined;
-                        }
-                        Layer.confirm(
-                            __('请确认资料完整，是否开始提交审核?'),
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
-
-                            function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-
-                                Fast.api.ajax({
-
-                                    url: 'salesmanagement/orderlisttabs/setAudit',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
-
-                                    Toastr.success('操作成功');
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
-
-                                    return false;
-                                });
-                            }
-                        );
-                    },
-                    /**
-                     * 租车提交车管
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-second_audit': function (e, value, row, index) {
-
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var that = this;
-                        var top = $(that).offset().top - $(window).scrollTop();
-                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                        if (top + 154 > $(window).height()) {
-                            top = top - 154;
-                        }
-                        if ($(window).width() < 480) {
-                            top = left = undefined;
-                        }
-                        Layer.confirm(
-                            __('请确认资料完整，是否开始提交审核?'),
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
-
-                            function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-
-                                Fast.api.ajax({
-
-                                    url: 'salesmanagement/orderlisttabs/setAudit',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
-
-                                    Toastr.success('操作成功');
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
-
-                                    return false;
-                                });
-                            }
-                        );
-                    },
-                    /**
-                     * 全款（二手车）提交车管
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-submitCar': function (e, value, row, index) {
-
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var that = this;
-                        var top = $(that).offset().top - $(window).scrollTop();
-                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                        if (top + 154 > $(window).height()) {
-                            top = top - 154;
-                        }
-                        if ($(window).width() < 480) {
-                            top = left = undefined;
-                        }
-                        Layer.confirm(
- 
-                            __('请确认资料完整并发送给内勤生成提车单?'),
- 
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
-
-                            function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-                                Fast.api.ajax({
-
-                                    url: 'salesmanagement/orderlisttabs/submitCar',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
-
-                                    Toastr.success('操作成功');
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
-
-                                    return false;
-                                });
-                            }
-                        );
-                    },
-                    /**
-                     * 全款（二手车）提交车管
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-secondfullinternal': function (e, value, row, index) {
-
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var that = this;
-                        var top = $(that).offset().top - $(window).scrollTop();
-                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                        if (top + 154 > $(window).height()) {
-                            top = top - 154;
-                        }
-                        if ($(window).width() < 480) {
-                            top = left = undefined;
-                        }
-                        Layer.confirm(
- 
-                            __('请确认资料完整并发送给内勤生成提车单?'),
- 
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
-
-                            function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-                                Fast.api.ajax({
-
-                                    url: 'salesmanagement/orderlisttabs/secondfullinternal',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
-
-                                    Toastr.success('操作成功');
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
-
-                                    return false;
-                                });
-                            }
-                        );
-                    },
-
                     /**
                      * 删除按钮
                      * @param e
@@ -1573,7 +1325,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     var buttons = $.extend([], this.buttons || []);
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
-                }
+                },
+                /**
+                 * 提车返回√
+                 * @param value
+                 * @returns {string}
+                 */
+                judge: function (value, row, index) {
+
+                    var res = "";
+                    var color = "";
+                   
+                   if(row.lift_car_status == 'yes'){
+                        res = "<i class='fa fa-check'></i>"
+                        color = "success";
+                    
+                    }
+
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"> ' + row.username +  __(res) + '</span>';
+
+                    return html;
+
+                },
             }
         }
     };
