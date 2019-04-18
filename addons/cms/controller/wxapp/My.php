@@ -1,6 +1,9 @@
 <?php
 
 namespace addons\cms\controller\wxapp;
+use addons\cms\model\Config;
+use addons\cms\model\User;
+use fast\Auth;
 use think\Db;
 use Endroid\QrCode\QrCode;
 use fast\Random;
@@ -10,13 +13,30 @@ use think\Exception;
  */
 class My extends Base
 {
-    protected $noNeedLogin = ['aboutus'];
-
+    protected $noNeedLogin = ['*'];
+    protected $uid = '';
     public function _initialize()
     {
         parent::_initialize();
+//        $auth = Auth::instance();
+//        $this->uid = $auth->id;
     }
+    public function index(){
+        $user_id = $this->request->post('user_id');
+        if (!(int)$user_id) $this->error('参数错误');
+        try {
+            $userInfo = User::field('id,nickname,avatar,invite_code,invitation_code_img,level')
+                ->find($user_id);
+            if (!$userInfo) $this->error('未查询到用户信息');
+            //查询邀请码背景图片
+            $userInfo['invite_bg_img'] = Config::get(['name' => 'invite_bg_img'])->value;
 
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+        }
+        $this->success('请求成功', ['userInfo' => $userInfo]);
+
+    }
     /**
      * 生成二维码
      * @throws \Endroid\QrCode\Exceptions\ImageTypeInvalidException
@@ -43,4 +63,5 @@ class My extends Base
         }
         $this->error('未知错误');
     }
+
 }

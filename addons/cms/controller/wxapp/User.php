@@ -47,7 +47,7 @@ class User extends Base
         if (!$code || !$rawData) {
             $this->error("参数不正确");
         }
-        $userInfo = (array)json_decode($rawData, true);
+        $userInfo = (array)json_decode(htmlspecialchars_decode($rawData), true);
         if ($userInfo['nickName']) {
             $userInfo['nickName'] = emoji_encode($userInfo['nickName']);
         }
