@@ -65,6 +65,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 return row.orderdetails.is_it_illegal == 'no_queries' ? value : row.orderdetails.is_it_illegal == 'violation_of_regulations' ? value + ' <span class=\'label label-danger\' style=\'cursor: pointer\'>有违章</span>' : value + ' <span class=\'label label-success\' style=\'cursor: pointer\'>无违章</span>';
                             }
                         },
+                        {
+                            field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
+
+                                return "<img src=" +Config.cdn+row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
+                            }
+                        },
                         {field: 'phone', title: __('Phone')},
                         {field: 'id_card', title: __('Id_card')},
                         {field: 'models_name', title: __('Models_name')},
@@ -271,6 +277,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             data: {ids}
 
                         }, function (data, ret) {
+                            // var arrs = [
+                            //     {
+                            //         username:'企鹅啊',
+                            //         license_plate_number:'川A56554',
+                            //         status:'error',
+                            //         msg:'违法禁令指示的'
+                            //     },
+                            //     {
+                            //         username:'的方式',
+                            //         license_plate_number:'川A56554',
+                            //         status:'error',
+                            //         msg:'违法禁令指示的'
+                            //     },
+                            //     {
+                            //         username:'的法国队',
+                            //         license_plate_number:'川A56554',
+                            //         status:'success',
+                            //         msg:''
+                            //     },
+                            // ]
+
                             var html = '';
                             html += '<h3 style="text-align: center">总成功数：' + data['success_num'] + '，总失败数：' + data['error_num'] + '</h3>';
 
@@ -289,17 +316,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 '    </tr>\n' +
                                 '    </thead><tbody>';
 
-                            for (let i in data['query_record']) {
+                            for (let i of data['query_record']) {
                                 html += '<tr>' +
-                                    '<td style="text-align: center;vertical-align: middle !important;">' + data['query_record'][i]['username'] + '</td>' +
-                                    '<td style="text-align: center;vertical-align: middle !important;">' + data['query_record'][i]['license_plate_number'] + '</td>';
-                                if (data['query_record'][i]['status'] == 'success') {
+                                    '<td style="text-align: center;vertical-align: middle !important;">' + i.username + '</td>' +
+                                    '<td style="text-align: center;vertical-align: middle !important;">' + i.license_plate_number + '</td>';
+                                if (i.status == 'success') {
                                     html += '<td style="text-align: center;vertical-align: middle !important;color: green">成功</td>';
                                 } else {
                                     html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">失败</td>';
                                 }
 
-                                html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">' + data['query_record'][i]['msg'] + '</td>' +
+                                html += '<td style="text-align: center;vertical-align: middle !important;color: #FF0000">' + i.msg + '</td>' +
                                     '</tr>';
                             }
 
@@ -308,7 +335,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             layer.open({
                                 type: 1,
                                 area: ['800px', '600px'],
-                                title: ['查询违章结果', 'font-size:18px;text-align: center'],
+                                title: ['查询违章结果', 'font-size:18px;text-align:center'],
+                                maxmin: true,
                                 content: html
                             });
                             Layer.close(closeLay);

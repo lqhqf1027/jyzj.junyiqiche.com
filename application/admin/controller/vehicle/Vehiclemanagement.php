@@ -5,6 +5,7 @@ namespace app\admin\controller\vehicle;
 use app\admin\model\Order;
 use app\admin\model\OrderDetails;
 use app\common\controller\Backend;
+use fast\Date;
 use think\Db;
 use think\Exception;
 use think\exception\PDOException;
@@ -41,13 +42,6 @@ class Vehiclemanagement extends Backend
     }
 
     /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
-
-
-    /**
      * 查看
      */
     public function index()
@@ -65,13 +59,13 @@ class Vehiclemanagement extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                ->with(['orderdetails'])
+                ->with(['orderdetails', 'admin'])
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
-                ->with(['orderdetails'])
+                ->with(['orderdetails', 'admin'])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -81,6 +75,8 @@ class Vehiclemanagement extends Backend
                 $row->visible(['id', 'username', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy', 'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
@@ -201,12 +197,23 @@ class Vehiclemanagement extends Backend
                     Db::rollback();
                     $this->error($e->getMessage());
                 }
-                if ($result) {
+
+                    $time = time();
+                    if($params['annual_inspection_time']){
+                        $last_month = date('Y-m-d',$params['annual_inspection_time']);
+                        $last_month = strtotime("{$last_month} -1 month");
+                        $status_year = '';
+                        if($time<$last_month){
+                            $status_year = 'normal';
+                        }else if($time>$last_month && $time<$params['annual_inspection_time']){
+                            $status_year = 'soon';
+                        }else if($time>$params['annual_inspection_time']){
+                            $status_year = 'overdue';
+                        }
+                    }
 
                     $this->success();
-                } else {
-                    $this->error();
-                }
+
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
@@ -218,6 +225,11 @@ class Vehiclemanagement extends Backend
         return $this->view->fetch();
     }
 
+
+    public static function check_state($checktime)
+    {
+        
+    }
 
     /**
      * 查看客户信息
@@ -282,7 +294,6 @@ class Vehiclemanagement extends Backend
             $params = $this->request->post()['ids'];
             $keys = '217fb8552303cb6074f88dbbb5329be7';
             $order_details = new OrderDetails();
-//            pr($params);die;
             $query_record = [];
             $error_num = $success_num = 0;
             foreach ($params as $k => $v) {
@@ -351,7 +362,7 @@ class Vehiclemanagement extends Backend
             }
 
 
-            $this->success('', '',['error_num'=>$error_num,'success_num'=>$success_num,'query_record'=>$query_record]);
+            $this->success('', '', ['error_num' => $error_num, 'success_num' => $success_num, 'query_record' => $query_record]);
         }
     }
 
