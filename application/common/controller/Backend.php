@@ -215,6 +215,7 @@ class Backend extends Controller
         //渲染站点配置
         $this->assign('site', $site);
         $this->assign('version', \app\common\model\Config::get(['name'=>'version'])->value);
+
         //渲染配置信息
         $this->assign('config', $config);
 

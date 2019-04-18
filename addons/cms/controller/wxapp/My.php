@@ -47,7 +47,7 @@ class My extends Base
         if (!(int)$user_id) $this->error('参数错误');
         $time = date('YmdHis');
         $qrCode = new QrCode();
-        $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?user_id=' . $user_id)
+        $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?user_id=' . $user_id )
             ->setSize(150)
             ->setPadding(10)
             ->setErrorCorrection('high')
