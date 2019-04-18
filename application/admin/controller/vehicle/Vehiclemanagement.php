@@ -5,6 +5,7 @@ namespace app\admin\controller\vehicle;
 use app\admin\model\Order;
 use app\admin\model\OrderDetails;
 use app\common\controller\Backend;
+use fast\Date;
 use think\Db;
 use think\Exception;
 use think\exception\PDOException;
@@ -34,14 +35,11 @@ class Vehiclemanagement extends Backend
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("liftCarStatusList", $this->model->getLiftCarStatusList());
+
+        $this->view->assign([
+            'total_violation' => OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id')
+        ]);
     }
-
-    /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
-
 
     /**
      * 查看
@@ -55,20 +53,19 @@ class Vehiclemanagement extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            $a = null;
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                ->with(['orderdetails'])
+                ->with(['orderdetails', 'admin'])
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
-                ->with(['orderdetails'])
+                ->with(['orderdetails', 'admin'])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -77,15 +74,17 @@ class Vehiclemanagement extends Backend
             foreach ($list as $row) {
                 $row->visible(['id', 'username', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status']);
                 $row->visible(['orderdetails']);
-                $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy', 'business_risks', 'subordinate_branch', 'transfer_time','is_it_illegal']);
-$a = $row['type'];
+                $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy', 'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
             $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list,'types'=>$a);
-Session::set('types',$a);
+            $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
+
+
         return $this->view->fetch();
     }
 
@@ -160,8 +159,7 @@ Session::set('types',$a);
     public function modifying_data($ids = null)
     {
         $row = OrderDetails::getByOrder_id($ids);
-//        pr($row->toArray());die;
-//            $this->model->get($ids);
+
         if (!$row) {
             $this->error(__('No Results were found'));
         }
@@ -184,6 +182,9 @@ Session::set('types',$a);
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
                         $row->validate($validate);
                     }
+                    $params['annual_inspection_time'] = $params['annual_inspection_time'] ? strtotime($params['annual_inspection_time']) : null;
+                    $params['traffic_force_insurance_time'] = $params['traffic_force_insurance_time'] ? strtotime($params['traffic_force_insurance_time']) : null;
+                    $params['business_insurance_time'] = $params['business_insurance_time'] ? strtotime($params['business_insurance_time']) : null;
                     $result = $row->allowField(true)->save($params);
                     Db::commit();
                 } catch (ValidateException $e) {
@@ -196,11 +197,23 @@ Session::set('types',$a);
                     Db::rollback();
                     $this->error($e->getMessage());
                 }
-                if ($result) {
+
+                    $time = time();
+                    if($params['annual_inspection_time']){
+                        $last_month = date('Y-m-d',$params['annual_inspection_time']);
+                        $last_month = strtotime("{$last_month} -1 month");
+                        $status_year = '';
+                        if($time<$last_month){
+                            $status_year = 'normal';
+                        }else if($time>$last_month && $time<$params['annual_inspection_time']){
+                            $status_year = 'soon';
+                        }else if($time>$params['annual_inspection_time']){
+                            $status_year = 'overdue';
+                        }
+                    }
+
                     $this->success();
-                } else {
-                    $this->error();
-                }
+
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
@@ -212,6 +225,11 @@ Session::set('types',$a);
         return $this->view->fetch();
     }
 
+
+    public static function check_state($checktime)
+    {
+        
+    }
 
     /**
      * 查看客户信息
@@ -262,7 +280,7 @@ Session::set('types',$a);
     }
 
     /**
-     * 单个请求第三方接口获取违章信息
+     * 请求第三方接口获取违章信息
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -274,74 +292,80 @@ Session::set('types',$a);
         if ($this->request->isAjax()) {
 
             $params = $this->request->post()['ids'];
-            $params = $params[0];
-            $finals = [];
             $keys = '217fb8552303cb6074f88dbbb5329be7';
+            $order_details = new OrderDetails();
+            $query_record = [];
+            $error_num = $success_num = 0;
+            foreach ($params as $k => $v) {
+                //获取城市前缀接口
+                $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($v['hphm']));
+                if ($result['error_code'] == 0) {
 
-            //获取城市前缀接口
-            $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($params['hphm']));
-//pr($result);die;
-            if ($result['error_code'] == 0) {
+                    $field = array();
 
-                $field = array();
+                    $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($v['hphms']) . "&engineno=" . $v['engineno'] . "&classno=" . $v['classno'] . "&key=" . $keys);
 
+                    if ($data['error_code'] == 0) {
 
-                $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($params['hphms']) . "&engineno=" . $params['engineno'] . "&classno=" . $params['classno'] . "&key=" . $keys);
+                        $total_fraction = 0;     //总扣分
+                        $total_money = 0;        //总罚款
+                        $flag = -1;
+                        if ($data['result']['lists']) {
+                            $record = [];
+                            foreach ($data['result']['lists'] as $key => $value) {
+                                if ($value['handled'] == 0) {
+                                    $flag = -2;
+                                } else if ($value['handled'] == 1) {
+                                    continue;
+                                }
+                                if ($value['fen']) {
+                                    $value['fen'] = floatval($value['fen']);
 
-//pr($data);die;
-                if ($data['error_code'] == 0) {
+                                    $total_fraction += $value['fen'];
+                                }
 
-                    $total_fraction = 0;     //总扣分
-                    $total_money = 0;        //总罚款
-                    $flag = -1;
-                    if ($data['result']['lists']) {
-                        $record = [];
-                        foreach ($data['result']['lists'] as $key => $value) {
-                            if ($value['handled'] == 0) {
-                                $flag = -2;
-                            } else if ($value['handled'] == 1) {
-                                continue;
+                                if ($value['money']) {
+                                    $value['money'] = floatval($value['money']);
+
+                                    $total_money += $value['money'];
+                                }
+
+                                $record[] = $value;
+
                             }
-                            if ($value['fen']) {
-                                $value['fen'] = floatval($value['fen']);
+                            $field['violation_details'] = $record ? json_encode($record) : null;
 
-                                $total_fraction += $value['fen'];
-                            }
+                            $field['is_it_illegal'] = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
 
-                            if ($value['money']) {
-                                $value['money'] = floatval($value['money']);
-
-                                $total_money += $value['money'];
-                            }
-
-                            $record[] = $value;
-
+                        } else {
+                            $field['is_it_illegal'] = 'no_violation';
                         }
-                        $field['violation_details'] = $record?json_encode($record):null;
 
-                        $field['is_it_illegal'] = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
+                        $field['total_deduction'] = $total_fraction;
+                        $field['total_fine'] = $total_money;
 
+                        $order_details->allowField(true)->save($field, ['id' => OrderDetails::getByOrder_id($v['order_id'])->id]);
+                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => ''];
+                        $success_num++;
                     } else {
-                        $field['is_it_illegal'] = 'no_violation';
+//                        $this->error("客户姓名为<b>{$v['username']}</b>的用户：".$data['reason'], '', $data);
+                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $data['reason']];
+                        $error_num++;
                     }
-
-                    $field['total_deduction'] = $total_fraction;
-                    $field['total_fine'] = $total_money;
-
-                    $order_details = new OrderDetails();
-
-                    $order_details->allowField(true)->save($field,['id'=>OrderDetails::getByOrder_id($params['order_id'])->id]);
                 } else {
-                    $this->error($data['reason'], '', $data);
+                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $result['reason']];
+                    $error_num++;
                 }
-            } else {
-                $this->error($result['reason'], '', $result);
+//                else {
+//                    $this->error("客户姓名为<b>{$v['username']}</b>的用户：".$result['reason'], '', $result);
+//                }
             }
 
 
-            $this->success('', '', $finals);
+            $this->success('', '', ['error_num' => $error_num, 'success_num' => $success_num, 'query_record' => $query_record]);
         }
     }
+
 
     public function violation_details($ids = null)
     {
@@ -351,7 +375,7 @@ Session::set('types',$a);
 //            ->find();
 
         $detail = $this->model->field('username,phone')
-            ->with(['orderdetails'=>function ($q){
+            ->with(['orderdetails' => function ($q) {
                 $q->withField('total_deduction,total_fine,violation_details');
             }])->find($ids);
 
