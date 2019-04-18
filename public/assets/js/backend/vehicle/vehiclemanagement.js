@@ -71,6 +71,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 return "<img src=" + Config.cdn + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
                             }
                         },
+
                         {field: 'phone', title: __('Phone')},
                         {field: 'id_card', title: __('Id_card')},
                         {field: 'models_name', title: __('Models_name')},
@@ -226,6 +227,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     visible: function (row) {
                                         return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
                                     }
+                                },
+                                {
+                                    name: 'accredit',
+                                    icon: 'fa fa-eye',
+                                    title: __('小程序授权'),
+                                    text: '小程序授权',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-success btn-accredit',
                                 }
 
                             ]
@@ -550,6 +559,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     },
 
+                    'click .btn-delone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('Are you sure you want to delete this item?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Table.api.multi("del", row[options.pk], table, that);
+                                Layer.close(index);
+                            }
+                        );
+                    },
+                    /**
+                     * 小程序授权
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-accredit': function (e, value, row, index) {
+                    
+                        Fast.api.ajax({
+                            url: 'vehicle/vehiclemanagement/setqrcode',
+                            data: {order_id: JSON.stringify(row.id), username: JSON.stringify(row.username)},
+                        }, function (data, ret) {
+                                // console.log(data);      
+                        }, function (data, ret) {
+                                        
+                        });
+                    
+            
+                    },
+
+
                 }
             },
             layer_violation: function (data) {
@@ -589,6 +643,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     html += '<td style="text-align: center;vertical-align: middle !important;color: ' + color + '">' + i.is_it_illegal + '</td>';
                     html += '<td style="text-align: center;vertical-align: middle !important">' + i.total_deduction + '</td>';
                     html += '<td style="text-align: center;vertical-align: middle !important">' + i.total_fine + '</td></tr>';
+
                 }
 
 

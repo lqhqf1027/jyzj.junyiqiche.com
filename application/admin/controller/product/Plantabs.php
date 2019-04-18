@@ -68,7 +68,8 @@ class Plantabs extends Backend
 
             foreach ($list as $key => $row) {
                 
-                $list[$key]['brand_name'] = Db::name('brand_cate')->where('id', $row['models']['brand_id'])->value('name');
+                $brand_name = Db::name('brand_cate')->where('id', $row['models']['brand_id'])->value('name');
+                $list[$key]['models_name'] = $brand_name . ' ' . $list[$key]['models']['name'];
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
