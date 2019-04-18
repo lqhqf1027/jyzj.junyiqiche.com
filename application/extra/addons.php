@@ -16,6 +16,10 @@ return array (
     array (
       0 => 'cms',
     ),
+    'admin_login_init' => 
+    array (
+      0 => 'loginbg',
+    ),
     'upload_config_init' => 
     array (
       0 => 'upyun',

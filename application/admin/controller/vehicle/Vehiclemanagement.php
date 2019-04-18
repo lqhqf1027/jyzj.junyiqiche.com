@@ -12,7 +12,7 @@ use think\exception\PDOException;
 use think\exception\ValidateException;
 use think\response\Json;
 use think\Session;
-
+use Endroid\QrCode\QrCode;
 /**
  *
  *
@@ -111,7 +111,7 @@ class Vehiclemanagement extends Backend
                 ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id', 'username', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status']);
+                $row->visible(['id', 'username','avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy', 'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal','annual_inspection_time','traffic_force_insurance_time','business_insurance_time','annual_inspection_status','traffic_force_insurance_status','business_insurance_status']);
                 $row->visible(['admin']);
@@ -133,6 +133,41 @@ class Vehiclemanagement extends Backend
      * @throws Exception
      * @throws \think\exception\DbException
      */
+
+
+    /**
+     * 生成二维码,后台展示授权码
+     * @throws \Endroid\QrCode\Exceptions\ImageTypeInvalidException
+     */
+    public function setqrcode()
+    {
+
+        if($this->request->isAjax()){
+            $params = $this->request->post();
+//            pr(VENDOR_PATH);DIE;
+//            pr(ROOT_PATH.'vendor/endroid'.DS.'qr-code'.DS.'assets'.DS.'font'.DS.'MSYHBD.TTC');die;
+//            return ROOT_PATH.DS.'endroid'.DS.'qr-code'.DS.'assets'.DS.'font'.DS.'MSYHBD.TTC';
+            $time = date('YmdHis');
+            $qrCode = new QrCode();
+            $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?order_id=' . $params['order_id'] )
+                ->setSize(150)
+                ->setPadding(10)
+                ->setErrorCorrection('high')
+                ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+                ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+                ->setLabel('需由客户 '.$params['username'].' 扫码授权')
+                ->setLabelFontPath(VENDOR_PATH.'endroid/qr-code/assets/font/MSYHBD.TTC')
+                ->setLabelFontSize(10)
+                ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
+            $fileName = DS . 'uploads' . DS . 'qrcode' . DS . $time . '_' . 'o_id'.$params['order_id'] . '.png';
+            $qrCode->save(ROOT_PATH . 'public' . $fileName);
+            if ($qrCode) {
+                Order::update(['id' => $params['order_id'], 'authorization_img' => $fileName]) ? $this->success('创建成功', $fileName) : $this->error('创建失败');
+            }
+            $this->error('未知错误');
+        }
+    }
+
     public function edit($ids = null)
     {
 

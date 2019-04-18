@@ -55,11 +55,14 @@ class Index extends Backend
      */
     public function login()
     {
+
         $url = $this->request->get('url', 'index/index');
         if ($this->auth->isLogin()) {
+
             $this->success(__("You've logged in, do not login again"), $url);
         }
         if ($this->request->isPost()) {
+
             $username = $this->request->post('username');
             $password = $this->request->post('password');
             $keeplogin = $this->request->post('keeplogin');
@@ -87,6 +90,7 @@ class Index extends Backend
             $result = $this->auth->login($username, $password, $keeplogin ? 86400 : 0);
             if ($result === true) {
                 Hook::listen("admin_login_after", $this->request);
+//                $this->redirect('index/index');
                 $this->success(__('Login successful'), $url, ['url' => $url, 'id' => $this->auth->id, 'username' => $username, 'avatar' => $this->auth->avatar]);
             } else {
                 $msg = $this->auth->getError();
@@ -97,13 +101,19 @@ class Index extends Backend
 
         // 根据客户端的cookie,判断是否可以自动登录
         if ($this->auth->autologin()) {
+
             $this->redirect($url);
         }
+
         $background = Config::get('fastadmin.login_background');
+
         $background = stripos($background, 'http') === 0 ? $background : config('site.cdnurl') . $background;
+
         $this->view->assign('background', $background);
         $this->view->assign('title', __('Login'));
-        Hook::listen("admin_login_init", $this->request);
+//        Hook::listen("admin_login_init", $this->request);
+
+
         return $this->view->fetch();
     }
 
