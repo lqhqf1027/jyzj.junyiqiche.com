@@ -35,6 +35,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'nickname', title: __('Nickname')},
                         {field: 'groups_text', title: __('Group'), operate:false, formatter: Table.api.formatter.label},
                         {field: 'email', title: __('Email')},
+                        {field: 'phone', title: __('手机号')},
                         {field: 'status', title: __("Status"), formatter: Table.api.formatter.status},
                         {field: 'rule_message', title: '所属角色',formatter:function(value, row, index){
                             for(var i in Config.siteList[0].value){

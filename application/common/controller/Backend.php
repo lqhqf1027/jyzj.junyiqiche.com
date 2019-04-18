@@ -186,7 +186,6 @@ class Backend extends Controller
         $lang = strip_tags($this->request->langset());
 
         $site = Config::get("site");
-
         $upload = \app\common\model\Config::upload();
 
         // 上传信息配置后
@@ -215,8 +214,10 @@ class Backend extends Controller
         $this->loadlang($controllername);
         //渲染站点配置
         $this->assign('site', $site);
+        $this->assign('version', \app\common\model\Config::get(['name'=>'version'])->value);
         //渲染配置信息
         $this->assign('config', $config);
+
         //渲染配置信息到js
         $this->assignconfig('cdn',   $config['upload']['cdnurl']);
         //渲染权限对象
