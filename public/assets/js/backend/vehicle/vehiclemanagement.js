@@ -1,5 +1,13 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    /**
+     * goeasy推送的key
+     */
+    var goeasy = new GoEasy({
+        appkey: 'BC-c02d73e1952048ecb954436f3bf79b4a'
+    });
+
+
     var Controller = {
         index: function () {
             // 初始化表格参数配置
@@ -692,13 +700,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             data: {order_id: JSON.stringify(row.id), username: JSON.stringify(row.username)},
                         }, function (data, ret) {
 
-                                // console.log('https://jyzj.junyiqiche.com' + data); 
-                                layer.open({
-                                    title: '小程序授权', //页面标题
-                                    type: 2, 
-                                    area: ['180px', '250px'],  //弹出层页面比例
-                                    content: ['https://jyzj.junyiqiche.com' + data, 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                                  });     
+                            // console.log('https://jyzj.junyiqiche.com' + data); 
+                            layer.open({
+                                title: '小程序授权', //页面标题
+                                type: 2, 
+                                area: ['180px', '250px'],  //弹出层页面比例
+                                content: ['https://jyzj.junyiqiche.com' + data, 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                            });    
+                            
+                            //goeasy关闭弹框
+                            goeasy.subscribe({
+                                channel: 'accredit',
+                                onMessage: function(message){
+                            
+                                    $(".btn-refresh").trigger("click");
+                                }
+                            });
 
                         }, function (data, ret) {
 
