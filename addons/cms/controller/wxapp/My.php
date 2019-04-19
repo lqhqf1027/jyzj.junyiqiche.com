@@ -5,11 +5,7 @@ namespace addons\cms\controller\wxapp;
 use addons\cms\model\Config;
 use addons\cms\model\OrderDetails;
 use addons\cms\model\User;
-<<<<<<< HEAD
-use app\admin\model\OrderDetails;
-=======
 use addons\cms\model\Order;
->>>>>>> upstream/master
 use fast\Auth;
 use think\Cache;
 use think\Db;
@@ -78,7 +74,6 @@ class My extends Base
     }
 
     /**
-<<<<<<< HEAD
      * 查询违章
      */
     public function query_violation()
@@ -131,8 +126,7 @@ class My extends Base
 
     }
 
-=======
-     * 君忆司机认证，表单
+     /* 君忆司机认证，表单
      * @throws \think\exception\DbException
      */
     public function confirmFormDriver()
@@ -160,4 +154,4 @@ class My extends Base
     }
 
 }
->>>>>>> upstream/master
+

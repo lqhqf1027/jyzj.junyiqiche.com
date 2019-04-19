@@ -136,12 +136,8 @@ class Vehiclemanagement extends Backend
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-<<<<<<< HEAD
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail']);
-=======
                     'traffic_force_insurance_status', 'business_insurance_status','reson_query_fail']);
 
->>>>>>> upstream/master
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
@@ -472,13 +468,10 @@ class Vehiclemanagement extends Backend
 
                         $field['is_it_illegal'] = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
 
-<<<<<<< HEAD
-=======
                         $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
 
                         $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
                         $success_num++;
->>>>>>> upstream/master
                     } else {
                         $field['is_it_illegal'] = 'no_violation';
                     }
