@@ -1,13 +1,17 @@
 <?php
 
 namespace addons\cms\controller\wxapp;
+
 use addons\cms\model\Config;
+use addons\cms\model\OrderDetails;
 use addons\cms\model\User;
+use addons\cms\model\Order;
 use fast\Auth;
 use think\Db;
 use Endroid\QrCode\QrCode;
 use fast\Random;
 use think\Exception;
+
 /**
  * 我的
  */
@@ -15,17 +19,20 @@ class My extends Base
 {
     protected $noNeedLogin = ['*'];
     protected $uid = '';
+
     public function _initialize()
     {
         parent::_initialize();
 //        $auth = Auth::instance();
 //        $this->uid = $auth->id;
     }
-    public function index(){
+
+    public function index()
+    {
         $user_id = $this->request->post('user_id');
         if (!(int)$user_id) $this->error('参数错误');
         try {
-            $userInfo = User::field('id,nickname,avatar,invite_code,invitation_code_img,level')
+            $userInfo = User::field('id,nickname,avatar,invite_code,invitation_code_img,level,cif_driver')
                 ->find($user_id);
             if (!$userInfo) $this->error('未查询到用户信息');
             //查询邀请码背景图片
@@ -37,6 +44,7 @@ class My extends Base
         $this->success('请求成功', ['userInfo' => $userInfo]);
 
     }
+
     /**
      * 生成二维码
      * @throws \Endroid\QrCode\Exceptions\ImageTypeInvalidException
@@ -47,7 +55,7 @@ class My extends Base
         if (!(int)$user_id) $this->error('参数错误');
         $time = date('YmdHis');
         $qrCode = new QrCode();
-        $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?user_id=' . $user_id )
+        $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?user_id=' . $user_id)
             ->setSize(150)
             ->setPadding(10)
             ->setErrorCorrection('high')
@@ -62,6 +70,34 @@ class My extends Base
             User::update(['id' => $user_id, 'invitation_code_img' => $fileName]) ? $this->success('创建成功', $fileName) : $this->error('创建失败');
         }
         $this->error('未知错误');
+    }
+
+    /**
+     * 君忆司机认证，表单
+     * @throws \think\exception\DbException
+     */
+    public function confirmFormDriver()
+    {
+        $params = $this->request->post('');
+        $err = '';
+        foreach ($params as $key => $item) {
+            if (!in_array($key, ['user_id', 'username', 'phone', 'licensenumber', 'id_card']) || !$item) $err .= ' ' . $key;
+        }
+        if ($err) $this->error($err . '参数错误');
+        //根据车牌号查询出order_details id
+//        return $oder_id;
+        $data = Order::get(['username' => $params['username'], 'phone' => $params['phone'], 'id_card' => $params['id_card']]);
+        $licensenumber = OrderDetails::get(['order_id' => $data->id])->licensenumber;
+        if ($data && $licensenumber) {
+            if ($licensenumber != $params['licensenumber']) $this->error(  '输入的车主信息与车牌号'. $params['licensenumber'].'不匹配');
+        } else {
+            $this->error(' 未查询到认证信息');
+        }
+        if (Order::update(['id' => $data->id, 'user_id' => $params['user_id']]) && User::update(['id' => $params['user_id'], 'cif_driver' => 1])) $this->error('认证成功');
+
+        $this->error(' 认证失败');
+
+
     }
 
 }

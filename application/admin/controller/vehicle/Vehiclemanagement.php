@@ -39,7 +39,6 @@ class Vehiclemanagement extends Backend
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("liftCarStatusList", $this->model->getLiftCarStatusList());
 
-
         if (!Cache::get('statistics')) {
 
             Cache::set('statistics', self::statistics(), 43200);
@@ -138,6 +137,7 @@ class Vehiclemanagement extends Backend
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
                     'traffic_force_insurance_status', 'business_insurance_status','reson_query_fail']);
+
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
@@ -162,9 +162,8 @@ class Vehiclemanagement extends Backend
 
         if ($this->request->isAjax()) {
             $params = $this->request->post();
-//            pr(VENDOR_PATH);DIE;
-//            pr(ROOT_PATH.'vendor/endroid'.DS.'qr-code'.DS.'assets'.DS.'font'.DS.'MSYHBD.TTC');die;
-//            return ROOT_PATH.DS.'endroid'.DS.'qr-code'.DS.'assets'.DS.'font'.DS.'MSYHBD.TTC';
+            $authorization_img = Order::get($params['order_id'])->authorization_img;
+            if ($authorization_img) $this->success('创建成功', '', $authorization_img);
             $time = date('YmdHis');
             $qrCode = new QrCode();
             $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?order_id=' . $params['order_id'])
@@ -180,7 +179,7 @@ class Vehiclemanagement extends Backend
             $fileName = DS . 'uploads' . DS . 'qrcode' . DS . $time . '_' . 'o_id' . $params['order_id'] . '.png';
             $qrCode->save(ROOT_PATH . 'public' . $fileName);
             if ($qrCode) {
-                Order::update(['id' => $params['order_id'], 'authorization_img' => $fileName]) ? $this->success('创建成功', $fileName) : $this->error('创建失败');
+                Order::update(['id' => $params['order_id'], 'authorization_img' => $fileName]) ? $this->success('创建成功', '', $fileName) : $this->error('创建失败');
             }
             $this->error('未知错误');
         }
@@ -465,6 +464,7 @@ class Vehiclemanagement extends Backend
                         $field['total_fine'] = $total_money;
 
                         $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
+
                         $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
                         $success_num++;
                     } else {

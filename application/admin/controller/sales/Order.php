@@ -125,21 +125,21 @@ class Order extends Backend
     /**
      * 查看租车单
      */
-    public function carRental()
-    {
-        //当前是否为关联查询
-        $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
+    // public function carRental()
+    // {
+    //     //当前是否为关联查询
+    //     $this->relationSearch = true;
+    //     //设置过滤方法
+    //     $this->request->filter(['strip_tags']);
+    //     if ($this->request->isAjax()) {
 
-            $result = $this->commit('car_rental');
+    //         $result = $this->commit('car_rental');
 
-            return json($result);
+    //         return json($result);
 
-        }
-        return $this->view->fetch();
-    }
+    //     }
+    //     return $this->view->fetch();
+    // }
 
     /**
      * 查看全款（新车）单
@@ -270,11 +270,11 @@ class Order extends Backend
     /**
      * 新增租车单
      */
-    public function rentaladd()
-    {
-        $this->commitadd('car_rental');
-        return $this->view->fetch();
-    }
+    // public function rentaladd()
+    // {
+    //     $this->commitadd('car_rental');
+    //     return $this->view->fetch();
+    // }
 
     /**
      * 新增全款新车单
@@ -418,23 +418,23 @@ class Order extends Backend
     /**
      * 修改租车单
      */
-    public function rentaledit($ids = null)
-    {
-        $row = $this->model->get($ids);
-        //相关信息
-        $OrderDetails = OrderDetails::where('order_id', $ids)->find();
-        //相关图片
-        $OrderImg = OrderImg::where('order_id', $ids)->find();
+    // public function rentaledit($ids = null)
+    // {
+    //     $row = $this->model->get($ids);
+    //     //相关信息
+    //     $OrderDetails = OrderDetails::where('order_id', $ids)->find();
+    //     //相关图片
+    //     $OrderImg = OrderImg::where('order_id', $ids)->find();
 
-        $this->commitedit($row, 'car_rental');
+    //     $this->commitedit($row, 'car_rental');
 
-        $this->view->assign([
-            'row' => $row,
-            'OrderDetails' => $OrderDetails,
-            'OrderImg' => $OrderImg
-        ]);
-        return $this->view->fetch();
-    }
+    //     $this->view->assign([
+    //         'row' => $row,
+    //         'OrderDetails' => $OrderDetails,
+    //         'OrderImg' => $OrderImg
+    //     ]);
+    //     return $this->view->fetch();
+    // }
 
     /**
      * 修改全款新车单

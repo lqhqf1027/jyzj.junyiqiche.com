@@ -45,7 +45,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             sortable:true
                         },
 
-                        {field: 'invalidtime', title: __('失效时间')},
+                        {field: 'invalidtime', title: __('失效时间'), formatter: function (v, r, i) {
+                            return Controller.api.formatter.datetime(v);
+                        }},
 
                         {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
 
@@ -386,7 +388,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             return '未知销售';
                             break;
                     }
-                }
+                },
+                /**
+                 * 失效时间
+                 */
+                datetime: function (v) {
+                    var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
+                    if (isNaN(v)) {
+                        return v ? Moment(v).format(datetimeFormat) : __('None');
+                    } else {
+                        return v ? Moment(parseInt(v) * 1000).format(datetimeFormat) : __('None');
+                    }
+                },
             },
             operate: function (value, row, index) {
                 var table = this.table;
