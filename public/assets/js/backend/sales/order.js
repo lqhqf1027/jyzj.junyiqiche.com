@@ -361,156 +361,156 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     Fast.api.open(url,'新增按揭（二手车）单',options)
                 })
             },
-            /**
-             * 租车单
-             */
-            car_rental: function () {
-                var carRental = $("#carRental"); 
-                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
-                // 初始化表格
-                carRental.bootstrapTable({
-                    url: 'sales/order/carRental',
-                    extend: {
-                        rentaladd_url: 'sales/order/rentaladd',
-                        rentaledit_url: 'sales/order/rentaledit',
-                        import_url: 'sales/order/import',
-                        del_url: 'sales/order/rentaldel',
-                        multi_url: 'sales/order/multi',
-                        table: 'order',
-                    },
-                    toolbar: '#toolbar3',
-                    pk: 'id',
-                    sortName: 'id',
-                    // searchFormVisible: true,
-                    columns: [
-                        [
-                            {checkbox: true},
-                            {field: 'id', title: __('Id')},
-                            {
-                                field: 'admin_id', title: __('销售员'), formatter: function (v, r, i) {
-                                    return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.nickname : '';
-                                }
-                            },
-                            {
-                                field: 'customer_source',
-                                title: __('Customer_source'),
-                                searchList: {
-                                    "direct_the_guest": __('Customer_source direct_the_guest'),
-                                    "turn_to_introduce": __('Customer_source turn_to_introduce')
-                                },
-                                formatter: Table.api.formatter.normal
-                            },
-                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.judge},
-                            {field: 'phone', title: __('Phone')},
-                            {field: 'id_card', title: __('Id_card')},
-                            {
-                                field: 'type',
-                                title: __('Type'),
-                                searchList: {
-                                    "mortgage": __('Type mortgage'),
-                                    "used_car_mortgage": __('Type used_car_mortgage'),
-                                    "car_rental": __('Type car_rental'),
-                                    "full_new_car": __('Type full_new_car'),
-                                    "full_used_car": __('Type full_used_car'),
-                                    "sublet": __('Type sublet'),
-                                    "affiliated": __('Type affiliated')
-                                },
-                                formatter: Table.api.formatter.normal
-                            },
-                            {field: 'models_name', title: __('Models_name')},
-                            {field: 'rent', title: __('Rent'), operate: 'BETWEEN'},
-                            {field: 'deposit', title: __('Deposit'), operate: 'BETWEEN'},
-                            {
-                                field: 'createtime',
-                                title: __('Createtime'),
-                                operate: 'RANGE',
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {
-                                field: 'delivery_datetime',
-                                title: __('Delivery_datetime'),
-                                operate: 'RANGE',
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {field: 'note_sales', title: __('Note_sales')},
-                            {
-                                field: 'operate',
-                                title: __('Operate'),
-                                table: carRental,
-                                buttons: [
+            // /**
+            //  * 租车单
+            //  */
+            // car_rental: function () {
+            //     var carRental = $("#carRental"); 
+            //     $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
+            //     // 初始化表格
+            //     carRental.bootstrapTable({
+            //         url: 'sales/order/carRental',
+            //         extend: {
+            //             rentaladd_url: 'sales/order/rentaladd',
+            //             rentaledit_url: 'sales/order/rentaledit',
+            //             import_url: 'sales/order/import',
+            //             del_url: 'sales/order/rentaldel',
+            //             multi_url: 'sales/order/multi',
+            //             table: 'order',
+            //         },
+            //         toolbar: '#toolbar3',
+            //         pk: 'id',
+            //         sortName: 'id',
+            //         // searchFormVisible: true,
+            //         columns: [
+            //             [
+            //                 {checkbox: true},
+            //                 {field: 'id', title: __('Id')},
+            //                 {
+            //                     field: 'admin_id', title: __('销售员'), formatter: function (v, r, i) {
+            //                         return v ? '  <img src='+Config.cdn + r.admin.avatar+' alt="" width="25" height="25" >  '  + r.admin.nickname : '';
+            //                     }
+            //                 },
+            //                 {
+            //                     field: 'customer_source',
+            //                     title: __('Customer_source'),
+            //                     searchList: {
+            //                         "direct_the_guest": __('Customer_source direct_the_guest'),
+            //                         "turn_to_introduce": __('Customer_source turn_to_introduce')
+            //                     },
+            //                     formatter: Table.api.formatter.normal
+            //                 },
+            //                 {field: 'username', title: __('Username'), formatter: Controller.api.formatter.judge},
+            //                 {field: 'phone', title: __('Phone')},
+            //                 {field: 'id_card', title: __('Id_card')},
+            //                 {
+            //                     field: 'type',
+            //                     title: __('Type'),
+            //                     searchList: {
+            //                         "mortgage": __('Type mortgage'),
+            //                         "used_car_mortgage": __('Type used_car_mortgage'),
+            //                         "car_rental": __('Type car_rental'),
+            //                         "full_new_car": __('Type full_new_car'),
+            //                         "full_used_car": __('Type full_used_car'),
+            //                         "sublet": __('Type sublet'),
+            //                         "affiliated": __('Type affiliated')
+            //                     },
+            //                     formatter: Table.api.formatter.normal
+            //                 },
+            //                 {field: 'models_name', title: __('Models_name')},
+            //                 {field: 'rent', title: __('Rent'), operate: 'BETWEEN'},
+            //                 {field: 'deposit', title: __('Deposit'), operate: 'BETWEEN'},
+            //                 {
+            //                     field: 'createtime',
+            //                     title: __('Createtime'),
+            //                     operate: 'RANGE',
+            //                     addclass: 'datetimerange',
+            //                     formatter: Table.api.formatter.datetime
+            //                 },
+            //                 {
+            //                     field: 'delivery_datetime',
+            //                     title: __('Delivery_datetime'),
+            //                     operate: 'RANGE',
+            //                     addclass: 'datetimerange',
+            //                     formatter: Table.api.formatter.datetime
+            //                 },
+            //                 {field: 'note_sales', title: __('Note_sales')},
+            //                 {
+            //                     field: 'operate',
+            //                     title: __('Operate'),
+            //                     table: carRental,
+            //                     buttons: [
 
-                                    /**
-                                     * 租车单编辑 
-                                     */
-                                    {
-                                        name: 'newedit', 
-                                        text: '租车单编辑', 
-                                        icon: 'fa fa-pencil', 
-                                        extend: 'data-toggle="tooltip"', 
-                                        title: __('租车单编辑'), 
-                                        classname: 'btn btn-xs btn-success btn-rentaledit',
-                                        visible: function (row) {
-                                            return row.lift_car_status == 'no' ? true : false;
-                                        }
+            //                         /**
+            //                          * 租车单编辑 
+            //                          */
+            //                         {
+            //                             name: 'newedit', 
+            //                             text: '租车单编辑', 
+            //                             icon: 'fa fa-pencil', 
+            //                             extend: 'data-toggle="tooltip"', 
+            //                             title: __('租车单编辑'), 
+            //                             classname: 'btn btn-xs btn-success btn-rentaledit',
+            //                             visible: function (row) {
+            //                                 return row.lift_car_status == 'no' ? true : false;
+            //                             }
                                        
-                                    },
-                                    /**
-                                     * 已提车
-                                     */
-                                    {
-                                        name: 'success',
-                                        icon: 'fa fa-check',
-                                        title: __('已提车'),
-                                        text: '已提车',
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'text-info',
-                                        visible: function (row) {
-                                            return row.lift_car_status == 'yes' ? true : false;
-                                        }
-                                    },
+            //                         },
+            //                         /**
+            //                          * 已提车
+            //                          */
+            //                         {
+            //                             name: 'success',
+            //                             icon: 'fa fa-check',
+            //                             title: __('已提车'),
+            //                             text: '已提车',
+            //                             extend: 'data-toggle="tooltip"',
+            //                             classname: 'text-info',
+            //                             visible: function (row) {
+            //                                 return row.lift_car_status == 'yes' ? true : false;
+            //                             }
+            //                         },
 
                            
-                                ],
-                                events: Controller.api.events.operate,
-                                formatter: Controller.api.formatter.operate
-                            }
-                        ]
-                    ]
+            //                     ],
+            //                     events: Controller.api.events.operate,
+            //                     formatter: Controller.api.formatter.operate
+            //                 }
+            //             ]
+            //         ]
                     
-                });
+            //     });
 
-                /**
-                 * 表格刷新渲染
-                 */
-                carRental.on('load-success.bs.table', function (e, data) {
-                    // $('#badge_order_rental').text(data.total);
-                    $(".btn-rentaladd").data("area", ["60%", "85%"]);
+            //     /**
+            //      * 表格刷新渲染
+            //      */
+            //     carRental.on('load-success.bs.table', function (e, data) {
+            //         // $('#badge_order_rental').text(data.total);
+            //         $(".btn-rentaladd").data("area", ["60%", "85%"]);
 
-                })
-                /**
-                 * 为租车单表格绑定事件
-                 */
-                Table.api.bindevent(carRental);
-                /**
-                 * 新增租车单
-                 */
-                $(document).on("click", ".btn-rentaladd", function () {   
+            //     })
+            //     /**
+            //      * 为租车单表格绑定事件
+            //      */
+            //     Table.api.bindevent(carRental);
+            //     /**
+            //      * 新增租车单
+            //      */
+            //     $(document).on("click", ".btn-rentaladd", function () {   
                         
-                    var url = 'sales/order/rentaladd';
-                    var options = {
-                        shadeClose: false,
-                        shade: [0.3, '#393D49'],
-                        area:['65%','80%'],
-                        callback:function(value){
+            //         var url = 'sales/order/rentaladd';
+            //         var options = {
+            //             shadeClose: false,
+            //             shade: [0.3, '#393D49'],
+            //             area:['65%','80%'],
+            //             callback:function(value){
 
-                        }
-                    }
-                    Fast.api.open(url,'新增租车单',options)
-                })
+            //             }
+            //         }
+            //         Fast.api.open(url,'新增租车单',options)
+            //     })
 
-            },
+            // },
             /**
              * 全款单（新车）
              */
