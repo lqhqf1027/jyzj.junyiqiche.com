@@ -4,8 +4,10 @@ namespace app\admin\controller\vehicle;
 
 use app\admin\model\Order;
 use app\admin\model\OrderDetails;
+use app\admin\model\OrderImg;
 use app\common\controller\Backend;
 use fast\Date;
+use think\Cache;
 use think\Db;
 use think\Exception;
 use think\exception\PDOException;
@@ -37,48 +39,64 @@ class Vehiclemanagement extends Backend
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("liftCarStatusList", $this->model->getLiftCarStatusList());
 
-        $this->view->assign([
-            'total_violation' => OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id')
-        ]);
+        if (!Cache::get('statistics')) {
 
-//        $query_today = OrderDetails::whereTime('last_update_check_time', 'today')->find();
+            Cache::set('statistics', self::statistics(), 43200);
 
-        $check_time = collection(OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status', 'neq', 'no_queries')->select())->toArray();
+            $check_time = collection(OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status', 'neq', 'no_queries')->select())->toArray();
 
-//        pr($check_time);die;
-        $times = time();
+            foreach ($check_time as $value) {
 
-//        $config_time = strtotime(Db::name('config')->where('name', 'last_update_time')->value('value'));
-//
-//        if ($config_time > strtotime(date('Ymd')) && $config_time < (strtotime(date('Ymd')) + 86400)) {
-//
-//        }
+                $year_status = $traffic_force_status = $business_status = 'no_queries';
+                if ($value['annual_inspection_status'] != 'no_queries') {
+                    $year_status = self::check_state($value['annual_inspection_time']);
+                }
 
+                if ($value['traffic_force_insurance_status'] != 'no_queries') {
+                    $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
+                }
 
-        foreach ($check_time as $value) {
+                if ($value['business_insurance_status'] != 'no_queries') {
+                    $business_status = self::check_state($value['business_insurance_time']);
+                }
 
-            $year_status = $traffic_force_status = $business_status = 'no_queries';
-            if ($value['annual_inspection_status'] != 'no_queries') {
-                $year_status = self::check_state($value['annual_inspection_time']);
+                OrderDetails::update([
+                    'id' => $value['id'],
+                    'annual_inspection_status' => $year_status,
+                    'traffic_force_insurance_status' => $traffic_force_status,
+                    'business_insurance_status' => $business_status,
+                ]);
             }
 
-            if ($value['traffic_force_insurance_status'] != 'no_queries') {
-                $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
-            }
-
-            if ($value['business_insurance_status'] != 'no_queries') {
-                $business_status = self::check_state($value['business_insurance_time']);
-            }
-
-            OrderDetails::update([
-                'id' => $value['id'],
-                'annual_inspection_status' => $year_status,
-                'traffic_force_insurance_status' => $traffic_force_status,
-                'business_insurance_status' => $business_status,
-//                'last_update_check_time' => $times
-            ]);
         }
 
+        if(!Cache::get('statistics_total_violation')){
+            Cache::set('statistics_total_violation',OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'),43200);
+        }
+
+        $this->view->assign([
+            'statistics'=> Cache::get('statistics'),
+            'statistics_total_violation'=>Cache::get('statistics_total_violation')
+        ]);
+
+    }
+
+    /**
+     * 统计
+     * @return array
+     * @throws Exception
+     */
+    protected static function statistics()
+    {
+        return [
+//            'total_violation' => OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'),
+            'soon_year' => OrderDetails::where('annual_inspection_status', 'soon')->count('id'),
+            'year_overdue' => OrderDetails::where('annual_inspection_status', 'overdue')->count('id'),
+            'soon_traffic' => OrderDetails::where('traffic_force_insurance_status', 'soon')->count('id'),
+            'traffic_overdue' => OrderDetails::where('traffic_force_insurance_status', 'overdue')->count('id'),
+            'soon_business' => OrderDetails::where('business_insurance_status', 'soon')->count('id'),
+            'business_overdue' => OrderDetails::where('business_insurance_status', 'overdue')->count('id'),
+        ];
     }
 
     /**
@@ -89,7 +107,7 @@ class Vehiclemanagement extends Backend
         //当前是否为关联查询
         $this->relationSearch = true;
 
-        $this->searchFields = 'username';
+        $this->searchFields = 'username,orderdetails.licensenumber';
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -114,12 +132,17 @@ class Vehiclemanagement extends Backend
             foreach ($list as $row) {
                 $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status']);
                 $row->visible(['orderdetails']);
-                $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy', 'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time', 'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status', 'traffic_force_insurance_status', 'business_insurance_status']);
+                $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
+                    'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
+                    'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
+                    'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
+                    'traffic_force_insurance_status', 'business_insurance_status','reson_query_fail']);
+
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
             $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
+            $result = array("total" => $total, "rows" => $list,'else'=>array_merge(Cache::get('statistics'),['statistics_total_violation'=>Cache::get('statistics_total_violation')]));
 
             return json($result);
         }
@@ -127,13 +150,7 @@ class Vehiclemanagement extends Backend
         return $this->view->fetch();
     }
 
-    /**
-     * 确认提车
-     * @param null $ids
-     * @return string
-     * @throws Exception
-     * @throws \think\exception\DbException
-     */
+
 
 
     /**
@@ -168,6 +185,13 @@ class Vehiclemanagement extends Backend
         }
     }
 
+    /**
+     * 确认提车
+     * @param null $ids
+     * @return string
+     * @throws Exception
+     * @throws \think\exception\DbException
+     */
     public function edit($ids = null)
     {
 
@@ -286,6 +310,10 @@ class Vehiclemanagement extends Backend
                 $row->traffic_force_insurance_status = $traffic_force_status;
                 $row->business_insurance_status = $business_status;
                 $row->save();
+
+                Cache::rm('statistics');
+
+                Cache::set('statistics', self::statistics(), 43200);
                 $this->success();
 
             }
@@ -387,6 +415,7 @@ class Vehiclemanagement extends Backend
             $query_record = [];
             $error_num = $success_num = 0;
             foreach ($params as $k => $v) {
+                $order_details_id = OrderDetails::getByOrder_id($v['order_id'])->id;
                 //获取城市前缀接口
                 $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($v['hphm']));
                 if ($result['error_code'] == 0) {
@@ -434,15 +463,17 @@ class Vehiclemanagement extends Backend
                         $field['total_deduction'] = $total_fraction;
                         $field['total_fine'] = $total_money;
 
-                        $order_details->allowField(true)->save($field, ['id' => OrderDetails::getByOrder_id($v['order_id'])->id]);
+                        $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
+
                         $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
                         $success_num++;
                     } else {
-//                        $this->error("客户姓名为<b>{$v['username']}</b>的用户：".$data['reason'], '', $data);
+                        $order_details->allowField(true)->save(['is_it_illegal'=>'query_failed','reson_query_fail'=>$data['reason']], ['id' => $order_details_id]);
                         $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $data['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
                         $error_num++;
                     }
                 } else {
+                    $order_details->allowField(true)->save(['is_it_illegal'=>'query_failed','reson_query_fail'=>$result['reason']], ['id' => $order_details_id]);
                     $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $result['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
                     $error_num++;
                 }
@@ -451,7 +482,8 @@ class Vehiclemanagement extends Backend
 //                }
             }
 
-
+            Cache::rm('statistics_total_violation');
+            Cache::set('statistics_total_violation',OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'),43200);
             $this->success('', '', ['error_num' => $error_num, 'success_num' => $success_num, 'query_record' => $query_record]);
         }
     }
@@ -504,6 +536,12 @@ class Vehiclemanagement extends Backend
     public function accredit()
     {
         return 123;
+    }
+
+    public function customer_information($ids = null)
+    {
+        
+
     }
 
 }
