@@ -45,7 +45,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
-                return "快速搜索：客户姓名";
+                return "快速搜索：客户姓名,车牌号";
             };
 
             // 初始化表格
@@ -57,61 +57,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'),},
-                        {
-                            field: 'username', title: __('Username'), formatter: function (value, row, index) {
-                                // if(!row.orderdetails.is_it_illegal){
-                                //     return value;
-                                // }
-                                return row.orderdetails.is_it_illegal == 'no_queries' ? value : row.orderdetails.is_it_illegal == 'violation_of_regulations' ? value + ' <span class=\'label label-danger\' style=\'cursor: pointer\'>有违章</span>' : value + ' <span class=\'label label-success\' style=\'cursor: pointer\'>无违章</span>';
-                            }
-                        },
+                        {field: 'orderdetails.file_coding', title: __('Orderdetails.file_coding')},
+                        {field: 'username', title: __('Username')},
+                        {field: 'id_card', title: __('Id_card')},
+                        {field: 'phone', title: __('Phone')},
+                        {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber')},
+                        {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
+                        {field: 'orderdetails.engine_number', title: __('Orderdetails.engine_number')},
                         {
                             field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
 
                                 return "<img src=" + Config.cdn + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
                             }
                         },
-
-                        {field: 'phone', title: __('Phone')},
-                        {field: 'id_card', title: __('Id_card')},
                         {field: 'models_name', title: __('Models_name')},
-                        {
-                            field: 'orderdetails.annual_inspection_time',
-                            title: __('年检截至日期'),
-                            operate: 'RANGE',
-                            addclass: 'datetimerange',
-                            formatter: Controller.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
-                        },
-                        {
-                            field: 'orderdetails.traffic_force_insurance_time',
-                            title: __('交强险截至日期'),
-                            operate: 'RANGE',
-                            addclass: 'datetimerange',
-                            formatter: Table.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
-                        },
-                        {
-                            field: 'orderdetails.business_insurance_time',
-                            title: __('商业险截至日期'),
-                            operate: 'RANGE',
-                            addclass: 'datetimerange',
-                            formatter: Table.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
-                        },
-                        {field: 'payment', title: __('Payment')},
-                        {field: 'monthly', title: __('月供'), operate: 'BETWEEN'},
-                        {field: 'nperlist', title: __('期数')},
-                        {field: 'end_money', title: __('End_money')},
-                        {field: 'tail_money', title: __('Tail_money')},
-                        {field: 'margin', title: __('Margin')},
-                        {
-                            field: 'createtime',
-                            title: __('Createtime'),
-                            operate: 'RANGE',
-                            addclass: 'datetimerange',
-                            formatter: Table.api.formatter.datetime
-                        },
                         {
                             field: 'type',
                             title: __('Type'),
@@ -126,34 +85,125 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             formatter: Table.api.formatter.normal
                         },
-                        {field: 'orderdetails.file_coding', title: __('Orderdetails.file_coding')},
-                        {field: 'orderdetails.signdate', title: __('Orderdetails.signdate')},
-                        {field: 'orderdetails.total_contract', title: __('Orderdetails.total_contract')},
-                        {field: 'orderdetails.hostdate', title: __('Orderdetails.hostdate')},
-                        {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber')},
-                        {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
-                        {field: 'orderdetails.engine_number', title: __('Orderdetails.engine_number')},
-                        {field: 'orderdetails.is_mortgage', title: __('Orderdetails.is_mortgage')},
-                        {field: 'orderdetails.mortgage_people', title: __('Orderdetails.mortgage_people')},
-                        {field: 'orderdetails.ticketdate', title: __('Orderdetails.ticketdate')},
-                        {field: 'orderdetails.supplier', title: __('Orderdetails.supplier')},
-                        {field: 'orderdetails.tax_amount', title: __('Orderdetails.tax_amount')},
-                        {field: 'orderdetails.no_tax_amount', title: __('Orderdetails.no_tax_amount')},
-                        {field: 'orderdetails.pay_taxesdate', title: __('Orderdetails.pay_taxesdate')},
-                        {field: 'orderdetails.purchase_of_taxes', title: __('Orderdetails.purchase_of_taxes')},
-                        {field: 'orderdetails.house_fee', title: __('Orderdetails.house_fee')},
-                        {field: 'orderdetails.luqiao_fee', title: __('Orderdetails.luqiao_fee')},
-                        {field: 'orderdetails.insurance_buydate', title: __('Orderdetails.insurance_buydate')},
-                        {field: 'orderdetails.insurance_policy', title: __('Orderdetails.insurance_policy')},
-                        {field: 'orderdetails.insurance', title: __('Orderdetails.insurance')},
-                        {field: 'orderdetails.car_boat_tax', title: __('Orderdetails.car_boat_tax')},
                         {
-                            field: 'orderdetails.commercial_insurance_policy',
-                            title: __('Orderdetails.commercial_insurance_policy')
+                            field: 'orderdetails.is_it_illegal', title: __('违章状态'), formatter: function (value, row, index) {
+                                if(value == 'no_queries'){
+                                    return '-';
+                                }
+
+                                let color = '';
+                                let content = '';
+
+                                switch (value) {
+                                    case 'no_violation':
+                                        color = 'success';
+                                        content = '无违章';
+                                        break;
+                                    case 'violation_of_regulations':
+                                        color = 'danger';
+                                        content = '有违章';
+                                        break;
+                                    case 'query_failed':
+                                        color = 'primary';
+                                        content = '查询违章失败';
+                                        break;
+                                }
+
+                                if(value!='query_failed'){
+                                    return  '<span class=\'label label-'+color+'\' style=\'cursor: pointer\'>'+content+'</span>' ;
+                                }
+
+                                return  '<span class=\'label label-'+color+'\' style=\'cursor: pointer\'>'+content+'</span><span class="text-danger" style="font-size: smaller;display: block;margin-top: 5px">'+row.orderdetails.reson_query_fail+'</span>' ;
+
+
+                            }
                         },
-                        {field: 'orderdetails.business_risks', title: __('Orderdetails.business_risks')},
-                        {field: 'orderdetails.subordinate_branch', title: __('Orderdetails.subordinate_branch')},
-                        {field: 'orderdetails.transfer_time', title: __('Orderdetails.transfer_time')},
+                        {
+                            field: 'orderdetails.annual_inspection_time',
+                            title: __('年检截至日期'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Controller.api.formatter.datetime,
+                            datetimeFormat: "YYYY-MM-DD"
+                        },
+                        {
+                            field: 'orderdetails.traffic_force_insurance_time',
+                            title: __('交强险截至日期'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Controller.api.formatter.datetime,
+                            datetimeFormat: "YYYY-MM-DD"
+                        },
+                        {
+                            field: 'orderdetails.business_insurance_time',
+                            title: __('商业险截至日期'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Controller.api.formatter.datetime,
+                            datetimeFormat: "YYYY-MM-DD"
+                        },
+                        // {field: 'payment', title: __('Payment')},
+                        // {field: 'monthly', title: __('月供'), operate: 'BETWEEN'},
+                        // {field: 'nperlist', title: __('期数')},
+                        // {field: 'end_money', title: __('End_money')},
+                        // {field: 'tail_money', title: __('Tail_money')},
+                        // {field: 'margin', title: __('Margin')},
+                        // {
+                        //     field: 'createtime',
+                        //     title: __('Createtime'),
+                        //     operate: 'RANGE',
+                        //     addclass: 'datetimerange',
+                        //     formatter: Table.api.formatter.datetime
+                        // },
+
+                        //
+                        // {field: 'orderdetails.signdate', title: __('Orderdetails.signdate')},
+                        // {field: 'orderdetails.total_contract', title: __('Orderdetails.total_contract')},
+                        // {field: 'orderdetails.hostdate', title: __('Orderdetails.hostdate')},
+                        //
+                        //
+                        // {field: 'orderdetails.is_mortgage', title: __('Orderdetails.is_mortgage')},
+                        // {field: 'orderdetails.mortgage_people', title: __('Orderdetails.mortgage_people')},
+                        // {field: 'orderdetails.ticketdate', title: __('Orderdetails.ticketdate')},
+                        // {field: 'orderdetails.supplier', title: __('Orderdetails.supplier')},
+                        // {field: 'orderdetails.tax_amount', title: __('Orderdetails.tax_amount')},
+                        // {field: 'orderdetails.no_tax_amount', title: __('Orderdetails.no_tax_amount')},
+                        // {field: 'orderdetails.pay_taxesdate', title: __('Orderdetails.pay_taxesdate')},
+                        // {field: 'orderdetails.purchase_of_taxes', title: __('Orderdetails.purchase_of_taxes')},
+                        // {field: 'orderdetails.house_fee', title: __('Orderdetails.house_fee')},
+                        // {field: 'orderdetails.luqiao_fee', title: __('Orderdetails.luqiao_fee')},
+                        // {field: 'orderdetails.insurance_buydate', title: __('Orderdetails.insurance_buydate')},
+                        // {field: 'orderdetails.insurance_policy', title: __('Orderdetails.insurance_policy')},
+                        // {field: 'orderdetails.insurance', title: __('Orderdetails.insurance')},
+                        // {field: 'orderdetails.car_boat_tax', title: __('Orderdetails.car_boat_tax')},
+                        // {
+                        //     field: 'orderdetails.commercial_insurance_policy',
+                        //     title: __('Orderdetails.commercial_insurance_policy')
+                        // },
+                        // {field: 'orderdetails.business_risks', title: __('Orderdetails.business_risks')},
+                        // {field: 'orderdetails.subordinate_branch', title: __('Orderdetails.subordinate_branch')},
+                        // {field: 'orderdetails.transfer_time', title: __('Orderdetails.transfer_time')},
+                        {
+                            field: 'operates',
+                            title: __('详情'),
+                            table: table,
+                            // events: Controller.api.events.operate,
+                            formatter: Table.api.formatter.operate,
+                            buttons: [
+                                {
+                                    name: 'customer_information',
+                                    icon: 'fa fa-eye',
+                                    title: __('查看客户详细资料'),
+                                    text: '查看客户详细资料',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-primary btn-dialog btn-customer_information',
+                                    url: 'vehicle/vehiclemanagement/customer_information',
+                                    // visible: function (row) {
+                                    // }
+                                },
+
+                            ]
+                        },
                         {
                             field: 'operate',
                             title: __('Operate'),
@@ -244,8 +294,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             table.on('load-success.bs.table', function (e, data) {
-
+                $(".btn-customer_information").data("area", ["95%", "95%"]);
+                if (data.else) {
+                      $('#peccancy').text(data.else.statistics_total_violation);
+                      $('#year_inspect').text(data.else.soon_year);
+                      $('#year_overdue').text(data.else.year_overdue);
+                      $('#strong').text(data.else.soon_traffic);
+                      $('#strong_overdue').text(data.else.traffic_overdue);
+                      $('#business').text(data.else.soon_business);
+                      $('#business_overdue').text(data.else.business_overdue);
+                }
             });
+
             /**
              * 批量查询违章
              */
@@ -405,6 +465,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
 
+
             // 为表格绑定事件
             Table.api.bindevent(table);
         },
@@ -430,26 +491,45 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
             },
-            formatter:{
+            formatter: {
                 datetime: function (value, row, index) {
                     var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
                     if (isNaN(value)) {
                         return value ? Moment(value).format(datetimeFormat) : __('None');
                     } else {
-                        console.log(row);
-
-                        var types = '';
+                        if (!value) {
+                            return value;
+                        }
+                        var status = '';
+                        var text = '';
                         switch (this.field) {
-                            case 'annual_inspection_time':
-                                
+                            case 'orderdetails.annual_inspection_time':
+                                status = row.orderdetails.annual_inspection_status;
+                                text = '年检';
                                 break;
-                            case 'traffic_force_insurance_time':
+                            case 'orderdetails.traffic_force_insurance_time':
+                                status = row.orderdetails.traffic_force_insurance_status;
+                                text = '交强险';
                                 break;
-                            case 'business_insurance_time':
+                            case 'orderdetails.business_insurance_time':
+                                status = row.orderdetails.business_insurance_status;
+                                text = '商业险';
                                 break;
                         }
-                        console.log(this.field);
-                        return value ? Moment(parseInt(value) * 1000).format(datetimeFormat) : __('None');
+                        let sign = '';
+                        let content = '';
+                        if (status == 'normal') {
+                            sign = 'success';
+                            content = '正常';
+                        } else if (status == 'soon') {
+                            sign = 'warning';
+                            content = text + '即将过期';
+                        } else if (status == 'overdue') {
+                            sign = 'danger';
+                            content = text + '已过期';
+                        }
+
+                        return status != 'no_queries' ? Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-" + sign + "' style='cursor: pointer'>" + content + "</span>" : value;
                     }
                 },
             },
@@ -590,17 +670,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param index
                      */
                     'click .btn-accredit': function (e, value, row, index) {
-                    
+
                         Fast.api.ajax({
                             url: 'vehicle/vehiclemanagement/setqrcode',
                             data: {order_id: JSON.stringify(row.id), username: JSON.stringify(row.username)},
                         }, function (data, ret) {
-                                // console.log(data);      
+                            // console.log(data);
                         }, function (data, ret) {
-                                        
+
                         });
-                    
-            
+
+
                     },
 
 
