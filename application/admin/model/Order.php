@@ -54,7 +54,7 @@ class Order extends Model
 
     public function getTypeList()
     {
-        return ['mortgage' => __('Type mortgage'), 'used_car_mortgage' => __('Type used_car_mortgage'), 'car_rental' => __('Type car_rental'), 'full_new_car' => __('Type full_new_car'), 'full_used_car' => __('Type full_used_car'), 'sublet' => __('Type sublet'), 'affiliated' => __('Type affiliated')];
+        return ['mortgage' => __('Type mortgage'), 'used_car_mortgage' => __('Type used_car_mortgage'), 'full_new_car' => __('Type full_new_car'), 'full_used_car' => __('Type full_used_car')];
     }
 
     public function getLiftCarStatusList()
