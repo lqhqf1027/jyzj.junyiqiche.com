@@ -9,6 +9,7 @@ use app\common\controller\Backend;
 use fast\Date;
 use think\Cache;
 use think\Db;
+use think\Config;
 use think\Exception;
 use think\exception\PDOException;
 use think\exception\ValidateException;
@@ -571,15 +572,79 @@ class Vehiclemanagement extends Backend
         return $this->view->fetch();
     }
 
-
-    public function accredit()
-    {
-        return 123;
-    }
-
+    //查看客户信息
     public function customer_information($ids = null)
-    {
+    { 
+        $row = Db::name('order')->alias('a')
+            ->join('order_details b', 'b.order_id=a.id', 'LEFT')
+            ->join('order_img c', 'c.order_id = a.id', 'LEFT')
+            ->field('a.customer_source,a.financial_name,a.username,a.phone,a.id_card,a.genderdata,a.city,a.detailed_address,a.models_name,a.payment,a.monthly,a.nperlist,a.gps,
+                a.end_money,a.tail_money,a.margin,a.decoration,a.rent,a.deposit,a.family_members,a.family_members2,a.turn_to_introduce_name,a.turn_to_introduce_phone,
+                a.turn_to_introduce_card,a.order_createtime,a.delivery_datetime,a.note_sales,a.type,a.lift_car_status,
+                b.file_coding,b.signdate,b.total_contract,b.hostdate,b.licensenumber,b.frame_number,b.engine_number,b.mortgage_people,b.ticketdate,b.supplier,
+                b.tax_amount,b.no_tax_amount,b.pay_taxesdate,b.purchase_of_taxes,b.house_fee,b.luqiao_fee,b.insurance_buydate,b.insurance_policy,b.insurance,b.car_boat_tax,
+                b.commercial_insurance_policy,b.business_risks,b.subordinate_branch,b.transfer_time,b.annual_inspection_time,b.traffic_force_insurance_time,b.business_insurance_time,
+                
+                c.id_cardimages,c.drivers_licenseimages,c.application_formimages,c.commit_to_authimages,c.bank_cardimages,c.mate_id_cardimages,c.residence_bookletimages,
+                c.call_listfiles,c.no_criminal_recordimages,c.car_purchase_confirmationimages,c.deposit_contractimages,c.deposit_receiptimages,
+                c.undertakingimages,c.faceimages')
+            ->where('a.id', $ids)
+            ->find();
 
+        // pr($row);
+        if (!$row) $this->error(__('No Results were found'));
+
+        //身份证正反面（多图）
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
+        //驾照正副页（多图）
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
+        //申请表（多图）
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
+        //承诺与授权书（多图）
+        $commit_to_authimages = $row['commit_to_authimages'] == '' ? [] : explode(',', $row['commit_to_authimages']);
+        //银行卡照（可多图）
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
+        //配偶的身份证正反面（多图）
+        $mate_id_cardimages = $row['mate_id_cardimages'] == '' ? [] : explode(',', $row['mate_id_cardimages']);
+        //户口簿【首页、主人页、本人页】
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
+        //通话清单（文件上传）
+        $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
+        //无犯罪记录书
+        $no_criminal_recordimages = $row['no_criminal_recordimages'] == '' ? [] : explode(',', $row['no_criminal_recordimages']);
+        //购车确认书
+        $car_purchase_confirmationimages = $row['car_purchase_confirmationimages'] == '' ? [] : explode(',', $row['car_purchase_confirmationimages']);
+        //定金合同（多图）
+        $deposit_contractimages = $row['deposit_contractimages'] == '' ? [] : explode(',', $row['deposit_contractimages']);
+        //定金收据上传
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] : explode(',', $row['deposit_receiptimages']);
+        //承诺书
+        $undertakingimages = $row['undertakingimages'] == '' ? [] : explode(',', $row['undertakingimages']);
+        //面签照
+        $faceimages = $row['faceimages'] == '' ? [] : explode(',', $row['faceimages']);
+       
+
+        $this->view->assign([
+            "row" => $row,
+            'cdnurl' => Config::get('upload')['cdnurl'],
+            'id_cardimages' => $id_cardimages,
+            'drivers_licenseimages' => $drivers_licenseimages,
+            'application_formimages' => $application_formimages,
+            'commit_to_authimages' => $commit_to_authimages,
+            'bank_cardimages' => $bank_cardimages,
+            'mate_id_cardimages' => $mate_id_cardimages,
+            'residence_bookletimages' => $residence_bookletimages,
+            'call_listfiles' => $call_listfiles,
+            'no_criminal_recordimages' => $no_criminal_recordimages,
+            'car_purchase_confirmationimages' => $car_purchase_confirmationimages,
+            'deposit_contractimages' => $deposit_contractimages,
+            'deposit_receiptimages' => $deposit_receiptimages,
+            'undertakingimages' => $undertakingimages,
+            'faceimages' => $faceimages
+        ]);
+
+        
+        return $this->view->fetch();
 
     }
 
