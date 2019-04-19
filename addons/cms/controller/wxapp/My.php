@@ -7,6 +7,7 @@ use addons\cms\model\OrderDetails;
 use addons\cms\model\User;
 use addons\cms\model\Order;
 use fast\Auth;
+use think\Cache;
 use think\Db;
 use Endroid\QrCode\QrCode;
 use fast\Random;
@@ -73,7 +74,59 @@ class My extends Base
     }
 
     /**
-     * 君忆司机认证，表单
+     * 查询违章
+     */
+    public function query_violation()
+    {
+        $user_id = $this->request->post('user_id');
+
+        $is_update = $this->request->post('is_update');
+
+        $order_info = \app\admin\model\Order::getByUser_id($user_id)->visible(['id', 'username']);
+
+        $order_details = OrderDetails::getByOrder_id($order_info->id);
+//        $this->success($order_details);
+        if ($order_details) {
+            $status = $order_details->is_it_illegal;
+
+            if ($is_update) {
+                $status = 'no_queries';
+            }
+            if ($status == 'no_queries') {
+                $parms = [
+                    [
+                        'hphm' => trim(mb_substr($order_details->licensenumber, 0, 2)),
+                        'hphms' => trim($order_details->licensenumber),
+                        'engineno' => trim($order_details->engine_number),
+                        'classno' => trim($order_details->frame_number),
+                        'order_id' => trim($order_details->order_id),
+                        'username' => trim($order_info->username)
+                    ]
+                ];
+
+                \app\admin\controller\vehicle\Vehiclemanagement::illegal($parms, true);
+
+                $order_details = OrderDetails::getByOrder_id($order_info->id)->visible(['licensenumber', 'frame_number', 'engine_number', 'total_deduction', 'total_fine', 'violation_details', 'number_of_queries'])->toArray();
+
+                if ($order_details['violation_details']) {
+                    $order_details['violation_details'] = json_decode($order_details['violation_details'], true);
+                    $order_details['violation_number'] = count($order_details['violation_details']);
+                }
+            } else {
+                $order_details = $order_details->visible(['licensenumber', 'frame_number', 'engine_number', 'total_deduction', 'total_fine', 'violation_details', 'number_of_queries'])->toArray();
+
+                if ($order_details['violation_details']) {
+                    $order_details['violation_details'] = json_decode($order_details['violation_details'], true);
+                    $order_details['violation_number'] = count($order_details['violation_details']);
+                }
+            }
+            $this->success('查询成功', $order_details);
+
+        }
+
+    }
+
+     /* 君忆司机认证，表单
      * @throws \think\exception\DbException
      */
     public function confirmFormDriver()
@@ -101,3 +154,4 @@ class My extends Base
     }
 
 }
+
