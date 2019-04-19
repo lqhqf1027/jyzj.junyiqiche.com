@@ -71,13 +71,13 @@ class Vehiclemanagement extends Backend
 
         }
 
-        if(!Cache::get('statistics_total_violation')){
-            Cache::set('statistics_total_violation',OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'),43200);
+        if (!Cache::get('statistics_total_violation')) {
+            Cache::set('statistics_total_violation', OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'), 43200);
         }
 
         $this->view->assign([
-            'statistics'=> Cache::get('statistics'),
-            'statistics_total_violation'=>Cache::get('statistics_total_violation')
+            'statistics' => Cache::get('statistics'),
+            'statistics_total_violation' => Cache::get('statistics_total_violation')
         ]);
 
     }
@@ -137,20 +137,18 @@ class Vehiclemanagement extends Backend
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status','reson_query_fail']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
             $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list,'else'=>array_merge(Cache::get('statistics'),['statistics_total_violation'=>Cache::get('statistics_total_violation')]));
+            $result = array("total" => $total, "rows" => $list, 'else' => array_merge(Cache::get('statistics'), ['statistics_total_violation' => Cache::get('statistics_total_violation')]));
 
             return json($result);
         }
 
         return $this->view->fetch();
     }
-
-
 
 
     /**
@@ -411,81 +409,119 @@ class Vehiclemanagement extends Backend
         if ($this->request->isAjax()) {
 
             $params = $this->request->post()['ids'];
-            $keys = '217fb8552303cb6074f88dbbb5329be7';
-            $order_details = new OrderDetails();
-            $query_record = [];
-            $error_num = $success_num = 0;
-            foreach ($params as $k => $v) {
-                $order_details_id = OrderDetails::getByOrder_id($v['order_id'])->id;
-                //获取城市前缀接口
-                $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($v['hphm']));
-                if ($result['error_code'] == 0) {
+            $illegal = self::illegal($params);
 
-                    $field = array();
+            $this->success('', '', ['error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
+        }
+    }
 
-                    $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($v['hphms']) . "&engineno=" . $v['engineno'] . "&classno=" . $v['classno'] . "&key=" . $keys);
+    /**
+     * 查询违章
+     * @param $params
+     * @return array
+     * @throws Exception
+     */
+    public static function illegal($params, $is_number = false)
+    {
+        $keys = '217fb8552303cb6074f88dbbb5329be7';
+        $order_details = new OrderDetails();
+        $query_record = [];
+        $error_num = $success_num = 0;
+        foreach ($params as $k => $v) {
+            $order_details_id = OrderDetails::getByOrder_id($v['order_id'])->id;
+            //获取城市前缀接口
+            $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($v['hphm']));
+            if ($result['error_code'] == 0) {
 
-                    if ($data['error_code'] == 0) {
+                $field = array();
 
-                        $total_fraction = 0;     //总扣分
-                        $total_money = 0;        //总罚款
-                        $flag = -1;
-                        if ($data['result']['lists']) {
-                            $record = [];
-                            foreach ($data['result']['lists'] as $key => $value) {
-                                if ($value['handled'] == 0) {
-                                    $flag = -2;
-                                } else if ($value['handled'] == 1) {
-                                    continue;
-                                }
-                                if ($value['fen']) {
-                                    $value['fen'] = floatval($value['fen']);
+                $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($v['hphms']) . "&engineno=" . $v['engineno'] . "&classno=" . $v['classno'] . "&key=" . $keys);
 
-                                    $total_fraction += $value['fen'];
-                                }
+                if ($data['error_code'] == 0) {
 
-                                if ($value['money']) {
-                                    $value['money'] = floatval($value['money']);
-
-                                    $total_money += $value['money'];
-                                }
-
-                                $record[] = $value;
-
+                    $total_fraction = 0;     //总扣分
+                    $total_money = 0;        //总罚款
+                    $flag = -1;
+                    if ($data['result']['lists']) {
+                        $record = [];
+                        foreach ($data['result']['lists'] as $key => $value) {
+                            if ($value['handled'] == 0) {
+                                $flag = -2;
+                            } else if ($value['handled'] == 1) {
+                                continue;
                             }
-                            $field['violation_details'] = $record ? json_encode($record) : null;
+                            if ($value['fen']) {
+                                $value['fen'] = floatval($value['fen']);
 
-                            $field['is_it_illegal'] = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
+                                $total_fraction += $value['fen'];
+                            }
 
-                        } else {
-                            $field['is_it_illegal'] = 'no_violation';
+                            if ($value['money']) {
+                                $value['money'] = floatval($value['money']);
+
+                                $total_money += $value['money'];
+                            }
+
+                            $record[] = $value;
+
+                        }
+                        $field['violation_details'] = $record ? json_encode($record) : null;
+
+                        $field['is_it_illegal'] = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
+
+                    } else {
+                        $field['is_it_illegal'] = 'no_violation';
+                    }
+
+                    $field['total_deduction'] = $total_fraction;
+                    $field['total_fine'] = $total_money;
+
+                    $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
+                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
+                    $success_num++;
+
+                    if ($is_number) {
+                        $nums = OrderDetails::whereTime('update_violation_time', 'w')->where('order_id', $v['order_id'])->value('number_of_queries');
+
+                        if ($nums != 2) {
+                            $update_time = time();
+
+                            if (!$nums) {
+                                $nums = 0;
+                            }
+                            $nums++;
+
+                            OrderDetails::update([
+                                'id' => $order_details_id,
+                                'number_of_queries' => $nums,
+                                'update_violation_time' => $update_time
+                            ]);
+
                         }
 
-                        $field['total_deduction'] = $total_fraction;
-                        $field['total_fine'] = $total_money;
-
-                        $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
-                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
-                        $success_num++;
-                    } else {
-                        $order_details->allowField(true)->save(['is_it_illegal'=>'query_failed','reson_query_fail'=>$data['reason']], ['id' => $order_details_id]);
-                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $data['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
-                        $error_num++;
                     }
+
                 } else {
-                    $order_details->allowField(true)->save(['is_it_illegal'=>'query_failed','reson_query_fail'=>$result['reason']], ['id' => $order_details_id]);
-                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $result['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
+                    $order_details->allowField(true)->save(['is_it_illegal' => 'query_failed', 'reson_query_fail' => $data['reason']], ['id' => $order_details_id]);
+                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $data['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
                     $error_num++;
                 }
-//                else {
-//                    $this->error("客户姓名为<b>{$v['username']}</b>的用户：".$result['reason'], '', $result);
-//                }
+            } else {
+                $order_details->allowField(true)->save(['is_it_illegal' => 'query_failed', 'reson_query_fail' => $result['reason']], ['id' => $order_details_id]);
+                $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $result['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
+                $error_num++;
             }
 
-            Cache::rm('statistics_total_violation');
-            Cache::set('statistics_total_violation',OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'),43200);
-            $this->success('', '', ['error_num' => $error_num, 'success_num' => $success_num, 'query_record' => $query_record]);
         }
+
+        Cache::rm('statistics_total_violation');
+        Cache::set('statistics_total_violation', OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'), 43200);
+
+        return [
+            'error_num' => $error_num,
+            'success_num' => $success_num,
+            'query_record' => $query_record
+        ];
     }
 
 
@@ -540,7 +576,7 @@ class Vehiclemanagement extends Backend
 
     public function customer_information($ids = null)
     {
-        
+
 
     }
 
