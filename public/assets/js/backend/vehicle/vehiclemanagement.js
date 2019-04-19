@@ -235,6 +235,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     text: '小程序授权',
                                     extend: 'data-toggle="tooltip"',
                                     classname: 'btn btn-xs btn-success btn-accredit',
+                                    visible: function (row) {
+                                        return !row.user_id ? true : false;
+                                    }
+
+                                },
+                                {
+                                    name: '',
+                                    icon: 'fa fa-check',
+                                    title: __('已授权'),
+                                    text: '已授权',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'text-success',
+                                    visible: function (row) {
+                                        return row.user_id ? true : false;
+                                    }
+
                                 }
 
                             ]
