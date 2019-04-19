@@ -3,8 +3,13 @@
 namespace addons\cms\controller\wxapp;
 
 use addons\cms\model\Config;
+use addons\cms\model\OrderDetails;
 use addons\cms\model\User;
+<<<<<<< HEAD
 use app\admin\model\OrderDetails;
+=======
+use addons\cms\model\Order;
+>>>>>>> upstream/master
 use fast\Auth;
 use think\Cache;
 use think\Db;
@@ -32,7 +37,7 @@ class My extends Base
         $user_id = $this->request->post('user_id');
         if (!(int)$user_id) $this->error('参数错误');
         try {
-            $userInfo = User::field('id,nickname,avatar,invite_code,invitation_code_img,level')
+            $userInfo = User::field('id,nickname,avatar,invite_code,invitation_code_img,level,cif_driver')
                 ->find($user_id);
             if (!$userInfo) $this->error('未查询到用户信息');
             //查询邀请码背景图片
@@ -73,6 +78,7 @@ class My extends Base
     }
 
     /**
+<<<<<<< HEAD
      * 查询违章
      */
     public function query_violation()
@@ -125,3 +131,33 @@ class My extends Base
 
     }
 
+=======
+     * 君忆司机认证，表单
+     * @throws \think\exception\DbException
+     */
+    public function confirmFormDriver()
+    {
+        $params = $this->request->post('');
+        $err = '';
+        foreach ($params as $key => $item) {
+            if (!in_array($key, ['user_id', 'username', 'phone', 'licensenumber', 'id_card']) || !$item) $err .= ' ' . $key;
+        }
+        if ($err) $this->error($err . '参数错误');
+        //根据车牌号查询出order_details id
+//        return $oder_id;
+        $data = Order::get(['username' => $params['username'], 'phone' => $params['phone'], 'id_card' => $params['id_card']]);
+        $licensenumber = OrderDetails::get(['order_id' => $data->id])->licensenumber;
+        if ($data && $licensenumber) {
+            if ($licensenumber != $params['licensenumber']) $this->error(  '输入的车主信息与车牌号'. $params['licensenumber'].'不匹配');
+        } else {
+            $this->error(' 未查询到认证信息');
+        }
+        if (Order::update(['id' => $data->id, 'user_id' => $params['user_id']]) && User::update(['id' => $params['user_id'], 'cif_driver' => 1])) $this->error('认证成功');
+
+        $this->error(' 认证失败');
+
+
+    }
+
+}
+>>>>>>> upstream/master

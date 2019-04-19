@@ -39,7 +39,6 @@ class Vehiclemanagement extends Backend
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("liftCarStatusList", $this->model->getLiftCarStatusList());
 
-
         if (!Cache::get('statistics')) {
 
             Cache::set('statistics', self::statistics(), 43200);
@@ -131,13 +130,18 @@ class Vehiclemanagement extends Backend
                 ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status']);
+                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
+<<<<<<< HEAD
                     'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail']);
+=======
+                    'traffic_force_insurance_status', 'business_insurance_status','reson_query_fail']);
+
+>>>>>>> upstream/master
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
@@ -160,9 +164,8 @@ class Vehiclemanagement extends Backend
 
         if ($this->request->isAjax()) {
             $params = $this->request->post();
-//            pr(VENDOR_PATH);DIE;
-//            pr(ROOT_PATH.'vendor/endroid'.DS.'qr-code'.DS.'assets'.DS.'font'.DS.'MSYHBD.TTC');die;
-//            return ROOT_PATH.DS.'endroid'.DS.'qr-code'.DS.'assets'.DS.'font'.DS.'MSYHBD.TTC';
+            $authorization_img = Order::get($params['order_id'])->authorization_img;
+            if ($authorization_img) $this->success('创建成功', '', $authorization_img);
             $time = date('YmdHis');
             $qrCode = new QrCode();
             $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?order_id=' . $params['order_id'])
@@ -178,7 +181,7 @@ class Vehiclemanagement extends Backend
             $fileName = DS . 'uploads' . DS . 'qrcode' . DS . $time . '_' . 'o_id' . $params['order_id'] . '.png';
             $qrCode->save(ROOT_PATH . 'public' . $fileName);
             if ($qrCode) {
-                Order::update(['id' => $params['order_id'], 'authorization_img' => $fileName]) ? $this->success('创建成功', $fileName) : $this->error('创建失败');
+                Order::update(['id' => $params['order_id'], 'authorization_img' => $fileName]) ? $this->success('创建成功', '', $fileName) : $this->error('创建失败');
             }
             $this->error('未知错误');
         }
@@ -469,6 +472,13 @@ class Vehiclemanagement extends Backend
 
                         $field['is_it_illegal'] = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
 
+<<<<<<< HEAD
+=======
+                        $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
+
+                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
+                        $success_num++;
+>>>>>>> upstream/master
                     } else {
                         $field['is_it_illegal'] = 'no_violation';
                     }

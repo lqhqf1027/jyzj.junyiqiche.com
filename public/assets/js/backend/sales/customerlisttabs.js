@@ -821,7 +821,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
          */
         numberFailure:function(v){
 
-            return v == null ? '-' : new Date(v.replace(/-/g, '/')).getTime() < new Date().getTime() ? v + ' <span class="label label-danger">已过期</span>' : v;
+            return v == null ? '-' : new Date(v.replace(/-/g, '/')).getTime() < new Date().getTime() ? Controller.api.formatter.datetime(v) + ' <span class="label label-danger">已过期</span>' : Controller.api.formatter.datetime(v);
 
         },
         /**
@@ -1086,6 +1086,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                     var buttons = $.extend([], this.buttons || []);
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
+                /**
+                 * 失效时间
+                 */
+                datetime: function (v) {
+                    var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
+                    if (isNaN(v)) {
+                        return v ? Moment(v).format(datetimeFormat) : __('None');
+                    } else {
+                        return v ? Moment(parseInt(v) * 1000).format(datetimeFormat) : __('None');
+                    }
                 },
                 status: function (value, row, index) {
 
