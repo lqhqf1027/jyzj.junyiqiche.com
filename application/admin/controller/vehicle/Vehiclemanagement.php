@@ -137,7 +137,7 @@ class Vehiclemanagement extends Backend
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status','reson_query_fail']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
@@ -409,6 +409,8 @@ class Vehiclemanagement extends Backend
         if ($this->request->isAjax()) {
 
             $params = $this->request->post()['ids'];
+
+//            pr($params);die;
             $illegal = self::illegal($params);
 
             $this->success('', '', ['error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
@@ -469,10 +471,6 @@ class Vehiclemanagement extends Backend
 
                         $field['is_it_illegal'] = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
 
-                        $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
-
-                        $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
-                        $success_num++;
                     } else {
                         $field['is_it_illegal'] = 'no_violation';
                     }
@@ -574,7 +572,7 @@ class Vehiclemanagement extends Backend
 
     //查看客户信息
     public function customer_information($ids = null)
-    { 
+    {
         $row = Db::name('order')->alias('a')
             ->join('order_details b', 'b.order_id=a.id', 'LEFT')
             ->join('order_img c', 'c.order_id = a.id', 'LEFT')
@@ -622,7 +620,7 @@ class Vehiclemanagement extends Backend
         $undertakingimages = $row['undertakingimages'] == '' ? [] : explode(',', $row['undertakingimages']);
         //面签照
         $faceimages = $row['faceimages'] == '' ? [] : explode(',', $row['faceimages']);
-       
+
 
         $this->view->assign([
             "row" => $row,
@@ -643,7 +641,7 @@ class Vehiclemanagement extends Backend
             'faceimages' => $faceimages
         ]);
 
-        
+
         return $this->view->fetch();
 
     }
