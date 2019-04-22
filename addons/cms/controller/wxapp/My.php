@@ -126,9 +126,9 @@ class My extends Base
 
     }
 
-     /* 君忆司机认证，表单
-     * @throws \think\exception\DbException
-     */
+    /* 君忆司机认证，表单
+    * @throws \think\exception\DbException
+    */
     public function confirmFormDriver()
     {
         $params = $this->request->post('');
@@ -142,13 +142,62 @@ class My extends Base
         $data = Order::get(['username' => $params['username'], 'phone' => $params['phone'], 'id_card' => $params['id_card']]);
         $licensenumber = OrderDetails::get(['order_id' => $data->id])->licensenumber;
         if ($data && $licensenumber) {
-            if ($licensenumber != $params['licensenumber']) $this->error(  '输入的车主信息与车牌号'. $params['licensenumber'].'不匹配');
+            if ($licensenumber != $params['licensenumber']) $this->error('输入的车主信息与车牌号' . $params['licensenumber'] . '不匹配');
         } else {
             $this->error(' 未查询到认证信息');
         }
         if (Order::update(['id' => $data->id, 'user_id' => $params['user_id']]) && User::update(['id' => $params['user_id'], 'cif_driver' => 1])) $this->error('认证成功');
 
         $this->error(' 认证失败');
+
+
+    }
+
+    /**
+     * 搜索品牌车型
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function search_vehicles()
+    {
+
+        $search = $this->request->post('search');
+
+        if ($search == '') {
+            $this->success('查询条件不能为空');
+        }
+
+        $info = collection(\app\admin\model\BrandCate::field('id,name,bfirstletter')
+            ->with(['models' => function ($q) {
+                $q->where('status', 'normal')->field('id,name,brand_id');
+            }])->where('name', 'like', '%' . $search . '%')->select())->toArray();
+
+        if (empty($info)) {
+            $info = collection(\app\admin\model\BrandCate::field('id,name,bfirstletter')
+                ->with(['models' => function ($q) use ($search) {
+                    $q->where([
+                        'status' => 'normal',
+                        'name' => ['like', '%' . $search . '%']
+                    ])->field('id,name,brand_id');
+                }])->select())->toArray();
+        }
+        //二维数组根据某个字段a-z顺序排列数组
+        array_multisort(array_column($info, 'bfirstletter'), SORT_ASC, $info);
+
+        foreach ($info as $k => $v) {
+            if (!$v['models']) {
+                unset($info[$k]);
+                continue;
+            }
+        }
+
+        if ($info) {
+            $info = array_values($info);
+            $this->success('搜索成功', ['brandList'=>$info]);
+        } else {
+            $this->success('未查询到数据');
+        }
 
 
     }
