@@ -3,6 +3,7 @@
 namespace app\common\controller;
 
 use app\common\library\Auth;
+use app\wechat\controller\Wechat;
 use think\Config;
 use think\Controller;
 use think\Hook;
@@ -41,6 +42,11 @@ class Frontend extends Controller
 
     public function _initialize()
     {
+        //微信登陆验证
+        if(!session('MEMBER')){
+            $wx = new Wechat();
+            $wx->getCodes();
+        }
         //移除HTML标签
         $this->request->filter('trim,strip_tags,htmlspecialchars');
         $modulename = $this->request->module();

@@ -46,6 +46,19 @@ if ($("table.table").size() > 0) {
         };
     });
 }
+require.config({
+    paths: {
+        'table-fix-columns': '../addons/tablefixcolumns/js/bootstrap-table-fixed-columns',
+    },
+    shim: {
+        'table-fix-columns': {
+            deps: ['jquery','bootstrap-table']
+        },
+    }
+});
+if ($("table.table").size() > 0) {
+    require(['table-fix-columns']);
+}
 //修改上传的接口调用
 require(['upload'], function (Upload) {
     var _onUploadResponse = Upload.events.onUploadResponse;
