@@ -55,7 +55,7 @@ class Customerlisttabs extends Backend
             array_push($backArray['sale'], $value['id']);
         }
 
-        $superAdmin = $this->model->where("rule_message", 'message1')
+        $superAdmin = $this->model->where("rule_message", 'in', ['message1', 'message4'])
             ->field("id")
             ->select();
 

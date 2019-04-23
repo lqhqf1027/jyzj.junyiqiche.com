@@ -646,4 +646,149 @@ class Vehiclemanagement extends Backend
 
     }
 
+
+    /**
+     * 发送小程序模板消息
+     * @param $data
+     * @return array
+     */
+
+    public static function sendXcxTemplateMsg($data = '')
+    {
+        Cache::rm('access_token');
+        $access_token = getWxAccessToken();
+        // pr($access_token);
+        // die;
+        $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={$access_token}";
+        return posts($url, $data);
+    }
+
+
+    /**
+     * 获取用户openid
+     * @param $user_id
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public static function getOpenid($user_id)
+    {
+        return Db::name('third')->where(['user_id' => $user_id])->find()['openid'];
+    }
+
+    /**
+     * 发送违章公众号模板消息
+     */
+    public function sendViolation()
+    {
+        $detail = Collection($this->model->field('username,phone,user_id')
+            ->with(['orderdetails' => function ($q) {
+                $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations']);
+            }])->select())->toArray();
+        //是否存在数据
+        if ($detail) {
+            foreach ($detail as $key => $value) {
+                
+                $openid = $this->getOpenid($value['user_id']);
+
+                $first = '您好，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有未处理的违章信息';
+
+                //是否有openid
+                if ($openid) {
+                    //违章详情
+                    $details = json_decode($value['orderdetails']['violation_details'], true);
+                    // pr($details);
+                    // die;
+                    foreach ($details as $k => $v) {
+                        //违章地点
+                        $city = $v['wzcity'] . $v['area'];
+                        
+                        $temp_msg = array(
+                            'touser' => "{$openid}",
+                            'template_id' => "o3J6ynbquxb9kztuBqb57orZ3pl48eindyOvd5fPh44",
+                            'data' => array(
+                                'first' => array(
+                                    'value' => "{$first}",
+                                ),
+                                'violationTime' => array(
+                                    'value' => "{$v['date']}",
+                                ),
+                                'violationAddress' => array(
+                                    'value' => "{$city}",
+                                ),
+                                'violationType' => array(
+                                    'value' => "{$v['act']}",
+                                ),
+                                'violationFine' => array(
+                                    'value' => "{$v['money']}",
+                                ),
+                                'violationPoints' => array(
+                                    'value' => "{$v['fen']}",
+                                ),
+                                "remark" => array(
+                                    "value" => "点击查看更多内容",
+                                )
+                            ),
+                        );
+
+                        $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
+                        pr($res);
+                        die;
+                    }
+                    
+                    $this->success();
+                }
+    
+            }
+
+        }
+
+        
+        // //测试公众号推送
+
+        // $openid = 'o-Yor5O2gJPCcBy2sS-579YbnAWk';
+
+        // $first = '您好，您车牌号为＂asdf＂的车辆有未处理的违章信息';
+
+        // //是否有openid
+        // if ($openid) {
+            
+        //     $temp_msg = array(
+        //         'touser' => "{$openid}",
+        //         'template_id' => "o3J6ynbquxb9kztuBqb57orZ3pl48eindyOvd5fPh44",
+        //         'data' => array(
+        //             'first' => array(
+        //                 "value" => "{$first}",
+        //             ),
+        //             'violationTime' => array(
+        //                 "value" => "123",
+        //             ),
+        //             'violationAddress' => array(
+        //                 "value" => "123",
+        //             ),
+        //             'violationType' => array(
+        //                 "value" => "123",
+        //             ),
+        //             'violationFine' => array(
+        //                 "value" => "123",
+        //             ),
+        //             'violationPoints' => array(
+        //                 "value" => "123",
+        //             ),
+        //             "remark" => array(
+        //                 "value" => "点击查看更多内容",
+        //             )
+             
+        //         ),
+        //     );
+
+        //     $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
+        // }
+
+        // $this->success();
+
+    }
+
+
 }

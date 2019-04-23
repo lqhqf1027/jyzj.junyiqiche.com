@@ -489,6 +489,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
 
+            /**
+             * 公众号推送违章信息
+             */
+            $('.btn-violation').on("click", function () {
+
+                Fast.api.ajax({
+                    url: 'vehicle/vehiclemanagement/sendViolation',
+                }, function (data, ret) {
+
+                    table.bootstrapTable('refresh');
+                    
+                });
+           
+            });
 
             // 为表格绑定事件
             Table.api.bindevent(table);
