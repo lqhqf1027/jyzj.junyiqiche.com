@@ -137,7 +137,7 @@ class Vehiclemanagement extends Backend
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail','update_violation_time']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
@@ -477,6 +477,13 @@ class Vehiclemanagement extends Backend
 
                     $field['total_deduction'] = $total_fraction;
                     $field['total_fine'] = $total_money;
+                    $field['update_violation_time'] = time();
+
+                    $change_num = OrderDetails::whereTime('update_violation_time', 'w')->where('id',$order_details_id)->value('id');
+
+                    if(!$change_num){
+                        $field['number_of_queries'] = 0;
+                    }
 
                     $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
                     $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];

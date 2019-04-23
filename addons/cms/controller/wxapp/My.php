@@ -12,6 +12,7 @@ use think\Db;
 use Endroid\QrCode\QrCode;
 use fast\Random;
 use think\Exception;
+use think\exception\PDOException;
 
 /**
  * 我的
@@ -82,47 +83,56 @@ class My extends Base
 
         $is_update = $this->request->post('is_update');
 
-        $order_info = \app\admin\model\Order::getByUser_id($user_id)->visible(['id', 'username']);
+        try {
+            $order_info = \app\admin\model\Order::getByUser_id($user_id)->visible(['id', 'username']);
 
-        $order_details = OrderDetails::getByOrder_id($order_info->id);
-//        $this->success($order_details);
-        if ($order_details) {
-            $status = $order_details->is_it_illegal;
+            $order_details = OrderDetails::getByOrder_id($order_info->id);
+            if ($order_details) {
+                $status = $order_details->is_it_illegal;
 
-            if ($is_update) {
-                $status = 'no_queries';
-            }
-            if ($status == 'no_queries') {
-                $parms = [
-                    [
-                        'hphm' => trim(mb_substr($order_details->licensenumber, 0, 2)),
-                        'hphms' => trim($order_details->licensenumber),
-                        'engineno' => trim($order_details->engine_number),
-                        'classno' => trim($order_details->frame_number),
-                        'order_id' => trim($order_details->order_id),
-                        'username' => trim($order_info->username)
-                    ]
-                ];
-
-                \app\admin\controller\vehicle\Vehiclemanagement::illegal($parms, true);
-
-                $order_details = OrderDetails::getByOrder_id($order_info->id)->visible(['licensenumber', 'frame_number', 'engine_number', 'total_deduction', 'total_fine', 'violation_details', 'number_of_queries'])->toArray();
-
-                if ($order_details['violation_details']) {
-                    $order_details['violation_details'] = json_decode($order_details['violation_details'], true);
-                    $order_details['violation_number'] = count($order_details['violation_details']);
+                if ($is_update) {
+                    $status = 'no_queries';
                 }
+                if ($status == 'no_queries') {
+                    $parms = [
+                        [
+                            'hphm' => trim(mb_substr($order_details->licensenumber, 0, 2)),
+                            'hphms' => trim($order_details->licensenumber),
+                            'engineno' => trim($order_details->engine_number),
+                            'classno' => trim($order_details->frame_number),
+                            'order_id' => trim($order_details->order_id),
+                            'username' => trim($order_info->username)
+                        ]
+                    ];
+
+                    \app\admin\controller\vehicle\Vehiclemanagement::illegal($parms, true);
+
+                    $order_details = OrderDetails::getByOrder_id($order_info->id)->visible(['licensenumber', 'frame_number', 'engine_number', 'total_deduction', 'total_fine', 'violation_details', 'number_of_queries'])->toArray();
+
+                    if ($order_details['violation_details']) {
+                        $order_details['violation_details'] = json_decode($order_details['violation_details'], true);
+                        $order_details['violation_number'] = count($order_details['violation_details']);
+                    }
+                } else {
+                    $order_details = $order_details->visible(['licensenumber', 'frame_number', 'engine_number', 'total_deduction', 'total_fine', 'violation_details', 'number_of_queries'])->toArray();
+
+                    if ($order_details['violation_details']) {
+                        $order_details['violation_details'] = json_decode($order_details['violation_details'], true);
+                        $order_details['violation_number'] = count($order_details['violation_details']);
+                    }
+                }
+                $this->success('查询成功', $order_details);
+
             } else {
-                $order_details = $order_details->visible(['licensenumber', 'frame_number', 'engine_number', 'total_deduction', 'total_fine', 'violation_details', 'number_of_queries'])->toArray();
-
-                if ($order_details['violation_details']) {
-                    $order_details['violation_details'] = json_decode($order_details['violation_details'], true);
-                    $order_details['violation_number'] = count($order_details['violation_details']);
-                }
+                throw new Exception('发生未知错误');
             }
-            $this->success('查询成功', $order_details);
 
+        } catch (PDOException $e) {
+            $this->error($e->getMessage());
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
         }
+
 
     }
 
@@ -154,6 +164,47 @@ class My extends Base
     }
 
     /**
+     * 用户认证
+     */
+    public function client_authentication()
+    {
+        $user_id = $this->request->post('user_id');
+        $order_id = $this->request->post('order_id');
+
+        Db::startTrans();
+        try {
+            $order = Order::get($order_id);
+
+            if ($order) {
+                $order->user_id = $user_id;
+                $order->save();
+
+                $user = \app\admin\model\User::get($user_id);
+
+                if ($user) {
+                    $user->cif_driver = 1;
+
+                    $user->save();
+                } else {
+                    throw new Exception('未找到该用户');
+                }
+            } else {
+                throw new Exception('未找到该订单');
+            }
+            Db::commit();
+        } catch (PDOException $e) {
+            Db::rollback();
+            $this->error($e->getMessage());
+        } catch (Exception $e) {
+            Db::rollback();
+            $this->error($e->getMessage());
+        }
+
+        $this->success('认证成功');
+
+    }
+
+    /**
      * 搜索品牌车型
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -168,20 +219,27 @@ class My extends Base
             $this->success('查询条件不能为空');
         }
 
-        $info = collection(\app\admin\model\BrandCate::field('id,name,bfirstletter')
-            ->with(['models' => function ($q) {
-                $q->where('status', 'normal')->field('id,name,brand_id');
-            }])->where('name', 'like', '%' . $search . '%')->select())->toArray();
-
-        if (empty($info)) {
+        try {
             $info = collection(\app\admin\model\BrandCate::field('id,name,bfirstletter')
-                ->with(['models' => function ($q) use ($search) {
-                    $q->where([
-                        'status' => 'normal',
-                        'name' => ['like', '%' . $search . '%']
-                    ])->field('id,name,brand_id');
-                }])->select())->toArray();
+                ->with(['models' => function ($q) {
+                    $q->where('status', 'normal')->field('id,name,brand_id');
+                }])->where('name', 'like', '%' . $search . '%')->select())->toArray();
+
+            if (empty($info)) {
+                $info = collection(\app\admin\model\BrandCate::field('id,name,bfirstletter')
+                    ->with(['models' => function ($q) use ($search) {
+                        $q->where([
+                            'status' => 'normal',
+                            'name' => ['like', '%' . $search . '%']
+                        ])->field('id,name,brand_id');
+                    }])->select())->toArray();
+            }
+        } catch (PDOException $e) {
+            $this->error($e->getMessage());
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
         }
+
         //二维数组根据某个字段a-z顺序排列数组
         array_multisort(array_column($info, 'bfirstletter'), SORT_ASC, $info);
 
@@ -194,7 +252,7 @@ class My extends Base
 
         if ($info) {
             $info = array_values($info);
-            $this->success('搜索成功', ['brandList'=>$info]);
+            $this->success('搜索成功', ['brandList' => $info]);
         } else {
             $this->success('未查询到数据');
         }
