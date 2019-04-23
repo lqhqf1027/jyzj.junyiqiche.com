@@ -95,7 +95,8 @@ class Autotask extends Controller
                         exec('nohup php ' . ROOT_PATH . 'public/index.php ' . $crontab['content'] . ' >> ' . $logDir . date("Y-m-d") . '.log 2>&1 &');
                     } else {
                         // 远程异步调用URL
-                        Http::sendAsyncRequest($crontab['content']);
+//                        Http::sendAsyncRequest($crontab['content']);
+                        Http::get($crontab['content']);
                     }
                 } else if ($crontab['type'] == 'sql') {
                     //这里需要强制重连数据库,使用已有的连接会报2014错误

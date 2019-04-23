@@ -91,10 +91,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 "sublet": __('Type sublet'),
                                 "affiliated": __('Type affiliated')
                             },
-                            formatter: Table.api.formatter.normal
+                            formatter: function (value, row, index) {
+
+                                switch (value) {
+                                    case 'mortgage':
+                                        return this.searchList.mortgage;
+                                    case 'used_car_mortgage':
+                                        return this.searchList.used_car_mortgage;
+                                    case 'full_new_car':
+                                        return this.searchList.full_new_car;
+                                    case 'full_used_car':
+                                        return this.searchList.full_used_car;
+                                    case 'sublet':
+                                        return this.searchList.sublet;
+                                    case 'affiliated':
+                                        return this.searchList.affiliated;
+                                    case 'car_rental':
+                                        return this.searchList.car_rental;
+                                }
+                            }
                         },
                         {
                             field: 'orderdetails.is_it_illegal', title: __('违章状态'), formatter: function (value, row, index) {
+                                console.log(row);
                                 if(value == 'no_queries'){
                                     return '-';
                                 }
@@ -125,6 +144,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                             }
+                        },
+                        {
+                            field: 'orderdetails.update_violation_time',
+                            title: __('最后查询违章时间'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime,
+                            datetimeFormat: "YYYY-MM-DD"
                         },
                         {
                             field: 'orderdetails.annual_inspection_time',
@@ -489,6 +516,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
 
+
             /**
              * 公众号推送违章信息
              */
@@ -523,7 +551,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         view_information: function () {
             Controller.api.bindevent();
         },
-
 
         api: {
             bindevent: function () {
@@ -629,9 +656,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         e.stopPropagation();
                         e.preventDefault();
                         var that = this;
-                        // console.log(row);return;
-                        Layer.confirm('是否查询违章?', {icon: 3, title: '提示'}, function (index) {
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
 
+                        Layer.confirm('是否查询违章?', {icon: 3,offset: [top, left], shadeClose: true ,title: '提示'}, function (index) {
 
                             if (!row.orderdetails.licensenumber || row.orderdetails.licensenumber == '') {
                                 Layer.msg('请补全车牌号');
@@ -664,7 +698,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 data: {ids}
 
                             }, function (data, ret) {
-
+                                Controller.api.layer_violation(data);
                                 Layer.close(index);
                                 table.bootstrapTable('refresh');
 
