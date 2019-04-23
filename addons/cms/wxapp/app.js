@@ -2,7 +2,7 @@ var Towxml = require('/assets/libs/towxml/main.js');
 App({
   //请不要修改 /addons/cms/wxapp.这部分,只允许修改域名部分
   //请注意小程序只支持https
-  apiUrl: 'https://demo.fastadmin.net/addons/cms/wxapp.',
+  apiUrl: 'https://jyzj.junyiqiche.com/addons/cms/wxapp.',
   si: 0,
   //小程序启动
   onLaunch: function () {

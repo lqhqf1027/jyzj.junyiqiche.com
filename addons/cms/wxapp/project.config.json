@@ -4,15 +4,16 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"autoAudits": false
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.6.4",
-	"appid": "",
+	"appid": "wxbf30f98715bbb9b5",
 	"projectname": "FastAdmin-cms-wxapp",
 	"condition": {
 		"search": {

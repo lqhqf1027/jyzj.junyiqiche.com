@@ -20,6 +20,10 @@ return array (
     array (
       0 => 'loginbg',
     ),
+    'testhook' => 
+    array (
+      0 => 'tablefixcolumns',
+    ),
     'upload_config_init' => 
     array (
       0 => 'upyun',
