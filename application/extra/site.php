@@ -4,9 +4,7 @@ return array (
   'name' => '君忆之家',
   'beian' => '',
   'cdnurl' => '',
-
-  'version' => '1.3',
-
+  'version' => '1.3.7',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
@@ -55,4 +53,10 @@ return array (
   'card_share_body' => '',
   'card_share_img' => '',
   'last_update_time' => '2019-04-18 11:59:23',
+  'turn' => 
+  array (
+  ),
+  'share_title' => '君忆司机认证',
+  'share_body' => '邀请你来认证君忆司机，获取更多车辆服务',
+  'share_img' => '/jyzj.junyiqiche.com/uploads/20190424/726058d409e8b54c950393fce76ce0a7.jpg',
 );

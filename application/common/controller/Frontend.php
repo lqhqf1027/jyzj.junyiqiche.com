@@ -44,6 +44,7 @@ class Frontend extends Controller
     {
         //微信登陆验证
         if(!session('MEMBER')){
+
             $wx = new Wechat();
             $wx->getCodes();
         }
@@ -120,6 +121,9 @@ class Frontend extends Controller
         $this->loadlang($controllername);
         $this->assign('site', $site);
         $this->assign('config', $config);
+        //卡片分享参数
+        $shareData = \app\common\model\Config::where('name', ['eq', 'share_title'], ['eq', 'share_body'], ['eq', 'share_img'], 'or')->column('value');
+        $this->assign(['share_title' => $shareData[2], 'share_body' => $shareData[0], 'share_img' => Config::get('upload')['cdnurl'] . $shareData[1]]);
     }
 
     /**
