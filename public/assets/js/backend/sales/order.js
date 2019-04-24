@@ -134,19 +134,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                 buttons: [
 
                                     /**
-                                     * 按揭（新车）单编辑 
+                                     * 按揭（新车）单编辑
                                      */
                                     {
-                                        name: 'newedit', 
-                                        text: '按揭（新车）单编辑', 
-                                        icon: 'fa fa-pencil', 
-                                        extend: 'data-toggle="tooltip"', 
-                                        title: __('按揭（新车）单编辑'), 
+                                        name: 'newedit',
+                                        text: '按揭（新车）单编辑',
+                                        icon: 'fa fa-pencil',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('按揭（新车）单编辑'),
                                         classname: 'btn btn-xs btn-success btn-newedit',
                                         visible: function (row) {
                                             return row.lift_car_status == 'no' ? true : false;
                                         }
-                                       
+
                                     },
                                     /**
                                      * 已提车
@@ -163,15 +163,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                         }
                                     },
 
-                           
+
                                 ],
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
                         ]
-                    ]
+                    ],
+                    // fixedColumns: true,   //开启冻结列
+                    // fixedNumber: 3,       //冻结左侧前3行
 
                 });
+                // newMortgage.bootstrapTable('fixedEvents'); //注册冻结列事件
                 /**
                  * 刷新表格渲染
                  */

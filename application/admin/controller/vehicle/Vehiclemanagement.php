@@ -30,7 +30,7 @@ class Vehiclemanagement extends Backend
      * @var \app\admin\model\vehicle\Vehiclemanagement
      */
     protected $model = null;
-
+    protected $noNeedRight = ['*'];
     public function _initialize()
     {
         parent::_initialize();
