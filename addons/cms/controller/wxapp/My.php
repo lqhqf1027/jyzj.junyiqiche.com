@@ -6,6 +6,8 @@ use addons\cms\model\Config;
 use addons\cms\model\OrderDetails;
 use addons\cms\model\User;
 use addons\cms\model\Order;
+use aipspeech\AipSpeech;
+use app\common\model\Type;
 use fast\Auth;
 use think\Cache;
 use think\Db;
@@ -258,6 +260,19 @@ class My extends Base
         }
 
 
+    }
+
+    public function speech_recognition()
+    {
+
+        $audio_file = $this->request->post('audio_file');
+
+        $client = new AipSpeech('16101235','bXanfwBIVCsONzVTnVDB7SYo','MDVyVOy2QKvCHE9M8dPzk2ekR0evwaNe');
+
+        // 识别本地文件
+        $this->success($client->asr(mb_convert_encoding(file_get_contents('../runtime/新录音.wav'),'UTF-8', 'UTF-8'), 'wav', 16000, array(
+            'dev_pid' => 1536,
+        )));
     }
 
 }
