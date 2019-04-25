@@ -664,9 +664,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
              * 公众号推送违章信息
              */
             $('.btn-pushviolation').on("click", function () {
+                var ids = Table.api.selectedids(table);
 
                 Fast.api.ajax({
-                    url: 'vehicle/vehiclemanagement/sendviolation',
+                    url: 'vehicle/vehiclemanagement/sendviolation?ids=' + ids,
                 }, function (data, ret) {
 
                     table.bootstrapTable('refresh');
