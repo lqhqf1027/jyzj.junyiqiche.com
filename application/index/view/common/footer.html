@@ -6,6 +6,7 @@
 <!--您的Layui代码start-->
 <script type="text/javascript">
     window.onload = function () {
+
         var ajaxurl = '{:url("index/sharedata")}';
         var urll = location.href.split('#')[0];
         $.ajax({
@@ -62,12 +63,7 @@
             }
         })
     }
-    window.ontouchmove = function (e) {
-        e.preventDefault && e.preventDefault();
-        e.returnValue = false;
-        e.stopPropagation && e.stopPropagation();
-        return false;
-    };
+
     layui.use(['form', 'element'], function () {
 
         var form = layui.form
