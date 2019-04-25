@@ -474,7 +474,7 @@
         //实时监听车牌号输入的值
         $('input[name="plate_no"]').on('input propertychange',function(){
             var pateNo_val = $(this).val();
-            $.post("{:url('index/driver/getUserVin')}",{ pateNo_val:pateNo_val },function(data){
+            $.post("{:url('index/index/getUserVin')}",{ pateNo_val:pateNo_val },function(data){
                 if(data.result!==''){
                     $('.car-box').html('<div class="wrap-input100 validate-input m-t-20 m-b-20 vin"data-validate="不能为空"><input class="input100"type="text"name="vin"required lay-verify="required" value="'+data.result.vin+'"><span class="focus-input100"data-placeholder="输入车辆识别代号"></span></div><div class="wrap-input100 validate-input m-t-20 m-b-20 engine_no"data-validate="不能为空"><input class="input100"type="text"name="engine_no"required lay-verify="required"value="'+data.result.engine_no+'"><span class="focus-input100"data-placeholder="输入发动机号"></span></div>');
                     

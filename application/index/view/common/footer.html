@@ -126,6 +126,341 @@
         /*layer弹出一个示例*/
         // layer.msg('Hello World');
     });
+
+
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['form','upload', 'element'], function () {
+        var upload = layui.upload;
+        var element = layui.element;
+        var form = layui.form;
+        jq = layui.jquery;
+        var flag = false;
+        $('.reload-btn').on('click',function(){
+            location.reload();
+        })
+         //图片识别
+        upload.render({
+            url: '{:url("index/ocrView")}',
+            elem: '#test1',
+            ext: 'jpg|png|gif|jpeg',
+            area: ['500', '500px'],
+            before: function (input) {
+                loading = layer.load(2, {
+                    shade: [0.2, '#000']
+                   
+                });
+            },
+            done: function (res) {
+                console.log(res); 
+                
+                switch(res.state){
+                    case 1:
+                    layer.msg(res.errmsg, {
+                        time: 1500,
+                        icon: 5
+                    });
+                    layer.close(loading);
+                    
+                   
+                    break;
+                    case 2:
+                    flag = true;
+                    layer.close(loading);
+                    
+                    layer.msg(res.errmsg, {
+                        time: 1000,
+                        icon: 1
+                    },function(){
+                     
+                    if (res.data[0].type == 3) {
+                        res.data[0].type = '行驶证';
+                    } else {
+                        res.data[0].type = '未知的证件类型';
+
+                    } 
+                    $('#car_info').html('<ul><li>图片类型：&nbsp;&nbsp;' + res.data[0].type +
+                        '</li><li>品牌型号：&nbsp;&nbsp;' + res.data[0].model +
+                        '</li><li>车牌号码：&nbsp;&nbsp;<span class="plate_no">' + res.data[0].plate_no +
+                        '</span></li><li>所有人：&nbsp;&nbsp;' + res.data[0].owner +
+                        '</li><li>车辆识别代号：&nbsp;&nbsp;<span class="vin">' + res.data[0].vin +
+                        '</span></li><li>发动机号码：&nbsp;&nbsp;<span class="engine_no">' + res.data[0].engine_no +
+                        '</span></li><li>签发机关：&nbsp;&nbsp;' + res.data[0].issued_by + '</li></ul>');
+
+                    console.log(res); 
+                    }); 
+                    
+                    break;
+
+                    case 3:
+                    layer.close(loading);
+                    layer.alert(res.errmsg,{ icon:5},function(){
+                        location.reload();
+                        
+                    }); 
+                    
+                    break;
+
+                    case 4:
+                    layer.close(loading);
+                    layer.alert(res.errmsg,{ icon:5},function(){
+                        location.reload();
+                        
+                    }); 
+
+                    break;
+                }
+                
+                
+            },
+            error: function (res) {
+                layer.close(loading);
+
+                alert(res);
+            }
+        }) 
+    
+        $('.car_img_sel').on('click',function(){
+           if(flag){
+            loading = layer.load(2, {
+                shade: [0.2, '#000']
+            });
+                var plate_no = $('.plate_no').text(),
+                    vin = $('.vin').text(),
+                    engine_no = $('.engine_no').text();
+                $.post("{:url('index/selCarInfo')}",{plate_no:plate_no,vin:vin,engine_no:engine_no},function(msg){
+                   
+                    //查询成功：错误码为0并且list不为空
+                    if(msg.error_code==3){
+                        layer.close(loading);
+                        
+                        layer.alert(msg.reason,{ icon:5}); 
+                        return;
+                    }
+                    if(msg.error_code==0&&msg.result.lists.length>0){
+                        //改变剩余可查询次数
+                        $('.query_num').text(msg.query_number);
+                        layer.close(loading);
+                        
+                        var carInfo = '',
+                            fen='',
+                            money='';
+
+                            for( var i in msg.result.lists){
+                                // console.log(msg.result.lists[i]['area'])
+                                fen = Number(fen);
+                                money = Number(money);
+                                fen +=Number(msg.result.lists[i]['fen']);
+                                money +=Number(msg.result.lists[i]['money']);
+                                carInfo+='<ul class="login-more  p-l-10 p-r-10"><li class="m-b-8"><span class="txt1">时间：&nbsp;'+msg.result.lists[i]['date']+'；&nbsp;&nbsp;&nbsp;&nbsp;地点：&nbsp;'+msg.result.lists[i]['area']+'；&nbsp;&nbsp;&nbsp;&nbsp;违章行为：&nbsp;'+msg.result.lists[i]['act']+'；&nbsp;&nbsp;&nbsp;&nbsp;扣分：&nbsp;<span style="color:red">'+msg.result.lists[i]['fen']+'</span>；&nbsp;&nbsp;&nbsp;&nbsp;罚款：&nbsp;<span style="color:red">'+msg.result.lists[i]['money']+'</span></span></li></ul> <hr>';
+                            }
+                        layer.msg(msg.reason,{ time:1000,icon:1},function(){
+                           var indexClose =  layer.open({
+                                type: 1,
+                                // skin: 'layui-layer-rim', //加上边框
+                                area: ['95%', ''], //宽高
+                                content: '<div class="close-div"><h2><center>'+msg.result.hphm+'</center></h2><p style="text-align:center">未处理违章：'+msg.result.lists.length+'，累计扣分：'+fen+'，累计罚款(元)：'+money+'</p><br>'+carInfo+'</div>',
+                                cancel:function(indexClose){
+                                    if(confirm('确定要关闭么')){
+                                        location.reload();
+                                        
+                                        // layer.close(indexClose)
+                                        
+                                    }
+                                    return false; 
+                                } 
+                               
+                            })
+                            // var closeDiv = $('.close-div');
+                            // cancel:function(indexClose,closeDiv){
+                            //         layer.confirm('是否关闭？',{
+                            //             btn:['再看看','关了吧，心塞..']
+                                
+                            //         },function(index){
+                            //             layer.close(index);
+                            //         },function(){
+                            //             location.reload();
+                            //             // layer.closeAll();
+                                        
+                            //         });
+                            // }
+                             
+                           
+                           
+                            
+                            
+                        });
+                        
+                        console.log(msg)
+                        return;
+                    }
+                    if(msg.error_code==0&&msg.result.lists.length==0){
+                        layer.close(loading);
+                        $('.query_num').text(msg.query_number);
+                        
+                        layer.alert('恭喜你，暂无违章记录！继续保持',{ icon:1},function(){
+                            location.reload();
+                            
+                        }); 
+                        
+                         return;
+                    }
+                    else{
+                        layer.alert(msg.reason,{ icon:5}); 
+                        layer.close(loading);
+                        
+                        console.log(msg);  
+                        return; 
+                    }
+                })
+           }
+           else{
+            layer.msg('不能为空', {
+                    time: 1500,
+                    icon: 5
+                },function(){});
+           }
+        })
+        form.on('checkbox(encrypt)', function(data){
+            if(data.elem.checked==true){
+                $('input[name="status"]').val(1)
+              
+            }else{
+                $('input[name="status"]').val(0)
+                
+            }  
+        });     
+        //实时监听车牌号输入的值
+        $('input[name="plate_no"]').on('input propertychange',function(){
+            var pateNo_val = $(this).val();
+            $.post("{:url('index/index/getUserVin')}",{ pateNo_val:pateNo_val },function(data){
+                if(data.result!==''){
+                    $('.car-box').html('<div class="wrap-input100 validate-input m-t-20 m-b-20 vin"data-validate="不能为空"><input class="input100"type="text"name="vin"required lay-verify="required" value="'+data.result.vin+'"><span class="focus-input100"data-placeholder="输入车辆识别代号"></span></div><div class="wrap-input100 validate-input m-t-20 m-b-20 engine_no"data-validate="不能为空"><input class="input100"type="text"name="engine_no"required lay-verify="required"value="'+data.result.engine_no+'"><span class="focus-input100"data-placeholder="输入发动机号"></span></div>');
+                    
+                }
+                 
+                else{
+                    $('.car-box').html('');
+            console.log(data)
+                
+                    
+                }
+            })
+            // console.log(pateNo_val)
+        }) 
+        //手动输入查询
+          //监听提交
+        form.on('submit(formDemo)', function(data){ 
+           
+            loading = layer.load(2, {
+                shade: [0.2, '#000']
+            }); 
+            $.post("{:url('index/selCarInfo')}",data.field,function(msg){
+                    //查询成功：错误码为0并且list不为空
+                    if(msg.error_code==4){
+                        layer.close(loading); 
+                        
+                        layer.alert(msg.reason,{ icon:5},function(){
+                            location.reload();
+                            
+                        });
+                        return;
+                        
+                        
+                    }
+                    if(msg.error_code==5){
+                        layer.alert(msg.reason,{ icon:5},function(){
+                            location.reload(); 
+                        });
+                        return;
+                         
+                    }
+                    if(msg.error_code==0&&msg.result.lists.length>0){
+                        //改变剩余可查询次数
+                        $('.query_num').text(msg.query_number);
+                        layer.close(loading);
+                        
+                        var carInfo = '',
+                            fen='',
+                            money='';
+
+                            for( var i in msg.result.lists){
+                                // console.log(msg.result.lists[i]['area'])
+                                fen = Number(fen);
+                                money = Number(money);
+                                fen +=Number(msg.result.lists[i]['fen']);
+                                money +=Number(msg.result.lists[i]['money']);
+                                carInfo+='<ul class="login-more  p-l-10 p-r-10"><li class="m-b-8"><span class="txt1">时间：&nbsp;'+msg.result.lists[i]['date']+'；&nbsp;&nbsp;&nbsp;&nbsp;地点：&nbsp;'+msg.result.lists[i]['area']+'；&nbsp;&nbsp;&nbsp;&nbsp;违章行为：&nbsp;'+msg.result.lists[i]['act']+'；&nbsp;&nbsp;&nbsp;&nbsp;扣分：&nbsp;<span style="color:red">'+msg.result.lists[i]['fen']+'</span>；&nbsp;&nbsp;&nbsp;&nbsp;罚款：&nbsp;<span style="color:red">'+msg.result.lists[i]['money']+'</span></span></li></ul> <hr>';
+                            }
+                        layer.msg(msg.reason,{ time:1000,icon:1},function(){
+                           var indexClose =  layer.open({
+                                type: 1,
+                                // skin: 'layui-layer-rim', //加上边框
+                                area: ['95%', ''], //宽高
+                                content: '<div class="close-div"><h2><center>'+msg.result.hphm+'</center></h2><p style="text-align:center">未处理违章：'+msg.result.lists.length+'，累计扣分：'+fen+'，累计罚款(元)：'+money+'</p><br>'+carInfo+'</div>',
+                                cancel:function(indexClose){
+                                    if(confirm('确定要关闭么')){
+                                        location.reload();
+                                        
+                                        // layer.close(indexClose)
+                                        
+                                    }
+                                    return false; 
+                                } 
+                               
+                            })
+                            // var closeDiv = $('.close-div');
+                            // cancel:function(indexClose,closeDiv){
+                            //         layer.confirm('是否关闭？',{
+                            //             btn:['再看看','关了吧，心塞..']
+                                
+                            //         },function(index){
+                            //             layer.close(index);
+                            //         },function(){
+                            //             location.reload();
+                            //             // layer.closeAll();
+                                        
+                            //         });
+                            // }
+                             
+                           
+                           
+                            
+                            
+                        });
+                        
+                        console.log(msg)
+                        return;
+                    }
+                    if(msg.error_code==0&&msg.result.lists.length==0){
+                        layer.close(loading);
+                        $('.query_num').text(msg.query_number);
+                        
+                        layer.alert('恭喜你，暂无违章记录！继续保持',{ icon:1},function(){
+                            location.reload();
+                            
+                        }); 
+                        
+                         return;
+                    }
+                    else{
+                        layer.close(loading);
+                        
+                        layer.alert(msg.reason,{ icon:5},function(){
+                            location.reload();
+                            
+                        }); 
+                        
+                         
+                        return; 
+                    }
+            })
+            return false;
+        })
+        $('.url').on('click',function(){
+            location.href="https://www.junyiqiche.com"
+        })
+
+    })
 </script>
 
 
