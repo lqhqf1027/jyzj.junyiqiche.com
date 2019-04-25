@@ -63,20 +63,15 @@ class Index extends Frontend
 
         //违章信息
         $order_id = Db::name('order')->where(['wx_public_user_id' => $uid['id']])->find()['id'];
-        $detail = Db::name('order_details')->where(['order_id' => $order_id])->find()['violation_details'];
+        $detail = Db::name('order_details')->where(['order_id' => $order_id])->find();
   
         //用户头像,用户的查询次数
         $this->assign([
             'userinfo' => $uid,
-            'detail' => json_decode($detail, true),
-            'user_query_num' => $userinfo['query_number']
+            'detail' => json_decode($detail['violation_details'], true),
+            'user_query_num' => $userinfo['query_number'],
+            'userInput' => $detail
         ]);
-        // 记住输入信息 ,status 为1 assign出去
-        $userInput = Db::name('user_input_car')->where('openid',$uid['openid'])->find();
-        if($userInput['status']==1){
-            $this->assign('userInput', $userInput);
-            
-        }
 
 
         return Order::get(['wx_public_user_id' => $uid['id']]) ? $this->view->fetch('apply') : $this->view->fetch();
@@ -344,27 +339,7 @@ class Index extends Frontend
             $carno = $data['plate_no']; //车牌号，必传
             $engineno =$data['engine_no']; //发动机号，需要的城市必传
             $classno = $data['vin']; //车架号，需要的城市必传
-            // return json(array('city'=>$city,'carno'=>$carno,'engineno'=>$engineno,'classno'=>$classno)); 
-            //如果选中记住输入信息，那就插入数据库,1为记住状态
-            if(isset($data['status'])){ 
-                if($data['status']==1){
-                    $data['openid'] = $uid['openid'];
-                    $usercar = Db::name('user_input_car')->where('openid',$uid['openid'])->find();
-                    //如果是空的，新增
-                    if(empty($usercar)){
-                        Db::name('user_input_car')->insert($data);
-                    }else{
-                        //去掉session openid
-                        unset($data['openid']);
             
-                        Db::name('user_input_car')->where('openid',$uid['openid'])->update($data);
-                    }
-                }
-                else{
-                    Db::name('user_input_car')->where('openid',$uid['openid'])->setField('status',0);
-                                    
-                }
-            }
                         
             if(strlen($carno)==9){
                 return  gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7"); 

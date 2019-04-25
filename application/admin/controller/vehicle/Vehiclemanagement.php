@@ -692,9 +692,9 @@ class Vehiclemanagement extends Backend
     /**
      * 发送违章公众号模板消息
      */
-    public function sendViolation()
+    public function sendviolation()
     {
-        $detail = Collection($this->model->field('username,phone,wx_public_user_id,models_name')
+        $detail = Collection($this->model->where('wx_public_user_id', 'not null')->field('username,phone,wx_public_user_id,models_name')
             ->with(['orderdetails' => function ($q) {
                 $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations']);
             }])->select())->toArray();
@@ -756,6 +756,63 @@ class Vehiclemanagement extends Backend
         }
 
     }
+
+
+    /**
+     * 可以发送的违章客户信息展示
+     */
+    public function canviolation()
+    {
+        //当前是否为关联查询
+        $this->relationSearch = true;
+
+        $this->searchFields = 'username,orderdetails.licensenumber';
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->with(['orderdetails', 'admin'])
+                ->where($where)
+                ->where(['is_it_illegal' => 'violation_of_regulations'])
+                ->where( 'wx_public_user_id', 'not NULL')
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->with(['orderdetails', 'admin'])
+                ->where($where)
+                ->where(['is_it_illegal' => 'violation_of_regulations'])
+                ->where( 'wx_public_user_id', 'not NULL')
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            foreach ($list as $row) {
+                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id']);
+                $row->visible(['orderdetails']);
+                $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
+                    'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
+                    'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
+                    'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail','update_violation_time']);
+
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname', 'avatar']);
+            }
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list, 'else' => array_merge(Cache::get('statistics'), ['statistics_total_violation' => Cache::get('statistics_total_violation')]));
+
+            return json($result);
+        }
+
+        return $this->view->fetch();
+    }
+
 
 
 }
