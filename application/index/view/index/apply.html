@@ -1,19 +1,611 @@
 {extend name="common/layoutextend" /}
 {block name="body"}
-    <div style="text-align: center">
-        <h2><img src="{$userInfo.headimgurl}" alt="" width="40" height="40"> <span>{$userInfo.nickname}</span></h2>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>君忆汽车司机车辆服务中心</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="__CDN__/assets/Login_v6/images/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/fonts/iconic/css/material-design-iconic-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/css/util.css">
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/Login_v6/css/main.css">
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/layui-2.0/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="__CDN__/assets/css/fileinput.css">
+    <!--===============================================================================================-->
+</head>
+<style>
+    .login100-form-btns{
+        font-family: Poppins-Medium;
+        font-size: 16px;
+        color: #fff;
+        line-height: 1.2;
+        text-transform: uppercase;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+        width: 100%;
+        height: 50px;
+        background-color: #57b846;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px 0px rgba(87, 184, 70, 0.5);
+        -moz-box-shadow: 0 10px 30px 0px rgba(87, 184, 70, 0.5);
+        -webkit-box-shadow: 0 10px 30px 0px rgba(87, 184, 70, 0.5);
+        -o-box-shadow: 0 10px 30px 0px rgba(87, 184, 70, 0.5);
+        -ms-box-shadow: 0 10px 30px 0px rgba(87, 184, 70, 0.5);
+        -webkit-transition: all 0.4s;
+        -o-transition: all 0.4s;
+        -moz-transition: all 0.4s;
+        transition: all 0.4s;
+       
+    }
+
+</style>
+
+<body >
+
+
+
+
+    <div class="limiter" >
+        <div class="container-login100" style="padding:10px;">
+            <div class="wrap-login100 p-t-10 ">
+              
+                    <span class="login100-form-title p-b-30">
+                        欢迎你
+                    </span>
+                    <span class="login100-form-avatar">
+                        <img src="{$userinfo.headimgurl}" alt="AVATAR">
+                    </span>
+                    <p class="text-info login100-form-title p-b-30 p-t-30" style="font-size:16px;">
+                        <span class="fa fa-bell"></span>仅查询君忆公司车辆</p>
+                        <p><small>受各省当地交管局对车辆违章数据开放影响，现暂<span style="color:red">不支持</span>以下省、市查询：</small></p>
+                        <p style="font-weight: bold">【云南，宁夏，西藏，海南，甘肃，广西，山西，内蒙古，吉林，黑龙江】等</p>
+                        <p> <small>具体开放查询时间以当地交管局为准。--现可同时支持新能源小型汽车查询</small></p>
+                    <div class="layui-tab" >
+                        <ul class="layui-tab-title">
+                            <li class="layui-this" style="width:33%">上传行驶证查询</li>
+                            <li style="width:33%"> 输入车牌号查询</li> 
+                            <li style="width:33%"> 违章信息</li> 
+                        </ul>
+                        <!--max-height:168px;text-align:center;line-height:168px;-->
+                        <div class="layui-tab-content" style="">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-form-item" style="text-align:center;padding-top:20px;">
+                                        <p class="text-danger" style="text-align:center"><i class="fa fa-bolt" aria-hidden="true"></i> 需上传合法清晰的行驶证 “正页” 图片</p>
+
+                                    <button type="button" class="layui-btn m-t-10" id="test1">
+                                        <i class="layui-icon">&#xe67c;</i>上传行驶证图片
+                                    </button>
+                                    <div style="padding-top:10px;text-align:left" id="car_info">
+
+                                    </div>
+
+                                </div>
+                                <div class="container-login100-form-btn car_img_sel"  >
+                                    <button class="login100-form-btns"  >
+                                        查询  
+                                    </button>
+                                </div>
+                            </div>
+
+                          
+                                <div class="layui-tab-item">
+                                    <form class="login100-form validate-form layui-form">
+                                        <div class="wrap-input100 validate-input m-t-20 m-b-20" data-validate="不能为空"> 
+                                            <input class="input100" type="text" name="plate_no" required  lay-verify="required" value="{$userInput.plate_no}">
+                                            <span class="focus-input100" data-placeholder="输入车牌号，格式如：川A1G23U" ></span>
+                                        </div>
+                                        <div class="car-box">
+                                            {if $userInput}
+                                                <div class="wrap-input100 validate-input m-t-20 m-b-20 vin" data-validate="不能为空"  > 
+                                                    <input class="input100" type="text" name="vin" required  lay-verify="required" value="{$userInput.vin}">
+                                                    <span class="focus-input100" data-placeholder="输入车辆识别代号" ></span>
+                                                </div>
+                                                <div class="wrap-input100 validate-input m-t-20 m-b-20 engine_no" data-validate="不能为空"  >
+                                                        
+                                                    <input class="input100" type="text" name="engine_no" required  lay-verify="required" value="{$userInput.engine_no}">
+                                                    <span class="focus-input100" data-placeholder="输入发动机号"></span>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                        
+                                        <h4 style="padding-bottom:10px"><input type="checkbox" value="{$userInput.status}" {if condition="$userInput.status==1"}checked {/if} lay-filter="encrypt">记住我的输入信息</h4>
+                                        <input type="hidden" value="1" name="status">
+                                        <div class="container-login100-form-btn " >
+                                            <button class="login100-form-btns" type="button" lay-submit lay-filter="formDemo"  >
+                                                查询
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="layui-tab-item">
+                                        
+                                    <table class="table table-bordered table-striped table-hover" style="max-width: 1103px;max-height: 700px;margin: auto">
+                                        <thead>
+
+                                        <tr>
+
+                                            <th>违章时间</th>
+                                            <th>违章城市</th>
+                                            <th>违章地点</th>
+                                            <th>违章扣分</th>
+                                            <th>违章罚款</th>
+                                            <th>违章原因</th>
+                                            <th>处理状态</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {foreach name="detail" item="vo"}
+                                        <tr>
+                                            <td>{$vo.date}</td>
+                                            <td>{$vo.wzcity}</td>
+                                            <td>{$vo.area}</td>
+                                            <td>{$vo.fen}</td>
+                                            <td>{$vo.money}</td>
+                                            <td>{$vo.act}</td>
+                                            <td>
+                                                {if condition="$vo.handled eq 1"}
+                                                <span class="text-success">已处理</span>
+                                                {elseif condition="$vo.handled eq 0"}
+                                                <span class="text-danger">未处理</span>
+                                                {else /}
+                                                未知
+                                                {/if}
+                                            </td>
+                                        </tr>
+                                        {/foreach}
+
+
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
+                           
+                        </div>
+                    </div>
+               
+            </div>
+
+
+            <ul class="login-more  p-l-10 p-r-10">
+                <li class="m-b-8">
+                    <span class="txt1">
+                        每位司机七天内可查询两次
+                    </span>
+
+                </li>
+                <li class="m-b-8">
+                    <span class="txt1">
+                        现可查询次数
+                    </span>
+                    <a href="#" class="txt2">
+                        <span class="query_num">{$user_query_num}</span>次
+                    </a>
+                    {if $time7}
+                       ， 请于 <span style="color:black">【{$time7}】 </span>后再查询 
+                       <button class="btn   btn-sm reload-btn" style="border:1px solid #ddd"><i class="fa fa-refresh"></i> 刷新</button>
+                    {/if} 
+                </li>
+                <li class="m-b-8">
+                    <span class="txt1">
+                        公司户处理违章需要到公司拿：营业执照、委托书
+                    </span>
+                </li>
+                <li class="m-b-8">
+                    <span class="txt1">
+                        分局处理违章时间：正常工作日
+                    </span>
+                   
+                </li>
+
+
+            </ul>
+            <div class="copyright">
+                
+                <p style="text-align:center"><small><i>&copy; Copyright 2018 成都君忆汽车服务有限公司 </i></small> </p>
+                <p style="text-align:center"><small><i><span class="url" style="color:coral">junyiqiche.com</span>&nbsp;All Rights Reserved </i></small> </p>
+                
+                
+                <p></p>
+                
+                
+              </div>
+        </div>
+        
     </div>
-    <br>
-    <h3>
-        <center>{$licensenumber}</center>
-    </h3>
-    <br>
+    
 
-    <blockquote class="layui-elem-quote" style="text-align: center;color:green;font-weight: bold">您已认证！<br>
 
-    </blockquote>
-如需车辆违章查询自助服务，请访问<a href="https://driver.junyiqiche.com/index" style="color: #01AAED;"><u>君忆车主司机车辆服务中心</u></a>
-    <br>
+    <div id="dropDownSelect1"></div>
+
+    <!--===============================================================================================-->
+    <script src="__CDN__/assets/Login_v6/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="__CDN__/assets/Login_v6/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="__CDN__/assets/Login_v6/vendor/bootstrap/js/popper.js"></script>
+    <script src="__CDN__/assets/Login_v6/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="__CDN__/assets/Login_v6/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="__CDN__/assets/Login_v6/vendor/daterangepicker/moment.min.js"></script>
+    <script src="__CDN__/assets/Login_v6/vendor/daterangepicker/daterangepicker.js"></script>
+    <!--===============================================================================================-->
+    <script src="__CDN__/assets/Login_v6/vendor/countdowntime/countdowntime.js"></script>
+    <!--===============================================================================================-->
+    <script src="__CDN__/assets/Login_v6/js/main.js"></script>
+
+    <script src="__CDN__/assets/layer/layer.js"></script>
+
+    <script src="__CDN__/assets/layui-2.0/layui.js"></script>
+
+    <script src="__CDN__/assets/js/fileinput.js"></script>
+    <script src="__CDN__/assets/js/fileinput_locale_zh.js"></script>
+
+</body>
+<script>
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['form','upload', 'element'], function () {
+        var upload = layui.upload;
+        var element = layui.element;
+        var form = layui.form;
+        jq = layui.jquery;
+        var flag = false;
+        $('.reload-btn').on('click',function(){
+            location.reload();
+        })
+         //图片识别
+        upload.render({
+            url: '{:url("index/ocrView")}',
+            elem: '#test1',
+            ext: 'jpg|png|gif|jpeg',
+            area: ['500', '500px'],
+            before: function (input) {
+                loading = layer.load(2, {
+                    shade: [0.2, '#000']
+                   
+                });
+            },
+            done: function (res) {
+                console.log(res); 
+                
+                switch(res.state){
+                    case 1:
+                    layer.msg(res.errmsg, {
+                        time: 1500,
+                        icon: 5
+                    });
+                    layer.close(loading);
+                    
+                   
+                    break;
+                    case 2:
+                    flag = true;
+                    layer.close(loading);
+                    
+                    layer.msg(res.errmsg, {
+                        time: 1000,
+                        icon: 1
+                    },function(){
+                     
+                    if (res.data[0].type == 3) {
+                        res.data[0].type = '行驶证';
+                    } else {
+                        res.data[0].type = '未知的证件类型';
+
+                    } 
+                    $('#car_info').html('<ul><li>图片类型：&nbsp;&nbsp;' + res.data[0].type +
+                        '</li><li>品牌型号：&nbsp;&nbsp;' + res.data[0].model +
+                        '</li><li>车牌号码：&nbsp;&nbsp;<span class="plate_no">' + res.data[0].plate_no +
+                        '</span></li><li>所有人：&nbsp;&nbsp;' + res.data[0].owner +
+                        '</li><li>车辆识别代号：&nbsp;&nbsp;<span class="vin">' + res.data[0].vin +
+                        '</span></li><li>发动机号码：&nbsp;&nbsp;<span class="engine_no">' + res.data[0].engine_no +
+                        '</span></li><li>签发机关：&nbsp;&nbsp;' + res.data[0].issued_by + '</li></ul>');
+
+                    console.log(res); 
+                    }); 
+                    
+                    break;
+
+                    case 3:
+                    layer.close(loading);
+                    layer.alert(res.errmsg,{ icon:5},function(){
+                        location.reload();
+                        
+                    }); 
+                    
+                    break;
+
+                    case 4:
+                    layer.close(loading);
+                    layer.alert(res.errmsg,{ icon:5},function(){
+                        location.reload();
+                        
+                    }); 
+
+                    break;
+                }
+                
+                
+            },
+            error: function (res) {
+                layer.close(loading);
+
+                alert(res);
+            }
+        }) 
+    
+        $('.car_img_sel').on('click',function(){
+           if(flag){
+            loading = layer.load(2, {
+                shade: [0.2, '#000']
+            });
+                var plate_no = $('.plate_no').text(),
+                    vin = $('.vin').text(),
+                    engine_no = $('.engine_no').text();
+                $.post("{:url('index/selCarInfo')}",{plate_no:plate_no,vin:vin,engine_no:engine_no},function(msg){
+                   
+                    //查询成功：错误码为0并且list不为空
+                    if(msg.error_code==3){
+                        layer.close(loading);
+                        
+                        layer.alert(msg.reason,{ icon:5}); 
+                        return;
+                    }
+                    if(msg.error_code==0&&msg.result.lists.length>0){
+                        //改变剩余可查询次数
+                        $('.query_num').text(msg.query_number);
+                        layer.close(loading);
+                        
+                        var carInfo = '',
+                            fen='',
+                            money='';
+
+                            for( var i in msg.result.lists){
+                                // console.log(msg.result.lists[i]['area'])
+                                fen = Number(fen);
+                                money = Number(money);
+                                fen +=Number(msg.result.lists[i]['fen']);
+                                money +=Number(msg.result.lists[i]['money']);
+                                carInfo+='<ul class="login-more  p-l-10 p-r-10"><li class="m-b-8"><span class="txt1">时间：&nbsp;'+msg.result.lists[i]['date']+'；&nbsp;&nbsp;&nbsp;&nbsp;地点：&nbsp;'+msg.result.lists[i]['area']+'；&nbsp;&nbsp;&nbsp;&nbsp;违章行为：&nbsp;'+msg.result.lists[i]['act']+'；&nbsp;&nbsp;&nbsp;&nbsp;扣分：&nbsp;<span style="color:red">'+msg.result.lists[i]['fen']+'</span>；&nbsp;&nbsp;&nbsp;&nbsp;罚款：&nbsp;<span style="color:red">'+msg.result.lists[i]['money']+'</span></span></li></ul> <hr>';
+                            }
+                        layer.msg(msg.reason,{ time:1000,icon:1},function(){
+                           var indexClose =  layer.open({
+                                type: 1,
+                                // skin: 'layui-layer-rim', //加上边框
+                                area: ['95%', ''], //宽高
+                                content: '<div class="close-div"><h2><center>'+msg.result.hphm+'</center></h2><p style="text-align:center">未处理违章：'+msg.result.lists.length+'，累计扣分：'+fen+'，累计罚款(元)：'+money+'</p><br>'+carInfo+'</div>',
+                                cancel:function(indexClose){
+                                    if(confirm('确定要关闭么')){
+                                        location.reload();
+                                        
+                                        // layer.close(indexClose)
+                                        
+                                    }
+                                    return false; 
+                                } 
+                               
+                            })
+                            // var closeDiv = $('.close-div');
+                            // cancel:function(indexClose,closeDiv){
+                            //         layer.confirm('是否关闭？',{
+                            //             btn:['再看看','关了吧，心塞..']
+                                
+                            //         },function(index){
+                            //             layer.close(index);
+                            //         },function(){
+                            //             location.reload();
+                            //             // layer.closeAll();
+                                        
+                            //         });
+                            // }
+                             
+                           
+                           
+                            
+                            
+                        });
+                        
+                        console.log(msg)
+                        return;
+                    }
+                    if(msg.error_code==0&&msg.result.lists.length==0){
+                        layer.close(loading);
+                        $('.query_num').text(msg.query_number);
+                        
+                        layer.alert('恭喜你，暂无违章记录！继续保持',{ icon:1},function(){
+                            location.reload();
+                            
+                        }); 
+                        
+                         return;
+                    }
+                    else{
+                        layer.alert(msg.reason,{ icon:5}); 
+                        layer.close(loading);
+                        
+                        console.log(msg);  
+                        return; 
+                    }
+                })
+           }
+           else{
+            layer.msg('不能为空', {
+                    time: 1500,
+                    icon: 5
+                },function(){});
+           }
+        })
+        form.on('checkbox(encrypt)', function(data){
+            if(data.elem.checked==true){
+                $('input[name="status"]').val(1)
+              
+            }else{
+                $('input[name="status"]').val(0)
+                
+            }  
+        });     
+        //实时监听车牌号输入的值
+        $('input[name="plate_no"]').on('input propertychange',function(){
+            var pateNo_val = $(this).val();
+            $.post("{:url('index/driver/getUserVin')}",{ pateNo_val:pateNo_val },function(data){
+                if(data.result!==''){
+                    $('.car-box').html('<div class="wrap-input100 validate-input m-t-20 m-b-20 vin"data-validate="不能为空"><input class="input100"type="text"name="vin"required lay-verify="required" value="'+data.result.vin+'"><span class="focus-input100"data-placeholder="输入车辆识别代号"></span></div><div class="wrap-input100 validate-input m-t-20 m-b-20 engine_no"data-validate="不能为空"><input class="input100"type="text"name="engine_no"required lay-verify="required"value="'+data.result.engine_no+'"><span class="focus-input100"data-placeholder="输入发动机号"></span></div>');
+                    
+                }
+                 
+                else{
+                    $('.car-box').html('');
+            console.log(data)
+                
+                    
+                }
+            })
+            // console.log(pateNo_val)
+        }) 
+        //手动输入查询
+          //监听提交
+        form.on('submit(formDemo)', function(data){ 
+           
+            loading = layer.load(2, {
+                shade: [0.2, '#000']
+            }); 
+            $.post("{:url('index/selCarInfo')}",data.field,function(msg){
+                    //查询成功：错误码为0并且list不为空
+                    if(msg.error_code==4){
+                        layer.close(loading); 
+                        
+                        layer.alert(msg.reason,{ icon:5},function(){
+                            location.reload();
+                            
+                        });
+                        return;
+                        
+                        
+                    }
+                    if(msg.error_code==5){
+                        layer.alert(msg.reason,{ icon:5},function(){
+                            location.reload(); 
+                        });
+                        return;
+                         
+                    }
+                    if(msg.error_code==0&&msg.result.lists.length>0){
+                        //改变剩余可查询次数
+                        $('.query_num').text(msg.query_number);
+                        layer.close(loading);
+                        
+                        var carInfo = '',
+                            fen='',
+                            money='';
+
+                            for( var i in msg.result.lists){
+                                // console.log(msg.result.lists[i]['area'])
+                                fen = Number(fen);
+                                money = Number(money);
+                                fen +=Number(msg.result.lists[i]['fen']);
+                                money +=Number(msg.result.lists[i]['money']);
+                                carInfo+='<ul class="login-more  p-l-10 p-r-10"><li class="m-b-8"><span class="txt1">时间：&nbsp;'+msg.result.lists[i]['date']+'；&nbsp;&nbsp;&nbsp;&nbsp;地点：&nbsp;'+msg.result.lists[i]['area']+'；&nbsp;&nbsp;&nbsp;&nbsp;违章行为：&nbsp;'+msg.result.lists[i]['act']+'；&nbsp;&nbsp;&nbsp;&nbsp;扣分：&nbsp;<span style="color:red">'+msg.result.lists[i]['fen']+'</span>；&nbsp;&nbsp;&nbsp;&nbsp;罚款：&nbsp;<span style="color:red">'+msg.result.lists[i]['money']+'</span></span></li></ul> <hr>';
+                            }
+                        layer.msg(msg.reason,{ time:1000,icon:1},function(){
+                           var indexClose =  layer.open({
+                                type: 1,
+                                // skin: 'layui-layer-rim', //加上边框
+                                area: ['95%', ''], //宽高
+                                content: '<div class="close-div"><h2><center>'+msg.result.hphm+'</center></h2><p style="text-align:center">未处理违章：'+msg.result.lists.length+'，累计扣分：'+fen+'，累计罚款(元)：'+money+'</p><br>'+carInfo+'</div>',
+                                cancel:function(indexClose){
+                                    if(confirm('确定要关闭么')){
+                                        location.reload();
+                                        
+                                        // layer.close(indexClose)
+                                        
+                                    }
+                                    return false; 
+                                } 
+                               
+                            })
+                            // var closeDiv = $('.close-div');
+                            // cancel:function(indexClose,closeDiv){
+                            //         layer.confirm('是否关闭？',{
+                            //             btn:['再看看','关了吧，心塞..']
+                                
+                            //         },function(index){
+                            //             layer.close(index);
+                            //         },function(){
+                            //             location.reload();
+                            //             // layer.closeAll();
+                                        
+                            //         });
+                            // }
+                             
+                           
+                           
+                            
+                            
+                        });
+                        
+                        console.log(msg)
+                        return;
+                    }
+                    if(msg.error_code==0&&msg.result.lists.length==0){
+                        layer.close(loading);
+                        $('.query_num').text(msg.query_number);
+                        
+                        layer.alert('恭喜你，暂无违章记录！继续保持',{ icon:1},function(){
+                            location.reload();
+                            
+                        }); 
+                        
+                         return;
+                    }
+                    else{
+                        layer.close(loading);
+                        
+                        layer.alert(msg.reason,{ icon:5},function(){
+                            location.reload();
+                            
+                        }); 
+                        
+                         
+                        return; 
+                    }
+            })
+            return false;
+        })
+        $('.url').on('click',function(){
+            location.href="https://www.junyiqiche.com"
+        })
+
+    })
+</script>
+
+</html>
 
 
 
