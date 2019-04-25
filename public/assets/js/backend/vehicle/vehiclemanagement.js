@@ -336,7 +336,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return row.user_id ? true : false;
                                     }
 
-                                }
+                                },
+                                {
+                                    name: 'wechat',
+                                    icon: 'fa fa-eye',
+                                    title: __('微信公众号授权'),
+                                    text: '微信公众号授权',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-success btn-wechat',
+
+                                },
 
                             ]
                         }
@@ -742,6 +751,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param index
                      */
                     'click .btn-accredit': function (e, value, row, index) {
+
+                        Fast.api.ajax({
+                            url: 'vehicle/vehiclemanagement/setqrcode',
+                            data: {order_id: JSON.stringify(row.id), username: JSON.stringify(row.username)},
+                        }, function (data, ret) {
+
+                            // console.log('https://jyzj.junyiqiche.com' + data); 
+                            layer.open({
+                                title: '小程序授权', //页面标题
+                                type: 2, 
+                                area: ['180px', '250px'],  //弹出层页面比例
+                                content: ['https://jyzj.junyiqiche.com' + data, 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                            });    
+                            
+                            //goeasy关闭弹框
+                            goeasy.subscribe({
+                                channel: 'accredit',
+                                onMessage: function(message){
+                            
+                                    $(".btn-refresh").trigger("click");
+                                }
+                            });
+
+                        }, function (data, ret) {
+
+                        });
+
+
+                    },
+                    /**
+                     * 微信公众号授权
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-wechat': function (e, value, row, index) {
 
                         Fast.api.ajax({
                             url: 'vehicle/vehiclemanagement/setqrcode',
