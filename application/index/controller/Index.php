@@ -340,6 +340,14 @@ class Index extends Frontend
             $engineno =$data['engine_no']; //发动机号，需要的城市必传
             $classno = $data['vin']; //车架号，需要的城市必传
             
+            //更新车牌号，车架号，发动机号
+            $order_id = Db::name('order')->where('wx_public_user_id',$uid['id'])->find()['id'];
+            $result = [
+                'licensenumber' => $carno,
+                'frame_number' => $classno,
+                'engine_number' => $engineno
+            ];
+            Db::name('order_details')->where('order_id',$order_id)->update($result);
                         
             if(strlen($carno)==9){
                 return  gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7"); 

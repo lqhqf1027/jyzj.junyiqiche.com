@@ -692,11 +692,11 @@ class Vehiclemanagement extends Backend
     /**
      * 发送违章公众号模板消息
      */
-    public function sendviolation()
+    public function sendviolation($ids = '')
     {
-        $detail = Collection($this->model->where('wx_public_user_id', 'not null')->field('username,phone,wx_public_user_id,models_name')
-            ->with(['orderdetails' => function ($q) {
-                $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations']);
+        $detail = Collection($this->model->field('username,phone,wx_public_user_id,models_name')
+            ->with(['orderdetails' => function ($q) use ($ids) {
+                $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where('order_id', 'in', $ids);
             }])->select())->toArray();
         //是否存在数据
         if ($detail) {
@@ -776,17 +776,19 @@ class Vehiclemanagement extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                ->with(['orderdetails', 'admin'])
+                ->with(['orderdetails' => function ($q) {
+                    $q->where(['is_it_illegal' => 'violation_of_regulations']);
+                }, 'admin'])
                 ->where($where)
-                ->where(['is_it_illegal' => 'violation_of_regulations'])
                 ->where( 'wx_public_user_id', 'not NULL')
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
-                ->with(['orderdetails', 'admin'])
+                ->with(['orderdetails' => function ($q) {
+                    $q->where(['is_it_illegal' => 'violation_of_regulations']);
+                }, 'admin'])
                 ->where($where)
-                ->where(['is_it_illegal' => 'violation_of_regulations'])
                 ->where( 'wx_public_user_id', 'not NULL')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -805,6 +807,8 @@ class Vehiclemanagement extends Backend
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
             }
             $list = collection($list)->toArray();
+            // pr($list);
+            // die;
             $result = array("total" => $total, "rows" => $list, 'else' => array_merge(Cache::get('statistics'), ['statistics_total_violation' => Cache::get('statistics_total_violation')]));
 
             return json($result);
