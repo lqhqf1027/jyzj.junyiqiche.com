@@ -168,7 +168,7 @@ class Vehiclemanagement extends Backend
             $time = date('YmdHis');
             $qrCode = new QrCode();
             $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?order_id=' . $params['order_id'])
-                ->setSize(150)
+                ->setSize(350)
                 ->setPadding(10)
                 ->setErrorCorrection('high')
                 ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
@@ -181,6 +181,34 @@ class Vehiclemanagement extends Backend
             $qrCode->save(ROOT_PATH . 'public' . $fileName);
             if ($qrCode) {
                 Order::update(['id' => $params['order_id'], 'authorization_img' => $fileName]) ? $this->success('创建成功', '', $fileName) : $this->error('创建失败');
+            }
+            $this->error('未知错误');
+        }
+    }
+
+    public function public_qr_code()
+    {
+        if ($this->request->isAjax()) {
+
+            $params = $this->request->post();
+            $public_img = Order::get($params['order_id'])->public_img;
+            if ($public_img) $this->success('创建成功', '', $public_img);
+            $time = date('YmdHis');
+            $qrCode = new QrCode();
+            $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/index/index/index.html/order_id/'. $params['order_id'])
+                ->setSize(250)
+                ->setPadding(10)
+                ->setErrorCorrection('high')
+                ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+                ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+                ->setLabel('需由客户 ' . $params['username'] . ' 扫码授权')
+                ->setLabelFontPath(VENDOR_PATH . 'endroid/qr-code/assets/font/MSYHBD.TTC')
+                ->setLabelFontSize(10)
+                ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
+            $fileName = DS . 'uploads' . DS . 'qrcode' . DS . $time . '_' . 'o_id' . $params['order_id'] . '.png';
+            $qrCode->save(ROOT_PATH . 'public' . $fileName);
+            if ($qrCode) {
+                Order::update(['id' => $params['order_id'], 'public_img' => $fileName]) ? $this->success('创建成功', '', $fileName) : $this->error('创建失败');
             }
             $this->error('未知错误');
         }
