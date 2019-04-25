@@ -4,7 +4,7 @@ return array (
   'name' => '君忆之家',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.3.7',
+  'version' => '1.4.2',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
