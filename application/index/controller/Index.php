@@ -323,90 +323,63 @@ class Index extends Frontend
         }
         $this->selQueryNumber(); 
         
-       
-                 //获取车牌号查询省市字母简写
-        //截取前两位用url_encode 转换
-                    // return $res;
-        
-                    $plate_no = array(
-                        'key' => '217fb8552303cb6074f88dbbb5329be7',
-                        'hphm' => url_encode(mb_substr($data['plate_no'], 0, 2, "UTF-8"))
-                    );
+          
+        $plate_no = array(
+            'key' => '217fb8552303cb6074f88dbbb5329be7',
+            'hphm' => urlencode(mb_substr($data['plate_no'], 0, 2, "UTF-8"))
+        );
     
-        // return json(array('state'=>$plate_no));
-            
-                    //聚合查询城市前缀
-                    $car_city_name = gets("http://v.juhe.cn/sweizhang/carPre?key=217fb8552303cb6074f88dbbb5329be7&hphm={$plate_no['hphm']}");
+        //聚合查询城市前缀
+        $car_city_name = gets("http://v.juhe.cn/sweizhang/carPre?key=217fb8552303cb6074f88dbbb5329be7&hphm={$plate_no['hphm']}");
                     
-                    // $car_city_name_arr =  json_decode($car_city_name,true);
-                    
-                    if ($car_city_name['error_code'] == 0) {
-                ##如果返回的错误码不等于0，就返回官方的错误信息
-                // return json(array('state' =>$car_city_name['result']['city_code']));
-                
-                    
-        //查询车辆违章
-                    $wz = new Wz($this->appkey);
-                    $res = json_decode($res, true);
-        //根据需要的查询条件，查询车辆的违章信息
-                    $city = $car_city_name['result']['city_code']; //城市代码，必传
-
-                    $carno = $data['plate_no']; //车牌号，必传
-                    $engineno =$data['engine_no']; //发动机号，需要的城市必传
-                    $classno = $data['vin']; //车架号，需要的城市必传
-                    // return json(array('city'=>$city,'carno'=>$carno,'engineno'=>$engineno,'classno'=>$classno)); 
-                    //如果选中记住输入信息，那就插入数据库,1为记住状态
-                        if(isset($data['status'])){ 
-                            if($data['status']==1){
-                                $data['openid'] = Session::get(['MEMBER'])['openid'];
-                                $usercar = $this->userInput();
-                                //如果是空的，新增
-                                if(empty($usercar)){
-                                    Db::name('user_input_car')->insert($data);
-                                }else{
-                                    //去掉session openid
-                                    unset($data['openid']);
+        // $car_city_name_arr =  json_decode($car_city_name,true);
         
-                                    Db::name('user_input_car')->where('openid',Session::get(['MEMBER'])['openid'])->update($data);
-                                }
-                            }
-                            else{
-                                Db::name('user_input_car')->where('openid',Session::get(['MEMBER'])['openid'])->setField('status',0);
-                                
-                            }
-                        }
-                    
-                    if(strlen($carno)==9){
-                        return  gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7"); 
-                            
+        if ($car_city_name['error_code'] == 0) {
+            ##如果返回的错误码不等于0，就返回官方的错误信息
+            // return json(array('state' =>$car_city_name['result']['city_code']));
+                
+            //根据需要的查询条件，查询车辆的违章信息
+            $city = $car_city_name['result']['city_code']; //城市代码，必传
+
+            $carno = $data['plate_no']; //车牌号，必传
+            $engineno =$data['engine_no']; //发动机号，需要的城市必传
+            $classno = $data['vin']; //车架号，需要的城市必传
+            // return json(array('city'=>$city,'carno'=>$carno,'engineno'=>$engineno,'classno'=>$classno)); 
+            //如果选中记住输入信息，那就插入数据库,1为记住状态
+            if(isset($data['status'])){ 
+                if($data['status']==1){
+                    $data['openid'] = $uid['openid'];
+                    $usercar = Db::name('user_input_car')->where('openid',$uid['openid'])->find();
+                    //如果是空的，新增
+                    if(empty($usercar)){
+                        Db::name('user_input_car')->insert($data);
+                    }else{
+                        //去掉session openid
+                        unset($data['openid']);
+            
+                        Db::name('user_input_car')->where('openid',$uid['openid'])->update($data);
                     }
-                    else{
-                        return  gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}&hpzl=52&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7"); 
-
-                    }
-
-                    // $wzResult = $wz->query($city, $carno, $engineno, $classno);
-                    // if ($wzResult['error_code'] == 0) {
-                    //     if ($wzResult['result']['lists']) {
-                    //         //有违章
-                          
-                    //         foreach ($wzResult['result']['lists'] as $key => $w) {
-                    // //以下就是根据实际业务需求修改了
-                    //         return json(array('error_code'=>1,'result'=>$w['area'] . " " . $w['date'] . " " . $w['act'] . " " . $w['fen'] . " " . $w['money'],'reason'=>'','query_number'=>$this->selUserInfo()['query_number'])); 
-                    //         }
-                    //     } else {
-                    //         //无违章
-                    //         return json(array('error_code' =>2,'result'=>'', 'reason' => '暂无违章记录，恭喜你','query_number'=>$this->selUserInfo()['query_number'])); 
-
-                    //     }
-                    // } else {
-                    //     //查询不成功
-                    //     return json(array('error_code'=>4,'reason'=>$wzResult['error_code'] . ":" . $wzResult['reason'],'result'=>''));
-                    // }
                 }
                 else{
-                    return $car_city_name;
+                    Db::name('user_input_car')->where('openid',$uid['openid'])->setField('status',0);
+                                    
                 }
+            }
+                        
+            if(strlen($carno)==9){
+                return  gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7"); 
+                                
+            }
+            else{
+                return  gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}&hpzl=52&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7"); 
+
+            }
+
+                    
+        }
+        else{
+            return $car_city_name;
+        }
 
     }
     public function selQueryNumber(){
