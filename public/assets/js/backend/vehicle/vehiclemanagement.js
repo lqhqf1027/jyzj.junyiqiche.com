@@ -526,13 +526,187 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
 
+            // /**
+            //  * 公众号推送违章信息
+            //  */
+            // $('.btn-violation').on("click", function () {
+
+            //     Fast.api.ajax({
+            //         url: 'vehicle/vehiclemanagement/sendviolation',
+            //     }, function (data, ret) {
+
+            //         table.bootstrapTable('refresh');
+                    
+            //     });
+           
+            // });
+
             /**
              * 公众号推送违章信息
              */
             $('.btn-violation').on("click", function () {
+                $(".btn-violation").data("area", ["80%", "80%"]);
+                var url = 'vehicle/vehiclemanagement/canviolation';
+                Fast.api.open(
+                    Table.api.replaceurl(url, table), __('可以推送违章信息的客户信息展示'), $(this).data() || {});
+           
+            });
+
+            // 为表格绑定事件
+            Table.api.bindevent(table);
+        },
+        //可以推送违章信息的客户展示
+        canviolation: function () {
+
+            // 初始化表格参数配置
+            Table.api.init({
+                extend: {
+                    'dragsort_url': ''
+                }
+            });
+
+            var table = $("#table");
+            $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+            };
+            // 初始化表格
+            table.bootstrapTable({
+                url: 'vehicle/vehiclemanagement/canviolation',
+                pk: 'id',
+                sortName: 'id',
+                toolbar: '#toolbar',
+                // searchFormVisible: true,
+                columns: [
+                    [
+                        {checkbox: true},
+                        {field: 'id', title: __('Id'),},
+                        {field: 'orderdetails.file_coding', title: __('Orderdetails.file_coding')},
+                        {field: 'username', title: __('Username')},
+                        {field: 'id_card', title: __('Id_card')},
+                        {field: 'phone', title: __('Phone')},
+                        {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber')},
+                        {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
+                        {field: 'orderdetails.engine_number', title: __('Orderdetails.engine_number')},
+                        {
+                            field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
+
+                                return "<img src=" + Config.cdn + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
+                            }
+                        },
+                        {field: 'models_name', title: __('Models_name')},
+                        {
+                            field: 'type',
+                            title: __('Type'),
+                            searchList: {
+                                "mortgage": __('Type mortgage'),
+                                "used_car_mortgage": __('Type used_car_mortgage'),
+                                "car_rental": __('Type car_rental'),
+                                "full_new_car": __('Type full_new_car'),
+                                "full_used_car": __('Type full_used_car'),
+                                "sublet": __('Type sublet'),
+                                "affiliated": __('Type affiliated')
+                            },
+                            formatter: function (value, row, index) {
+
+                                switch (value) {
+                                    case 'mortgage':
+                                        return this.searchList.mortgage;
+                                    case 'used_car_mortgage':
+                                        return this.searchList.used_car_mortgage;
+                                    case 'full_new_car':
+                                        return this.searchList.full_new_car;
+                                    case 'full_used_car':
+                                        return this.searchList.full_used_car;
+                                    case 'sublet':
+                                        return this.searchList.sublet;
+                                    case 'affiliated':
+                                        return this.searchList.affiliated;
+                                    case 'car_rental':
+                                        return this.searchList.car_rental;
+                                }
+                            }
+                        },
+                        {
+                            field: 'orderdetails.is_it_illegal', title: __('违章状态'), formatter: function (value, row, index) {
+                                console.log(row);
+                                if(value == 'no_queries'){
+                                    return '-';
+                                }
+
+                                let color = '';
+                                let content = '';
+
+                                switch (value) {
+                                    case 'no_violation':
+                                        color = 'success';
+                                        content = '无违章';
+                                        break;
+                                    case 'violation_of_regulations':
+                                        color = 'danger';
+                                        content = '有违章';
+                                        break;
+                                    case 'query_failed':
+                                        color = 'primary';
+                                        content = '查询违章失败';
+                                        break;
+                                }
+
+                                if(value!='query_failed'){
+                                    return  '<span class=\'label label-'+color+'\' style=\'cursor: pointer\'>'+content+'</span>' ;
+                                }
+
+                                return  '<span class=\'label label-'+color+'\' style=\'cursor: pointer\'>'+content+'</span><span class="text-danger" style="font-size: smaller;display: block;margin-top: 5px">'+row.orderdetails.reson_query_fail+'</span>' ;
+
+
+                            }
+                        },
+                        {
+                            field: 'orderdetails.update_violation_time',
+                            title: __('最后查询违章时间'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime,
+                            datetimeFormat: "YYYY-MM-DD"
+                        },
+                        // {
+                        //     field: 'orderdetails.annual_inspection_time',
+                        //     title: __('年检截至日期'),
+                        //     operate: 'RANGE',
+                        //     addclass: 'datetimerange',
+                        //     formatter: Controller.api.formatter.datetime,
+                        //     datetimeFormat: "YYYY-MM-DD"
+                        // },
+                        // {
+                        //     field: 'orderdetails.traffic_force_insurance_time',
+                        //     title: __('交强险截至日期'),
+                        //     operate: 'RANGE',
+                        //     addclass: 'datetimerange',
+                        //     formatter: Controller.api.formatter.datetime,
+                        //     datetimeFormat: "YYYY-MM-DD"
+                        // },
+                        // {
+                        //     field: 'orderdetails.business_insurance_time',
+                        //     title: __('商业险截至日期'),
+                        //     operate: 'RANGE',
+                        //     addclass: 'datetimerange',
+                        //     formatter: Controller.api.formatter.datetime,
+                        //     datetimeFormat: "YYYY-MM-DD"
+                        // },
+                       
+                    ]
+                ]
+            });
+
+            // 为表格绑定事件
+            Table.api.bindevent(table);
+
+
+            /**
+             * 公众号推送违章信息
+             */
+            $('.btn-pushviolation').on("click", function () {
 
                 Fast.api.ajax({
-                    url: 'vehicle/vehiclemanagement/sendViolation',
+                    url: 'vehicle/vehiclemanagement/sendviolation',
                 }, function (data, ret) {
 
                     table.bootstrapTable('refresh');
@@ -541,8 +715,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
            
             });
 
-            // 为表格绑定事件
-            Table.api.bindevent(table);
+
         },
         add: function () {
 
