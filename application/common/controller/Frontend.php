@@ -44,13 +44,13 @@ class Frontend extends Controller
     {
 
         //判断是否为微信浏览器\
-        if(!is_weixin()) die('<h1><center>请使用微信手机端访问！ </center></h1>');
-        //微信登陆验证
-        if(!session('MEMBER')){
-
-            $wx = new Wechat();
-            $wx->getCodes();
-        }
+//        if(!is_weixin()) die('<h1><center>请使用微信手机端访问！ </center></h1>');
+//        //微信登陆验证
+//        if(!session('MEMBER')){
+//
+//            $wx = new Wechat();
+//            $wx->getCodes();
+//        }
         //移除HTML标签
         $this->request->filter('trim,strip_tags,htmlspecialchars');
         $modulename = $this->request->module();
@@ -123,6 +123,7 @@ class Frontend extends Controller
         // 加载当前控制器语言包
         $this->loadlang($controllername);
         $this->assign('site', $site);
+
         $this->assign('config', $config);
         //卡片分享参数
         $shareData = \app\common\model\Config::where('name', ['eq', 'share_title'], ['eq', 'share_body'], ['eq', 'share_img'], 'or')->column('value');
