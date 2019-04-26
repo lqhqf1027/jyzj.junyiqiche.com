@@ -489,10 +489,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // /**
             //  * 公众号推送违章信息
             //  */
-            // $('.btn-violation').on("click", function () {
+            // $('.btn-sendoneviolation').on("click", function () {
 
             //     Fast.api.ajax({
-            //         url: 'vehicle/vehiclemanagement/sendviolation',
+            //         url: 'vehicle/vehiclemanagement/sendoneviolation',
             //     }, function (data, ret) {
 
             //         table.bootstrapTable('refresh');
@@ -835,13 +835,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 order_id: row.id,
                                 username: row.username
                             }];
+                            var id = row.id;
 
                             Fast.api.ajax({
                                 url: 'vehicle/vehiclemanagement/sendMessagePerson',
                                 data: {ids}
 
                             }, function (data, ret) {
-                                Controller.api.layer_violation(data);
+                                Controller.api.layer_violation(data,id);
                                 Layer.close(index);
                                 table.bootstrapTable('refresh');
 
@@ -958,7 +959,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 }
             },
-            layer_violation: function (data) {
+            layer_violation: function (data,id = '') {
                 var html = '';
                 html += '<h4 style="text-align: center;color: #FF0000">如需查看违章详情，请关闭当前页面点击右侧的【查看违章详情】按钮</h4>';
                 html += '<h3 style="text-align: center">总成功数：' + data['success_num'] + '，总失败数：' + data['error_num'] + '</h3>';
@@ -1000,6 +1001,36 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                 html += '</tbody></table>';
+                html += '<div class="form-group layer-footer">';
+                html += '<div style="text-align: center;vertical-align: middle !important;">'
+                html += '<button  type="submit" class="btn btn-success btn-embossed btn-sendoneviolation">推送违章信息</button>';
+                html += '<script>';
+                html += '$(".btn-sendoneviolation").on("click", function () {\n' + 
+                    'var confirm = layer.confirm(\n' + 
+                    '    __("确定进行违章模板推送吗?"),\n' + 
+                    '    {icon: 3, title: __("Warning"), shadeClose: true},\n' + 
+                    '    function (index) {\n' + 
+            
+                    '        Fast.api.ajax({\n' + 
+                    '            url: "vehicle/vehiclemanagement/sendoneviolation",\n' + 
+                    '            data: {id: JSON.stringify(' + id + ')}\n' + 
+                    '        }, function (data, ret) {\n' + 
+                    '           parent.$("#toolbar .btn-refresh", parent.document).trigger("click")\n' + 
+                    '           Layer.close(confirm);\n' + 
+                    '           var index = parent.layer.getFrameIndex(window.name); \n' + 
+                    '           parent.layer.close(index);\n' + 
+                    '           return false;\n' + 
+                    '        }, function (data, ret) {\n' + 
+                                //失败的回调
+                    '           return false;\n' + 
+                    '        });\n' + 
+            
+                    '   }\n' + 
+                    ');\n' + 
+               
+                '});';
+                html += '</script>';
+    
                 layer.open({
                     type: 1,
                     area: ['1000px', '750px'],

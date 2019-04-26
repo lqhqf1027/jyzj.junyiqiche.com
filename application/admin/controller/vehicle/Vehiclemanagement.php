@@ -808,7 +808,7 @@ class Vehiclemanagement extends Backend
                     $q->where(['is_it_illegal' => 'violation_of_regulations']);
                 }, 'admin'])
                 ->where($where)
-                ->where( 'wx_public_user_id', 'not NULL')
+                ->where('wx_public_user_id', 'not NULL')
                 ->order($sort, $order)
                 ->count();
 
@@ -817,7 +817,7 @@ class Vehiclemanagement extends Backend
                     $q->where(['is_it_illegal' => 'violation_of_regulations']);
                 }, 'admin'])
                 ->where($where)
-                ->where( 'wx_public_user_id', 'not NULL')
+                ->where('wx_public_user_id', 'not NULL')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -845,6 +845,158 @@ class Vehiclemanagement extends Backend
         return $this->view->fetch();
     }
 
+
+    /**
+     * 全网发送违章公众号模板消息
+     */
+    public function sendallviolation()
+    {
+        $detail = Collection($this->model->where('wx_public_user_id', 'not NULL')->field('username,phone,wx_public_user_id,models_name')
+            ->with(['orderdetails' => function ($q) {
+                $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations']);
+            }])->select())->toArray();
+        //是否存在数据
+        if ($detail) {
+            foreach ($detail as $key => $value) {
+                
+                $openid = $this->getOpenid($value['wx_public_user_id']);
+
+                //是否有openid
+                if ($openid) {
+
+                    $first = $value['username'] . '您好，您车型为：' . $value['models_name'] . '，车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有未处理的违章信息';
+                    $time = date('Y-m-d', time());
+                    $details = json_decode($value['orderdetails']['violation_details'], true);
+                    foreach ($details as $k => $v) {
+                        $count = $k + 1;
+                    }
+                    
+                    $temp_msg = array(
+                        'touser' => "{$openid}",
+                        'template_id' => "hTlWqtgPyt6wr1KNdctpFkilUZbc0f9lDNtosGaH1-4",
+                        'data' => array(
+                            'first' => array(
+                                "value" => "{$first}",
+                            ),
+                            'keyword1' => array(
+                                "value" => "{$value['orderdetails']['licensenumber']}",
+                            ),
+                            'keyword2' => array(
+                                "value" => "{$count}",
+                                "color" => "#ff0000"
+                            ),
+                            'keyword3' => array(
+                                "value" => "{$value['orderdetails']['total_deduction']}",
+                                "color" => "#ff0000"
+                            ),
+                            'keyword4' => array(
+                                "value" => "{$value['orderdetails']['total_fine']}元",
+                                "color" => "#ff0000"
+                            ),
+                            'keyword5' => array(
+                                "value" => "{$time}",
+                            ),
+                            "remark" => array(
+                                "value" => "点击查看更多内容",
+                            )
+                            
+                        ),
+                    );
+                    
+                    $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
+                   
+                }
+    
+            }
+            
+            $this->success();
+        }
+
+    }
+
+
+    /**
+     * 单个发送违章公众号模板消息
+     */
+    public function sendoneviolation()
+    {
+        if ($this->request->isAjax()) {
+
+            $id = input("id");
+
+            $id = json_decode($id, true);
+            // pr($id);
+            // die;
+            $detail = Collection($this->model->field('username,phone,wx_public_user_id,models_name')
+            ->with(['orderdetails' => function ($q) use ($id) {
+                $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations', 'order_id' => $id]);
+            }])->select())->toArray();
+            // pr($detail);
+            // die;
+            //是否存在数据
+            if ($detail) {
+                    
+                $openid = $this->getOpenid($detail[0]['wx_public_user_id']);
+            
+                //是否有openid
+                if ($openid) {
+
+                    $first = $value['username'] . '您好，您车型为：' . $detail[0]['models_name'] . '，车牌号为＂' . $detail[0]['orderdetails']['licensenumber'] . '＂的车辆有未处理的违章信息';
+                    $time = date('Y-m-d', time());
+                    $details = json_decode($detail[0]['orderdetails']['violation_details'], true);
+                    foreach ($details as $k => $v) {
+                        $count = $k + 1;
+                    }
+                        
+                    $temp_msg = array(
+                        'touser' => "{$openid}",
+                        'template_id' => "hTlWqtgPyt6wr1KNdctpFkilUZbc0f9lDNtosGaH1-4",
+                        'data' => array(
+                            'first' => array(
+                                "value" => "{$first}",
+                            ),
+                            'keyword1' => array(
+                                "value" => "{$detail[0]['orderdetails']['licensenumber']}",
+                            ),
+                            'keyword2' => array(
+                                "value" => "{$count}",
+                                "color" => "#ff0000"
+                            ),
+                            'keyword3' => array(
+                                "value" => "{$detail[0]['orderdetails']['total_deduction']}",
+                                "color" => "#ff0000"
+                            ),
+                            'keyword4' => array(
+                                "value" => "{$detail[0]['orderdetails']['total_fine']}元",
+                                "color" => "#ff0000"
+                            ),
+                            'keyword5' => array(
+                                "value" => "{$time}",
+                            ),
+                            "remark" => array(
+                                "value" => "点击查看更多内容",
+                            )
+                                
+                        ),
+                    );
+                        
+                    $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
+                    
+                    if ($res['errcode']  == 0) {
+                        $this->success();
+                    }
+                    
+                }
+                else {
+                    $this->success('未认证，请前往君忆之家公众号进行认证');
+                }
+        
+            }
+            else {
+                $this->success('没有违章可推送');
+            }
+        }
+    }
 
 
 }
