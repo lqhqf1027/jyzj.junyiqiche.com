@@ -127,6 +127,7 @@
             </ul>
             <div class=""
                  style=" text-align: center;vertical-align: middle;padding:10px 0 ;background-color: #F2F2F2;border-top: 1px solid #ddd; ">
+
                 <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty query_violation">
                     更新我的违章信息
                 </button>
@@ -135,6 +136,15 @@
             <!--<img src="../images/yuantiao.jpg" alt="" width="100%"/>-->
         </div>
         <span class="infos">
+                <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty" style="font-size: 12px">
+                    更新我的违章信息
+                </button>
+                <div style="display: inline-block;position: absolute;right: 6px;top: 136px;" class="rule"> <u class="text-info">规则说明 <span class="mui-icon mui-icon-arrowright" style="font-size: 14px"></span></u> </div>
+                <p style="margin-bottom: 0">最后一次更新时间 2019-4-7 15:23</p>
+            </div>
+            <!--<img src="../images/yuantiao.jpg" alt="" width="100%"/>-->
+        </div>
+
 
         {foreach $detail as $k => $v}
         <div class="mui-card" {if $k eq 0}style="margin-top: 204px;"{else /}{/if}>
@@ -182,7 +192,7 @@
     </div>
     <div id="tabbar-with-chat" class="mui-control-content ">
         <div class="title">联系我们</div>
-
+        <img src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/imgs/051138456dc5e959b1b54f86598d5ca.jpg" alt="" width="100%">
         <!--<ul class="mui-table-view mui-table-view-chevron">-->
         <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 1</a></li>-->
         <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 2</a></li>-->
@@ -195,7 +205,14 @@
 <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.js"></script>
 <script src="__CDN__/assets/layer_mobile/layer.js"></script>
 <script src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/mui/js/mui.min.js"></script>
+<script>
+    var h = "<ol style='font-size: 12px'><li> 公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书</li><li> 每位司机每周可查询/更新一次违章</li></ol>"
+    $('.rule').on('click',function () {
 
+        mui.alert('sdf',h,'d');
+    })
+
+</script>
 </body>
 </html>
 <script>

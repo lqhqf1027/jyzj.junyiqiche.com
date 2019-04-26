@@ -262,97 +262,77 @@ class My extends Base
 
     }
 
-    public function speech_recognition()
+    public function tencent()
     {
+        $filepath = 'voice/tmp_265c59f4dcebc75ec0cf861afa69a8e4.wav';
 
-        $audio_file = $this->request->post('audio_file');
+        $filepath = urlencode($filepath);
 
-        $client = new AipSpeech('16101235','bXanfwBIVCsONzVTnVDB7SYo','MDVyVOy2QKvCHE9M8dPzk2ekR0evwaNe');
-
-//        mb_convert_encoding(file_get_contents('./php.wav'),'UTF-8', 'UTF-8')
-        // 识别本地文件
-        $this->success($client->asr(file_get_contents('./php.wav'), 'wav', 16000, array(
-            'dev_pid' => 1536,
-        )));
+//        $this->success(gets("https://czz.junyiqiche.com/addons/cms/wxapp.index/index"));
+        $time = time();
+        $Nonce = rand(1, 100);
+        $this->success(gets("https://aai.tencentcloudapi.com/?Action=SentenceRecognition&ProjectId=0&SubServiceType=2&EngSerViceType=16k&SourceType=0&Version=2018-05-22&VoiceFormat=wav&UsrAudioKey=asr_1_template12&Url=" . $filepath . "&Timestamp={$time}&Nonce={$Nonce}&SecretId=AKIDOcLvMY2Dg2Y0IPuSK2eWDoEGI9oQoY5T"));
     }
 
-
-
-
     //音频上传编解码
+    public function wxupload()
+    {
 
-    public function wxupload(){
+        $upload_res = $_FILES['voice'];
 
-        $upload_res=$_FILES['voice'];
+        try {
 
-
-//        $tempfile = file_get_contents($upload_res['tmp_name']);
-
-        $tempfile = mb_convert_encoding($upload_res['tmp_name'], 'UTF-8', 'UTF-8');
-//        $this->success($tempfile);
-
-        $wavname = substr($upload_res['name'],0,strripos($upload_res['name'],".")).".wav";
-
-
-
-
-        $arr = explode(",", $tempfile);
-
-        $path = 'Aduio/'.$upload_res['name'];
-
-
-
-        if ($arr && !empty(strstr($tempfile,'base64'))){
-
-            //微信模拟器录制的音频文件可以直接存储返回
-
-            file_put_contents($path, base64_decode($arr[1]));
-
-            $data['path'] = $path;
-
-           $this->success("转码成功",$data);
-
-        }else{
+            $wavname = substr($upload_res['name'], 0, strripos($upload_res['name'], ".")) . ".wav";
 
             //手机录音文件
 
-            $path = 'Aduio/'.$upload_res['name'];
+            $path = 'voice/' . $upload_res['name'];
 
-            $newpath = 'Aduio/'.$wavname;
+            $newpath = 'voice/' . $wavname;
 
-            file_put_contents($path, $tempfile);
+            file_put_contents($path, file_get_contents($upload_res['tmp_name']));
 
             chmod($path, 0777);
 
-            $exec1 = "avconv -i /home/wwwroot/mapxcx.kanziqiang.top/$path -vn -f wav /home/wwwroot/mapxcx.kanziqiang.top/$newpath";
+            $exec1 = "ffmpeg -i /home/wwwroot/jyzj.junyiqiche.com/public/$path -acodec pcm_s16le -ac 2 -ar 16000 /home/wwwroot/jyzj.junyiqiche.com/public/$newpath";
 
-            exec($exec1,$info,$status);
+            exec($exec1, $info, $status);
 
             chmod($newpath, 0777);
 
-            if ( !empty($tempfile) && $status == 0 ) {
+            if ($status == 0) {
 
                 $data['path'] = $newpath;
 
-                $this->success("转码成功",$data);
+                $client = new AipSpeech('16101235', 'bXanfwBIVCsONzVTnVDB7SYo', 'MDVyVOy2QKvCHE9M8dPzk2ekR0evwaNe');
+
+                $result = $client->asr(file_get_contents($newpath), 'wav', 16000, array(
+                    'dev_pid' => 1536,
+                ));
+
+//                switch ($result['err_no']){
+//                    case 3301:
+//                        $msg = '请上传清晰的音频';
+//                        break;
+//                    default:
+//                        $msg = '未知';
+//                }
+                // 识别本地文件
+                $result['err_no'] == 0 ? $this->success('识别成功', $result) : $this->error('识别失败,错误码：' . $result['err_no']);
+
+//                $this->success("转码成功", $data);
 
             }
 
+
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
         }
 
-        $this->error("发生未知错误","！");
+        $this->error("发生未知错误", "！");
 
     }
 
-    //json数据返回方法封装
-
-    public function apiResponse($flag = 'error', $message = '',$data = array()){
-
-        $result = array('flag'=>$flag,'message'=>$message,'data'=>$data);
-
-        print json_encode($result);exit;
-
-    }
 
 }
 
