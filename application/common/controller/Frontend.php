@@ -42,6 +42,9 @@ class Frontend extends Controller
 
     public function _initialize()
     {
+
+        //判断是否为微信浏览器\
+        if(!is_weixin()) die('<h1><center>请使用微信手机端访问！ </center></h1>');
         //微信登陆验证
         if(!session('MEMBER')){
 

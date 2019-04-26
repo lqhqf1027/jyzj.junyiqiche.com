@@ -1,6 +1,7 @@
 <?php
 // 公共助手函数
 error_reporting(E_PARSE | E_ERROR | E_WARNING);
+
 // 公共助手函数
 
 use think\Request;
@@ -69,15 +70,16 @@ if (!function_exists('wx_public_token')) {
 }
 
 
-function ihttp_request($url, $post = '', $extra = array(), $timeout = 60) {
+function ihttp_request($url, $post = '', $extra = array(), $timeout = 60)
+{
     $urlset = parse_url($url);
-    if(empty($urlset['path'])) {
+    if (empty($urlset['path'])) {
         $urlset['path'] = '/';
     }
-    if(!empty($urlset['query'])) {
+    if (!empty($urlset['query'])) {
         $urlset['query'] = "?{$urlset['query']}";
     }
-    if(empty($urlset['port'])) {
+    if (empty($urlset['port'])) {
         $urlset['port'] = $urlset['scheme'] == 'https' ? '443' : '80';
     }
     if (strexists($url, 'https://') && !extension_loaded('openssl')) {
@@ -85,12 +87,12 @@ function ihttp_request($url, $post = '', $extra = array(), $timeout = 60) {
             //die('请开启您PHP环境的openssl');
         }
     }
-    if(function_exists('curl_init') && function_exists('curl_exec')) {
+    if (function_exists('curl_init') && function_exists('curl_exec')) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $urlset['scheme']. '://' .$urlset['host'].($urlset['port'] == '80' ? '' : ':'.$urlset['port']).$urlset['path'].$urlset['query']);
+        curl_setopt($ch, CURLOPT_URL, $urlset['scheme'] . '://' . $urlset['host'] . ($urlset['port'] == '80' ? '' : ':' . $urlset['port']) . $urlset['path'] . $urlset['query']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
-        if($post) {
+        if ($post) {
             curl_setopt($ch, CURLOPT_POST, 1);
             if (is_array($post)) {
                 $post = http_build_query($post);
@@ -117,7 +119,7 @@ function ihttp_request($url, $post = '', $extra = array(), $timeout = 60) {
                     $headers[] = "{$opt}: {$value}";
                 }
             }
-            if(!empty($headers)) {
+            if (!empty($headers)) {
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             }
         }
@@ -126,7 +128,7 @@ function ihttp_request($url, $post = '', $extra = array(), $timeout = 60) {
         $errno = curl_errno($ch);
         $error = curl_error($ch);
         curl_close($ch);
-        if($errno || empty($data)) {
+        if ($errno || empty($data)) {
             //return error(1, $error);
         } else {
             return ihttp_response_parse($data);
@@ -135,7 +137,7 @@ function ihttp_request($url, $post = '', $extra = array(), $timeout = 60) {
     $method = empty($post) ? 'GET' : 'POST';
     $fdata = "{$method} {$urlset['path']}{$urlset['query']} HTTP/1.1\r\n";
     $fdata .= "Host: {$urlset['host']}\r\n";
-    if(function_exists('gzdecode')) {
+    if (function_exists('gzdecode')) {
         $fdata .= "Accept-Encoding: gzip, deflate\r\n";
     }
     $fdata .= "Connection: close\r\n";
@@ -157,7 +159,7 @@ function ihttp_request($url, $post = '', $extra = array(), $timeout = 60) {
     } else {
         $fdata .= "\r\n";
     }
-    if($urlset['scheme'] == 'https') {
+    if ($urlset['scheme'] == 'https') {
         $fp = fsockopen('ssl://' . $urlset['host'], $urlset['port'], $errno, $error);
     } else {
         $fp = fsockopen($urlset['host'], $urlset['port'], $errno, $error);
@@ -176,7 +178,8 @@ function ihttp_request($url, $post = '', $extra = array(), $timeout = 60) {
     }
 }
 
-function ihttp_response_parse($data, $chunked = false) {
+function ihttp_response_parse($data, $chunked = false)
+{
     $rlt = array();
     $pos = strpos($data, "\r\n\r\n");
     $split1[0] = substr($data, 0, $pos);
@@ -204,31 +207,32 @@ function ihttp_response_parse($data, $chunked = false) {
         } else {
             $rlt['headers'][$key] = $value;
         }
-        if(!$isgzip && strtolower($key) == 'content-encoding' && strtolower($value) == 'gzip') {
+        if (!$isgzip && strtolower($key) == 'content-encoding' && strtolower($value) == 'gzip') {
             $isgzip = true;
         }
-        if(!$ischunk && strtolower($key) == 'transfer-encoding' && strtolower($value) == 'chunked') {
+        if (!$ischunk && strtolower($key) == 'transfer-encoding' && strtolower($value) == 'chunked') {
             $ischunk = true;
         }
     }
-    if($chunked && $ischunk) {
+    if ($chunked && $ischunk) {
         $rlt['content'] = ihttp_response_parse_unchunk($split1[1]);
     } else {
         $rlt['content'] = $split1[1];
     }
-    if($isgzip && function_exists('gzdecode')) {
+    if ($isgzip && function_exists('gzdecode')) {
         $rlt['content'] = gzdecode($rlt['content']);
     }
 
     //$rlt['meta'] = $data;
-    if($rlt['code'] == '100') {
+    if ($rlt['code'] == '100') {
         return ihttp_response_parse($rlt['content']);
     }
     return $rlt;
 }
 
-function ihttp_response_parse_unchunk($str = null) {
-    if(!is_string($str) or strlen($str) < 1) {
+function ihttp_response_parse_unchunk($str = null)
+{
+    if (!is_string($str) or strlen($str) < 1) {
         return false;
     }
     $eol = "\r\n";
@@ -238,67 +242,72 @@ function ihttp_response_parse_unchunk($str = null) {
     do {
         $tmp = ltrim($tmp);
         $pos = strpos($tmp, $eol);
-        if($pos === false) {
+        if ($pos === false) {
             return false;
         }
         $len = hexdec(substr($tmp, 0, $pos));
-        if(!is_numeric($len) or $len < 0) {
+        if (!is_numeric($len) or $len < 0) {
             return false;
         }
         $str .= substr($tmp, ($pos + $add), $len);
-        $tmp  = substr($tmp, ($len + $pos + $add));
+        $tmp = substr($tmp, ($len + $pos + $add));
         $check = trim($tmp);
-    } while(!empty($check));
+    } while (!empty($check));
     unset($tmp);
     return $str;
 }
 
 
-function ihttp_get($url) {
+function ihttp_get($url)
+{
     return ihttp_request($url);
 }
 
-function ihttp_post($url, $data) {
+function ihttp_post($url, $data)
+{
     $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
     return ihttp_request($url, $data, $headers);
 }
 
-function gets($url=NULL){
-    if($url){
-        $rslt  = ihttp_get($url);
-        if(strtolower(trim($rslt['status'])) == 'ok'){
+function gets($url = NULL)
+{
+    if ($url) {
+        $rslt = ihttp_get($url);
+        if (strtolower(trim($rslt['status'])) == 'ok') {
             //pr($rslt) ;exit;
-            if(is_json($rslt['content'])){ //返回格式是json 直接返回数组
-                $return =  json_decode($rslt['content'],true);
-                if($return['errcode']) //有错误
-                    exit('Error:<br>Api:'.$url.'  <br>errcode:'.$return['errcode'].'<br>errmsg:'.$return['errmsg']);
-                return $return ;
-            }else{  //先暂时直接返回，以后其它格式再增加
-                return $rslt['content'] ;
+            if (is_json($rslt['content'])) { //返回格式是json 直接返回数组
+                $return = json_decode($rslt['content'], true);
+                if ($return['errcode']) //有错误
+                    exit('Error:<br>Api:' . $url . '  <br>errcode:' . $return['errcode'] . '<br>errmsg:' . $return['errmsg']);
+                return $return;
+            } else {  //先暂时直接返回，以后其它格式再增加
+                return $rslt['content'];
             }
         }
-        exit('远程请求失败：'.$url);
+        exit('远程请求失败：' . $url);
     }
     exit('未发现远程请求地址');
 }
+
 /**
-远程post请求
+ * 远程post请求
  */
-function posts($url=NULL, $data=NULL){
-    if($url && $data){
-        $rslt  = ihttp_post($url,$data);
-        if(strtolower(trim($rslt['status'])) == 'ok'){
+function posts($url = NULL, $data = NULL)
+{
+    if ($url && $data) {
+        $rslt = ihttp_post($url, $data);
+        if (strtolower(trim($rslt['status'])) == 'ok') {
             //pr($rslt) ;
-            if(is_json($rslt['content'])){ //返回格式是json 直接返回数组
-                $return =  json_decode($rslt['content'],true);
-                if($return['errcode']) //有错误
-                    exit('Error:<br>Api:'.$url.'  <br>errcode:'.$return['errcode'].'<br>errmsg:'.$return['errmsg']);
-                return $return ;
-            }else{  //先暂时直接返回，以后其它格式再增加
-                return $rslt['content'] ;
+            if (is_json($rslt['content'])) { //返回格式是json 直接返回数组
+                $return = json_decode($rslt['content'], true);
+                if ($return['errcode']) //有错误
+                    exit('Error:<br>Api:' . $url . '  <br>errcode:' . $return['errcode'] . '<br>errmsg:' . $return['errmsg']);
+                return $return;
+            } else {  //先暂时直接返回，以后其它格式再增加
+                return $rslt['content'];
             }
         }
-        exit('远程请求失败：'.$url);
+        exit('远程请求失败：' . $url);
     }
     exit('post远程请求，参数错误');
 }
@@ -429,8 +438,57 @@ if (!function_exists('cdnurl')) {
         return $url;
     }
 }
+if (!function_exists('alert')) {
+    /**
+     * JS提示跳转
+     * @param  $tip  弹窗口提示信息(为空没有提示)
+     * @param  $type 设置类型 close = 关闭 ，back=返回 ，refresh=提示重载，jump提示并跳转url
+     * @param  $url  跳转url
+     */
+    function alert($tip = "", $type = "", $url = "")
+    {
+        $js = "<script>";
+        if ($tip)
+            $js .= "alert('" . $tip . "');";
+        switch ($type) {
+            case "close" : //关闭页面
+                $js .= "window.close();";
+                break;
+            case "back" : //返回
+                $js .= "history.back(-1);";
+                break;
+            case "refresh" : //刷新
+                $js .= "parent.location.reload();";
+                break;
+            case "top" : //框架退出
+                if ($url)
+                    $js .= "top.location.href='" . $url . "';";
+                break;
+            case "jump" : //跳转
+                if ($url)
+                    $js .= "window.location.href='" . $url . "';";
+                break;
+            default :
+                break;
+        }
+        $js .= "</script>";
+        echo $js;
+        if ($type) {
+            exit();
+        }
+    }
+}
+if (!function_exists('is_weixin')) {
 
-
+    /**
+     * 是否为微信浏览器访问
+     * @return bool
+     */
+    function is_weixin()
+    {
+        return strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false ? true : false;
+    }
+}
 if (!function_exists('is_really_writable')) {
 
     /**
@@ -985,19 +1043,19 @@ if (!function_exists('hsv2rgb')) {
          */
         function getWxAccessToken()
         {
-    
+
             $config = get_addon_config('cms');
-    
+
             $appid = $config['wxappid'];
             $secret = $config['wxappsecret'];
             //我们将access_token全局缓存在文件中,每次获取的时候,先判断是否过期,如果过期重新获取再全局缓存
             //我们缓存的在文件中的数据，包括access_token和该access_token的过期时间戳.
             //获取缓存的access_token
             $access_token_data = json_decode(Cache::get('access_token'), true);
-    
+
             //判断缓存的access_token是否存在和过期，如果不存在和过期则重新获取.
             if ($access_token_data !== null && $access_token_data['access_token'] && $access_token_data['expires_in'] > time()) {
-    
+
                 return $access_token_data['access_token'];
             } else {
                 //重新获取access_token,并全局缓存
@@ -1010,7 +1068,7 @@ if (!function_exists('hsv2rgb')) {
                         $data['expires_in'] = $data['expires_in'] + time();
                         //将access_token全局缓存，快速缓存到文件中.
                         Cache::set('access_token', json_encode($data));
-    
+
                         //返回access_token
                         return $data['access_token'];
                     }
