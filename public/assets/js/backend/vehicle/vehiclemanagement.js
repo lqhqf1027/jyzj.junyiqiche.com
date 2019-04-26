@@ -3,9 +3,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     /**
      * goeasy推送的key
      */
-    var goeasy = new GoEasy({
-        appkey: 'BC-c02d73e1952048ecb954436f3bf79b4a'
-    });
+    // var goeasy = new GoEasy({
+    //     appkey: 'BC-c02d73e1952048ecb954436f3bf79b4a'
+    // });
 
 
     var Controller = {
@@ -177,47 +177,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             formatter: Controller.api.formatter.datetime,
                             datetimeFormat: "YYYY-MM-DD"
                         },
-                        // {field: 'payment', title: __('Payment')},
-                        // {field: 'monthly', title: __('月供'), operate: 'BETWEEN'},
-                        // {field: 'nperlist', title: __('期数')},
-                        // {field: 'end_money', title: __('End_money')},
-                        // {field: 'tail_money', title: __('Tail_money')},
-                        // {field: 'margin', title: __('Margin')},
-                        // {
-                        //     field: 'createtime',
-                        //     title: __('Createtime'),
-                        //     operate: 'RANGE',
-                        //     addclass: 'datetimerange',
-                        //     formatter: Table.api.formatter.datetime
-                        // },
-
-                        //
-                        // {field: 'orderdetails.signdate', title: __('Orderdetails.signdate')},
-                        // {field: 'orderdetails.total_contract', title: __('Orderdetails.total_contract')},
-                        // {field: 'orderdetails.hostdate', title: __('Orderdetails.hostdate')},
-                        //
-                        //
-                        // {field: 'orderdetails.is_mortgage', title: __('Orderdetails.is_mortgage')},
-                        // {field: 'orderdetails.mortgage_people', title: __('Orderdetails.mortgage_people')},
-                        // {field: 'orderdetails.ticketdate', title: __('Orderdetails.ticketdate')},
-                        // {field: 'orderdetails.supplier', title: __('Orderdetails.supplier')},
-                        // {field: 'orderdetails.tax_amount', title: __('Orderdetails.tax_amount')},
-                        // {field: 'orderdetails.no_tax_amount', title: __('Orderdetails.no_tax_amount')},
-                        // {field: 'orderdetails.pay_taxesdate', title: __('Orderdetails.pay_taxesdate')},
-                        // {field: 'orderdetails.purchase_of_taxes', title: __('Orderdetails.purchase_of_taxes')},
-                        // {field: 'orderdetails.house_fee', title: __('Orderdetails.house_fee')},
-                        // {field: 'orderdetails.luqiao_fee', title: __('Orderdetails.luqiao_fee')},
-                        // {field: 'orderdetails.insurance_buydate', title: __('Orderdetails.insurance_buydate')},
-                        // {field: 'orderdetails.insurance_policy', title: __('Orderdetails.insurance_policy')},
-                        // {field: 'orderdetails.insurance', title: __('Orderdetails.insurance')},
-                        // {field: 'orderdetails.car_boat_tax', title: __('Orderdetails.car_boat_tax')},
-                        // {
-                        //     field: 'orderdetails.commercial_insurance_policy',
-                        //     title: __('Orderdetails.commercial_insurance_policy')
-                        // },
-                        // {field: 'orderdetails.business_risks', title: __('Orderdetails.business_risks')},
-                        // {field: 'orderdetails.subordinate_branch', title: __('Orderdetails.subordinate_branch')},
-                        // {field: 'orderdetails.transfer_time', title: __('Orderdetails.transfer_time')},
                         {
                             field: 'operates',
                             title: __('详情'),
@@ -321,6 +280,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     extend: 'data-toggle="tooltip"',
                                     classname: 'btn btn-xs btn-success btn-accredit',
                                     visible: function (row) {
+                                        return false;
                                         return !row.user_id ? true : false;
                                     }
 
@@ -704,9 +664,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
              * 公众号推送违章信息
              */
             $('.btn-pushviolation').on("click", function () {
+                var ids = Table.api.selectedids(table);
 
                 Fast.api.ajax({
-                    url: 'vehicle/vehiclemanagement/sendviolation',
+                    url: 'vehicle/vehiclemanagement/sendviolation?ids=' + ids,
                 }, function (data, ret) {
 
                     table.bootstrapTable('refresh');
@@ -930,22 +891,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             data: {order_id: JSON.stringify(row.id), username: JSON.stringify(row.username)},
                         }, function (data, ret) {
 
-                            // console.log('https://jyzj.junyiqiche.com' + data); 
+                            // console.log('https://jyzj.junyiqiche.com' + data);
                             layer.open({
                                 title: '小程序授权', //页面标题
                                 type: 2, 
                                 area: ['180px', '250px'],  //弹出层页面比例
                                 content: ['https://jyzj.junyiqiche.com' + data, 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                             });    
-                            
-                            //goeasy关闭弹框
-                            goeasy.subscribe({
-                                channel: 'accredit',
-                                onMessage: function(message){
-                            
-                                    $(".btn-refresh").trigger("click");
-                                }
-                            });
+
+                            // if(goeasy){
+                                //goeasy关闭弹框
+                                // goeasy.subscribe({
+                                //     channel: 'accredit',
+                                //     onMessage: function(message){
+                                //
+                                //         $(".btn-refresh").trigger("click");
+                                //     }
+                                // });
+                            // }
+
 
                         }, function (data, ret) {
 
@@ -963,26 +927,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     'click .btn-wechat': function (e, value, row, index) {
 
                         Fast.api.ajax({
-                            url: 'vehicle/vehiclemanagement/setqrcode',
+                            url: 'vehicle/vehiclemanagement/public_qr_code',
                             data: {order_id: JSON.stringify(row.id), username: JSON.stringify(row.username)},
                         }, function (data, ret) {
 
                             // console.log('https://jyzj.junyiqiche.com' + data); 
                             layer.open({
-                                title: '小程序授权', //页面标题
+                                title: '公众号授权', //页面标题
                                 type: 2, 
-                                area: ['180px', '250px'],  //弹出层页面比例
+                                area: ['280px', '330px'],  //弹出层页面比例
                                 content: ['https://jyzj.junyiqiche.com' + data, 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                             });    
                             
                             //goeasy关闭弹框
-                            goeasy.subscribe({
-                                channel: 'accredit',
-                                onMessage: function(message){
-                            
-                                    $(".btn-refresh").trigger("click");
-                                }
-                            });
+                            // goeasy.subscribe({
+                            //     channel: 'accredit',
+                            //     onMessage: function(message){
+                            //
+                            //         $(".btn-refresh").trigger("click");
+                            //     }
+                            // });
 
                         }, function (data, ret) {
 
