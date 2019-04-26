@@ -25,21 +25,22 @@ class Index extends Frontend
     public function _initialize()
     {
         parent::_initialize();
-        $memberId = Session::get('MEMBER')['id'];
-
-        //判断是否扫码进入；
-        $order_id = Request::instance()->param('order_id') ;
-        if ($order_id) {
-            $s = self::isApplyDriver($order_id);
-
-            if ($s['wx_public_user_id'] && $s['wx_public_user_id'] !== $memberId) die('<h1 style="margin-top: 20%;color: red;"><center> 该车辆已被 ' . $s['username'] . ' 授权</center></h1>');
-
-            return Order::update(['id' => $order_id, 'wx_public_user_id' => $memberId]) && WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => 1]) ? alert('认证成功！','','https://jyzj.junyiqiche.com/index') : die('<h1 style="margin-top: 20%;color: red;"><center> 认证失败</center></h1>');
-
-        }
-
-        $licensenumber = OrderDetails::get(['order_id' => Order::get(['wx_public_user_id' => $memberId])->id])->licensenumber;
-        $this->view->assign(['userInfo' => Session::get('MEMBER'), 'licensenumber' => $licensenumber]);
+//        $memberId = Session::get('MEMBER')['id'];
+//
+//        //判断是否扫码进入；
+//        $order_id = Request::instance()->param('order_id') ;
+//        if ($order_id) {
+//            return 1;die;
+//            $s = self::isApplyDriver($order_id);
+//
+//            if ($s['wx_public_user_id'] && $s['wx_public_user_id'] !== $memberId) die('<h1 style="margin-top: 20%;color: red;"><center> 该车辆已被 ' . $s['username'] . ' 授权</center></h1>');
+//
+//            return Order::update(['id' => $order_id, 'wx_public_user_id' => $memberId]) && WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => 1]) ? alert('认证成功!！','','https://jyzj.junyiqiche.com/index') : die('<h1 style="margin-top: 20%;color: red;"><center> 认证失败</center></h1>');
+//
+//        }
+//
+//        $licensenumber = OrderDetails::get(['order_id' => Order::get(['wx_public_user_id' => $memberId])->id])->licensenumber;
+//        $this->view->assign(['userInfo' => Session::get('MEMBER'), 'licensenumber' => $licensenumber]);
 
     }
 
@@ -147,11 +148,12 @@ class Index extends Frontend
     {
 
         if ($this->request->isAjax()) {
-            if ($this->request->isPost()) {
+
                 $params = $this->request->post('');
+
                 Db::startTrans();
                 try {
-                    if (self::isApplyDriver($params['order_id'])) throw new Exception('该车型已被认证过');
+                    if (self::isApplyDriver($params['order_id'])['wx_public_user_id']) throw new Exception('该车型已被认证过');
                     WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => $params['is_apply']]);
                     Order::update(['id' => $params['order_id'], 'wx_public_user_id' => Session::get('MEMBER')['id']]);
                     Db::commit();
@@ -161,7 +163,7 @@ class Index extends Frontend
                 }
                 $this->success('认证成功', '', '');
 
-            }
+
             $this->error('非法请求', '', '');
 
 
