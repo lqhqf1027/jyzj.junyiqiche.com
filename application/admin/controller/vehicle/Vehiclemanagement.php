@@ -33,6 +33,7 @@ class Vehiclemanagement extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
+    protected $noNeedLogin = ['sendviolation'];
     public function _initialize()
     {
         parent::_initialize();
@@ -784,6 +785,7 @@ class Vehiclemanagement extends Backend
         }
 
     }
+
 
 
     /**
