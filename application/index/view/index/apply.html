@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="stylesheet" href="{$config.upload.cdnurl}/jyzj.junyiqiche.com/mui/css/mui.css">
+<link rel="stylesheet" type="text/css" href="__CDN__/assets/layer_mobile/need/layer.css"/>
 
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -82,13 +83,13 @@
     <div id="tabbar" class="mui-control-content mui-active">
         <div class="mui-card" style="margin: 0 0 10px 0;position: fixed;top: 0;z-index: 99999;;min-width: 100%">
             <div class="mui-card-header mui-card-media" style="background-color: #F2F2F2">
-                <img src="{$userInfo.headimgurl}"/>
+                <img src="{$userinfo.headimgurl}"/>
 
                 <!--<img src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/imgs/car2.png" />-->
                 <div class="mui-media-body">
-                    <strong>川ASD234</strong>
+                    <strong>{$order_details.orderdetails.licensenumber}</strong>
                     <!--{$licensenumber}-->
-                    <p>大众捷达1.6L烧油 &nbsp;vin :LSVAE45E4JN037314</p>
+                    <p>{$order_details.models_name} &nbsp;vin :{$order_details.orderdetails.frame_number}</p>
                 </div>
                 <!--<img class="mui-pull-left" src="../images/logo.png" width="34px" height="34px" />
                 <h2>小M</h2>
@@ -100,13 +101,13 @@
 
                     <!--<span class="mui-icon mui-icon-home"></span>-->
                     <p class="">累计违章：</p>
-                    <p><span class="text-success "><strong>232</strong></span> <span class=""
+                    <p><span class="text-success "><strong>{$count}</strong></span> <span class=""
                                                                                      style="color: #000">条</span></p>
                 </li>
                 <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
                     <!--<span class="mui-icon mui-icon-email"><span class="mui-badge">5</span></span>-->
                     <p class="">累计罚款：</p>
-                    <p><span class="text-success "><strong>232</strong></span> <span class=""
+                    <p><span class="text-success "><strong>{$order_details.orderdetails.total_fine}</strong></span> <span class=""
                                                                                      style="color: #000">元</span></p>
 
 
@@ -116,7 +117,7 @@
                     <!--<span class="mui-icon mui-icon-chatbubble"></span>-->
                     <p class=" ">累计扣分：
                     <p/>
-                    <p><span class="text-success "><strong>232</strong></span> <span class=""
+                    <p><span class="text-success "><strong>{$order_details.orderdetails.total_deduction}</strong></span> <span class=""
                                                                                      style="color: #000">分</span></p>
 
 
@@ -126,76 +127,47 @@
             </ul>
             <div class=""
                  style=" text-align: center;vertical-align: middle;padding:10px 0 ;background-color: #F2F2F2;border-top: 1px solid #ddd; ">
-                <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty">
+                <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty query_violation">
                     更新我的违章信息
                 </button>
-                <p style="margin-bottom: 0">最后一次更新时间 2019-4-7 15:23</p>
+                <p style="margin-bottom: 0">最后一次更新时间 {$query_time}</p>
             </div>
             <!--<img src="../images/yuantiao.jpg" alt="" width="100%"/>-->
         </div>
-        <div class="mui-card" style="margin-top: 204px;">
-            <div class="mui-card-header">川ASD234</div>
+        <span class="infos">
+
+        {foreach $detail as $k => $v}
+        <div class="mui-card" {if $k eq 0}style="margin-top: 204px;"{else /}{/if}>
+            <div class="mui-card-header">{$order_details.orderdetails.licensenumber}</div>
             <div class="mui-card-content">
                 <div class="mui-card-content-inner">
                     <ul style="margin-bottom: 0;padding-left: 15px;">
-                        <li>违法时间：2019-2-45</li>
-                        <li>违法地点：受到了飞机离开结果拉克斯基公开fasdfasdfasdfds</li>
-                        <li>违法行为：受到了飞机离开结果拉克斯基公开</li>
+                        <li>违法时间：{$v.date}</li>
+                        <li>违法地点：{$v.wzcity}{$v.area}</li>
+                        <li>违法行为：{$v.act}</li>
 
                     </ul>
                 </div>
             </div>
             <div class="mui-card-footer " style="text-align: center; ">
-                <div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：200元</div>
+                <div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：{$v.money}元</div>
 
-                <div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：0分</div>
+                <div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：{$v.fen}分</div>
+                {if condition="$v.handled eq 1"}
+                <div class="" style="width: 33%;color: success">已处理</div>
+                {elseif condition="$vo.handled eq 0"}
                 <div class="" style="width: 33%;color: red">未处理，未缴款</div>
+                {else /}
+                <div class="" style="width: 33%;color: red">未知</div>
+                {/if}
+                
 
 
             </div>
         </div>
-        <div class="mui-card">
-            <div class="mui-card-header">川ASD234</div>
-            <div class="mui-card-content">
-                <div class="mui-card-content-inner">
-                    <ul style="margin-bottom: 0;padding-left: 15px;">
-                        <li>违法时间：2019-2-45</li>
-                        <li>违法地点：受到了飞机离开结果拉克斯基公开fasdfasdfasdfds</li>
-                        <li>违法行为：受到了飞机离开结果拉克斯基公开</li>
-
-                    </ul>
-                </div>
-            </div>
-            <div class="mui-card-footer " style="text-align: center; ">
-                <div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：200元</div>
-
-                <div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：0分</div>
-                <div class="" style="width: 33%;color: red">未处理，未缴款</div>
-
-
-            </div>
-        </div>
-        <div class="mui-card">
-            <div class="mui-card-header">川ASD234</div>
-            <div class="mui-card-content">
-                <div class="mui-card-content-inner">
-                    <ul style="margin-bottom: 0;padding-left: 15px;">
-                        <li>违法时间：2019-2-45</li>
-                        <li>违法地点：受到了飞机离开结果拉克斯基公开fasdfasdfasdfds</li>
-                        <li>违法行为：受到了飞机离开结果拉克斯基公开</li>
-
-                    </ul>
-                </div>
-            </div>
-            <div class="mui-card-footer " style="text-align: center; ">
-                <div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：200元</div>
-
-                <div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：0分</div>
-                <div class="" style="width: 33%;color: red">未处理，未缴款</div>
-
-
-            </div>
-        </div>
+        {/foreach}
+    </span>
+        
         <!--<div class="mui-card-footer">-->
         <!--<a class="mui-card-link">Like</a>-->
         <!--<a class="mui-card-link">Comment</a>-->
@@ -221,7 +193,50 @@
 </div>
 
 <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.js"></script>
+<script src="__CDN__/assets/layer_mobile/layer.js"></script>
 <script src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/mui/js/mui.min.js"></script>
 
 </body>
 </html>
+<script>
+
+    $('.query_violation').on('click',function () {
+        // console.log("{$licensenumber}");
+        // return;
+        $.ajax({
+            url: 'selCarInfo',
+            success:function (data) {  
+               
+                console.log(data);
+                var h = '';
+                if (data.code == 1) {
+                    alert(data.msg);
+                    res = data.data;
+                    
+                    for(var i in res){
+                        var m ='';
+                        if(i==0){
+                            m = 'margin-top: 204px;';
+                        } 
+                      h += ' <div class="mui-card"   style="'+m+'"><div class="mui-card-header">{$licensenumber}</div><div class="mui-card-content"><div class="mui-card-content-inner"><ul style="margin-bottom: 0;padding-left: 15px;"><li>违法时间：'+res[i]['date']+'</li><li>违法地点：'+res[i]['wzcity'] + res[i]['area'] +'</li><li>违法行为：'+res[i]['act']+'</li></ul></div></div><div class="mui-card-footer " style="text-align: center; "><div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：'+res[i]['money']+'元</div><div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：'+res[i]['fen']+'分</div><div class="" style="width: 33%;color: red">未处理，未缴款</div></div></div>	';
+                    }
+                    if(data.data){
+
+                        $('.infos').html('').append(h)
+
+                    }
+    
+                }
+                else {
+                    
+                    alert(data.msg);
+                    return;
+    
+                }
+
+            }
+        })
+
+    })
+
+</script>
