@@ -27,18 +27,7 @@ class Index extends Frontend
         parent::_initialize();
         $memberId = Session::get('MEMBER')['id'];
 
-        //判断是否扫码进入；
-        $order_id = Request::instance()->param('order_id');
-        if ($order_id) {
-
-            $s = self::isApplyDriver($order_id);
-
-            if ($s['wx_public_user_id'] && $s['wx_public_user_id'] !== $memberId) die('<h1 style="margin-top: 20%;color: red;"><center> 该车辆已被 ' . $s['username'] . ' 授权</center></h1>');
-
-            return Order::update(['id' => $order_id, 'wx_public_user_id' => $memberId]) && WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => 1]) ? alert('认证成功!！', '', 'https://jyzj.junyiqiche.com/index') : die('<h1 style="margin-top: 20%;color: red;"><center> 认证失败</center></h1>');
-
-        }
-
+       
         $licensenumber = OrderDetails::get(['order_id' => Order::get(['wx_public_user_id' => $memberId])->id])->licensenumber;
         $this->view->assign(['userInfo' => Session::get('MEMBER'), 'licensenumber' => $licensenumber]);
 
@@ -47,6 +36,19 @@ class Index extends Frontend
 
     public function index()
     {
+         //判断是否扫码进入；
+         $order_id = Request::instance()->param('order_id');
+         if ($order_id) {
+             // pr($order_id);
+             // die;
+             $s = self::isApplyDriver($order_id);
+ 
+             if ($s['wx_public_user_id'] && $s['wx_public_user_id'] !== $memberId) die('<h1 style="margin-top: 20%;color: red;"><center> 该车辆已被 ' . $s['username'] . ' 授权</center></h1>');
+ 
+             return Order::update(['id' => $order_id, 'wx_public_user_id' => $memberId]) && WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => 1]) ? alert('认证成功!！', '', 'https://jyzj.junyiqiche.com/index') : die('<h1 style="margin-top: 20%;color: red;"><center> 认证失败</center></h1>');
+ 
+         }
+ 
 //        pr($this->resetQuery_number());
 
         $uid = Session::get('MEMBER');
@@ -64,7 +66,7 @@ class Index extends Frontend
         $this->model = new \app\admin\model\Order();
         $order_details = collection($this->model->where(['wx_public_user_id' => $uid['id']])->field('username,phone,wx_public_user_id,models_name')
             ->with(['orderdetails' => function ($q) {
-                $q->withField('licensenumber,frame_number,total_deduction,total_fine,violation_details,engine_number');
+                $q->withField('id,licensenumber,frame_number,total_deduction,total_fine,violation_details,engine_number');
             }])->select())->toArray();
         foreach ($order_details as $value) {
             $order_details = $value;
@@ -87,7 +89,8 @@ class Index extends Frontend
             'detail' => $detail,
             'query_time' => $userinfo['query_time'] ? $userinfo['query_time'] : '从未更新',
             'count' => $count,
-            'userinfo' => $userinfo
+            'userinfo' => $userinfo,
+            'id' => $order_details['orderdetails']['id']
         ]);
 
         return Order::get(['wx_public_user_id' => $uid['id']]) ? $this->view->fetch('apply') : $this->view->fetch();
@@ -387,6 +390,42 @@ class Index extends Frontend
         $content = curl_exec($ch);
         curl_close($ch);
         return $content;
+    }
+
+    //修改车架号
+    public function frame_number()
+    {
+        if($this->request->isAjax()){
+            $params = $this->request->post();
+            // pr($params);
+            // die;
+            $result = OrderDetails::where('id', $params['id'])->setField(['frame_number' => $params['frame_number']]);
+            if ($result) {
+                $this->success('修改成功');
+            }
+            else {
+                $this->error();
+            }
+        }
+         
+    }
+
+    //修改发动机号
+    public function engine_number()
+    {
+        if($this->request->isAjax()){
+            $params = $this->request->post();
+            // pr($params);
+            // die;
+            $result = OrderDetails::where('id', $params['id'])->setField(['engine_number' => $params['engine_number']]);
+            if ($result) {
+                $this->success('修改成功');
+            }
+            else {
+                $this->error();
+            }
+        }
+        
     }
 
 }
