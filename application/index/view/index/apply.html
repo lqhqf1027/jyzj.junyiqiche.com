@@ -125,18 +125,10 @@
 
 
             </ul>
-            <div class=""
-                 style=" text-align: center;vertical-align: middle;padding:10px 0 ;background-color: #F2F2F2;border-top: 1px solid #ddd; ">
+    
+            <div class="" style=" text-align: center;vertical-align: middle;padding:10px 0 ;background-color: #F2F2F2;border-top: 1px solid #ddd; ">
 
-                <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty query_violation">
-                    更新我的违章信息
-                </button>
-                <p style="margin-bottom: 0">最后一次更新时间 {$query_time}</p>
-            </div>
-            <!--<img src="../images/yuantiao.jpg" alt="" width="100%"/>-->
-        </div>
-        <span class="infos">
-                <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty" style="font-size: 12px">
+                <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty query_violation" style="font-size: 12px">
                     更新我的违章信息
                 </button>
                 <div style="display: inline-block;position: absolute;right: 6px;top: 136px;" class="rule"> <u class="text-info">规则说明 <span class="mui-icon mui-icon-arrowright" style="font-size: 14px"></span></u> </div>
@@ -145,7 +137,7 @@
             <!--<img src="../images/yuantiao.jpg" alt="" width="100%"/>-->
         </div>
 
-
+    <span class="infos">
         {foreach $detail as $k => $v}
         <div class="mui-card" {if $k eq 0}style="margin-top: 204px;"{else /}{/if}>
             <div class="mui-card-header">{$order_details.orderdetails.licensenumber}</div>
@@ -235,7 +227,7 @@
                         if(i==0){
                             m = 'margin-top: 204px;';
                         } 
-                      h += ' <div class="mui-card"   style="'+m+'"><div class="mui-card-header">{$licensenumber}</div><div class="mui-card-content"><div class="mui-card-content-inner"><ul style="margin-bottom: 0;padding-left: 15px;"><li>违法时间：'+res[i]['date']+'</li><li>违法地点：'+res[i]['wzcity'] + res[i]['area'] +'</li><li>违法行为：'+res[i]['act']+'</li></ul></div></div><div class="mui-card-footer " style="text-align: center; "><div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：'+res[i]['money']+'元</div><div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：'+res[i]['fen']+'分</div><div class="" style="width: 33%;color: red">未处理，未缴款</div></div></div>	';
+                      h += ' <div class="mui-card"   style=""><div class="mui-card-header">{$licensenumber}</div><div class="mui-card-content"><div class="mui-card-content-inner"><ul style="margin-bottom: 0;padding-left: 15px;"><li>违法时间：'+res[i]['date']+'</li><li>违法地点：'+res[i]['wzcity'] + res[i]['area'] +'</li><li>违法行为：'+res[i]['act']+'</li></ul></div></div><div class="mui-card-footer " style="text-align: center; "><div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：'+res[i]['money']+'元</div><div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：'+res[i]['fen']+'分</div><div class="" style="width: 33%;color: red">未处理，未缴款</div></div></div>	';
                     }
                     if(data.data){
 
