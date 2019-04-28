@@ -85,7 +85,7 @@ class Index extends Frontend
         $this->view->assign([
             'order_details' => $order_details,
             'detail' => $detail,
-            'query_time' => $userinfo['query_time'],
+            'query_time' => $userinfo['query_time'] ? $userinfo['query_time'] : '从未更新',
             'count' => $count,
             'userinfo' => $userinfo
         ]);
@@ -350,9 +350,9 @@ class Index extends Frontend
                         'total_fraction' => $total_fraction,
                         'total_money' => $total_money,
                         'counts' => count($data['result']['lists']),
-                        'upTime' => '上一次更新时间：'.date('Y-m-d H:i:s', time())]
+                        'upTime' => '上一次更新时间：' . date('Y-m-d H:i:s', time())]
 
-            );
+                );
 
             } else $this->error($data['reason']);
 

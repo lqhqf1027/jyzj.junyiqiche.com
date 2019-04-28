@@ -61,7 +61,7 @@
 <!--</header>-->
 <nav class="mui-bar mui-bar-tab">
     <a class="mui-tab-item mui-active" href="#tabbar">
-        <span class="mui-icon mui-icon-search"> <span class="mui-badge resCountBadge">{$count}</span></span>
+        <span class="mui-icon mui-icon-search"> <span class="mui-badge resCountBadge">{if $count}{$count} {else /}0{/if}</span></span>
         <span class="mui-tab-label">违章信息</span>
     </a>
     <a class="mui-tab-item " href="#payment">
@@ -107,7 +107,7 @@
 
                     <!--<span class="mui-icon mui-icon-home"></span>-->
                     <p class="">累计违章：</p>
-                    <p><span class="text-success "><strong class="resCout">{$count}</strong></span> <span class=""
+                    <p><span class="text-success "><strong class="resCout">{$count|default="0"}</strong></span> <span class=""
                                                                                                           style="color: #000">条</span>
 
                     </p>
@@ -157,13 +157,14 @@
                 <div style="display: inline-block;position: absolute;right: 6px;top: 136px;" class="rule"><u
                         class="text-info">规则说明 <span class="mui-icon mui-icon-arrowright"
                                                      style="font-size: 14px"></span></u></div>
-                <p style="margin-bottom: 0" class="upTime">上一次更新时间：{$query_time|default="从未更新"}</p>
+                <p style="margin-bottom: 0" class="upTime">上一次更新时间：{$query_time} </p>
             </div>
             <!--<img src="../images/yuantiao.jpg" alt="" width="100%"/>-->
         </div>
 
 
         <span class="infos">
+            {if $detail}
         {foreach $detail as $k => $v}
         <div class="mui-card" {if $k eq 0} style="margin-top: 204px;" {else /}{/if}>
             <div class="mui-card-header">{$order_details.orderdetails.licensenumber}</div>
@@ -194,6 +195,11 @@
             </div>
     </div>
     {/foreach}
+    {else /}
+    <span class="emptyInfos">11</span>
+    <div class="text-success" style="margin-top: 304px;text-align: center;"> <strong> <span class="mui-icon mui-icon-checkmarkempty"></span>暂无违章数据，请继续保持！</strong></div>
+        {/if}
+
     </span>
 
     <!--<div class="mui-card-footer">-->
@@ -274,6 +280,10 @@
                             $('.upTime').text(data.data.upTime);
                             layer.close(load);
                             $('.infos').html('').append(h)
+                        }
+                        else{  //mei有违章数据
+                            console.log($('.emptyInfos'))
+                            $('.emptyInfos').append('<div class="text-success" style="margin-top: 304px;text-align: center;"> <strong> <span class="mui-icon mui-icon-checkmarkempty"></span>暂无违章数据，请继续保持！</strong></div>')
                         }
 
                     }
