@@ -9,7 +9,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="stylesheet" href="{$config.upload.cdnurl}/jyzj.junyiqiche.com/mui/css/mui.css">
-<link rel="stylesheet" type="text/css" href="__CDN__/assets/layer_mobile/need/layer.css"/>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.90so.net/layui/2.4.5/css/layui.css"/>
+
 
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -59,7 +61,7 @@
 <!--</header>-->
 <nav class="mui-bar mui-bar-tab">
     <a class="mui-tab-item mui-active" href="#tabbar">
-        <span class="mui-icon mui-icon-search"> <span class="mui-badge">9</span></span>
+        <span class="mui-icon mui-icon-search"> <span class="mui-badge resCountBadge">{$count}</span></span>
         <span class="mui-tab-label">违章信息</span>
     </a>
     <a class="mui-tab-item " href="#payment">
@@ -83,13 +85,17 @@
     <div id="tabbar" class="mui-control-content mui-active">
         <div class="mui-card" style="margin: 0 0 10px 0;position: fixed;top: 0;z-index: 99999;;min-width: 100%">
             <div class="mui-card-header mui-card-media" style="background-color: #F2F2F2">
-                <img src="{$userinfo.headimgurl}"/>
+                <img src="{$userInfo.headimgurl}"/>
 
                 <!--<img src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/imgs/car2.png" />-->
                 <div class="mui-media-body">
-                    <strong>{$order_details.orderdetails.licensenumber}</strong>
+                    <strong>{$order_details.orderdetails.licensenumber}
+                        &nbsp;&nbsp;{$order_details.models_name}</strong>
                     <!--{$licensenumber}-->
-                    <p>{$order_details.models_name} &nbsp;vin :{$order_details.orderdetails.frame_number}</p>
+                    <p> 车架号 :{$order_details.orderdetails.frame_number}&nbsp;&nbsp; <span class="text-info"> 修改</span>
+                    </p>
+                    <p>发动机号：{$order_details.orderdetails.engine_number} &nbsp;&nbsp; <span class="text-info"> 修改</span>
+                    </p>
                 </div>
                 <!--<img class="mui-pull-left" src="../images/logo.png" width="34px" height="34px" />
                 <h2>小M</h2>
@@ -97,49 +103,69 @@
             </div>
 
             <ul class="mui-table-view mui-grid-view mui-grid-9">
-                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" style="padding:0 15px ">
 
                     <!--<span class="mui-icon mui-icon-home"></span>-->
                     <p class="">累计违章：</p>
-                    <p><span class="text-success "><strong>{$count}</strong></span> <span class=""
-                                                                                     style="color: #000">条</span></p>
+                    <p><span class="text-success "><strong class="resCout">{$count}</strong></span> <span class=""
+                                                                                                          style="color: #000">条</span>
+
+                    </p>
                 </li>
-                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" style="padding:0 15px ">
                     <!--<span class="mui-icon mui-icon-email"><span class="mui-badge">5</span></span>-->
                     <p class="">累计罚款：</p>
-                    <p><span class="text-success "><strong>{$order_details.orderdetails.total_fine}</strong></span> <span class=""
-                                                                                     style="color: #000">元</span></p>
+                    <p><span class="text-success "><strong class="resTotal_fine">{$order_details.orderdetails.total_fine}</strong></span>
+                        <span class=""
+                              style="color: #000">元</span></p>
 
 
                 </li>
-                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" style="padding:0 15px ">
 
                     <!--<span class="mui-icon mui-icon-chatbubble"></span>-->
                     <p class=" ">累计扣分：
                     <p/>
-                    <p><span class="text-success "><strong>{$order_details.orderdetails.total_deduction}</strong></span> <span class=""
-                                                                                     style="color: #000">分</span></p>
+                    <p><span class="text-success "><strong class="resTotal_deduction">{$order_details.orderdetails.total_deduction}</strong></span>
+                        <span class=""
+                              style="color: #000">分</span></p>
 
 
                 </li>
 
 
             </ul>
-    
-            <div class="" style=" text-align: center;vertical-align: middle;padding:10px 0 ;background-color: #F2F2F2;border-top: 1px solid #ddd; ">
 
-                <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty query_violation" style="font-size: 12px">
+            <div class=""
+                 style=" text-align: center;vertical-align: middle;padding:10px 0 ;background-color: #F2F2F2;border-top: 1px solid #ddd; ">
+   <span class="retsInfo">
+
+                </span>
+                {if condition="$userinfo.query_number eq 0 "}
+
+                <button type="button" class="mui-btn mui-btn-warning mui-icon mui-icon-refreshempty " id="rets"
+                        style="font-size: 12px">
+
+                    下周可再次更新
+                </button>
+                {else /}
+                <button type="button" class="mui-btn mui-btn-primary mui-icon mui-icon-refreshempty query_violation"
+                        style="font-size: 12px">
                     更新我的违章信息
                 </button>
-                <div style="display: inline-block;position: absolute;right: 6px;top: 136px;" class="rule"> <u class="text-info">规则说明 <span class="mui-icon mui-icon-arrowright" style="font-size: 14px"></span></u> </div>
-                <p style="margin-bottom: 0">最后一次更新时间 2019-4-7 15:23</p>
+                {/if}
+                <div style="display: inline-block;position: absolute;right: 6px;top: 136px;" class="rule"><u
+                        class="text-info">规则说明 <span class="mui-icon mui-icon-arrowright"
+                                                     style="font-size: 14px"></span></u></div>
+                <p style="margin-bottom: 0" class="upTime">上一次更新时间：{$query_time|default="从未更新"}</p>
             </div>
             <!--<img src="../images/yuantiao.jpg" alt="" width="100%"/>-->
         </div>
 
-    <span class="infos">
+
+        <span class="infos">
         {foreach $detail as $k => $v}
-        <div class="mui-card" {if $k eq 0}style="margin-top: 204px;"{else /}{/if}>
+        <div class="mui-card" {if $k eq 0} style="margin-top: 204px;" {else /}{/if}>
             <div class="mui-card-header">{$order_details.orderdetails.licensenumber}</div>
             <div class="mui-card-content">
                 <div class="mui-card-content-inner">
@@ -156,7 +182,7 @@
 
                 <div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：{$v.fen}分</div>
                 {if condition="$v.handled eq 1"}
-                <div class="" style="width: 33%;color: success">已处理</div>
+                <div class="" style="width: 33%;color:  ">已处理</div>
                 {elseif condition="$vo.handled eq 0"}
                 <div class="" style="width: 33%;color: red">未处理，未缴款</div>
                 {else /}
@@ -166,86 +192,105 @@
 
 
             </div>
-        </div>
-        {/foreach}
+    </div>
+    {/foreach}
     </span>
-        
-        <!--<div class="mui-card-footer">-->
-        <!--<a class="mui-card-link">Like</a>-->
-        <!--<a class="mui-card-link">Comment</a>-->
-        <!--<a class="mui-card-link">Read more</a>-->
-        <!--</div>-->
-    </div>
 
-    <div id="payment" class="mui-control-content ">
-        <div class="title">即将开放</div>
+    <!--<div class="mui-card-footer">-->
+    <!--<a class="mui-card-link">Like</a>-->
+    <!--<a class="mui-card-link">Comment</a>-->
+    <!--<a class="mui-card-link">Read more</a>-->
+    <!--</div>-->
+</div>
+
+<div id="payment" class="mui-control-content ">
+    <div class="title">即将开放</div>
 
 
-    </div>
-    <div id="tabbar-with-chat" class="mui-control-content ">
-        <div class="title">联系我们</div>
-        <img src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/imgs/051138456dc5e959b1b54f86598d5ca.jpg" alt="" width="100%">
-        <!--<ul class="mui-table-view mui-table-view-chevron">-->
-        <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 1</a></li>-->
-        <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 2</a></li>-->
+</div>
+<div id="tabbar-with-chat" class="mui-control-content ">
+    <div class="title">联系我们</div>
+    <img src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/imgs/051138456dc5e959b1b54f86598d5ca.jpg" alt="" width="100%">
+    <!--<ul class="mui-table-view mui-table-view-chevron">-->
+    <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 1</a></li>-->
+    <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 2</a></li>-->
 
-        <!--</ul>-->
+    <!--</ul>-->
 
-    </div>
+</div>
 </div>
 
 <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.js"></script>
-<script src="__CDN__/assets/layer_mobile/layer.js"></script>
+<script src="https://cdn.90so.net/layui/2.4.5/layui.js"></script>
 <script src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/mui/js/mui.min.js"></script>
 <script>
     var h = "<ol style='font-size: 12px'><li> 公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书</li><li> 每位司机每周可查询/更新一次违章</li></ol>"
-    $('.rule').on('click',function () {
+    $('.rule').on('click', function () {
 
-        mui.alert('sdf',h,'d');
+        mui.alert('提示', h, '知道了');
     })
 
 </script>
 </body>
 </html>
 <script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer
+            , form = layui.form;
 
-    $('.query_violation').on('click',function () {
-        // console.log("{$licensenumber}");
-        // return;
-        $.ajax({
-            url: 'selCarInfo',
-            success:function (data) {  
-               
-                console.log(data);
-                var h = '';
-                if (data.code == 1) {
-                    alert(data.msg);
-                    res = data.data;
-                    
-                    for(var i in res){
-                        var m ='';
-                        if(i==0){
-                            m = 'margin-top: 204px;';
-                        } 
-                      h += ' <div class="mui-card"   style=""><div class="mui-card-header">{$licensenumber}</div><div class="mui-card-content"><div class="mui-card-content-inner"><ul style="margin-bottom: 0;padding-left: 15px;"><li>违法时间：'+res[i]['date']+'</li><li>违法地点：'+res[i]['wzcity'] + res[i]['area'] +'</li><li>违法行为：'+res[i]['act']+'</li></ul></div></div><div class="mui-card-footer " style="text-align: center; "><div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：'+res[i]['money']+'元</div><div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：'+res[i]['fen']+'分</div><div class="" style="width: 33%;color: red">未处理，未缴款</div></div></div>	';
+
+        $('.query_violation').on('click', function () {
+            var load = layer.load(2);
+
+            $.ajax({
+                url: 'selCarInfo',
+                success: function (data) {
+                    console.log(data);
+                    var h = '';
+                    if (data.code == 1) {
+                        $('.infos').html('');
+                        layer.msg(data.msg);
+                        res = data.data.lists;
+                        if (res) {  //违章不为空
+                            for (var i in res) {
+                                var m = '';
+                                if (i == 0) {
+
+                                    m = 'margin-top: 204px;';
+                                }
+                                h += ' <div class="mui-card"   style="' + m + '"><div class="mui-card-header">{$licensenumber}</div><div class="mui-card-content"><div class="mui-card-content-inner"><ul style="margin-bottom: 0;padding-left: 15px;"><li>违法时间：' + res[i]['date'] + '</li><li>违法地点：' + res[i]['wzcity'] + res[i]['area'] + '</li><li>违法行为：' + res[i]['act'] + '</li></ul></div></div><div class="mui-card-footer " style="text-align: center; "><div class=" " style=" width: 33% ;border-right: 1px solid #ddd">罚款：' + res[i]['money'] + '元</div><div class="" style="width: 33%;border-right: 1px solid #ddd">扣分：' + res[i]['fen'] + '分</div><div class="" style="width: 33%;color: red">未处理，未缴款</div></div></div>	';
+
+
+                            }
+
+                            console.log($('#rets'));
+
+                            $('.query_violation').hide();
+                            $('.retsInfo').append('<button type="button" class="mui-btn mui-btn-warning mui-icon mui-icon-refreshempty " style="font-size: 12px">下周可再次更新</button>');
+
+                            $('.resCout,.resCountBadge').text(data.data.counts);
+                            $('.resTotal_fine').text(data.data.total_money);
+                            $('.resTotal_deduction').text(data.data.total_fraction);
+                            $('.upTime').text(data.data.upTime);
+                            layer.close(load);
+                            $('.infos').html('').append(h)
+                        }
+
                     }
-                    if(data.data){
-
-                        $('.infos').html('').append(h)
+                    else {
+                        layer.close(load);
+                        layer.alert(data.msg);
+                        return false;
 
                     }
-    
-                }
-                else {
-                    
-                    alert(data.msg);
-                    return;
-    
-                }
 
-            }
+                },
+                error: function () {
+                    layer.close(load);
+
+                }
+            })
+
         })
-
-    })
-
+    });
 </script>

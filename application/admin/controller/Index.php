@@ -50,6 +50,7 @@ class Index extends Backend
         return $this->view->fetch();
     }
 
+
     /**
      * 管理员登录
      */
