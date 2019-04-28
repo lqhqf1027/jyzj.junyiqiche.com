@@ -333,6 +333,83 @@ class My extends Base
 
     }
 
+    public function test()
+    {
+        header('Content-Type:application/json; charset=utf-8');
 
+//        $picturedata = fread(fopen('16k.pcm', "r"), filesize('16k.pcm'));
+
+        $access_token = posts('https://openapi.baidu.com/oauth/2.0/token', [
+            'grant_type' => 'client_credentials',
+            'client_id' => 'aGq0ysie2Kw6uFl2hifyRfHw',
+            'client_secret' => '6AVnZ6HoSNnCXWfgbLwA0pvuAwoPN13T'
+        ]);
+//$this->success($this->StrToBin('asdasdsxcvxvxc'));
+//        $picturedata =  $this->StrToBin(file_get_contents('16k.pcm'));
+//        if($access_token['code']==1){
+        $access_token = $access_token['access_token'];
+
+        $data = array(
+            'format' => 'pcm',
+            'rate' => 16000,
+            'channel' => 1,
+            'cuid' => '70-85-C2-83-80-09',
+            'token' => $access_token,
+            'dev_pid' => 80001,
+            'speech' => base64_encode('16k.pcm'),
+            "len" => filesize('16k.pcm'),
+        );
+
+        $a = json_encode($data);
+
+        $b = $data;
+        $this->success(posts('https://vop.baidu.com/pro_api', $a));
+//        }
+//
+//        $this->success($access_token);
+    }
+
+    public function StrToBin($str)
+    {
+        //1.列出每个字符
+        $arr = preg_split('/(?<!^)(?!$)/u', $str);
+        //2.unpack字符
+        foreach ($arr as &$v) {
+            $temp = unpack('H*', $v);
+            $temp = $this->str_split_unicode($temp[1], 50);
+
+            $str = '';
+            foreach ($temp as $key => $value) {
+                $str .= base_convert($value, 16, 2);
+            }
+            $v = $str;
+            unset($temp);
+        }
+
+        return join(' ', $arr);
+    }
+
+    public function str_split_unicode($str, $l = 0)
+    {
+
+        if ($l-- > 0) {
+
+            $ret = array();
+
+            $len = mb_strlen($str, "UTF-8");
+
+            for ($i = 0; $i < $len; $i += $l) {
+
+                $ret[] = mb_substr($str, $i, $l, "UTF-8");
+
+            }
+
+            return $ret;
+
+        }
+
+        return preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
+
+    }
 }
 
