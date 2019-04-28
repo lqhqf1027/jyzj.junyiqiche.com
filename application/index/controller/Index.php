@@ -350,7 +350,7 @@ class Index extends Frontend
                         'total_fraction' => $total_fraction,
                         'total_money' => $total_money,
                         'counts' => count($data['result']['lists']),
-                        'upTime' => date('Y-m-d H:i:s', time())]
+                        'upTime' => '上一次更新时间：'.date('Y-m-d H:i:s', time())]
 
             );
 
