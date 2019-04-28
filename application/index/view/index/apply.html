@@ -92,9 +92,9 @@
                     <strong>{$order_details.orderdetails.licensenumber}
                         &nbsp;&nbsp;{$order_details.models_name}</strong>
                     <!--{$licensenumber}-->
-                    <p> 车架号 :{$order_details.orderdetails.frame_number}&nbsp;&nbsp; <span class="text-info"> 修改</span>
+                    <p > 车架号 :<span class="frame">{$order_details.orderdetails.frame_number}</span>&nbsp;&nbsp; <span class="text-info frame_number"> 修改</span>
                     </p>
-                    <p>发动机号：{$order_details.orderdetails.engine_number} &nbsp;&nbsp; <span class="text-info"> 修改</span>
+                    <p >发动机号：<span class="engine">{$order_details.orderdetails.engine_number}</span> &nbsp;&nbsp; <span class="text-info engine_number"> 修改</span>
                     </p>
                 </div>
                 <!--<img class="mui-pull-left" src="../images/logo.png" width="34px" height="34px" />
@@ -290,6 +290,43 @@
 
                 }
             })
+
+        })
+        //修改车架号
+        $('.frame_number').on('click', function () {
+            var frame_number = $('.frame').text();
+            var id = {$id};
+            layer.prompt({title: '修改车架号，并确认', formType: 0, value: frame_number}, function(frame_number, index){
+                $.post('frame_number',{id: id, frame_number: frame_number},function(data){
+                    layer.close(index);
+                    console.log(data);
+                    layer.msg(data.msg);
+                    if(data.code == 1) {
+                        $('.frame').text(frame_number);
+                    }
+                })
+                 
+            
+            });
+
+        })
+
+        //修改发动机号
+        $('.engine_number').on('click', function () {
+            var engine_number = $('.engine').text();
+            var id = {$id};
+            layer.prompt({title: '修改发动机号，并确认', formType: 0, value: engine_number}, function(engine_number, index){
+
+                $.post('engine_number',{id: id, engine_number: engine_number},function(data){
+                    layer.close(index);
+                    console.log(data);
+                    layer.msg(data.msg);
+                    if(data.code == 1) {
+                        $('.engine').text(engine_number);
+                    }
+                })
+    
+            });
 
         })
     });

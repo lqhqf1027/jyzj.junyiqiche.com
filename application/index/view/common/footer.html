@@ -114,7 +114,7 @@
             }, function (res) {
                 if (res.code == 1) {
                     layer.msg(res.msg);
-                    parent.location.reload();
+                    window.location.href="{:url('index')}";
                 }
                 else  layer.msg(res.msg);
 
