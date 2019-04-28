@@ -4,6 +4,7 @@ namespace app\wechat\controller;
 
 use app\admin\model\WxPublicUser;
 use fast\Http;
+use think\Cache;
 use think\request;
 use think\Controller;
 use think\Loader;
@@ -61,7 +62,7 @@ class Wechat extends Controller
         $user_data = $user_data ? $user_data->getData() : '';
         unset($userInfo['privilege']);
         if (empty($user_data)) {
-
+            Cache::rm('Token');
             $token = $this->Wxapis->getWxtoken()['access_token'];
             $r = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid=" . $userInfo['openid']);
             if (!$r['subscribe']) {

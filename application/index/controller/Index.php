@@ -25,77 +25,88 @@ class Index extends Frontend
     public function _initialize()
     {
         parent::_initialize();
-       $memberId = Session::get('MEMBER')['id'];
+        $memberId = Session::get('MEMBER')['id'];
 
-       //判断是否扫码进入；
-       $order_id = Request::instance()->param('order_id') ;
-       if ($order_id) {
-           
-           $s = self::isApplyDriver($order_id);
+        //判断是否扫码进入；
+        $order_id = Request::instance()->param('order_id');
+        if ($order_id) {
 
-           if ($s['wx_public_user_id'] && $s['wx_public_user_id'] !== $memberId) die('<h1 style="margin-top: 20%;color: red;"><center> 该车辆已被 ' . $s['username'] . ' 授权</center></h1>');
+            $s = self::isApplyDriver($order_id);
 
-           return Order::update(['id' => $order_id, 'wx_public_user_id' => $memberId]) && WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => 1]) ? alert('认证成功!！','','https://jyzj.junyiqiche.com/index') : die('<h1 style="margin-top: 20%;color: red;"><center> 认证失败</center></h1>');
+            if ($s['wx_public_user_id'] && $s['wx_public_user_id'] !== $memberId) die('<h1 style="margin-top: 20%;color: red;"><center> 该车辆已被 ' . $s['username'] . ' 授权</center></h1>');
 
-       }
+            return Order::update(['id' => $order_id, 'wx_public_user_id' => $memberId]) && WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => 1]) ? alert('认证成功!！', '', 'https://jyzj.junyiqiche.com/index') : die('<h1 style="margin-top: 20%;color: red;"><center> 认证失败</center></h1>');
 
-       $licensenumber = OrderDetails::get(['order_id' => Order::get(['wx_public_user_id' => $memberId])->id])->licensenumber;
-       $this->view->assign(['userInfo' => Session::get('MEMBER'), 'licensenumber' => $licensenumber]);
+        }
+
+        $licensenumber = OrderDetails::get(['order_id' => Order::get(['wx_public_user_id' => $memberId])->id])->licensenumber;
+        $this->view->assign(['userInfo' => Session::get('MEMBER'), 'licensenumber' => $licensenumber]);
 
     }
 
 
     public function index()
     {
+//        pr($this->resetQuery_number());
+
         $uid = Session::get('MEMBER');
-
-        $userinfo = Db::name('wx_public_user')->where('openid', $uid['openid'])->find();
-
+        $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();
+//        pr($userinfo);die;
+//最后一次查询时间是否在本周内,新用户
         if ($userinfo['query_time']) {
-            $query_time = date('Y-m-d H:i:s', $userinfo['query_time']);
-        }
-        else {
-            $query_time = '暂无';
-        }
 
-        $day_7 = intval($userinfo['query_time']) + intval((7 * 86400));
+            if (WxPublicUser::get($uid['id'], function ($q) {
+                $q->whereTime(['query_time' => 'w']);
+            })->getData()) $userinfo['query_number'] = 0;
+        } //如果没有在本周内,更新query_number 为1
+        else $userinfo['query_number'] = 1;
 
-        //判断首先时间字段都不为空
-        if (!empty($userinfo['query_time'])) {
-            //计算第一次时间加上7天 
-            //如果登录进来当前时间大于数据表里的时间
-            if (time() > $day_7) {
-                //重置次数
-                Db::name('wx_public_user')->where('openid', $uid['openid'])->setField('query_number', 1);
-            } else {
-
-            }
-            //扔出7天后的时间
-
-        }
-
-        //违章信息
         $this->model = new \app\admin\model\Order();
-        $order_details = $this->model->where(['wx_public_user_id' => $uid['id']])->field('username,phone,wx_public_user_id,models_name')
+        $order_details = collection($this->model->where(['wx_public_user_id' => $uid['id']])->field('username,phone,wx_public_user_id,models_name')
             ->with(['orderdetails' => function ($q) {
-                $q->withField('licensenumber,frame_number,total_deduction,total_fine,violation_details');
-            }])->find();
-
-        $detail = json_decode($order_details['orderdetails']['violation_details'], true);
-        foreach ($detail as $k => $v) {
-            $count = $k + 1;
+                $q->withField('licensenumber,frame_number,total_deduction,total_fine,violation_details,engine_number');
+            }])->select())->toArray();
+        foreach ($order_details as $value) {
+            $order_details = $value;
         }
-        //用户头像,用户的查询次数
-        $this->assign([
-            'userinfo' => $uid,
+
+        $detail = '';
+        if ($order_details) {
+            $detail = json_decode($order_details['orderdetails']['violation_details'], true);
+            foreach ((array)$detail as $k => $v) {
+                $count = $k + 1;
+            }
+        }
+
+//        pr($detail);die;
+//        pr($userinfo);die;
+
+//用户头像,用户的查询次数
+        $this->view->assign([
             'order_details' => $order_details,
             'detail' => $detail,
-            'query_time' => $query_time,
-            'count' => $count
+            'query_time' => $userinfo['query_time'],
+            'count' => $count,
+            'userinfo' => $userinfo
         ]);
 
-
         return Order::get(['wx_public_user_id' => $uid['id']]) ? $this->view->fetch('apply') : $this->view->fetch();
+
+    }
+
+    /**
+     * 定时任务，每周日23：59 全部重置可查询,违章
+     */
+    public function resetQuery_number()
+    {
+        $m = new WxPublicUser();
+        $res = $m->all();
+        $list = [];
+        foreach ($res as $row) {
+            array_push($list, ['id' => $row->id, 'query_number' => 1]);
+        }
+        return $m->saveAll($list) ? true : false;
+//        return $list
 
     }
 
@@ -156,19 +167,19 @@ class Index extends Frontend
 
         if ($this->request->isAjax()) {
 
-                $params = $this->request->post('');
+            $params = $this->request->post('');
 
-                Db::startTrans();
-                try {
-                    if (self::isApplyDriver($params['order_id'])['wx_public_user_id']) throw new Exception('该车型已被认证过');
-                    WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => $params['is_apply']]);
-                    Order::update(['id' => $params['order_id'], 'wx_public_user_id' => Session::get('MEMBER')['id']]);
-                    Db::commit();
-                } catch (Exception $e) {
-                    Db::rollback();
-                    $this->error($e->getMessage(), '', '');
-                }
-                $this->success('认证成功', '', '');
+            Db::startTrans();
+            try {
+                if (self::isApplyDriver($params['order_id'])['wx_public_user_id']) throw new Exception('该车型已被认证过');
+                WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => $params['is_apply']]);
+                Order::update(['id' => $params['order_id'], 'wx_public_user_id' => Session::get('MEMBER')['id']]);
+                Db::commit();
+            } catch (Exception $e) {
+                Db::rollback();
+                $this->error($e->getMessage(), '', '');
+            }
+            $this->success('认证成功', '', '');
 
 
             $this->error('非法请求', '', '');
@@ -264,87 +275,20 @@ class Index extends Frontend
     }
 
 
-    // public function ocrView()
-    // {
-
-    //     if (request()->isPost()) {
-    //         $uid = Session::get('MEMBER');
-
-    //         $userinfo = Db::name('wx_public_user')->where('openid', $uid['openid'])->find();
-
-    //         //判断查询次数是否为0
-    //         if ($userinfo['query_number'] == 0) {
-    //             return json(array('state' => 4, 'errmsg' => '当前可查询次数为0,请于' . date('Y-m-d H:i:s', intval($userinfo['query_time']) + intval((7 * 86400))) . '后再查询', 'data' => ''));
-
-    //         }
-    //         // 获取表单上传文件 例如上传了001.jpg
-    //         $file = request()->file('file');
-    //         // 移动到框架应用根目录/public/uploads/ 目录下
-    //         $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads');
-    //         if ($info) {
-    //             // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
-    //             $path = $info->getSaveName();
-    //             // 成功上传后 返回上传信息
-    //             // return json(array('info'=>'https://apply.aicheyide.com/uploads'.DS.$path));
-    //             $data = array(
-    //                 'api_key' => '6YWpf8Xx8g1Ll2F5w8bNOpNkmOby1Sdh',
-    //                 'api_secret' => 'BV_r5bgSN3DY9SELbKpmVUZ52hI-GCPp',
-    //                 'image_url' => 'https://driver.junyiqiche.com' . DS . 'uploads' . DS . $path
-    //             );
-    //             // return  $res->driving('https://apply.aicheyide.com' .DS. 'uploads'.DS.$path);
-    //             //旷视ocr接口，提取行驶证信息
-    //             $res = self::curl_post_contents("https://api-cn.faceplusplus.com/cardpp/v1/ocrvehiclelicense", $data);
-    //             if (empty(json_decode($res, true)['cards'])) {
-    //                 return json(array('state' => 1, 'errmsg' => '请上传合法清晰的行驶证 “正页” 图片', 'data' => ''));
-    //             } else {
-    //                 //判断车牌是否是公司的车
-    //                 $res_plate_no = Db::name('order_details')->where('licensenumber', json_decode($res, true)['cards'][0]['plate_no'])->find();
-    //                 if (empty($res_plate_no)) {
-    //                     //如果是空的，那么就不是公司的车辆
-    //                     return json(array('state' => 3, 'errmsg' => '该车辆为非君忆公司车辆！如有疑问请联系管理员@包', 'data' => ''));
-
-    //                 } else {
-    //                     return json(array('state' => 2, 'errmsg' => '识别成功', 'data' => json_decode($res, true)['cards']));
-
-    //                 }
-
-
-    //             }
-
-    //             // return posts("https://api-cn.faceplusplus.com/cardpp/v1/ocrvehiclelicense",$data);
-    //             // return json(array('info'=>upload(makePostData(ROOT_PATH . 'public' . DS . 'uploads'.DS.$path, 'image/jpeg'))));
-    //         } else {
-    //             // 上传失败返回错误信息
-    //             return json(array('state' => 0, 'errmsg' => '上传失败'));
-    //         }
-    //     }
-
-
-    // }
-
     //查询违章
     public function selCarInfo()
     {
-        $uid = Session::get('MEMBER');
-        
-        $userinfo = Db::name('wx_public_user')->where('openid', $uid['openid'])->find();
 
+        $uid = Session::get('MEMBER');
+
+
+        $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();
+        if ($userinfo['query_number'] == 0) $this->error('请于下周再来更新！');
         $this->model = new \app\admin\model\Order();
         $order_details = $this->model->where(['wx_public_user_id' => $uid['id']])->field('username,phone,wx_public_user_id,models_name')
             ->with(['orderdetails' => function ($q) {
                 $q->withField('licensenumber,frame_number,engine_number,total_deduction,total_fine,violation_details');
             }])->find();
-
-        //判断查询次数是否为0
-        if ($userinfo['query_number'] == 0) {
-            $this->error('当前可查询次数为0,请于' . date('Y-m-d H:i:s', intval($userinfo['query_time']) + intval((7 * 86400))) . '后再查询');
-            // return json(array('error_code' => 4, 'reason' => '当前可查询次数为0,请于' . date('Y-m-d H:i:s', intval($userinfo['query_time']) + intval((7 * 86400))) . '后再查询', 'result' => ''));
-
-        }
-
-        $this->selQueryNumber();
-
-
         $plate_no = array(
             'key' => '217fb8552303cb6074f88dbbb5329be7',
             'hphm' => urlencode(mb_substr($order_details['orderdetails']['licensenumber'], 0, 2, "UTF-8"))
@@ -365,61 +309,56 @@ class Index extends Frontend
             $carno = $order_details['orderdetails']['licensenumber']; //车牌号，必传
             $engineno = $order_details['orderdetails']['engine_number']; //发动机号，需要的城市必传
             $classno = $order_details['orderdetails']['frame_number']; //车架号，需要的城市必传
-                        
-            if(strlen($carno)==9){
-                $data = gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7"); 
-                // pr($data);
-                // die;
-                if ($data['resultcode'] == 200)  $this->success($data['reason'],'',$data['result']['lists']);
-                else $this->error($data['reason']);
+            $s = strlen($carno) == 9 ? '' : '&hpzl=52';
+            $data = gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}{$s}&&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7");
 
-                                
-            }
-            else{
-                $data = gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}&hpzl=52&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7"); 
- 
-                if ($data['resultcode'] == 200)  $this->success($data['reason'],'',$data['result']['lists']);
-                else $this->error($data['reason']);
-            }
+            if ($data['resultcode'] == 200) {
+                $total_fraction = 0;     //总扣分
+                $total_money = 0;        //总罚款
+                $flag = -1;
 
+                Db::startTrans();
+                try {
+                    $lists = [];
+                    if ($data['result']['lists']) {
+                        foreach ($data['result']['lists'] as $k => $v) {
+                            if ($v['handled'] == 0) {
+                                $flag = -2;
+                            } else if ($v['handled'] == 1) {
+                                continue;
+                            }
+                            if ($v['fen']) $total_fraction += floatval($v['fen']);
+                            if ($v['money']) $total_money += floatval($v['money']); //总罚款
+                            array_push($lists, $v);
+                        }
+                    }
 
-        } else {
-            return $car_city_name;
+                    WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
+                    $id = collection(Order::field('id,wx_public_user_id')->with(['orderdetails' => function ($q) {
+                        $q->withField('id,order_id');
+                    }])->where(['wx_public_user_id' => $uid['id']])->select())->toArray()[0];
+
+                    OrderDetails::update(['id' => $id['orderdetails']['id'], 'violation_details' => $lists ? json($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money]);
+                    Db::commit();
+                } catch (Exception $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                }
+                $this->success($data['reason'], '',
+                    [
+                        'lists' => $data['result']['lists'],
+                        'total_fraction' => $total_fraction,
+                        'total_money' => $total_money,
+                        'counts' => count($data['result']['lists']),
+                        'upTime' => '上一次更新时间：'.date('Y-m-d H:i:s', time())]
+
+            );
+
+            } else $this->error($data['reason']);
+
+            $this->error('暂不支持此车型');
         }
-
-    }
-
-    //判断查询时间
-    public function selQueryNumber()
-    {
-
-        $uid = Session::get('MEMBER');
-
-        $userinfo = Db::name('wx_public_user')->where('openid', $uid['openid'])->find();
-        //判断首先时间字段为空的情况下，代表新用户第一次查询，新增时间,次数变为1
-        //  if(empty($userinfo['query_time'])){
-        //     Db::name('wx_public_user')->where('openid',session('MEMBER')['openid'])->update(['query_time'=>time(),'query_number'=>1]); 
-
-
-        // } 
-        //计算第一次时间加上7天
-        $day_7 = intval($userinfo['query_time']) + intval((7 * 86400));
-        //如果当前的时间小于第一次设置的时间+7天并且次数小于2，证明是在有效7天内进行第二次查询，次数变为0
-        if (time() < $day_7) {
-            Db::name('wx_public_user')->where('openid', $uid['openid'])->setDec('query_number');
-        }
-        if (time() > $day_7) {
-
-            if ($userinfo['query_number'] == 1) {
-                Db::name('wx_public_user')->where('openid', $uid['openid'])->setField('query_time', time());
-            }
-            Db::name('wx_public_user')->where('openid', $uid['openid'])->setDec('query_number');
-
-        } else {
-
-            //查询
-            return json(array('error_code' => 3, 'result' => '', 'reason' => '请于' . date('Y-m-d H:i:s', $day_7) . '后再试'));
-        }
+        $this->error($car_city_name['reason']);
     }
 
     /**
