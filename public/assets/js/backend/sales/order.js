@@ -149,6 +149,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
 
                                     },
                                     /**
+                                     * 等待车管审批
+                                     */
+                                    {
+                                        name: '',
+                                        text: '等待车管审批',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('等待车管审批'),
+                                        icon: 'fa fa-spinner',
+                                        classname: 'btn btn-xs btn-danger',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
+
+                                    },
+                                    /**
                                      * 已提车
                                      */
                                     {
@@ -309,6 +324,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                             return row.lift_car_status == 'no' ? true : false;
                                         }
                                        
+                                    },
+                                    /**
+                                     * 等待车管审批
+                                     */
+                                    {
+                                        name: '',
+                                        text: '等待车管审批',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('等待车管审批'),
+                                        icon: 'fa fa-spinner', 
+                                        classname: 'btn btn-xs btn-danger',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
+
                                     },
                                     /**
                                      * 已提车
@@ -624,6 +654,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                        
                                     },
                                     /**
+                                     * 等待车管审批
+                                     */
+                                    {
+                                        name: '',
+                                        text: '等待车管审批',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('等待车管审批'),
+                                        icon: 'fa fa-spinner', 
+                                        classname: 'btn btn-xs btn-danger',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
+
+                                    },
+                                    /**
                                      * 已提车
                                      */
                                     {
@@ -786,6 +831,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                                             return row.lift_car_status == 'no' ? true : false;
                                         }
                                        
+                                    },
+                                    /**
+                                     * 等待车管审批
+                                     */
+                                    {
+                                        name: '',
+                                        text: '等待车管审批',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('等待车管审批'),
+                                        icon: 'fa fa-spinner', 
+                                        classname: 'btn btn-xs btn-danger',
+                                        visible: function (row) {
+                                            return row.lift_car_status == 'no' ? true : false;
+                                        }
+
                                     },
                                     /**
                                      * 已提车

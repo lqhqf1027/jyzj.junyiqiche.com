@@ -85,7 +85,7 @@ class Index extends Frontend
         $this->view->assign([
             'order_details' => $order_details,
             'detail' => $detail,
-            'query_time' => $userinfo['query_time'] ? $userinfo['query_time'] : '从未更新',
+            'query_time' => $userinfo['query_time'] ? date('Y-m-d H:i:s', $userinfo['query_time']) : '从未更新',
             'count' => $count,
             'userinfo' => $userinfo,
             'id' => $order_details['orderdetails']['id']
@@ -360,8 +360,9 @@ class Index extends Frontend
                             $is_it_illegal = 'no_violation';
                         }
 
-                      
-                        WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
+                        if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
+                            WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
+                        }
                   
                         // $id = collection(Order::field('id,wx_public_user_id')->with(['orderdetails' => function ($q) {
                         //     $q->withField('id,order_id');

@@ -172,17 +172,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-xs-12 col-sm-2">{:__('Nperlist')}:</label>
+                                <label class="control-label col-xs-12 col-sm-2">{:__('期数')}:</label>
                                 <div class="col-xs-12 col-sm-8">
-
-                                    <select id="c-nperlist" class="form-control selectpicker" name="row[nperlist]"
+                                    <input id="c-nperlist" class="form-control" step="0.01" name="row[nperlist]"
+                                           value="{$row.nperlist}" disabled
+                                           type="number" data-rule="required">
+                                    <!-- <select id="c-nperlist" class="form-control selectpicker" name="row[nperlist]"
                                             disabled>
                                         {foreach name="nperlistList" item="vo"}
                                         <option value="{$key}" {in name="key" value="$row.nperlist" }selected{
                                         /in}>{$vo}</option>
 
                                         {/foreach}
-                                    </select>
+                                    </select> -->
 
                                 </div>
                             </div>
