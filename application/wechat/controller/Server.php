@@ -1,6 +1,9 @@
 <?php
+
 namespace app\wechat\controller;
-use EasyWeChat\Factory;
+
+
+use EasyWeChat\Foundation\Application;
 
 /**
  * Created by PhpStorm.
@@ -8,7 +11,6 @@ use EasyWeChat\Factory;
  * Date: 2019/4/29
  * Time: 17:56
  */
-
 class Server
 {
     protected $config = [
@@ -20,13 +22,14 @@ class Server
 
     public function check()
     {
-        $app =  Factory::officialAccount($this->config);
+        $app = new Application($this->config);
 //        $app = \EasyWeChat\Factory::officialAccount($this->config);
 //
         $response = $app->server->serve();
 //
 //// 将响应输出
-        $response->send();exit;
+        $response->send();
+        exit;
 //        exit; // Laravel 里请使用：return $response;
         echo 1;
     }
