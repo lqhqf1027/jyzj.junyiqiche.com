@@ -205,17 +205,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             events: Controller.api.events.operate,
                             formatter: Table.api.formatter.operate,
                             buttons: [
-                                {
-                                    name: 'view_information',
-                                    icon: 'fa fa-eye',
-                                    title: __('查看提车资料'),
-                                    text: '查看提车资料',
-                                    extend: 'data-toggle="tooltip"',
-                                    classname: 'btn btn-xs btn-primary btn-view_information',
-                                    visible: function (row) {
-                                        return row.lift_car_status == 'no' ? true : false;
-                                    }
-                                },
+                                // {
+                                //     name: 'view_information',
+                                //     icon: 'fa fa-eye',
+                                //     title: __('查看提车资料'),
+                                //     text: '查看提车资料',
+                                //     extend: 'data-toggle="tooltip"',
+                                //     classname: 'btn btn-xs btn-primary btn-view_information',
+                                //     visible: function (row) {
+                                //         return row.lift_car_status == 'no' ? true : false;
+                                //     }
+                                // },
                                 {
                                     name: 'edits',
                                     icon: 'fa fa-pencil',

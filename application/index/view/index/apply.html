@@ -308,9 +308,9 @@
 
         $('.query_violation').on('click', function () {
             var load = layer.load(2);
-
+            var ajaxurl = '{:url("index/selCarInfo")}';
             $.ajax({
-                url: 'selCarInfo',
+                url: ajaxurl,
                 success: function (data) {
                     console.log(data);
                     var h = '';
@@ -368,10 +368,11 @@
         $('.frame_number').on('click', function () {
             var frame_number_text = $('.frame').text();
             var id = {$id};
+            var ajaxurl = '{:url("index/frame_number")}';
             layer.prompt({title: '修改车架号，并确认', formType: 0, value: frame_number_text}, function(frame_number, index){
 
                 if($.trim(frame_number_text)==$.trim(frame_number)) {layer.msg('未修改任何项！');return false;};
-                $.post('frame_number',{id: id, frame_number: frame_number},function(data){
+                $.post(ajaxurl,{id: id, frame_number: frame_number},function(data){
                     layer.close(index);
                     console.log(data);
                     layer.msg(data.msg);
@@ -389,9 +390,10 @@
         $('.engine_number').on('click', function () {
             var engine_number_text = $('.engine').text();
             var id = {$id};
+            var ajaxurl = '{:url("index/engine_number")}';
             layer.prompt({title: '修改发动机号，并确认', formType: 0, value: engine_number_text}, function(engine_number, index){
                 if($.trim(engine_number_text)==$.trim(engine_number)) {layer.msg('未修改任何项！');return false;};
-                $.post('engine_number',{id: id, engine_number: engine_number},function(data){
+                $.post(ajaxurl,{id: id, engine_number: engine_number},function(data){
                     layer.close(index);
                     console.log(data);
                     layer.msg(data.msg);
