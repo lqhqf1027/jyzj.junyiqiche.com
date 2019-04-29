@@ -1,4 +1,3 @@
-
 </div>
 <!--===============================================================================================-->
 <script src="__CDN__/assets/Login_v6/vendor/jquery/jquery-3.2.1.min.js"></script>
@@ -72,7 +71,6 @@
     }
 
 
-
     layui.use(['form', 'element'], function () {
 
         var form = layui.form
@@ -108,15 +106,21 @@
             return false;
         })
         $('.formDemo2').on('click', function () {
+            var load = layer.load(2);
             $.post("{:url('index/applyDriverInfo')}", {
                 order_id: $('input[type="hidden"]').val(),
                 is_apply: 1
             }, function (res) {
                 if (res.code == 1) {
+                    layer.close(load);
                     layer.msg(res.msg);
-                    window.location.href="{:url('index')}";
+                    window.location.href = "{:url('index')}";
                 }
-                else  layer.msg(res.msg);
+                else {
+                    layer.msg(res.msg);
+                    layer.close(load);
+                }
+                ;
 
             })
             return false;
