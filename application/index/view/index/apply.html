@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="stylesheet" href="{$config.upload.cdnurl}/jyzj.junyiqiche.com/mui/css/mui.css">
+<!--<link rel="stylesheet" href="{$config.upload.cdnurl}/jyzj.junyiqiche.com/mui/css/icons-extra.css">-->
 
 <link rel="stylesheet" type="text/css" href="https://cdn.90so.net/layui/2.4.5/css/layui.css"/>
 
@@ -61,15 +62,15 @@
 <!--</header>-->
 <nav class="mui-bar mui-bar-tab">
     <a class="mui-tab-item mui-active" href="#tabbar">
-        <span class="mui-icon mui-icon-search"> <span class="mui-badge resCountBadge">{if $count}{$count} {else /}0{/if}</span></span>
+        <span class="mui-icon mui-icon-map"> <span class="mui-badge resCountBadge">{if $count}{$count} {else /}0{/if}</span></span>
         <span class="mui-tab-label">违章信息</span>
     </a>
     <a class="mui-tab-item " href="#payment">
-        <span class="mui-icon mui-icon-email"> </span>
+        <span class="mui-icon mui-icon-list"> </span>
         <span class="mui-tab-label">还款中心</span>
     </a>
     <a class="mui-tab-item " href="#tabbar-with-chat">
-        <span class="mui-icon mui-icon-email"></span>
+        <span class="mui-icon mui-icon-navigate"></span>
         <span class="mui-tab-label">联系我们</span>
     </a>
     <!--<a class="mui-tab-item" href="#tabbar-with-contact">-->
@@ -215,7 +216,6 @@
 
 </div>
 <div id="tabbar-with-chat" class="mui-control-content ">
-    <div class="title">联系我们</div>
     <img src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/imgs/051138456dc5e959b1b54f86598d5ca.jpg" alt="" width="100%">
     <!--<ul class="mui-table-view mui-table-view-chevron">-->
     <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 1</a></li>-->
@@ -229,17 +229,78 @@
 <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.js"></script>
 <script src="https://cdn.90so.net/layui/2.4.5/layui.js"></script>
 <script src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/mui/js/mui.min.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
+
+</body>
+</html>
 <script>
-    var h = "<ol style='font-size: 12px'><li> 公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书</li><li> 每位司机每周可查询/更新一次违章</li></ol>"
+    var h = "<ul style='font-size: 12px'><li> 公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书</li><li> 每位司机每周可查询/更新一次违章</li></ul>"
     $('.rule').on('click', function () {
 
         mui.alert('提示', h, '知道了');
     })
+    window.onload = function () {
 
-</script>
-</body>
-</html>
-<script>
+        var ajaxurl = '{:url("index/sharedata")}';
+        var urll = location.href.split('#')[0];
+        $.ajax({
+            url: ajaxurl,
+            type: "post",
+            data: {urll: urll},
+            dataType: "json",
+            success: function (s) {
+                f = $.parseJSON(s);
+                console.log(f.url + '22222222222222222222222222222222');
+
+                wx.config({
+                    debug: false, //分享成功后可以关闭 false
+                    appId: f.appid,
+                    timestamp: f.timestamp,
+                    nonceStr: f.nonceStr,
+                    signature: f.signature,
+                    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+                });
+                wx.ready(function () {
+                    /*   wx.checkJsApi({
+                           jsApiList: [
+                               'getNetworkType',
+                               'previewImage'
+                           ],
+                           success: function (res) {
+                               // alert("checkJsApi=="+ JSON.stringify(res));
+                           }
+                       });*/
+                    wx.onMenuShareTimeline({
+                        title: '{$share_title}', // 分享标题
+                        link: 'http://jyzj.junyiqiche.com/index', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        imgUrl: "{$share_img}", // 分享图标 使用绝对路径
+                        success: function () {
+
+                        }
+                    });
+                    wx.onMenuShareAppMessage({
+                        title: '{$share_title}',
+                        desc: "{$share_body}", // 分享描述
+                        link: 'http://jyzj.junyiqiche.com/index', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        imgUrl: "{$share_img}", // 分享图标 使用绝对路径
+                        type: '', // 分享类型,music、video或link，不填默认为link
+                        dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                        success: function () {
+
+                        }
+                    });
+                });
+
+            },
+            error: function () {
+                console.log("通信失败");
+            }
+        })
+    }
+
+
+
+
     layui.use(['layer', 'form'], function () {
         var layer = layui.layer
             , form = layui.form;
@@ -282,7 +343,7 @@
                             $('.infos').html('').append(h)
                         }
                         else{  //mei有违章数据
-                            console.log($('.emptyInfos'))
+
                             $('.emptyInfos').append('<div class="text-success" style="margin-top: 304px;text-align: center;"> <strong> <span class="mui-icon mui-icon-checkmarkempty"></span>暂无违章数据，请继续保持！</strong></div>')
                         }
 
@@ -304,9 +365,11 @@
         })
         //修改车架号
         $('.frame_number').on('click', function () {
-            var frame_number = $('.frame').text();
+            var frame_number_text = $('.frame').text();
             var id = {$id};
-            layer.prompt({title: '修改车架号，并确认', formType: 0, value: frame_number}, function(frame_number, index){
+            layer.prompt({title: '修改车架号，并确认', formType: 0, value: frame_number_text}, function(frame_number, index){
+
+                if($.trim(frame_number_text)==$.trim(frame_number)) {layer.msg('未修改任何项！');return false;};
                 $.post('frame_number',{id: id, frame_number: frame_number},function(data){
                     layer.close(index);
                     console.log(data);
@@ -323,10 +386,10 @@
 
         //修改发动机号
         $('.engine_number').on('click', function () {
-            var engine_number = $('.engine').text();
+            var engine_number_text = $('.engine').text();
             var id = {$id};
-            layer.prompt({title: '修改发动机号，并确认', formType: 0, value: engine_number}, function(engine_number, index){
-
+            layer.prompt({title: '修改发动机号，并确认', formType: 0, value: engine_number_text}, function(engine_number, index){
+                if($.trim(engine_number_text)==$.trim(engine_number)) {layer.msg('未修改任何项！');return false;};
                 $.post('engine_number',{id: id, engine_number: engine_number},function(data){
                     layer.close(index);
                     console.log(data);
