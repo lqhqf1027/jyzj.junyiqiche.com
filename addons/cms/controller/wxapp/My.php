@@ -335,7 +335,7 @@ class My extends Base
 
     public function test()
     {
-        header('Content-Type:application/json; charset=utf-8');
+        header('Content-Type:application/json;charset=utf-8');
 
 //        $picturedata = fread(fopen('16k.pcm', "r"), filesize('16k.pcm'));
 
@@ -356,7 +356,7 @@ class My extends Base
             'cuid' => '70-85-C2-83-80-09',
             'token' => $access_token,
             'dev_pid' => 80001,
-            'speech' => base64_encode('16k.pcm'),
+            'speech' => base64_encode(file_get_contents('16k.pcm')),
             "len" => filesize('16k.pcm'),
         );
 
