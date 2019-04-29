@@ -13,10 +13,9 @@ use Mockery as m;
 use Overtrue\Socialite\AccessTokenInterface;
 use Overtrue\Socialite\Providers\AbstractProvider;
 use Overtrue\Socialite\User;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class OAuthTest extends TestCase
+class OAuthTest extends PHPUnit_Framework_TestCase
 {
     public function tearDown()
     {
