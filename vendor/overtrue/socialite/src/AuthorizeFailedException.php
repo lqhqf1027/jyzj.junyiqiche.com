@@ -24,7 +24,7 @@ class AuthorizeFailedException extends \RuntimeException
      * Constructor.
      *
      * @param string $message
-     * @param array  $body
+     * @param string $body
      */
     public function __construct($message, $body)
     {

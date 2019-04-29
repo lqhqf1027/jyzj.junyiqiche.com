@@ -102,13 +102,6 @@ abstract class AbstractProvider implements ProviderInterface
     protected $stateless = false;
 
     /**
-     * The options for guzzle\client.
-     *
-     * @var array
-     */
-    protected static $guzzleOptions = ['http_errors' => false];
-
-    /**
      * Create a new provider instance.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -261,7 +254,7 @@ abstract class AbstractProvider implements ProviderInterface
             return $this->accessToken;
         }
 
-        $postKey = (1 === version_compare(ClientInterface::VERSION, '6')) ? 'form_params' : 'body';
+        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
 
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
             'headers' => ['Accept' => 'application/json'],
@@ -336,8 +329,6 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @throws \ReflectionException
-     *
      * @return string
      */
     public function getName()
@@ -468,19 +459,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     protected function getHttpClient()
     {
-        return new Client(self::$guzzleOptions);
-    }
-
-    /**
-     * Set options for Guzzle HTTP client.
-     *
-     * @param array $config
-     *
-     * @return array
-     */
-    public static function setGuzzleOptions($config = [])
-    {
-        return self::$guzzleOptions = $config;
+        return new Client(['http_errors' => false]);
     }
 
     /**
@@ -500,7 +479,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     protected function isStateless()
     {
-        return !$this->request->hasSession() || $this->stateless;
+        return $this->stateless;
     }
 
     /**
@@ -540,10 +519,6 @@ abstract class AbstractProvider implements ProviderInterface
      */
     protected function makeState()
     {
-        if (!$this->request->hasSession()) {
-            return false;
-        }
-
         $state = sha1(uniqid(mt_rand(1, 1000000), true));
         $session = $this->request->getSession();
 

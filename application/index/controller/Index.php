@@ -366,7 +366,7 @@ class Index extends Frontend
 
                     OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
                     Db::commit();
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     Db::rollback();
                     $this->error($e->getMessage());
                 }
