@@ -7,12 +7,14 @@ use app\common\controller\Frontend;
 use app\common\library\Token;
 use app\admin\model\Order;
 use app\admin\model\OrderDetails;
+use think\Cache;
 use think\Controller;
 use think\Db;
 use think\Env;
 use think\Exception;
 use think\Request;
 use think\Session;
+use wechat\Wx;
 
 class Index extends Frontend
 {
@@ -20,16 +22,20 @@ class Index extends Frontend
     protected $noNeedLogin = '*';
     protected $noNeedRight = '*';
     protected $layout = '';
+    protected $Wxapis = '';
 
 
     public function _initialize()
     {
         parent::_initialize();
-
-
-        $licensenumber = OrderDetails::get(['order_id' => Order::get(['wx_public_user_id' => $memberId])->id])->licensenumber;
-        $this->view->assign(['userInfo' => Session::get('MEMBER'), 'licensenumber' => $licensenumber]);
-
+//        $this->Wxapis = new Wx(Env::get('wx_public.appid'), Env::get('wx_public.secret'));
+//        $token = Session::get('rslt')['access_token'];
+//
+//        $r = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid=" . Session::get('MEMBER')['openid']);
+//        if (!$r['subscribe']) {
+//            alert('请先关注公众号，点击logo头像即可关注！', 'jump', 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIyODAyNjE3NA==&scene=126&bizpsid=0&subscene=0#wechat_redirect');
+////                header('Location:https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIyODAyNjE3NA==&scene=126&bizpsid=0&subscene=0#wechat_redirect');
+//        }
     }
 
 
@@ -69,26 +75,17 @@ class Index extends Frontend
         foreach ($order_details as $value) {
             $order_details = $value;
         }
-
-        $detail = '';
-        if ($order_details) {
-            $detail = json_decode($order_details['orderdetails']['violation_details'], true);
-            foreach ((array)$detail as $k => $v) {
-                $count = $k + 1;
-            }
-        }
-
-//        pr($detail);die;
-//        pr($userinfo);die;
+        if ($order_details) $detail = json_decode($order_details['orderdetails']['violation_details'], true);
 
 //用户头像,用户的查询次数
         $this->view->assign([
             'order_details' => $order_details,
             'detail' => $detail,
-            'query_time' => $userinfo['query_time'] ? date('Y-m-d H:i:s', $userinfo['query_time']) : '从未更新',
-            'count' => $count,
+            'query_time' => $userinfo['query_time'] ? date('Y-m-d H:i:s', $userinfo['query_time']) : '从未更新', 
+            'count' => $detail ? count($detail) : 0, 
             'userinfo' => $userinfo,
-            'id' => $order_details['orderdetails']['id']
+            'id' => $order_details['orderdetails']['id'],
+            'licensenumber' => $order_details['orderdetails']['licensenumber']
         ]);
 
         return Order::get(['wx_public_user_id' => $uid['id']]) ? $this->view->fetch('apply') : $this->view->fetch();
@@ -280,7 +277,8 @@ class Index extends Frontend
     }
 
 
-    public function illegalFun(){
+    public function illegalFun()
+    {
 
     }
 
@@ -293,7 +291,7 @@ class Index extends Frontend
     public function selCarInfo()
     {
 
-       $this->queryViolation();
+        $this->queryViolation();
     }
 
     //查询违章
@@ -313,52 +311,50 @@ class Index extends Frontend
 
         // $car_city_name_arr =  json_decode($car_city_name,true);
         // if ($order_details['orderdetails']['is_it_illegal'] == 'no_queries') {
-            
-            $plate_no = array(
-                'key' => '217fb8552303cb6074f88dbbb5329be7',
-                'hphm' => urlencode(mb_substr($order_details['orderdetails']['licensenumber'], 0, 2, "UTF-8"))
-            );
-    
-            //聚合查询城市前缀
-            $car_city_name = gets("http://v.juhe.cn/sweizhang/carPre?key=217fb8552303cb6074f88dbbb5329be7&hphm={$plate_no['hphm']}");
-            
-            if ($car_city_name['error_code'] == 0) {
-                ##如果返回的错误码不等于0，就返回官方的错误信息
-                // return json(array('state' =>$car_city_name['result']['city_code']));
 
-                //根据需要的查询条件，查询车辆的违章信息
-                $city = $car_city_name['result']['city_code']; //城市代码，必传
+        $plate_no = array(
+            'key' => '217fb8552303cb6074f88dbbb5329be7',
+            'hphm' => urlencode(mb_substr($order_details['orderdetails']['licensenumber'], 0, 2, "UTF-8"))
+        );
 
-                $carno = $order_details['orderdetails']['licensenumber']; //车牌号，必传
-                $engineno = $order_details['orderdetails']['engine_number']; //发动机号，需要的城市必传
-                $classno = $order_details['orderdetails']['frame_number']; //车架号，需要的城市必传
-                $s = strlen($carno) == 9 ? '' : '&hpzl=52';
-                $data = gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}{$s}&&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7");
-                
-                if ($data['resultcode'] == 200) {
-                    $total_fraction = 0;     //总扣分
-                    $total_money = 0;        //总罚款
-                    $flag = -1;
+        //聚合查询城市前缀
+        $car_city_name = gets("http://v.juhe.cn/sweizhang/carPre?key=217fb8552303cb6074f88dbbb5329be7&hphm={$plate_no['hphm']}");
 
-                    Db::startTrans();
-                    try {
-                        $lists = [];
-                        if ($data['result']['lists']) {
-                            foreach ($data['result']['lists'] as $k => $v) {
-                                if ($v['handled'] == 0) {
-                                    $flag = -2;
-                                } else if ($v['handled'] == 1) {
-                                    continue;
-                                }
-                                if ($v['fen']) $total_fraction += floatval($v['fen']);
-                                if ($v['money']) $total_money += floatval($v['money']); //总罚款
-                                array_push($lists, $v);
+        if ($car_city_name['error_code'] == 0) {
+            ##如果返回的错误码不等于0，就返回官方的错误信息
+            // return json(array('state' =>$car_city_name['result']['city_code']));
+
+            //根据需要的查询条件，查询车辆的违章信息
+            $city = $car_city_name['result']['city_code']; //城市代码，必传
+
+            $carno = $order_details['orderdetails']['licensenumber']; //车牌号，必传
+            $engineno = $order_details['orderdetails']['engine_number']; //发动机号，需要的城市必传
+            $classno = $order_details['orderdetails']['frame_number']; //车架号，需要的城市必传
+            $s = strlen($carno) == 9 ? '' : '&hpzl=52';
+            $data = gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}{$s}&&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7");
+
+            if ($data['resultcode'] == 200) {
+                $total_fraction = 0;     //总扣分
+                $total_money = 0;        //总罚款
+                $flag = -1;
+
+                Db::startTrans();
+                try {
+                    $lists = [];
+                    if ($data['result']['lists']) {
+                        foreach ($data['result']['lists'] as $k => $v) {
+                            if ($v['handled'] == 0) {
+                                $flag = -2;
+                            } else if ($v['handled'] == 1) {
+                                continue;
                             }
-                            $is_it_illegal = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
+                            if ($v['fen']) $total_fraction += floatval($v['fen']);
+                            if ($v['money']) $total_money += floatval($v['money']); //总罚款
+                            array_push($lists, $v);
                         }
-                        else {
-                            $is_it_illegal = 'no_violation';
-                        }
+                        $is_it_illegal = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
+                    } else {
+                        $is_it_illegal = 'no_violation';
 
                         if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
                             WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
@@ -373,21 +369,36 @@ class Index extends Frontend
                     } catch (Exception $e) {
                         Db::rollback();
                         $this->error($e->getMessage());
+
                     }
-                    $this->success($data['reason'], '',
-                        [
-                            'lists' => $data['result']['lists'],
-                            'total_fraction' => $total_fraction,
-                            'total_money' => $total_money,
-                            'counts' => count($data['result']['lists']),
-                            'upTime' => '上一次更新时间：' . date('Y-m-d H:i:s', time())]
 
-                    );
 
-                } else $this->error($data['reason']);
+                    WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
 
-                $this->error('暂不支持此车型');
-            }
+                    // $id = collection(Order::field('id,wx_public_user_id')->with(['orderdetails' => function ($q) {
+                    //     $q->withField('id,order_id');
+                    // }])->where(['wx_public_user_id' => $uid['id']])->select())->toArray()[0];
+
+                    OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
+                    Db::commit();
+                } catch (Exception $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                }
+                $this->success($data['reason'], '',
+                    [
+                        'lists' => $data['result']['lists'],
+                        'total_fraction' => $total_fraction,
+                        'total_money' => $total_money,
+                        'counts' => count($data['result']['lists']),
+                        'upTime' => '上一次更新时间：' . date('Y-m-d H:i:s', time())]
+
+                );
+
+            } else $this->error($data['reason']);
+
+            $this->error('暂不支持此车型');
+        }
         // }
         $this->error($car_city_name['reason']);
     }
