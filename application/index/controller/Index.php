@@ -355,18 +355,17 @@ class Index extends Frontend
                         $is_it_illegal = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
                     } else {
                         $is_it_illegal = 'no_violation';
+                    }
 
-                        if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
+                    if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
                             WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
-                        }
 
-                        // $id = collection(Order::field('id,wx_public_user_id')->with(['orderdetails' => function ($q) {
-                        //     $q->withField('id,order_id');
-                        // }])->where(['wx_public_user_id' => $uid['id']])->select())->toArray()[0];
+                      }
+
 
                         OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
                         Db::commit();
-                    }
+               
                 } catch (\Exception $e) {
                     Db::rollback();
                     $this->error($e->getMessage());
