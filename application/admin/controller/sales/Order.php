@@ -3,6 +3,7 @@
 namespace app\admin\controller\sales;
 
 use app\admin\library\Auth;
+use app\admin\model\Admin;
 use app\admin\model\OrderDetails;
 use app\admin\model\OrderImg;
 use app\common\controller\Backend;
@@ -11,6 +12,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use think\Db;
+use think\Exception;
 use think\exception\PDOException;
 
 
@@ -542,6 +544,7 @@ class Order extends Backend
                 $fieldArr[$v['COLUMN_NAME']] = $v['COLUMN_NAME'];
             }
         }
+        $auth = Auth::instance();
         //加载文件
         $insert = $insertOrder = [];
         try {
@@ -608,6 +611,8 @@ class Order extends Backend
                     $row['business_risks'] = $row['business_risks'] ? $row['business_risks'] : 0;
                     $row['is_mortgage'] = $row['is_mortgage'] == '是' ? '是' : '否';
 
+                    $row['admin_id'] = empty($row['admin_id'])?$auth->id:Admin::getByNickname($row['admin_id'])->id;
+
                     if ($row['type']) {
                         switch ($row['type']) {
                             case '新车按揭':
@@ -631,6 +636,8 @@ class Order extends Backend
                             case '挂靠':
                                 $row['type'] = 'affiliated';
                                 break;
+                            default:
+                                throw new Exception($row['username'].'用户的购车类型填写有误');
                         }
                     }
 
@@ -647,24 +654,25 @@ class Order extends Backend
         if (!$insert) {
             $this->error(__('No rows were updated'));
         }
+//        pr($insert);die;
         Db::startTrans();
         try {
             //是否包含admin_id字段
-            $has_admin_id = false;
-            foreach ($fieldArr as $name => $key) {
-                if ($key == 'admin_id') {
-                    $has_admin_id = true;
-                    break;
-                }
-            }
-            if ($has_admin_id) {
-                $auth = Auth::instance();
-                foreach ($insert as &$val) {
-                    if (!isset($val['admin_id']) || empty($val['admin_id'])) {
-                        $val['admin_id'] = $auth->isLogin() ? $auth->id : 0;
-                    }
-                }
-            }
+//            $has_admin_id = false;
+//            foreach ($fieldArr as $name => $key) {
+//                if ($key == 'admin_id') {
+//                    $has_admin_id = true;
+//                    break;
+//                }
+//            }
+//            if ($has_admin_id) {
+//                $auth = Auth::instance();
+//                foreach ($insert as &$val) {
+//                    if (!isset($val['admin_id']) || empty($val['admin_id'])) {
+//                        $val['admin_id'] = $auth->isLogin() ? $auth->id : 0;
+//                    }
+//                }
+//            }
             $results = collection($this->model->allowField(true)->saveAll($insert))->toArray();
 
             foreach ($results as $k => $v) {
