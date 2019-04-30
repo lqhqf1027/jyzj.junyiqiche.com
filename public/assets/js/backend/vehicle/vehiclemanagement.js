@@ -61,6 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
@@ -79,38 +80,38 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         },
                         {field: 'models_name', title: __('Models_name')},
-                        {
-                            field: 'type',
-                            title: __('Type'),
-                            searchList: {
-                                "mortgage": __('Type mortgage'),
-                                "used_car_mortgage": __('Type used_car_mortgage'),
-                                "car_rental": __('Type car_rental'),
-                                "full_new_car": __('Type full_new_car'),
-                                "full_used_car": __('Type full_used_car'),
-                                "sublet": __('Type sublet'),
-                                "affiliated": __('Type affiliated')
-                            },
-                            formatter: function (value, row, index) {
+                        // {
+                        //     field: 'type',
+                        //     title: __('Type'),
+                        //     searchList: {
+                        //         "mortgage": __('Type mortgage'),
+                        //         "used_car_mortgage": __('Type used_car_mortgage'),
+                        //         "car_rental": __('Type car_rental'),
+                        //         "full_new_car": __('Type full_new_car'),
+                        //         "full_used_car": __('Type full_used_car'),
+                        //         "sublet": __('Type sublet'),
+                        //         "affiliated": __('Type affiliated')
+                        //     },
+                        //     formatter: function (value, row, index) {
 
-                                switch (value) {
-                                    case 'mortgage':
-                                        return this.searchList.mortgage;
-                                    case 'used_car_mortgage':
-                                        return this.searchList.used_car_mortgage;
-                                    case 'full_new_car':
-                                        return this.searchList.full_new_car;
-                                    case 'full_used_car':
-                                        return this.searchList.full_used_car;
-                                    case 'sublet':
-                                        return this.searchList.sublet;
-                                    case 'affiliated':
-                                        return this.searchList.affiliated;
-                                    case 'car_rental':
-                                        return this.searchList.car_rental;
-                                }
-                            }
-                        },
+                        //         switch (value) {
+                        //             case 'mortgage':
+                        //                 return this.searchList.mortgage;
+                        //             case 'used_car_mortgage':
+                        //                 return this.searchList.used_car_mortgage;
+                        //             case 'full_new_car':
+                        //                 return this.searchList.full_new_car;
+                        //             case 'full_used_car':
+                        //                 return this.searchList.full_used_car;
+                        //             case 'sublet':
+                        //                 return this.searchList.sublet;
+                        //             case 'affiliated':
+                        //                 return this.searchList.affiliated;
+                        //             case 'car_rental':
+                        //                 return this.searchList.car_rental;
+                        //         }
+                        //     }
+                        // },
                         {
                             field: 'orderdetails.is_it_illegal', title: __('违章状态'), formatter: function (value, row, index) {
                                 console.log(row);
@@ -143,7 +144,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 return  '<span class=\'label label-'+color+'\' style=\'cursor: pointer\'>'+content+'</span><span class="text-danger" style="font-size: smaller;display: block;margin-top: 5px">'+row.orderdetails.reson_query_fail+'</span>' ;
 
 
-                            }
+                            },
+                            searchList: {
+                                "no_violation": __('没有违章'),
+                                "violation_of_regulations": __('有违章'),
+                                "no_queries": __('未查询违章'),
+                                "query_failed": __('违章查询失败')
+                            },
                         },
                         {
                             field: 'orderdetails.update_violation_time',
@@ -244,6 +251,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     title: __('修改资料'),
                                     text: '修改资料',
                                     extend: 'data-toggle="tooltip"',
+                                    dropdown: '更多',
                                     classname: 'btn btn-xs btn-success btn-modifying_data',
                                     visible: function (row) {
                                         return row.lift_car_status == 'yes' ? true : false;
@@ -291,6 +299,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     title: __('已授权'),
                                     text: '已授权',
                                     extend: 'data-toggle="tooltip"',
+                                    dropdown: '更多',
                                     classname: 'text-success',
                                     visible: function (row) {
                                         return row.user_id ? true : false;
@@ -303,8 +312,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     title: __('微信公众号授权'),
                                     text: '微信公众号授权',
                                     extend: 'data-toggle="tooltip"',
+                                    dropdown: '更多',
                                     classname: 'btn btn-xs btn-success btn-wechat',
 
+                                },
+                                {
+                                    name: '',
+                                    icon: 'fa fa-send',
+                                    title: __('公众号推送违章信息'),
+                                    text: '公众号推送违章信息',
+                                    extend: 'data-toggle="tooltip"',
+                                    dropdown: '更多',
+                                    classname: 'btn btn-xs btn-success btn-push_violation',
+                                    visible: function (row) {
+                                        return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
+                                    }
                                 },
 
                             ]
@@ -854,7 +876,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                     },
-
+                    /**
+                     * 删除
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-delone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -955,6 +983,54 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                     },
+                    /**
+                     * 微信公众号推送违章信息
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-push_violation': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('是否确认进行违章推送?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+                                Fast.api.ajax({
+
+                                    url: 'vehicle/vehiclemanagement/sendoneviolation',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success('操作成功');
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+                            }
+                        );
+                    },
+
 
 
                 }
