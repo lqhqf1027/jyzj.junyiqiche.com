@@ -81,8 +81,8 @@ class Index extends Frontend
         $this->view->assign([
             'order_details' => $order_details,
             'detail' => $detail,
-            'query_time' => $userinfo['query_time'] ? date('Y-m-d H:i:s', $userinfo['query_time']) : '从未更新', 
-            'count' => $detail ? count($detail) : 0, 
+            'query_time' => $userinfo['query_time'] ? date('Y-m-d H:i:s', $userinfo['query_time']) : '从未更新',
+            'count' => $detail ? count($detail) : 0,
             'userinfo' => $userinfo,
             'id' => $order_details['orderdetails']['id'],
             'licensenumber' => $order_details['orderdetails']['licensenumber']
@@ -359,28 +359,14 @@ class Index extends Frontend
                         if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
                             WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
                         }
-                  
+
                         // $id = collection(Order::field('id,wx_public_user_id')->with(['orderdetails' => function ($q) {
                         //     $q->withField('id,order_id');
                         // }])->where(['wx_public_user_id' => $uid['id']])->select())->toArray()[0];
 
                         OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
                         Db::commit();
-                    } catch (Exception $e) {
-                        Db::rollback();
-                        $this->error($e->getMessage());
-
                     }
-
-
-                    WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
-
-                    // $id = collection(Order::field('id,wx_public_user_id')->with(['orderdetails' => function ($q) {
-                    //     $q->withField('id,order_id');
-                    // }])->where(['wx_public_user_id' => $uid['id']])->select())->toArray()[0];
-
-                    OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
-                    Db::commit();
                 } catch (\Exception $e) {
                     Db::rollback();
                     $this->error($e->getMessage());
