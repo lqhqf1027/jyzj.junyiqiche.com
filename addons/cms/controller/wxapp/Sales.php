@@ -4,13 +4,22 @@ namespace addons\cms\controller\wxapp;
 
 
 use app\admin\model\Admin;
+use think\Request;
 use think\Validate;
 use think\Exception;
 use think\exception\ValidateException;
+use think\Config as ThinkConfig;
+use fast\Random;
+use Upyun\Upyun;
+use Upyun\Config;
 
 class Sales extends Base
 {
     protected $noNeedLogin = '*';
+    protected $config = [
+
+    ];
+
 
     /**
      * 小程序登陆
@@ -51,6 +60,12 @@ class Sales extends Base
         }
 
 
+    }
+
+    public function testUp()
+    {
+
+//        $client->write('/save/path', 'file content');
     }
 
 }

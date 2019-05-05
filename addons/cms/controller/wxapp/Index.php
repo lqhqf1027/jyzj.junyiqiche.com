@@ -6,6 +6,11 @@ use addons\cms\model\Archives;
 use addons\cms\model\Block;
 use addons\cms\model\Channel;
 use app\common\model\Addon;
+use think\Config as ThinkConfig;
+use fast\Random;
+use think\Request;
+use Upyun\Upyun;
+use Upyun\Config;
 
 /**
  * 首页
@@ -13,6 +18,11 @@ use app\common\model\Addon;
 class Index extends Base
 {
     protected $noNeedLogin = '*';
+
+    public function __construct(Request $request = null)
+    {
+        parent::__construct($request);
+    }
 
     /**
      * 首页
@@ -44,10 +54,13 @@ class Index extends Base
             unset($item['imglink'], $item['textlink'], $item['channellink'], $item['tagslist'], $item['weigh'], $item['status'], $item['deletetime'], $item['memo'], $item['img']);
         }
         $data = [
-            'bannerList'   => $bannerList,
-            'tabList'      => $tabList,
+            'bannerList' => $bannerList,
+            'tabList' => $tabList,
             'archivesList' => $archivesList,
         ];
         $this->success('', $data);
     }
+
+
+
 }
