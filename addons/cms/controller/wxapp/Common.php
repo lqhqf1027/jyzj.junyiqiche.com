@@ -7,6 +7,7 @@ use addons\cms\model\Channel;
 use app\common\model\Addon;
 use think\Config as ThinkConfig;
 use fast\Random;
+use think\Env;
 use think\Request;
 use Upyun\Upyun;
 use Upyun\Config;
@@ -31,6 +32,11 @@ class Common extends Base
     public function upUpyun()
     {
         $file = $this->request->file('file');
+
+        $is_verify_idcard = $this->request->post('is_verify_idcard', false);
+
+//        $this->success($is_verify_idcard);
+
         if (empty($file)) {
             $this->error(__('No file upload or server upload limit exceeded'));
         }
@@ -89,23 +95,36 @@ class Common extends Base
                 $imageheight = isset($imgInfo[1]) ? $imgInfo[1] : $imageheight;
             }
 
-            $serviceConfig = new Config('static-junyiqiche', 'aicheyide', 'aicheyide168');
+            $serviceConfig = new Config(Env::get('upyun.serviceName'), Env::get('upyun.operatorName'), Env::get('upyun.operatorPassword'));
             $client = new Upyun($serviceConfig);
-
-
             try {
                 $fileName = $uploadDir . $splInfo->getSaveName();
                 $files = fopen(ROOT_PATH . '/public' . $fileName, 'r');
                 $res = $client->write('/jyzj.junyiqiche.com' . $fileName, $files); //上传到u拍云
+
+                if ($is_verify_idcard) {
+                    $identify_result = posts('https://api-cn.faceplusplus.com/cardpp/v1/ocridcard', [
+                        'api_key' => '6YWpf8Xx8g1Ll2F5w8bNOpNkmOby1Sdh',
+                        'api_secret' => 'BV_r5bgSN3DY9SELbKpmVUZ52hI-GCPp',
+//                        'image_url'=>ROOT_PATH . '/public' . $fileName
+                        'image_url' => 'https://static.junyiqiche.com/jyzj.junyiqiche.com' . $fileName
+                    ]);
+                }
                 if ($res['x-upyun-content-length']) unlink(ROOT_PATH . '/public' . $fileName);  //删除本地服务器
             } catch (\Exception $e) {
 
                 $this->error($e->getMessage());
             }
 
-            $this->success('上传成功', [
-                'url' => '/jyzj.junyiqiche.com' .$fileName
-            ]);
+            $datas = [
+                'url' => '/jyzj.junyiqiche.com' . $fileName
+            ];
+
+            if (!empty($identify_result)) {
+                $datas['card_info'] = $identify_result;
+            }
+
+            $this->success('上传成功', $datas);
         } else {
             // 上传失败获取错误信息
             $this->error($file->getError());
