@@ -101,10 +101,20 @@ class Sales extends Base
 
     public function new_sales_order()
     {
-        $user_id = $this->request->post('user_id');
+        $user_id = $this->request->post('id');
         $params = $this->request->post("row/a");
 
+//        $this->success($params);
+
+        if(!$user_id || !$params){
+            $this->error('缺少参数');
+        }
+
         $params['order_createtime'] = strtotime($params['order_createtime']);
+
+        $params['customer_source'] = $params['customer_source']=='转介绍'?'turn_to_introduce':'direct_the_guest';
+
+        $params['genderdata'] = $params['genderdata'] == '男'?'male':'female';
 
         if ($params) {
             Db::startTrans();
@@ -122,7 +132,7 @@ class Sales extends Base
 
                 }
 
-                if ($params['are_married' == 'yes']) {
+                if ($params['are_married' == '是']) {
                     $rule['mate_id_cardimages'] = 'require';
 
                     $check['mate_id_cardimages'] = $params['mate_id_cardimages'];
@@ -136,6 +146,8 @@ class Sales extends Base
                     }
                 }
 
+                $params['id_cardimages'] = $params['id_cardimages_positive'].','.$params['id_cardimages_negative'];
+
                 $order = new \app\admin\model\Order;
 
                 if (!$order->allowField(true)->save($params)) {
@@ -144,9 +156,9 @@ class Sales extends Base
 
                 $params['order_id'] = $order->id;
 
-                $order_details = new OrderDetails();
-
-                $order_details->allowField(true)->save($params);
+//                $order_details = new OrderDetails();
+//
+//                $order_details->allowField(true)->save($params);
 
                 $order_img = new OrderImg();
 
