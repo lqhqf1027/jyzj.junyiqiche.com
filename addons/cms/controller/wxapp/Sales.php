@@ -4,7 +4,14 @@ namespace addons\cms\controller\wxapp;
 
 
 use app\admin\model\Admin;
+
 use think\Request;
+
+use app\admin\model\OrderDetails;
+use app\admin\model\OrderImg;
+use think\Db;
+use think\exception\PDOException;
+
 use think\Validate;
 use think\Exception;
 use think\exception\ValidateException;
@@ -62,10 +69,120 @@ class Sales extends Base
 
     }
 
-    public function testUp()
+    /**
+     * 客户列表
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function client_list()
     {
+        $user_id = $this->request->post('user_id');
+        $type = $this->request->post('type');
+        $page = $this->request->post('page', 1);
 
-//        $client->write('/save/path', 'file content');
+        try {
+            $rule_message = Admin::get($user_id)->rule_message;
+
+            $list = \app\admin\model\Order::
+            field('id,username,phone')
+                ->with(['orderdetails' => function ($q) {
+                    $q->withField('licensenumber');
+                }])
+                ->where(function ($q) use ($rule_message, $user_id, $type) {
+                    $where = ['type' => $type];
+                    if ($rule_message != 'message1') {
+                        $where['order.admin_id'] = $user_id;
+                    }
+
+                    $q->where($where);
+
+                })
+                ->order('id desc')
+                ->page($page . ',20')
+                ->select();
+
+            $this->success('请求成功', ['client_list' => $list]);
+        } catch (PDOException $e) {
+            $this->error($e->getMessage());
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
+        }
+
+    }
+
+    public function new_sales_order()
+    {
+        $user_id = $this->request->post('user_id');
+        $params = $this->request->post("row/a");
+
+        $params['order_createtime'] = strtotime($params['order_createtime']);
+
+        if ($params) {
+            Db::startTrans();
+            try {
+                $params['admin_id'] = $user_id;
+                $rule = $check = [];
+                if ($params['customer_source'] === 'turn_to_introduce') {
+                    $rule['turn_to_introduce_name'] = 'require';
+                    $rule['turn_to_introduce_phone'] = 'require';
+                    $rule['turn_to_introduce_card'] = 'require';
+
+                    $check['turn_to_introduce_name'] = $params['turn_to_introduce_name'];
+                    $check['turn_to_introduce_phone'] = $params['turn_to_introduce_phone'];
+                    $check['turn_to_introduce_card'] = $params['turn_to_introduce_card'];
+
+                }
+
+                if ($params['are_married' == 'yes']) {
+                    $rule['mate_id_cardimages'] = 'require';
+
+                    $check['mate_id_cardimages'] = $params['mate_id_cardimages'];
+                }
+
+                if (!empty($check)) {
+                    $validate = new Validate($rule);
+
+                    if (!$validate->check($check)) {
+                        throw new ValidateException($validate->getError());
+                    }
+                }
+
+                $order = new \app\admin\model\Order;
+
+                if (!$order->allowField(true)->save($params)) {
+                    throw new Exception('添加订单失败');
+                };
+
+                $params['order_id'] = $order->id;
+
+                $order_details = new OrderDetails();
+
+                $order_details->allowField(true)->save($params);
+
+                $order_img = new OrderImg();
+
+                $order_img->allowField(true)->save($params);
+
+                Db::commit();
+            } catch (ValidateException $e) {
+                Db::rollback();
+                $this->error($e->getMessage());
+            } catch (PDOException $e) {
+                Db::rollback();
+                $this->error($e->getMessage());
+            } catch (Exception $e) {
+                Db::rollback();
+                $this->error($e->getMessage());
+            }
+
+            $this->success('添加订单成功');
+
+        }
+
+        $this->error('未提交任何信息');
+
+
     }
 
 }

@@ -929,9 +929,8 @@ class Vehiclemanagement extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $id = input("id");
-
-            $id = json_decode($id, true);
+            $ids = $this->request->post();
+            $id= $ids['id'];
             // pr($id);
             // die;
             $detail = Collection($this->model->field('username,phone,wx_public_user_id,models_name')
