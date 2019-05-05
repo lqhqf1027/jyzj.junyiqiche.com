@@ -984,7 +984,7 @@ class Vehiclemanagement extends Backend
                     $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
                     
                     if ($res['errcode']  == 0) {
-                        $this->success();
+                        $this->success('操作成功');
                     }
                     
                 }

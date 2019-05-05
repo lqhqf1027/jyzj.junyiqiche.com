@@ -864,6 +864,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 data: {ids}
 
                             }, function (data, ret) {
+
                                 Controller.api.layer_violation(data,id);
                                 Layer.close(index);
                                 table.bootstrapTable('refresh');
@@ -1095,6 +1096,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     '           Layer.close(confirm);\n' + 
                     '           var index = parent.layer.getFrameIndex(window.name); \n' + 
                     '           parent.layer.close(index);\n' + 
+                    '           Toastr.success(ret.msg);\n' + 
                     '           return false;\n' + 
                     '        }, function (data, ret) {\n' + 
                                 //失败的回调
