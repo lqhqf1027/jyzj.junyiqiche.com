@@ -111,6 +111,10 @@ class Sales extends Base
 
     }
 
+    /**
+     *
+     * 新增销售单
+     */
     public function new_sales_order()
     {
         $user_id = $this->request->post('id');
