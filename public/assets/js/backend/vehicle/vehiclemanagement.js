@@ -314,6 +314,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     extend: 'data-toggle="tooltip"',
                                     dropdown: '更多',
                                     classname: 'btn btn-xs btn-success btn-wechat',
+                                    visible:function (row) {
+                                        return !row.wx_public_user_id?true:false;
+                                    }
 
                                 },
                                 {
