@@ -187,6 +187,11 @@ class Vehiclemanagement extends Backend
         }
     }
 
+    /**
+     * 公众号授权
+     * @throws \Endroid\QrCode\Exceptions\ImageTypeInvalidException
+     * @throws \think\exception\DbException
+     */
     public function public_qr_code()
     {
         if ($this->request->isAjax()) {

@@ -9,6 +9,7 @@ use app\admin\model\Order;
 use app\admin\model\OrderDetails;
 use think\Cache;
 use think\Controller;
+use think\Config;
 use think\Db;
 use think\Env;
 use think\Exception;
@@ -45,6 +46,14 @@ class Index extends Frontend
         $order_id = Request::instance()->param('order_id');
         $uid = Session::get('MEMBER');
         if ($order_id) {
+//            $token = Session::get('rslt')['access_token'];
+//
+//            $r = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid=" . Session::get('MEMBER')['openid']);
+//            if (!$r['subscribe']) {
+//                alert('请先关注公众号，点击logo头像即可关注！', 'jump', 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIyODAyNjE3NA==&scene=126&bizpsid=0&subscene=0#wechat_redirect');
+////                header('Location:https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIyODAyNjE3NA==&scene=126&bizpsid=0&subscene=0#wechat_redirect');
+//            }
+//
             $memberId = Session::get('MEMBER')['id'];
             // pr($order_id);
             // die;
@@ -131,19 +140,20 @@ class Index extends Frontend
         if ($this->request->isAjax()) {
             if ($this->request->isPost()) {
                 $params = $this->request->post('');
-                // return $params['id_card'];
-                $id_card = Order::get(['id_card' => $params['id_card']]);
-                $licensenumber = OrderDetails::get(['licensenumber' => $params['licensenumber']]);
 
-                if (!$id_card || !$licensenumber) {
+                $id_card = Order::get(['id_card' => trim($params['id_card'])]);
+
+                $licensenumber = OrderDetails::get(['licensenumber' => trim($params['licensenumber'])]);
+
+                if (!$id_card->getData() || !$licensenumber->getData()) {
                     $this->error('未查询到客户信息');
                 };
-                if ($licensenumber['order_id'] !== $id_card['id']) {
+                if ($licensenumber->order_id !== $id_card->id) {
                     $this->error('车牌号与身份信息不符合');
                 } else {
                     $res = Order::field(['id,username,id_card,models_name'])->with(['orderdetails' => function ($q) {
                         $q->withField(['frame_number', 'licensenumber', 'engine_number']);
-                    }])->select(['id' => $id_card['id']]);
+                    }])->select(['id' => $id_card->id]);
                     $res = collection($res)->toArray()[0];
                     $this->success('查询成功', '', $res);
                 }
@@ -365,7 +375,6 @@ class Index extends Frontend
 
                         OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
                         Db::commit();
-               
                 } catch (\Exception $e) {
                     Db::rollback();
                     $this->error($e->getMessage());

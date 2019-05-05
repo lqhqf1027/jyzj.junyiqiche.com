@@ -4,17 +4,29 @@ namespace addons\cms\controller\wxapp;
 
 
 use app\admin\model\Admin;
+
+use think\Request;
+
 use app\admin\model\OrderDetails;
 use app\admin\model\OrderImg;
 use think\Db;
 use think\exception\PDOException;
+
 use think\Validate;
 use think\Exception;
 use think\exception\ValidateException;
+use think\Config as ThinkConfig;
+use fast\Random;
+use Upyun\Upyun;
+use Upyun\Config;
 
 class Sales extends Base
 {
     protected $noNeedLogin = '*';
+    protected $config = [
+
+    ];
+
 
     /**
      * 小程序登陆
@@ -181,6 +193,7 @@ class Sales extends Base
         }
 
         $this->error('未提交任何信息');
+
 
     }
 

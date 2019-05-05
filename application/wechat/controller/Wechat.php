@@ -62,6 +62,7 @@ class Wechat extends Controller
         $user_data = $user_data ? $user_data->getData() : '';
         unset($userInfo['privilege']);
         if (empty($user_data)) {
+
             Cache::rm('Token');
             $token = $this->Wxapis->getWxtoken()['access_token'];
             $r = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid=" . $userInfo['openid']);
