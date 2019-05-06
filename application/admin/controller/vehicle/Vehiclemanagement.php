@@ -136,7 +136,7 @@ class Vehiclemanagement extends Backend
             foreach ($list as $row) {
                 $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id','wx_public_user_id']);
                 $row->visible(['orderdetails']);
-                $row->getRelation('orderdetails')->visible(['file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
+                $row->getRelation('orderdetails')->visible(['total_deduction','file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
@@ -748,10 +748,8 @@ class Vehiclemanagement extends Backend
                     $first = $value['username'] . '师傅您好，截止到'.$time.'，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有以下未处理的违章信息';
 
                     $details = json_decode($value['orderdetails']['violation_details'], true);
-                    foreach ($details as $k => $v) {
-                        $count = $k + 1;
-                    }
-                    
+                   
+                    $count = count($details);
                     $temp_msg = array(
                         'touser' => "{$openid}",
                         'template_id' => "hTlWqtgPyt6wr1KNdctpFkilUZbc0f9lDNtosGaH1-4",
@@ -880,9 +878,7 @@ class Vehiclemanagement extends Backend
                     $first = $value['username'] . '您好，您车型为：' . $value['models_name'] . '，车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有未处理的违章信息';
                     $time = date('Y-m-d', time());
                     $details = json_decode($value['orderdetails']['violation_details'], true);
-                    foreach ($details as $k => $v) {
-                        $count = $k + 1;
-                    }
+                    $count = count($details);
                     
                     $temp_msg = array(
                         'touser' => "{$openid}",
@@ -890,6 +886,7 @@ class Vehiclemanagement extends Backend
                         'data' => array(
                             'first' => array(
                                 "value" => "{$first}",
+                                "color"=>'#1E9FFF'
                             ),
                             'keyword1' => array(
                                 "value" => "{$value['orderdetails']['licensenumber']}",
@@ -910,7 +907,7 @@ class Vehiclemanagement extends Backend
                                 "value" => "{$time}",
                             ),
                             "remark" => array(
-                                "value" => "点击查看更多内容",
+                                "value" => "点击查看违章详情，（公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书）",
                             )
                             
                         ),
@@ -956,9 +953,7 @@ class Vehiclemanagement extends Backend
                     $first = $value['username'] . '您好，您车型为：' . $detail[0]['models_name'] . '，车牌号为＂' . $detail[0]['orderdetails']['licensenumber'] . '＂的车辆有未处理的违章信息';
                     $time = date('Y-m-d', time());
                     $details = json_decode($detail[0]['orderdetails']['violation_details'], true);
-                    foreach ($details as $k => $v) {
-                        $count = $k + 1;
-                    }
+                    $count = count($details);
                         
                     $temp_msg = array(
                         'touser' => "{$openid}",
@@ -966,6 +961,7 @@ class Vehiclemanagement extends Backend
                         'data' => array(
                             'first' => array(
                                 "value" => "{$first}",
+                                "color"=>'#1E9FFF'
                             ),
                             'keyword1' => array(
                                 "value" => "{$detail[0]['orderdetails']['licensenumber']}",
@@ -986,7 +982,7 @@ class Vehiclemanagement extends Backend
                                 "value" => "{$time}",
                             ),
                             "remark" => array(
-                                "value" => "点击查看更多内容",
+                                "value" => "点击查看违章详情，（公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书）",
                             )
                                 
                         ),
