@@ -66,10 +66,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id'),},
+                        {field: 'id', title: __('Id'),operate:false},
                         {field: 'orderdetails.file_coding', title: __('Orderdetails.file_coding')},
                         {field: 'username', title: __('Username')},
-                        {field: 'id_card', title: __('Id_card')},
+                        // {field: 'id_card', title: __('Id_card')},
                         {field: 'phone', title: __('Phone')},
                         {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber')},
                         {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
@@ -77,10 +77,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {
                             field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
 
-                                return "<img src=" + Config.cdn + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
-                            }
-                        },
-                        {field: 'models_name', title: __('Models_name')},
+                                return "<img src=" + Config.cdn + row.admin.avatar + " style='height:20px;width:25px'></img>" + '&nbsp;' + value;
+                            },operate:false
+                        }, 
+                        {field: 'models_name', title: __('Models_name'),operate:false},
+                        // {
+                        //     field: 'type',
+                        //     title: __('Type'),
+                        //     searchList: {
+                        //         "mortgage": __('Type mortgage'),
+                        //         "used_car_mortgage": __('Type used_car_mortgage'),
+                        //         "car_rental": __('Type car_rental'),
+                        //         "full_new_car": __('Type full_new_car'),
+                        //         "full_used_car": __('Type full_used_car'),
+                        //         "sublet": __('Type sublet'),
+                        //         "affiliated": __('Type affiliated')
+                        //     },
+                        //     formatter: function (value, row, index) {
+
+                        //         switch (value) {
+                        //             case 'mortgage':
+                        //                 return this.searchList.mortgage;
+                        //             case 'used_car_mortgage':
+                        //                 return this.searchList.used_car_mortgage;
+                        //             case 'full_new_car':
+                        //                 return this.searchList.full_new_car;
+                        //             case 'full_used_car':
+                        //                 return this.searchList.full_used_car;
+                        //             case 'sublet':
+                        //                 return this.searchList.sublet;
+                        //             case 'affiliated':
+                        //                 return this.searchList.affiliated;
+                        //             case 'car_rental':
+                        //                 return this.searchList.car_rental;
+                        //         }
+                        //     }
+                        // },
+ 
                         {
                             field: 'orderdetails.is_it_illegal', title: __('违章状态'), formatter: function (value, row, index) {
                                 if(value == 'no_queries'){
@@ -126,7 +159,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Table.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
+                            datetimeFormat: "YYYY-MM-DD",operate:false
                         },
                         {
                             field: 'orderdetails.annual_inspection_time',
@@ -134,15 +167,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Controller.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
+                            datetimeFormat: "YYYY-MM-DD",operate:false
                         },
                         {
                             field: 'orderdetails.traffic_force_insurance_time',
+ 
                             title: __('保险截至日期'),
+ 
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Controller.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
+                            datetimeFormat: "YYYY-MM-DD",operate:false
                         },
                         // {
                         //     field: 'orderdetails.business_insurance_time',
@@ -156,6 +191,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             field: 'operates',
                             title: __('详情'),
                             table: table,
+
                             // events: Controller.api.events.operate,
                             formatter: Table.api.formatter.operate,
                             buttons: [
@@ -163,7 +199,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     name: 'customer_information',
                                     icon: 'fa fa-eye',
                                     title: __('查看客户详细资料'),
-                                    text: '查看客户详细资料',
+                                    text: '客户资料',
                                     extend: 'data-toggle="tooltip"',
                                     classname: 'btn btn-xs btn-primary btn-dialog btn-customer_information',
                                     url: 'vehicle/vehiclemanagement/customer_information',
@@ -171,7 +207,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     // }
                                 },
 
-                            ]
+                            ],operate:false
                         },
                         {
                             field: 'operate',

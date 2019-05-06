@@ -4,6 +4,7 @@ namespace addons\cms\controller\wxapp;
 
 use addons\third\library\Service;
 use addons\third\model\Third;
+use app\admin\model\Admin;
 use app\common\library\Auth;
 use fast\Http;
 use think\Config;
@@ -59,7 +60,9 @@ class User extends Base
         ];
         $result = Http::sendRequest("https://api.weixin.qq.com/sns/jscode2session", $params, 'GET');
         if ($result['ret']) {
+
             $json = (array)json_decode($result['msg'], true);
+
             if (isset($json['openid'])) {
                 //如果有传Token
                 if ($this->token) {
@@ -67,8 +70,9 @@ class User extends Base
                     //检测是否登录
                     if ($this->auth->isLogin()) {
                         $third = Third::where(['openid' => $json['openid'], 'platform' => 'wxapp'])->find();
+
                         if ($third && $third['user_id'] == $this->auth->id) {
-                            $this->success("登录成功", ['userInfo' => $this->auth->getUserinfo()]);
+                            $this->success("登录成功", ['userInfo' => $this->auth->getUserinfo(),'admin_id'=>\addons\cms\model\User::get($this->auth->id)->admin_id]);
                         }
                     }
                 }
@@ -88,8 +92,9 @@ class User extends Base
                 if ($ret) {
                     $auth = Auth::instance();
                     $users = $auth->getUserinfo();
+
                     $users['nickname'] = emoji_decode($users['nickname']);
-                    $this->success("登录成功", ['userInfo' => $users, 'openid' => $json['openid'], 'session_key' => $json['session_key']]);
+                    $this->success("登录成功", ['userInfo' => $users, 'openid' => $json['openid'], 'session_key' => $json['session_key'],'admin_id'=>\addons\cms\model\User::get($auth->getUserinfo()['id'])->admin_id]);
                 } else {
                     $this->error("连接失败");
                 }

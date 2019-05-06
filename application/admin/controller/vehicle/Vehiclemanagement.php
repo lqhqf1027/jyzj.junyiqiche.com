@@ -744,9 +744,9 @@ class Vehiclemanagement extends Backend
 
                 //是否有openid
                 if ($openid) {
-
-                    $first = $value['username'] . '您好，您车型为：' . $value['models_name'] . '，车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有未处理的违章信息';
                     $time = date('Y-m-d', time());
+                    $first = $value['username'] . '师傅您好，截止到'.$time.'，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有以下未处理的违章信息';
+
                     $details = json_decode($value['orderdetails']['violation_details'], true);
                     foreach ($details as $k => $v) {
                         $count = $k + 1;
@@ -755,30 +755,32 @@ class Vehiclemanagement extends Backend
                     $temp_msg = array(
                         'touser' => "{$openid}",
                         'template_id' => "hTlWqtgPyt6wr1KNdctpFkilUZbc0f9lDNtosGaH1-4",
+                        'url'=>'https://jyzj.junyiqiche.com/index/',
                         'data' => array(
                             'first' => array(
                                 "value" => "{$first}",
+                                "color"=>'#1E9FFF'
                             ),
                             'keyword1' => array(
                                 "value" => "{$value['orderdetails']['licensenumber']}",
                             ),
                             'keyword2' => array(
                                 "value" => "{$count}",
-                                "color" => "#ff0000"
+                                "color" => "#FF5722"
                             ),
                             'keyword3' => array(
                                 "value" => "{$value['orderdetails']['total_deduction']}",
-                                "color" => "#ff0000"
+                                "color" => "#FF5722"
                             ),
                             'keyword4' => array(
                                 "value" => "{$value['orderdetails']['total_fine']}元",
-                                "color" => "#ff0000"
+                                "color" => "#FF5722"
                             ),
                             'keyword5' => array(
                                 "value" => "{$time}",
                             ),
                             "remark" => array(
-                                "value" => "点击查看更多内容",
+                                "value" => "点击查看违章详情，（公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书）",
                             )
                             
                         ),
