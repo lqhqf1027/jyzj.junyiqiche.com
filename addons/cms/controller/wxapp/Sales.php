@@ -35,6 +35,7 @@ class Sales extends Base
     {
         $username = $this->request->post('username');
         $password = $this->request->post('password');
+        $user_id = $this->request->post('user_id');
 
         try {
             $validate = new Validate([
@@ -57,6 +58,18 @@ class Sales extends Base
 
             if ($admin->password != md5(md5($password) . $admin->salt)) {
                 throw new Exception('密码输入错误');
+            }
+
+            $user = \app\admin\model\User::get($user_id);
+
+            $admin_id = \app\admin\model\User::getByAdmin_id($admin->id);
+
+            if (!$user->admin_id && !$admin_id) {
+                $user->admin_id = $admin->id;
+
+                $user->save();
+            }else{
+                throw new Exception('该账户已被授权');
             }
 
             $this->success('成功', ['user_info' => $admin]);
@@ -122,15 +135,15 @@ class Sales extends Base
 
 //        $this->success($params);
 
-        if(!$user_id || !$params){
+        if (!$user_id || !$params) {
             $this->error('缺少参数');
         }
 
         $params['order_createtime'] = strtotime($params['order_createtime']);
 
-        $params['customer_source'] = $params['customer_source']=='转介绍'?'turn_to_introduce':'direct_the_guest';
+        $params['customer_source'] = $params['customer_source'] == '转介绍' ? 'turn_to_introduce' : 'direct_the_guest';
 
-        $params['genderdata'] = $params['genderdata'] == '男'?'male':'female';
+        $params['genderdata'] = $params['genderdata'] == '男' ? 'male' : 'female';
 
         if ($params) {
             Db::startTrans();
@@ -162,7 +175,7 @@ class Sales extends Base
                     }
                 }
 
-                $params['id_cardimages'] = $params['id_cardimages_positive'].','.$params['id_cardimages_negative'];
+                $params['id_cardimages'] = $params['id_cardimages_positive'] . ',' . $params['id_cardimages_negative'];
 
                 $order = new \app\admin\model\Order;
 

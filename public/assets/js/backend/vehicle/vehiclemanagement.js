@@ -56,6 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 return "快速搜索：客户姓名,车牌号";
             };
 
+
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
@@ -78,7 +79,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                 return "<img src=" + Config.cdn + row.admin.avatar + " style='height:20px;width:25px'></img>" + '&nbsp;' + value;
                             },operate:false
-                        },
+                        }, 
                         {field: 'models_name', title: __('Models_name'),operate:false},
                         // {
                         //     field: 'type',
@@ -112,9 +113,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         //         }
                         //     }
                         // },
+ 
                         {
                             field: 'orderdetails.is_it_illegal', title: __('违章状态'), formatter: function (value, row, index) {
-                                console.log(row);
                                 if(value == 'no_queries'){
                                     return '-';
                                 }
@@ -170,20 +171,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         },
                         {
                             field: 'orderdetails.traffic_force_insurance_time',
-                            title: __('交强险截至日期'),
+ 
+                            title: __('保险截至日期'),
+ 
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Controller.api.formatter.datetime,
                             datetimeFormat: "YYYY-MM-DD",operate:false
                         },
-                        {
-                            field: 'orderdetails.business_insurance_time',
-                            title: __('商业险截至日期'),
-                            operate: 'RANGE',
-                            addclass: 'datetimerange',
-                            formatter: Controller.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD",operate:false
-                        },
+                        // {
+                        //     field: 'orderdetails.business_insurance_time',
+                        //     title: __('商业险截至日期'),
+                        //     operate: 'RANGE',
+                        //     addclass: 'datetimerange',
+                        //     formatter: Controller.api.formatter.datetime,
+                        //     datetimeFormat: "YYYY-MM-DD"
+                        // },
                         {
                             field: 'operates',
                             title: __('详情'),
@@ -347,9 +350,71 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                       $('#year_overdue').text(data.else.year_overdue);
                       $('#strong').text(data.else.soon_traffic);
                       $('#strong_overdue').text(data.else.traffic_overdue);
-                      $('#business').text(data.else.soon_business);
-                      $('#business_overdue').text(data.else.business_overdue);
+                      // $('#business').text(data.else.soon_business);
+                      // $('#business_overdue').text(data.else.business_overdue);
                 }
+            });
+
+            /**
+             * 指定搜索条件
+             */
+            $('.search-status').each(function () {
+                $(this).on('click',function () {
+                    var key = '';
+                    var value = '';
+                    switch ($(this).find('span').attr('id')) {
+                        case 'year_inspect':
+                            key = 'orderdetails.annual_inspection_status';
+                            value = 'soon';
+                            break;
+                        case 'year_overdue':
+                            key = 'orderdetails.annual_inspection_status';
+                            value = 'overdue';
+                            break;
+                        case 'strong':
+                            key = 'orderdetails.traffic_force_insurance_status';
+                            value = 'soon';
+                            break;
+                        case 'strong_overdue':
+                            key = 'orderdetails.traffic_force_insurance_status';
+                            value = 'overdue';
+                            break;
+                        case 'business':
+                            key = 'orderdetails.business_insurance_status';
+                            value = 'soon';
+                            break;
+                        case 'business_overdue':
+                            key = 'orderdetails.business_insurance_status';
+                            value = 'overdue';
+                            break;
+                        case 'peccancy':
+                            key = 'orderdetails.is_it_illegal';
+                            value = 'violation_of_regulations';
+                            break;
+                    }
+                    var options = table.bootstrapTable('getOptions');
+                    var queryParams = options.queryParams;
+                    options.pageNumber = 1;
+                    options.queryParams = function (params) {
+                        //这一行必须要存在,否则在点击下一页时会丢失搜索栏数据
+                        params = queryParams(params);
+                        //如果希望追加搜索条件,可使用
+                        var filter = {};
+                        var op = {};
+
+                        filter[key] = value;
+                        op[key] = '=';
+                        params.filter = JSON.stringify(filter);
+                        params.op = JSON.stringify(op);
+
+                        //如果希望忽略搜索栏搜索条件,可使用
+                        //params.filter = JSON.stringify({url: 'login'});
+                        //params.op = JSON.stringify({url: 'like'});
+                        return params;
+                    };
+                    table.bootstrapTable('refresh', {});
+                    return false;
+                });
             });
 
             /**
@@ -510,22 +575,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
             });
 
-
-
-            // /**
-            //  * 公众号推送违章信息
-            //  */
-            // $('.btn-sendoneviolation').on("click", function () {
-
-            //     Fast.api.ajax({
-            //         url: 'vehicle/vehiclemanagement/sendoneviolation',
-            //     }, function (data, ret) {
-
-            //         table.bootstrapTable('refresh');
-                    
-            //     });
-           
-            // });
 
             /**
              * 公众号推送违章信息
@@ -743,7 +792,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 break;
                             case 'orderdetails.traffic_force_insurance_time':
                                 status = row.orderdetails.traffic_force_insurance_status;
-                                text = '交强险';
+                                text = '保险';
                                 break;
                             case 'orderdetails.business_insurance_time':
                                 status = row.orderdetails.business_insurance_status;

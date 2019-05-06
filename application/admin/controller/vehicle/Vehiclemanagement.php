@@ -276,7 +276,11 @@ class Vehiclemanagement extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign('type', $row->type);
+        $list = OrderDetails::getByOrder_id($ids);
+        $this->view->assign([
+            'type'=> $row->type,
+            'row'=>$list
+        ]);
         return $this->view->fetch();
     }
 
