@@ -158,6 +158,14 @@
     .carStatus h3 {
         font-weight: 600;
     }
+    .search-status{
+        cursor: pointer;
+
+    }
+    .search-status:hover{
+        opacity: .5;
+        color: #ff7742;
+    }
 </style>
 
 <div class="panel panel-default panel-intro">
@@ -168,7 +176,7 @@
                 <div class="sm-st clearfix">
                     <span class="sm-st-icon st-red"><i class="fa fa-car"></i></span>
                     <div class="row">
-                        <div class="col-sm-12 col-xs-6 col-md-4" >
+                        <div class="col-sm-12 col-xs-6 col-md-4 search-status" >
 
 
                             <div class="sm-st-info">
@@ -186,7 +194,7 @@
                 <div class="sm-st clearfix">
                     <span class="sm-st-icon st-violet"><i class="fa fa-car"></i></span>
                     <div class="row">
-                        <div class="col-sm-12 col-xs-6 col-md-4" >
+                        <div class="col-sm-12 col-xs-6 col-md-4 search-status" >
 
 
                             <div class="sm-st-info" style="border-right: 1px solid gray" >
@@ -197,7 +205,7 @@
                             </div>
 
                         </div>
-                        <div class="col-sm-12 col-xs-6 col-md-4" >
+                        <div class="col-sm-12 col-xs-6 col-md-4 search-status" >
 
 
                             <div class="sm-st-info">
@@ -216,23 +224,23 @@
                 <div class="sm-st clearfix">
                     <span class="sm-st-icon st-blue"><i class="fa fa-car"></i></span>
                     <div class="row">
-                        <div class="col-sm-12 col-xs-6 col-md-4" >
+                        <div class="col-sm-12 col-xs-6 col-md-4 search-status" >
 
 
                             <div class="sm-st-info" style="border-right: 1px solid gray">
                                 <span class="text-warning" id="strong">{$statistics.soon_traffic}</span>
-                                {:__('交强险即需续保车辆（台）')}
+                                {:__('保险即需续保车辆（台）')}
 
 
                             </div>
 
                         </div>
-                        <div class="col-sm-12 col-xs-6 col-md-4" >
+                        <div class="col-sm-12 col-xs-6 col-md-4 search-status" >
 
 
                             <div class="sm-st-info">
                                 <span class="text-danger" id="strong_overdue">{$statistics.traffic_overdue}</span>
-                                {:__('交强险已过期车辆（台）')}
+                                {:__('保险已过期车辆（台）')}
 
                             </div>
 
@@ -240,35 +248,35 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3 col-xs-6">
-                <div class="sm-st clearfix">
-                    <span class="sm-st-icon st-green"><i class="fa fa-car"></i></span>
-                    <div class="row">
-                        <div class="col-sm-12 col-xs-6 col-md-4" >
+            <!--<div class="col-sm-3 col-xs-6">-->
+                <!--<div class="sm-st clearfix">-->
+                    <!--<span class="sm-st-icon st-green"><i class="fa fa-car"></i></span>-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-12 col-xs-6 col-md-4 search-status" >-->
 
 
-                            <div class="sm-st-info" style="border-right: 1px solid gray">
-                                <span class="text-warning" id="business">{$statistics.soon_business}</span>
-                                {:__('商业险即需续保车辆（台）')}
+                            <!--<div class="sm-st-info" style="border-right: 1px solid gray">-->
+                                <!--<span class="text-warning" id="business">{$statistics.soon_business}</span>-->
+                                <!--{:__('商业险即需续保车辆（台）')}-->
 
 
-                            </div>
+                            <!--</div>-->
 
-                        </div>
-                        <div class="col-sm-12 col-xs-6 col-md-4" >
-
-
-                            <div class="sm-st-info">
-                                <span class="text-danger" id="business_overdue">{$statistics.business_overdue}</span>
-                                {:__('商业险已过期车辆（台）')}
+                        <!--</div>-->
+                        <!--<div class="col-sm-12 col-xs-6 col-md-4 search-status" >-->
 
 
-                            </div>
+                            <!--<div class="sm-st-info">-->
+                                <!--<span class="text-danger" id="business_overdue">{$statistics.business_overdue}</span>-->
+                                <!--{:__('商业险已过期车辆（台）')}-->
 
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+                            <!--</div>-->
+
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
         {:build_heading(null,FALSE)}
         <ul class="nav nav-tabs" data-field="type">

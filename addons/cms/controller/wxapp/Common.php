@@ -104,8 +104,8 @@ class Common extends Base
 
                 if ($is_verify_idcard) {
                     $identify_result = posts('https://api-cn.faceplusplus.com/cardpp/v1/ocridcard', [
-                        'api_key' => '6YWpf8Xx8g1Ll2F5w8bNOpNkmOby1Sdh',
-                        'api_secret' => 'BV_r5bgSN3DY9SELbKpmVUZ52hI-GCPp',
+                        'api_key' => Env::get('face.api_key'),
+                        'api_secret' => Env::get('face.api_secret'),
 //                        'image_url'=>ROOT_PATH . '/public' . $fileName
                         'image_url' => 'https://static.junyiqiche.com/jyzj.junyiqiche.com' . $fileName
                     ]);
