@@ -40,7 +40,6 @@ class Common extends Base
         if (empty($file)) {
             $this->error(__('No file upload or server upload limit exceeded'));
         }
-
         //判断是否已经存在附件
         $sha1 = $file->hash();
 
@@ -101,7 +100,6 @@ class Common extends Base
                 $fileName = $uploadDir . $splInfo->getSaveName();
                 $files = fopen(ROOT_PATH . '/public' . $fileName, 'r');
                 $res = $client->write('/jyzj.junyiqiche.com' . $fileName, $files); //上传到u拍云
-
                 if ($is_verify_idcard) {
                     $identify_result = posts('https://api-cn.faceplusplus.com/cardpp/v1/ocridcard', [
                         'api_key' => Env::get('face.api_key'),
