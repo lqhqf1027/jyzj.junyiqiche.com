@@ -228,7 +228,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => 'wx3b2ff8ef5b4b0cde',
+    'value' => 'wxdaa0be59fd250857',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',
@@ -243,7 +243,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => '1dfdcffcdd1f4a802b2be1ead9fe144e',
+    'value' => 'f3cedb18e4b38180205f44fc026389c1',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',

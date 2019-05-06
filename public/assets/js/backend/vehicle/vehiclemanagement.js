@@ -65,10 +65,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id'),},
+                        {field: 'id', title: __('Id'),operate:false},
                         {field: 'orderdetails.file_coding', title: __('Orderdetails.file_coding')},
                         {field: 'username', title: __('Username')},
-                        {field: 'id_card', title: __('Id_card')},
+                        // {field: 'id_card', title: __('Id_card')},
                         {field: 'phone', title: __('Phone')},
                         {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber')},
                         {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
@@ -76,10 +76,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {
                             field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
 
-                                return "<img src=" + Config.cdn + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value;
-                            }
+                                return "<img src=" + Config.cdn + row.admin.avatar + " style='height:20px;width:25px'></img>" + '&nbsp;' + value;
+                            },operate:false
                         },
-                        {field: 'models_name', title: __('Models_name')},
+                        {field: 'models_name', title: __('Models_name'),operate:false},
                         // {
                         //     field: 'type',
                         //     title: __('Type'),
@@ -158,7 +158,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Table.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
+                            datetimeFormat: "YYYY-MM-DD",operate:false
                         },
                         {
                             field: 'orderdetails.annual_inspection_time',
@@ -166,7 +166,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Controller.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
+                            datetimeFormat: "YYYY-MM-DD",operate:false
                         },
                         {
                             field: 'orderdetails.traffic_force_insurance_time',
@@ -174,7 +174,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Controller.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
+                            datetimeFormat: "YYYY-MM-DD",operate:false
                         },
                         {
                             field: 'orderdetails.business_insurance_time',
@@ -182,12 +182,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Controller.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD"
+                            datetimeFormat: "YYYY-MM-DD",operate:false
                         },
                         {
                             field: 'operates',
                             title: __('详情'),
                             table: table,
+
                             // events: Controller.api.events.operate,
                             formatter: Table.api.formatter.operate,
                             buttons: [
@@ -195,7 +196,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     name: 'customer_information',
                                     icon: 'fa fa-eye',
                                     title: __('查看客户详细资料'),
-                                    text: '查看客户详细资料',
+                                    text: '客户资料',
                                     extend: 'data-toggle="tooltip"',
                                     classname: 'btn btn-xs btn-primary btn-dialog btn-customer_information',
                                     url: 'vehicle/vehiclemanagement/customer_information',
@@ -203,7 +204,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     // }
                                 },
 
-                            ]
+                            ],operate:false
                         },
                         {
                             field: 'operate',

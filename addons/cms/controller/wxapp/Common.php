@@ -40,7 +40,6 @@ class Common extends Base
         if (empty($file)) {
             $this->error(__('No file upload or server upload limit exceeded'));
         }
-
         //判断是否已经存在附件
         $sha1 = $file->hash();
 
@@ -102,14 +101,8 @@ class Common extends Base
                 $files = fopen(ROOT_PATH . '/public' . $fileName, 'r');
                 $res = $client->write('/jyzj.junyiqiche.com' . $fileName, $files); //上传到u拍云
 
-                if ($is_verify_idcard) {
-                    $identify_result = posts('https://api-cn.faceplusplus.com/cardpp/v1/ocridcard', [
-                        'api_key' => '6YWpf8Xx8g1Ll2F5w8bNOpNkmOby1Sdh',
-                        'api_secret' => 'BV_r5bgSN3DY9SELbKpmVUZ52hI-GCPp',
-//                        'image_url'=>ROOT_PATH . '/public' . $fileName
-                        'image_url' => 'https://static.junyiqiche.com/jyzj.junyiqiche.com' . $fileName
-                    ]);
-                }
+
+
                 if ($res['x-upyun-content-length']) unlink(ROOT_PATH . '/public' . $fileName);  //删除本地服务器
             } catch (\Exception $e) {
 

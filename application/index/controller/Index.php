@@ -68,13 +68,13 @@ class Index extends Frontend
 
         $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();
         //最后一次查询时间是否在本周内,新用户
-        if ($userinfo['query_time']) {
-
-            if (WxPublicUser::get($uid['id'], function ($q) {
-                $q->whereTime(['query_time' => 'w']);
-            })->getData()) $userinfo['query_number'] = 0;
-        } //如果没有在本周内,更新query_number 为1
-        else $userinfo['query_number'] = 1;
+//        if ($userinfo['query_time']) {
+//
+//            if (WxPublicUser::get($uid['id'], function ($q) {
+//                $q->whereTime(['query_time' => 'w']);
+//            })->getData()) $userinfo['query_number'] = 0;
+//        } //如果没有在本周内,更新query_number 为1
+//        else $userinfo['query_number'] = 1;
 
         $this->model = new \app\admin\model\Order();
         $order_details = collection($this->model->where(['wx_public_user_id' => $uid['id']])->field('username,phone,wx_public_user_id,models_name')
@@ -368,13 +368,13 @@ class Index extends Frontend
                     }
 
                     if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
-                            WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
+                        WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
 
-                      }
+                    }
 
 
-                        OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
-                        Db::commit();
+                    OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
+                    Db::commit();
                 } catch (\Exception $e) {
                     Db::rollback();
                     $this->error($e->getMessage());

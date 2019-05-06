@@ -4,7 +4,7 @@ return array (
   'name' => '君忆之家',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.4.7',
+  'version' => '1.5.0',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
@@ -47,6 +47,7 @@ return array (
     'message6' => '销售顾问',
     'message7' => '销售经理',
     'message8' => '车管',
+    'message9' => '档案管理',
   ),
   'invite_bg_img' => '/jyzj.junyiqiche.com/uploads/20190417/50c0d3bf5e7bedcb8fcd81fc80c6ab61.jpg',
   'card_share_title' => '',
