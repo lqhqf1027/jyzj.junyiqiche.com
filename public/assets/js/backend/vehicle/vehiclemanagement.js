@@ -154,6 +154,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                         },
                         {
+                            field: 'orderdetails.total_deduction',
+                            title: __('总扣分'),
+                            operate: 'BETWEEN',
+                            formatter: Controller.api.formatter.fen
+                        },
+                        {
                             field: 'orderdetails.update_violation_time',
                             title: __('最后查询违章时间'),
                             operate: 'RANGE',
@@ -164,7 +170,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {
                             field: 'orderdetails.annual_inspection_time',
                             title: __('年检截至日期'),
-                            operate: 'RANGE',
+                            operate: false,
                             addclass: 'datetimerange',
                             formatter: Controller.api.formatter.datetime,
                             datetimeFormat: "YYYY-MM-DD",operate:false
@@ -173,11 +179,58 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             field: 'orderdetails.traffic_force_insurance_time',
  
                             title: __('保险截至日期'),
- 
-                            operate: 'RANGE',
+                            operate: false,
                             addclass: 'datetimerange',
                             formatter: Controller.api.formatter.datetime,
                             datetimeFormat: "YYYY-MM-DD",operate:false
+                        },
+                        // {
+                        //     field: 'orderdetails.business_insurance_time',
+                        //     title: __('商业险截至日期'),
+                        //     operate: false,
+                        //     addclass: 'datetimerange',
+                        //     formatter: Controller.api.formatter.datetime,
+                        //     datetimeFormat: "YYYY-MM-DD"
+                        // },
+                        {
+                            field: 'orderdetails.annual_inspection_status',
+                            title: '年检状态',
+                            searchList: {
+                                "normal": __('正常'),
+                                "soon": __('即将'),
+                                "overdue": __('过期'),
+                                "no_queries": __('暂未查询')
+                            },
+                            visible: false
+                        },
+                        {
+                            field: 'orderdetails.traffic_force_insurance_status',
+                            title: '保险状态',
+                            searchList: {
+                                "normal": __('正常'),
+                                "soon": __('即将'),
+                                "overdue": __('过期'),
+                                "no_queries": __('暂未查询')
+                            },
+                            visible: false
+                        },
+                        // {
+                        //     field: 'orderdetails.business_insurance_status',
+                        //     title: '商业险状态',
+                        //     searchList: {
+                        //         "normal": __('正常'),
+                        //         "soon": __('即将'),
+                        //         "overdue": __('过期'),
+                        //         "no_queries": __('暂未查询')
+                        //     },
+                        //     visible: false
+                        // },
+                        {
+                            field: 'createtime',
+                            title: __('Createtime'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime
                         },
                         // {
                         //     field: 'orderdetails.business_insurance_time',
@@ -193,6 +246,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             table: table,
 
                             // events: Controller.api.events.operate,
+                            operate: false,
                             formatter: Table.api.formatter.operate,
                             buttons: [
                                 {
@@ -238,17 +292,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return row.lift_car_status == 'no' ? true : false;
                                     }
                                 },
-                                {
-                                    name: 'edits',
-                                    icon: 'fa fa-check',
-                                    title: __('已提车'),
-                                    text: '已提车',
-                                    extend: 'data-toggle="tooltip"',
-                                    classname: 'text-info',
-                                    visible: function (row) {
-                                        return row.lift_car_status == 'yes' ? true : false;
-                                    }
-                                },
+                                // {
+                                //     name: 'edits',
+                                //     icon: 'fa fa-check',
+                                //     title: __('已提车'),
+                                //     text: '已提车',
+                                //     extend: 'data-toggle="tooltip"',
+                                //     classname: 'text-info',
+                                //     visible: function (row) {
+                                //         return row.lift_car_status == 'yes' ? true : false;
+                                //     }
+                                // },
                                 {
                                     name: 'modifying_data',
                                     icon: 'fa fa-pencil',
@@ -256,7 +310,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     text: '修改资料',
                                     extend: 'data-toggle="tooltip"',
                                     dropdown: '更多',
-                                    classname: 'btn btn-xs btn-success btn-modifying_data',
+                                    classname: 'btn btn-xs btn-modifying_data',
                                     visible: function (row) {
                                         return row.lift_car_status == 'yes' ? true : false;
                                     }
@@ -304,7 +358,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     text: '已授权',
                                     extend: 'data-toggle="tooltip"',
                                     dropdown: '更多',
-                                    classname: 'text-success',
+                                    classname: 'text-info',
                                     visible: function (row) {
                                         return row.user_id ? true : false;
                                     }
@@ -317,7 +371,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     text: '微信公众号授权',
                                     extend: 'data-toggle="tooltip"',
                                     dropdown: '更多',
-                                    classname: 'btn btn-xs btn-success btn-wechat',
+                                    classname: 'btn btn-xs btn-wechat',
                                     visible:function (row) {
                                         return !row.wx_public_user_id?true:false;
                                     }
@@ -330,7 +384,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     text: '公众号推送违章信息',
                                     extend: 'data-toggle="tooltip"',
                                     dropdown: '更多',
-                                    classname: 'btn btn-xs btn-success btn-push_violation',
+                                    classname: 'btn btn-xs btn-push_violation',
                                     visible: function (row) {
                                         return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
                                     }
@@ -794,10 +848,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 status = row.orderdetails.traffic_force_insurance_status;
                                 text = '保险';
                                 break;
-                            case 'orderdetails.business_insurance_time':
-                                status = row.orderdetails.business_insurance_status;
-                                text = '商业险';
-                                break;
+
                         }
                         let sign = '';
                         let content = '';
@@ -814,6 +865,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         return status != 'no_queries' ? Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-" + sign + "' style='cursor: pointer'>" + content + "</span>" : value;
                     }
+                },
+                /**
+                 * 0分标记
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
+                fen: function (value, row, index) {
+
+                    if (value) {
+                        return "<span class='text-danger'>" + value + "</span>";
+                    }
+                    return value == null ? '-' : "<span class='text-success'><strong>" + value + "</strong></span>";
+
                 },
             },
             // 单元格元素事件
@@ -1164,6 +1230,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     
                 layer.open({
                     type: 1,
+                    skin: 'layui-layer-demo', 
+                    closeBtn: 1,
                     area: ['1000px', '750px'],
                     title: ['查询违章结果', 'font-size:18px;text-align:center'],
                     maxmin: true,
