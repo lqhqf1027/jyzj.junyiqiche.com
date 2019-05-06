@@ -130,10 +130,10 @@ class Sales extends Base
      */
     public function new_sales_order()
     {
-        $user_id = $this->request->post('id');
+        $user_id = $this->request->post('admin_id');
         $params = $this->request->post("row/a");
 
-//        $this->success($params);
+//        $this->success($user_id.','.$params);
 
         if (!$user_id || !$params) {
             $this->error('缺少参数');
