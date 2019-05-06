@@ -19,6 +19,15 @@ use Endroid\QrCode\QrCode;
 use wechat\Wx;
 use think\Env;
 
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Shared_Date;
+use PHPExcel_Style;
+use PHPExcel_Style_Alignment;
+use PHPExcel_Style_Border;
+use PHPExcel_Style_Fill;
+use PHPExcel_Style_NumberFormat;
+
 /**
  *
  *
@@ -34,8 +43,10 @@ class Vehiclemanagement extends Backend
     protected $model = null;
     protected $noNeedRight = ['*'];
     protected $noNeedLogin = ['sendviolation'];
+
     public function _initialize()
     {
+        new PHPExcel()
         parent::_initialize();
         $this->model = new \app\admin\model\Order();
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
@@ -140,7 +151,7 @@ class Vehiclemanagement extends Backend
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail','update_violation_time']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail','update_violation_time','total_fine']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
@@ -1004,6 +1015,147 @@ class Vehiclemanagement extends Backend
                 $this->success('没有违章可推送');
             }
         }
+    }
+
+
+    public function exportOrderExcel($data)
+    {
+
+        // 新建一个excel对象 大神已经加入了PHPExcel 不用引了 直接用！
+        $objPHPExcel = new \PHPExcel();  //在vendor目录下 \不能少 否则报错
+        // 设置文档的相关信息
+        $objPHPExcel->getProperties()->setCreator("楼主666")/*设置作者*/
+        ->setLastModifiedBy("楼主666")/*最后修改*/
+        ->setTitle("楼主666")/*题目*/
+        ->setSubject("楼主666")/*主题*/
+        ->setDescription("楼主666")/*描述*/
+        ->setKeywords("楼主666")/*关键词*/
+        ->setCategory("楼主666");/*类别*/
+        $objPHPExcel->getDefaultStyle()->getFont()->setName('微软雅黑');//字体
+        /*设置表头*/
+        $objPHPExcel->getActiveSheet()->mergeCells('A1:P1');//合并第一行的单元格
+        $objPHPExcel->getActiveSheet()->mergeCells('A2:P2');//合并第二行的单元格
+        $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', '楼主教我导出EXcel666');//标题
+        $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);      // 第一行的默认高度
+        //第二行的内容和格式
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A2', '楼主真的666');
+        $objPHPExcel->getActiveSheet()->getRowDimension('2')->setRowHeight(20);/*设置行高*/
+        $myrow = 3;/*表头所需要行数的变量，方便以后修改*/
+        /*表头数据填充*/
+        $objPHPExcel->getActiveSheet()->getRowDimension('3')->setRowHeight(30);/*设置行高*/
+        $objPHPExcel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息
+        ->setCellValue('A' . $myrow, '序号')
+            ->setCellValue('B' . $myrow, '日期')
+            ->setCellValue('C' . $myrow, '物资名称')
+            ->setCellValue('D' . $myrow, '规格')
+            ->setCellValue('E' . $myrow, '单位')
+            ->setCellValue('F' . $myrow, '数量')
+            ->setCellValue('G' . $myrow, '出厂单价(元)')
+            ->setCellValue('H' . $myrow, '运杂费(元)')
+            ->setCellValue('I' . $myrow, '税率')
+            ->setCellValue('J' . $myrow, '税额(元)')
+            ->setCellValue('K' . $myrow, '价税合计(元)')
+            ->setCellValue('L' . $myrow, '金额(元)')
+            ->setCellValue('M' . $myrow, '使用单位')
+            ->setCellValue('N' . $myrow, '卸车地点')
+            ->setCellValue('O' . $myrow, '生产厂家')
+            ->setCellValue('P' . $myrow, '备注');
+        // 关键数据
+        $data = json_decode($data, true);
+        $myrow = $myrow + 1; //刚刚设置的行变量
+        $mynum = 1;//序号
+        //遍历接收的数据，并写入到对应的单元格内
+        foreach ($data as $key => $value) {
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A' . $myrow, $mynum)
+                ->setCellValue('B' . $myrow, $value['buyTime'])
+                ->setCellValue('C' . $myrow, $value['proName'])
+                ->setCellValue('D' . $myrow, $value['spec'])
+                ->setCellValue('E' . $myrow, $value['unit'])
+                ->setCellValue('F' . $myrow, $value['num'])
+                ->setCellValue('G' . $myrow, $value['sellPrice'])
+                ->setCellValue('H' . $myrow, '0')
+                ->setCellValue('I' . $myrow, $value['sellTaxRate'])
+                ->setCellValue('J' . $myrow, $value['sellTax'])
+                ->setCellValue('K' . $myrow, $value['sellSumTax'])
+                ->setCellValue('L' . $myrow, $value['sellSum'])
+                ->setCellValue('M' . $myrow, '')
+                ->setCellValue('N' . $myrow, '')
+                ->setCellValue('O' . $myrow, '')
+                ->setCellValue('P' . $myrow, '');
+            $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高 不能批量的设置 这种感觉 if（has（蛋）！=0）{疼();}*/
+            $myrow++;
+            $mynum++;
+        }
+        $mynumdata=$myrow-1; //获取主要数据结束的行号
+        $objPHPExcel->setActiveSheetIndex(0)->getstyle('A3:P' . $mynumdata)->getAlignment()->setHorizontal(\PHPExcel_style_Alignment::HORIZONTAL_CENTER);/*设置格式 水平居中*/
+        /*设置数据的边框 手册上写的方法只显示竖线 非常坑爹 所以采用网上搜来的方法*/
+        $style_array = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => \PHPExcel_Style_Border::BORDER_THIN
+                )
+            ));
+        $objPHPExcel->getActiveSheet()->getStyle('A3:P' . $mynumdata)->applyFromArray($style_array);
+        /*设置数据的格式*/
+        $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
+        $objPHPExcel->getActiveSheet()->mergeCells('A'.$myrow.':P'.$myrow);//合并下一行的单元格
+        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A' . $myrow,'供应单位：'.$name);
+        $myrow++; $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
+        $objPHPExcel->getActiveSheet()->mergeCells('A'.$myrow.':C'.$myrow);//合并下一行的单元格
+        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A' . $myrow,'收料员：');
+        $objPHPExcel->getActiveSheet()->mergeCells('D'.$myrow.':J'.$myrow);//合并下一行的单元格
+        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('D' . $myrow,'复核：');
+        $objPHPExcel->getActiveSheet()->mergeCells('K'.$myrow.':P'.$myrow);//合并下一行的单元格
+        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('K' . $myrow,'确认签字：');
+        $myrow++; $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
+        $objPHPExcel->getActiveSheet()->mergeCells('I'.$myrow.':K'.$myrow);//合并下一行的单元格
+        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('I' . $myrow,'日期：');
+        $objPHPExcel->getActiveSheet()->getStyle('A1:P' . $myrow)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);/*垂直居中*/
+        //关键数据结束
+
+
+        //设置宽width 由于自适应宽度对中文的支持是个BUG因此坑爹的手动设置了每一列的宽度 这种感觉 if（has（蛋）！=0）{碎();}
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(8.5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(8);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(8);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(8.5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(7);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getStyle('A3:P' . $myrow)->getAlignment()->setWrapText(true);//设置单元格允许自动换行
+        /*设置表相关的信息*/
+        $objPHPExcel->getActiveSheet()->setTitle($buytime); //活动表的名称
+        $objPHPExcel->setActiveSheetIndex(0);//设置第一张表为活动表
+        //纸张方向和大小 为A4横向
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(\PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(\PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+        //浏览器交互 导出
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="楼主教我的导出excel这弄得真是666.xlsx"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+        exit;
+
     }
 
 

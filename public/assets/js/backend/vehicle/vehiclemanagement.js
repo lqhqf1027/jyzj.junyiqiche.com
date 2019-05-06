@@ -67,6 +67,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
+                        {
+                            field: 'createtime',
+                            title: __('Createtime'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime,
+                            datetimeFormat:'YYYY-MM-DD'
+                        },
                         {field: 'orderdetails.file_coding', title: __('Orderdetails.file_coding')},
                         {field: 'username', title: __('Username')},
                         // {field: 'id_card', title: __('Id_card')},
@@ -81,39 +89,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },operate:false
                         }, 
                         {field: 'models_name', title: __('Models_name'),operate:false},
-                        // {
-                        //     field: 'type',
-                        //     title: __('Type'),
-                        //     searchList: {
-                        //         "mortgage": __('Type mortgage'),
-                        //         "used_car_mortgage": __('Type used_car_mortgage'),
-                        //         "car_rental": __('Type car_rental'),
-                        //         "full_new_car": __('Type full_new_car'),
-                        //         "full_used_car": __('Type full_used_car'),
-                        //         "sublet": __('Type sublet'),
-                        //         "affiliated": __('Type affiliated')
-                        //     },
-                        //     formatter: function (value, row, index) {
-
-                        //         switch (value) {
-                        //             case 'mortgage':
-                        //                 return this.searchList.mortgage;
-                        //             case 'used_car_mortgage':
-                        //                 return this.searchList.used_car_mortgage;
-                        //             case 'full_new_car':
-                        //                 return this.searchList.full_new_car;
-                        //             case 'full_used_car':
-                        //                 return this.searchList.full_used_car;
-                        //             case 'sublet':
-                        //                 return this.searchList.sublet;
-                        //             case 'affiliated':
-                        //                 return this.searchList.affiliated;
-                        //             case 'car_rental':
-                        //                 return this.searchList.car_rental;
-                        //         }
-                        //     }
-                        // },
- 
                         {
                             field: 'orderdetails.is_it_illegal', title: __('违章状态'), formatter: function (value, row, index) {
                                 if(value == 'no_queries'){
@@ -160,6 +135,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             formatter: Controller.api.formatter.fen
                         },
                         {
+                            field: 'orderdetails.total_fine',
+                            title: __('总罚款'),
+                            operate:false
+                            // operate: 'BETWEEN',
+                            // formatter: Controller.api.formatter.fen
+                        },
+                        {
                             field: 'orderdetails.update_violation_time',
                             title: __('最后查询违章时间'),
                             operate: 'RANGE',
@@ -197,8 +179,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             title: '年检状态',
                             searchList: {
                                 "normal": __('正常'),
-                                "soon": __('即将'),
-                                "overdue": __('过期'),
+                                "soon": __('即将年检'),
+                                "overdue": __('已过期'),
                                 "no_queries": __('暂未查询')
                             },
                             visible: false
@@ -208,8 +190,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             title: '保险状态',
                             searchList: {
                                 "normal": __('正常'),
-                                "soon": __('即将'),
-                                "overdue": __('过期'),
+                                "soon": __('即需续保'),
+                                "overdue": __('已过期'),
                                 "no_queries": __('暂未查询')
                             },
                             visible: false
@@ -225,13 +207,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         //     },
                         //     visible: false
                         // },
-                        {
-                            field: 'createtime',
-                            title: __('Createtime'),
-                            operate: 'RANGE',
-                            addclass: 'datetimerange',
-                            formatter: Table.api.formatter.datetime
-                        },
+
                         // {
                         //     field: 'orderdetails.business_insurance_time',
                         //     title: __('商业险截至日期'),
@@ -414,61 +390,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
              */
             $('.search-status').each(function () {
                 $(this).on('click',function () {
-                    var key = '';
-                    var value = '';
-                    switch ($(this).find('span').attr('id')) {
-                        case 'year_inspect':
-                            key = 'orderdetails.annual_inspection_status';
-                            value = 'soon';
-                            break;
-                        case 'year_overdue':
-                            key = 'orderdetails.annual_inspection_status';
-                            value = 'overdue';
-                            break;
-                        case 'strong':
-                            key = 'orderdetails.traffic_force_insurance_status';
-                            value = 'soon';
-                            break;
-                        case 'strong_overdue':
-                            key = 'orderdetails.traffic_force_insurance_status';
-                            value = 'overdue';
-                            break;
-                        case 'business':
-                            key = 'orderdetails.business_insurance_status';
-                            value = 'soon';
-                            break;
-                        case 'business_overdue':
-                            key = 'orderdetails.business_insurance_status';
-                            value = 'overdue';
-                            break;
-                        case 'peccancy':
-                            key = 'orderdetails.is_it_illegal';
-                            value = 'violation_of_regulations';
-                            break;
-                    }
-                    var options = table.bootstrapTable('getOptions');
-                    var queryParams = options.queryParams;
-                    options.pageNumber = 1;
-                    options.queryParams = function (params) {
-                        //这一行必须要存在,否则在点击下一页时会丢失搜索栏数据
-                        params = queryParams(params);
-                        //如果希望追加搜索条件,可使用
-                        var filter = {};
-                        var op = {};
-
-                        filter[key] = value;
-                        op[key] = '=';
-                        params.filter = JSON.stringify(filter);
-                        params.op = JSON.stringify(op);
-
-                        //如果希望忽略搜索栏搜索条件,可使用
-                        //params.filter = JSON.stringify({url: 'login'});
-                        //params.op = JSON.stringify({url: 'like'});
-                        return params;
-                    };
-                    table.bootstrapTable('refresh', {});
-                    return false;
+                   let result = Controller.api.specified_conditions($(this).find('span').attr('id'),table);
+                    $('a.btn-search-result').children('span.search-info').text(result+'（'+$(this).find('span').text()+'台）');
+                    $('a.btn-search-result').removeClass('hide');
                 });
+
+            });
+
+            /**
+             * 重置指定搜索条件
+             */
+            $('#reset').on('click',function () {
+                Controller.api.specified_conditions('',table);
+
+                $(this).parent().addClass('hide');
+            });
+
+            $('.btn-myexcel-export').on('click',function () {
+                var myexceldata=table.bootstrapTable('getSelections');//获取选中的项目的数据 格式是json
+                myexceldata=JSON.stringify(myexceldata);//数据转成字符串作为参数
+                // alert(myexceldata);
+                //直接url访问，不能使用ajax，因为ajax要求返回数据，和PHPExcel一会浏览器输出冲突！将数据作为参数
+                window.location.href="index/exportOrderExcel?data="+myexceldata;
             });
 
             /**
@@ -535,35 +478,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             data: {ids}
 
                         }, function (data, ret) {
-                            // var arrs = [
-                            //     {
-                            //         username: '企鹅啊',
-                            //         license_plate_number: '川A56554',
-                            //         status: 'error',
-                            //         msg: '车辆信息错误',
-                            //         is_it_illegal: '-',
-                            //         total_deduction: '-',
-                            //         total_fine: '-'
-                            //     },
-                            //     {
-                            //         username: '的方式',
-                            //         license_plate_number: '川A56554',
-                            //         status: 'error',
-                            //         msg: '车辆信息错误',
-                            //         is_it_illegal: '-',
-                            //         total_deduction: '-',
-                            //         total_fine: '-'
-                            //     },
-                            //     {
-                            //         username: '的法国队',
-                            //         license_plate_number: '川A56554',
-                            //         status: 'success',
-                            //         msg: '-',
-                            //         is_it_illegal: '有',
-                            //         total_deduction: '3',
-                            //         total_fine: '300'
-                            //     },
-                            // ];
+
                             Controller.api.layer_violation(data);
 
                             Layer.close(closeLay);
@@ -1277,6 +1192,73 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     table.bootstrapTable(types, data[i]);
                 }
             },
+            specified_conditions: function (obj = '',table) {
+                var key = '';
+                var value = '';
+                var text = '';
+                switch (obj) {
+                    case 'year_inspect':
+                        key = 'orderdetails.annual_inspection_status';
+                        value = 'soon';
+                        text = '即需年检车辆';
+                        break;
+                    case 'year_overdue':
+                        key = 'orderdetails.annual_inspection_status';
+                        value = 'overdue';
+                        text = '年检已过期车辆';
+                        break;
+                    case 'strong':
+                        key = 'orderdetails.traffic_force_insurance_status';
+                        value = 'soon';
+                        text = '即需续保车辆';
+                        break;
+                    case 'strong_overdue':
+                        key = 'orderdetails.traffic_force_insurance_status';
+                        value = 'overdue';
+                        text = '保险已过期车辆';
+                        break;
+                    // case 'business':
+                    //     key = 'orderdetails.business_insurance_status';
+                    //     value = 'soon';
+                    //     break;
+                    // case 'business_overdue':
+                    //     key = 'orderdetails.business_insurance_status';
+                    //     value = 'overdue';
+                    //     break;
+                    case 'peccancy':
+                        key = 'orderdetails.is_it_illegal';
+                        value = 'violation_of_regulations';
+                        text = '有违章车辆';
+                        break;
+
+                }
+                var options = table.bootstrapTable('getOptions');
+                var queryParams = options.queryParams;
+                options.pageNumber = 1;
+                options.queryParams = function (params) {
+                    //这一行必须要存在,否则在点击下一页时会丢失搜索栏数据
+                    params = queryParams(params);
+                    //如果希望追加搜索条件,可使用
+                    var filter = {};
+                    var op = {};
+
+                    if(obj){
+                        filter[key] = value;
+                        op[key] = '=';
+
+                    }
+                    params.filter = JSON.stringify(filter);
+                    params.op = JSON.stringify(op);
+
+
+                    //如果希望忽略搜索栏搜索条件,可使用
+                    //params.filter = JSON.stringify({url: 'login'});
+                    //params.op = JSON.stringify({url: 'like'});
+                    return params;
+                };
+                table.bootstrapTable('refresh', {});
+                return text;
+            }
         }
     };
     return Controller;
