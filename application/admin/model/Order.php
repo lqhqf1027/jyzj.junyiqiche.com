@@ -122,4 +122,10 @@ class Order extends Model
         return $this->belongsTo('Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    //关联客服
+    public function service()
+    {
+        return $this->belongsTo('Admin', 'service_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
 }

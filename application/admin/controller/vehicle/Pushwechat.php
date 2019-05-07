@@ -18,6 +18,7 @@ use think\Session;
 use Endroid\QrCode\QrCode;
 use wechat\Wx;
 use think\Env;
+use app\admin\model\WxPublicUser;
 
 /**
  *
@@ -191,6 +192,44 @@ class Pushwechat extends Backend
             $this->success();
         }
 
+    }
+
+    //更新unionid
+    public function wechat() 
+    {
+        Cache::rm('access_token');
+        $appid = Env::get('wx_public.appid');
+        $secret = Env::get('wx_public.secret');
+        $wx = new wx($appid,$secret);
+        $access_token = $wx->getWxtoken()['access_token'];
+        $result = WxPublicUser::where('id', '>', 99)->select();
+
+        $data = [
+            'user_list' => [
+
+            ]
+        ];
+        foreach ($result as $k => $v) {
+            
+            $openid = [
+                'openid' => $v['openid']
+            ];
+            array_push($data['user_list'], $openid);
+            
+        }
+        $data = json_encode($data);
+        // pr($data);
+        // die;
+        $r = posts("https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token={$access_token}", $data);
+
+        foreach ($r['user_info_list'] as $k => $v) {
+
+            // 更新当前用户信息
+            WxPublicUser::where(['openid' => $v['openid']])->update(['unionid' => $v['unionid']]);
+
+        }
+
+        
     }
 
 
