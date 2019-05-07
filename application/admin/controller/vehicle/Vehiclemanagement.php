@@ -54,6 +54,35 @@ class Vehiclemanagement extends Backend
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("liftCarStatusList", $this->model->getLiftCarStatusList());
 
+        $customer_service = Admin::field('id,nickname,avatar')
+        ->withCount(['violationCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('is_it_illegal','violation_of_regulations');
+            }]);
+        },'soonYearCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('annual_inspection_status','soon');
+            }]);
+        },'overdueYearCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('annual_inspection_status','overdue');
+            }]);
+        },'soonInsuranceCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('traffic_force_insurance_status','soon');
+            }]);
+        },'overdueInsuranceCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('traffic_force_insurance_status','overdue');
+            }]);
+        }])
+            ->where('rule_message','message10')
+            ->select();
+
+//        die;
+        $customer_service = collection($customer_service)->toArray();
+
+//        pr($customer_service);die;
         if (!Cache::get('statistics')) {
 
             Cache::set('statistics', self::statistics(), 43200);
@@ -86,30 +115,6 @@ class Vehiclemanagement extends Backend
                         ]);
                     }
                 });
-
-//            foreach ($check_time as $value) {
-//
-//                $year_status = $traffic_force_status = $business_status = 'no_queries';
-//                if ($value['annual_inspection_status'] != 'no_queries') {
-//                    $year_status = self::check_state($value['annual_inspection_time']);
-//                }
-//
-//                if ($value['traffic_force_insurance_status'] != 'no_queries') {
-//                    $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
-//                }
-//
-//                if ($value['business_insurance_status'] != 'no_queries') {
-//                    $business_status = self::check_state($value['business_insurance_time']);
-//                }
-//
-//                OrderDetails::update([
-//                    'id' => $value['id'],
-//                    'annual_inspection_status' => $year_status,
-//                    'traffic_force_insurance_status' => $traffic_force_status,
-//                    'business_insurance_status' => $business_status,
-//                ]);
-//            }
-
         }
 
         if (!Cache::get('statistics_total_violation')) {
@@ -118,7 +123,10 @@ class Vehiclemanagement extends Backend
 
         $this->view->assign([
             'statistics' => Cache::get('statistics'),
-            'statistics_total_violation' => Cache::get('statistics_total_violation')
+            'statistics_total_violation' => Cache::get('statistics_total_violation'),
+            'customer_service' => $customer_service,
+            'total_fine' => OrderDetails::where('is_it_illegal','violation_of_regulations')->sum('total_fine'),
+            'total_points' => OrderDetails::where('is_it_illegal','violation_of_regulations')->sum('total_deduction')
         ]);
 
     }

@@ -32,7 +32,7 @@
     }
 
     .sm-st-info span {
-        display: block;
+        /*display: inline-block;*/
         font-size: 24px;
         font-weight: 600;
     }
@@ -159,6 +159,7 @@
         font-weight: 600;
     }
     .search-status{
+        /*display: inline-block;*/
         cursor: pointer;
 
     }
@@ -182,8 +183,8 @@
         margin:0;
     }
     .services ul>li:hover{
-        opacity: .5;
-        color: #ff7742;
+        /*opacity: .5;*/
+        /*color: #ff7742;*/
     }
 </style>
 
@@ -194,20 +195,15 @@
             <div class="col-sm-3 col-xs-6 col-md-2">
                 <div class="sm-st clearfix" >
 
-
-
-
                     <div class="row">
                         <div class="col-sm-12 col-xs-6 col-md-12 search-status text-center" >
 
-
                             <embed src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/svg/违章.svg" width="60" height="60" type="image/svg+xml"pluginspage="http://www.adobe.com/svg/viewer/install/" />
 
-
                             <div class="sm-st-info">
-                                <span class="text-danger" id="peccancy">{$statistics_total_violation}</span>
+                                <span class="text-danger" id="peccancy" mark="peccancy">{$statistics_total_violation}</span>
                                <strong> {:__('车辆总违章数（台）')}</strong>
-                                <p style="margin:0"> 累计缴款金额 234489元，累计扣分435分</p>
+                                <p style="margin:0"> 累计缴款金额 {$total_fine}元，累计扣分{$total_points}分</p>
                             </div>
 
                         </div>
@@ -242,7 +238,7 @@
             <div class="col-sm-3 col-xs-6 col-md-2">
                 <div class="sm-st clearfix">
                     <div class="row">
-                        <div class="col-sm-12 col-xs-6 col-md-12 text-center search-status" >
+                        <div class="col-sm-12 col-xs-6 col-md-12 text-center" >
 
                             <embed src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/svg/检查.svg" width="60" height="60" type="image/svg+xml"pluginspage="http://www.adobe.com/svg/viewer/install/" />
 
@@ -250,7 +246,9 @@
                                 <!--<span>-->
                                     <!--{$statistics.soon_year}-->
                                 <!--</span>-->
-                                <i>即将过期</i>  <span class="text-warning" id="year_inspect" style="display: inline-block">{$statistics.soon_year}</span>&nbsp;&nbsp;&nbsp;&nbsp; <i>已过期</i><span class="text-danger" id=" " style="display: inline-block">&nbsp;{$statistics.year_overdue}</span>
+                                <div style="display: inline-block" class="search-status"><i>即将过期</i><span class="text-warning" id="year_inspect" mark="year_inspect">{$statistics.soon_year}</span></span></div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div style="display: inline-block" class="search-status"><i>已过期</i><span class="text-danger" id="year_overdue" mark="year_overdue">&nbsp;{$statistics.year_overdue}</span></div>
+
                                 <p style="margin:0">
                                     <strong>  年检车辆（台）</strong>
 
@@ -277,14 +275,19 @@
             <div class="col-sm-3 col-xs-6 col-md-2">
                 <div class="sm-st clearfix">
                     <div class="row">
-                        <div class="col-sm-12 col-xs-6 col-md-12 search-status text-center" >
+                        <div class="col-sm-12 col-xs-6 col-md-12 text-center" >
                             <embed src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/svg/保险.svg" width="60" height="60" type="image/svg+xml"pluginspage="http://www.adobe.com/svg/viewer/install/" />
 
                             <div class="sm-st-info "  >
                                 <!--<span>-->
                                 <!--{$statistics.soon_year}-->
                                 <!--</span>-->
-                                <i>即将过期</i>  <span class="text-warning" id="strong" style="display: inline-block">{$statistics.soon_traffic}</span>&nbsp;&nbsp;&nbsp;&nbsp; <i>已过期</i><span class="text-danger" id=" " style="display: inline-block">&nbsp;{$statistics.traffic_overdue}</span>
+                                <!--<div style="display: inline-block" class="search-status"></div>-->
+                                <div style="display: inline-block" class="search-status"><i>即将过期</i>  <span class="text-warning" id="strong" style="display: inline-block" mark="strong">{$statistics.soon_traffic}</span></div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <div style="display: inline-block" class="search-status">
+                                    <i>已过期</i><span class="text-danger" id="strong_overdue" style="display: inline-block" mark="strong_overdue">&nbsp;{$statistics.traffic_overdue}</span>
+                                </div>
                                 <p style="margin:0">
                                     <strong>  保险车辆（台）</strong>
 
@@ -300,52 +303,52 @@
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6 col-md-6">
-                <div class="sm-st clearfix" style="min-height: 138px">
+                <div class="sm-st clearfix" style="height: 138px">
 
                     <div class="row">
-                        <div class="col-sm-12 col-xs-6 col-md-12 search-status services" >
+                        <div class="col-sm-12 col-xs-6 col-md-12 services" >
 
-
-                            <div class="sm-st-info "  >
+                            <div class="sm-st-info ">
                                 <span class="text-warning" id=""></span>
                                 {:__('客服维护')}
 
-
                             </div>
                             <ul>
-                                <li  >
-
-
-
-                                    <img src="{$config.upload.cdnurl}{$admin.avatar}" alt="" width="25">
-                                    【客服】{$admin.nickname}
-                                    <span>
-                                    &nbsp;|&nbsp;<u>违章：<span class="text-danger"><strong>30 台</strong></span></u>
-                                    </span>
-                                    <span>
-                                    &nbsp;|&nbsp;<u>即将年检：<span class="text-danger"><strong>30 台</strong></span></u>
-                                    </span>
-                                    <span>
-                                    &nbsp;|&nbsp;<u>年检过期：<span class="text-danger"><strong>30 台</strong></span></u>
-                                    </span>
-                                    <span>
-                                    &nbsp;|&nbsp;<u>即将续保：<span class="text-danger"><strong>30 台</strong></span></u>
-                                    </span>
-                                    <span>
-                                    &nbsp;|&nbsp;<u>保险过期：<span class="text-danger"><strong>30 台</strong></span></u>
-                                    </span>
-                                </li>
-
+                                {volist name="customer_service" id="vo"}
                                 <li>
 
-                                    <img src="{$config.upload.cdnurl}{$admin.avatar}" alt="" width="25"> 【客服】{$admin.nickname} &nbsp;<span class="text-danger"><strong>30 台</strong></span>
-
+                                    <img src="{$config.upload.cdnurl}{$vo.avatar}" alt="" width="25">
+                                    【客服】<span class="customer-service">{$vo.nickname}</span> <span class="hide">{$vo.id}</span>
+                                    <span class="search-status">
+                                    &nbsp;|&nbsp;<u>违章：<span class="text-danger" mark="peccancy"><strong>{$vo.violation_count_count} 台</strong></span></u>
+                                    </span>
+                                    <span class="search-status">
+                                    &nbsp;|&nbsp;<u>即将年检：<span class="text-danger" mark="year_inspect"><strong>{$vo.soon_year_count_count} 台</strong></span></u>
+                                    </span>
+                                    <span class="search-status">
+                                    &nbsp;|&nbsp;<u>年检过期：<span class="text-danger" mark="year_overdue"><strong>{$vo.overdue_year_count_count} 台</strong></span></u>
+                                    </span>
+                                    <span class="search-status">
+                                    &nbsp;|&nbsp;<u>即将续保：<span class="text-danger" mark="strong"><strong>{$vo.soon_insurance_count_count} 台</strong></span></u>
+                                    </span>
+                                    <span class="search-status">
+                                    &nbsp;|&nbsp;<u>保险过期：<span class="text-danger" mark="strong_overdue"><strong>{$vo.overdue_insurance_count_count} 台</strong></span></u>
+                                    </span>
                                 </li>
-                                <li>
 
-                                    <img src="{$config.upload.cdnurl}{$admin.avatar}" alt="" width="25"> 【客服】{$admin.nickname} &nbsp;<span class="text-danger"><strong>30 台</strong></span>
+                                {/volist}
 
-                                </li>
+
+                                <!--<li>-->
+
+                                    <!--<img src="{$config.upload.cdnurl}{$admin.avatar}" alt="" width="25"> 【客服】{$admin.nickname} &nbsp;<span class="text-danger"><strong>30 台</strong></span>-->
+
+                                <!--</li>-->
+                                <!--<li>-->
+
+                                    <!--<img src="{$config.upload.cdnurl}{$admin.avatar}" alt="" width="25"> 【客服】{$admin.nickname} &nbsp;<span class="text-danger"><strong>30 台</strong></span>-->
+
+                                <!--</li>-->
                             </ul>
 
                         </div>
@@ -373,12 +376,13 @@
                                 class="fa fa-search"></i> {:__('批量查询违章')}</a>
                         <a href="javascript:;" class="btn btn-info btn-violation" title="{:__('公众号可以推送违章的客户信息展示')}"><i
                             class="fa fa-send"></i> {:__('公众号可以推送违章的客户信息展示')}</a>
-                        <a href="javascript:;" class="btn btn-default btn-search-result hide" ><i
-                                class="fa fa-search"></i> {:__('已筛选条件：')} <span class="search-info" style="padding:0  5px;font-weight: bold;color: red">kjhkjh</span><span id="reset">重置</span></a>
 
-                        <a href="javascript:;" class="btn btn-danger btn-export " title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>                    </div>
+                        <a href="javascript:;" class="btn btn-danger btn-export " title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>               
 
                         <a class="btn btn-info btn-disabled disabled btn-batch" href="javascript:;" ><i class="fa fa-share"></i> 批量分配客服</a>
+
+                        <a href="javascript:;" class="btn btn-default btn-search-result hide" ><i
+                                class="fa fa-search"></i> {:__('已筛选条件：')} <span class="search-info" style="padding:0  5px;font-weight: bold;color: red">kjhkjh</span><span id="reset">重置</span></a>
                     </div>
 
                     <table id="table" class="table table-striped table-bordered table-hover table-nowrap"

@@ -420,8 +420,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
              */
             $('.search-status').each(function () {
                 $(this).on('click',function () {
-                   let result = Controller.api.specified_conditions($(this).find('span').attr('id'),table);
-                    $('a.btn-search-result').children('span.search-info').text(result+'（'+$(this).find('span').text()+'台）');
+                    // $(this).siblings('img').length;
+                    // $(this).siblings('span.hide').text();
+                    // alert($(this).find('span').attr('mark'));
+                   let result = Controller.api.specified_conditions($(this).find('span').attr('mark'),table,$(this).siblings('img').length>0?$(this).siblings('span.hide').text():null);
+
+                   let str = $(this).find('span').text();
+
+                   str = str.replace(/台/,'');
+
+                   result = $(this).siblings('img').length>0?$(this).siblings('span.customer-service').text()+'：'+result:result;
+                    $('a.btn-search-result').children('span.search-info').text(result+'（'+str+'台）');
                     $('a.btn-search-result').removeClass('hide');
                 });
 
@@ -1338,7 +1347,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     table.bootstrapTable(types, data[i]);
                 }
             },
-            specified_conditions: function (obj = '',table) {
+            specified_conditions: function (obj = '',table,service_id = null) {
                 var key = '';
                 var value = '';
                 var text = '';
@@ -1363,14 +1372,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         value = 'overdue';
                         text = '保险已过期车辆';
                         break;
-                    // case 'business':
-                    //     key = 'orderdetails.business_insurance_status';
-                    //     value = 'soon';
-                    //     break;
-                    // case 'business_overdue':
-                    //     key = 'orderdetails.business_insurance_status';
-                    //     value = 'overdue';
-                    //     break;
                     case 'peccancy':
                         key = 'orderdetails.is_it_illegal';
                         value = 'violation_of_regulations';
@@ -1391,6 +1392,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if(obj){
                         filter[key] = value;
                         op[key] = '=';
+
+                        if(service_id){
+                            filter['service_id'] = service_id;
+                            op['service_id'] = '=';
+                        }
 
                     }
                     params.filter = JSON.stringify(filter);
