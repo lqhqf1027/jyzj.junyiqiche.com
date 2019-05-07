@@ -58,8 +58,6 @@ class Vehiclemanagement extends Backend
 
             Cache::set('statistics', self::statistics(), 43200);
 
-//            $check_time = collection(OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status', 'neq', 'no_queries')->select())->toArray();
-
 
             OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')
                 ->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status', 'neq', 'no_queries')
@@ -87,28 +85,6 @@ class Vehiclemanagement extends Backend
                     }
                 });
 
-//            foreach ($check_time as $value) {
-//
-//                $year_status = $traffic_force_status = $business_status = 'no_queries';
-//                if ($value['annual_inspection_status'] != 'no_queries') {
-//                    $year_status = self::check_state($value['annual_inspection_time']);
-//                }
-//
-//                if ($value['traffic_force_insurance_status'] != 'no_queries') {
-//                    $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
-//                }
-//
-//                if ($value['business_insurance_status'] != 'no_queries') {
-//                    $business_status = self::check_state($value['business_insurance_time']);
-//                }
-//
-//                OrderDetails::update([
-//                    'id' => $value['id'],
-//                    'annual_inspection_status' => $year_status,
-//                    'traffic_force_insurance_status' => $traffic_force_status,
-//                    'business_insurance_status' => $business_status,
-//                ]);
-//            }
 
         }
 
@@ -141,6 +117,27 @@ class Vehiclemanagement extends Backend
         ];
     }
 
+
+    /**得到可操作的管理员ID
+     * @return array
+     */
+    public function getUserId()
+    {
+        $this->model = model("Admin");
+        $back = $this->model->where("rule_message", 'message10')
+            ->field("id")
+            ->select();
+
+        $backArray = array();
+        $backArray['sale'] = array();
+        foreach ($back as $value) {
+            array_push($backArray['sale'], $value['id']);
+        }
+
+
+        return $backArray;
+    }
+
     /**
      * 查看
      */
@@ -158,15 +155,48 @@ class Vehiclemanagement extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $authId = $this->auth->id; // 当前操作员id
+            $getUserId = $this->getUserId();//获取当前可操作权限的id
+            $this->model = new \app\admin\model\Order();
             $total = $this->model
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
+                ->where(function ($query) use ($authId, $getUserId) {
+
+                    
+                        //超级管理员
+                        if (in_array($authId, $getUserId['sale'])) {
+                            
+                            $query->where(['service_id' => $authId]);
+    
+                        } else {
+    
+                            
+                        }
+                 
+    
+                })
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
+                ->where(function ($query) use ($authId, $getUserId) {
+
+                    
+                    //超级管理员
+                    if (in_array($authId, $getUserId['sale'])) {
+                        
+                        $query->where(['service_id' => $authId]);
+
+                    } else {
+
+                        
+                    }
+             
+
+                })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
