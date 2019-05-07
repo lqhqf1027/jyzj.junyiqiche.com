@@ -19,7 +19,6 @@ use Endroid\QrCode\QrCode;
 use wechat\Wx;
 use think\Env;
 
-use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Shared_Date;
 use PHPExcel_Style;
@@ -46,7 +45,7 @@ class Vehiclemanagement extends Backend
 
     public function _initialize()
     {
-        new PHPExcel()
+
         parent::_initialize();
         $this->model = new \app\admin\model\Order();
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
