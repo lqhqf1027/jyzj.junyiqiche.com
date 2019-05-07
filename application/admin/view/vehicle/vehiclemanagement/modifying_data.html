@@ -202,27 +202,27 @@
             <input type="hidden" value="{$type}">
         </div>
 
-        <!--<div class="right">-->
-            <!--<div class="form-group">-->
-                <!--<label class="control-label col-xs-12 col-sm-2">{:__('年检截至日期')}:</label>-->
-                <!--<div class="col-xs-12 col-sm-8">-->
-                    <!--{empty name="$row.annual_inspection_time"}-->
-                    <!--<input id="c-annual_inspection" class="form-control datetimepicker" data-date-format="YYYY-MM-DD"  name="row[annual_inspection_time]" type="text" value="">-->
-                    <!--{else /}-->
-                    <!--<input id="c-annual_inspection" class="form-control datetimepicker" data-date-format="YYYY-MM-DD"  name="row[annual_inspection_time]" type="text" value="{$row.annual_inspection_time|date='y-m-d',###}">-->
-                    <!--{/empty}-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-                <!--<label class="control-label col-xs-12 col-sm-2">{:__('保险截至日期')}:</label>-->
-                <!--<div class="col-xs-12 col-sm-8">-->
-                    <!--{empty name="$row.traffic_force_insurance_time"}-->
-                    <!--<input id="c-traffic_force_insurance" class="form-control datetimepicker" data-date-format="YYYY-MM-DD"  name="row[traffic_force_insurance_time]" type="text" value="">-->
-                    <!--{else /}-->
-                    <!--<input id="c-traffic_force_insurance" class="form-control datetimepicker" data-date-format="YYYY-MM-DD"  name="row[traffic_force_insurance_time]" type="text" value="{$row.traffic_force_insurance_time|date='y-m-d',###}">-->
-                    <!--{/empty}-->
-                <!--</div>-->
-            <!--</div>-->
+        <div class="right">
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">{:__('年检截至日期')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    {empty name="$row.annual_inspection_time"}
+                    <input id="c-annual_inspection" class="form-control datetimepicker" data-date-format="YYYY-MM-DD"  name="row[annual_inspection_time]" type="text" value="">
+                    {else /}
+                    <input id="c-annual_inspection" class="form-control datetimepicker" data-date-format="YYYY-MM-DD"  name="row[annual_inspection_time]" type="text" value="{$row.annual_inspection_time|date='y-m-d',###}">
+                    {/empty}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">{:__('保险截至日期')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    {empty name="$row.traffic_force_insurance_time"}
+                    <input id="c-traffic_force_insurance" class="form-control datetimepicker" data-date-format="YYYY-MM-DD"  name="row[traffic_force_insurance_time]" type="text" value="">
+                    {else /}
+                    <input id="c-traffic_force_insurance" class="form-control datetimepicker" data-date-format="YYYY-MM-DD"  name="row[traffic_force_insurance_time]" type="text" value="{$row.traffic_force_insurance_time|date='y-m-d',###}">
+                    {/empty}
+                </div>
+            </div>
 
         <!--</div>-->
 

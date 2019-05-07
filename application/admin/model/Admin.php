@@ -31,4 +31,35 @@ class Admin extends Model
         return $encrypt($password . $salt);
     }
 
+    //关联客服
+    public function violationCount()
+    {
+        return $this->hasMany('Order', 'service_id', 'id');
+    }
+
+    //关联客服
+    public function soonYearCount()
+    {
+        return $this->hasMany('Order', 'service_id', 'id');
+    }
+
+    //关联客服
+    public function overdueYearCount()
+    {
+        return $this->hasMany('Order', 'service_id', 'id');
+    }
+
+    //关联客服
+    public function soonInsuranceCount()
+    {
+        return $this->hasMany('Order', 'service_id', 'id');
+    }
+
+    //关联客服
+    public function overdueInsuranceCount()
+    {
+        return $this->hasMany('Order', 'service_id', 'id');
+    }
+
+
 }
