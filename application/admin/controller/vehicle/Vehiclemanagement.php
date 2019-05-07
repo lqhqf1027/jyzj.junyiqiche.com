@@ -57,30 +57,57 @@ class Vehiclemanagement extends Backend
 
             Cache::set('statistics', self::statistics(), 43200);
 
-            $check_time = collection(OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status', 'neq', 'no_queries')->select())->toArray();
+//            $check_time = collection(OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status', 'neq', 'no_queries')->select())->toArray();
 
-            foreach ($check_time as $value) {
 
-                $year_status = $traffic_force_status = $business_status = 'no_queries';
-                if ($value['annual_inspection_status'] != 'no_queries') {
-                    $year_status = self::check_state($value['annual_inspection_time']);
-                }
+            OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')
+                ->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status', 'neq', 'no_queries')
+                ->chunk(500, function ($item) {
+                    foreach ($item as $key => $value) {
+                        $year_status = $traffic_force_status = $business_status = 'no_queries';
+                        if ($value['annual_inspection_status'] != 'no_queries') {
+                            $year_status = self::check_state($value['annual_inspection_time']);
+                        }
 
-                if ($value['traffic_force_insurance_status'] != 'no_queries') {
-                    $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
-                }
+                        if ($value['traffic_force_insurance_status'] != 'no_queries') {
+                            $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
+                        }
 
-                if ($value['business_insurance_status'] != 'no_queries') {
-                    $business_status = self::check_state($value['business_insurance_time']);
-                }
+                        if ($value['business_insurance_status'] != 'no_queries') {
+                            $business_status = self::check_state($value['business_insurance_time']);
+                        }
 
-                OrderDetails::update([
-                    'id' => $value['id'],
-                    'annual_inspection_status' => $year_status,
-                    'traffic_force_insurance_status' => $traffic_force_status,
-                    'business_insurance_status' => $business_status,
-                ]);
-            }
+                        OrderDetails::update([
+                            'id' => $value['id'],
+                            'annual_inspection_status' => $year_status,
+                            'traffic_force_insurance_status' => $traffic_force_status,
+                            'business_insurance_status' => $business_status,
+                        ]);
+                    }
+                });
+
+//            foreach ($check_time as $value) {
+//
+//                $year_status = $traffic_force_status = $business_status = 'no_queries';
+//                if ($value['annual_inspection_status'] != 'no_queries') {
+//                    $year_status = self::check_state($value['annual_inspection_time']);
+//                }
+//
+//                if ($value['traffic_force_insurance_status'] != 'no_queries') {
+//                    $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
+//                }
+//
+//                if ($value['business_insurance_status'] != 'no_queries') {
+//                    $business_status = self::check_state($value['business_insurance_time']);
+//                }
+//
+//                OrderDetails::update([
+//                    'id' => $value['id'],
+//                    'annual_inspection_status' => $year_status,
+//                    'traffic_force_insurance_status' => $traffic_force_status,
+//                    'business_insurance_status' => $business_status,
+//                ]);
+//            }
 
         }
 
@@ -144,13 +171,13 @@ class Vehiclemanagement extends Backend
                 ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id','wx_public_user_id']);
+                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id']);
                 $row->visible(['orderdetails']);
-                $row->getRelation('orderdetails')->visible(['total_deduction','file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
+                $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail','update_violation_time','total_fine']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
@@ -211,7 +238,7 @@ class Vehiclemanagement extends Backend
             if ($public_img) $this->success('创建成功', '', $public_img);
             $time = date('YmdHis');
             $qrCode = new QrCode();
-            $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/index/index/index.html/order_id/'. $params['order_id'])
+            $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/index/index/index.html/order_id/' . $params['order_id'])
                 ->setSize(250)
                 ->setPadding(10)
                 ->setErrorCorrection('high')
@@ -288,8 +315,8 @@ class Vehiclemanagement extends Backend
         }
         $list = OrderDetails::getByOrder_id($ids);
         $this->view->assign([
-            'type'=> $row->type,
-            'row'=>$list
+            'type' => $row->type,
+            'row' => $list
         ]);
         return $this->view->fetch();
     }
@@ -529,9 +556,9 @@ class Vehiclemanagement extends Backend
                     $field['total_fine'] = $total_money;
                     $field['update_violation_time'] = time();
 
-                    $change_num = OrderDetails::whereTime('update_violation_time', 'w')->where('id',$order_details_id)->value('id');
+                    $change_num = OrderDetails::whereTime('update_violation_time', 'w')->where('id', $order_details_id)->value('id');
 
-                    if(!$change_num){
+                    if (!$change_num) {
                         $field['number_of_queries'] = 0;
                     }
 
@@ -715,7 +742,7 @@ class Vehiclemanagement extends Backend
         Cache::rm('access_token');
         $appid = Env::get('wx_public.appid');
         $secret = Env::get('wx_public.secret');
-        $wx = new wx($appid,$secret);
+        $wx = new wx($appid, $secret);
         $access_token = $wx->getWxtoken()['access_token'];
         // pr($access_token);
         // die;
@@ -749,25 +776,25 @@ class Vehiclemanagement extends Backend
         //是否存在数据
         if ($detail) {
             foreach ($detail as $key => $value) {
-                
+
                 $openid = $this->getOpenid($value['wx_public_user_id']);
 
                 //是否有openid
                 if ($openid) {
                     $time = date('Y-m-d', time());
-                    $first = $value['username'] . '师傅您好，截止到'.$time.'，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有以下未处理的违章信息';
+                    $first = $value['username'] . '师傅您好，截止到' . $time . '，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有以下未处理的违章信息';
 
                     $details = json_decode($value['orderdetails']['violation_details'], true);
-                   
+
                     $count = count($details);
                     $temp_msg = array(
                         'touser' => "{$openid}",
                         'template_id' => "hTlWqtgPyt6wr1KNdctpFkilUZbc0f9lDNtosGaH1-4",
-                        'url'=>'https://jyzj.junyiqiche.com/index/',
+                        'url' => 'https://jyzj.junyiqiche.com/index/',
                         'data' => array(
                             'first' => array(
                                 "value" => "{$first}",
-                                "color"=>'#1E9FFF'
+                                "color" => '#1E9FFF'
                             ),
                             'keyword1' => array(
                                 "value" => "{$value['orderdetails']['licensenumber']}",
@@ -790,21 +817,20 @@ class Vehiclemanagement extends Backend
                             "remark" => array(
                                 "value" => "点击查看违章详情，（公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书）",
                             )
-                            
+
                         ),
                     );
-                    
+
                     $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
-                   
+
                 }
-    
+
             }
-            
+
             $this->success();
         }
 
     }
-
 
 
     /**
@@ -850,7 +876,7 @@ class Vehiclemanagement extends Backend
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail','update_violation_time']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
@@ -879,7 +905,7 @@ class Vehiclemanagement extends Backend
         //是否存在数据
         if ($detail) {
             foreach ($detail as $key => $value) {
-                
+
                 $openid = $this->getOpenid($value['wx_public_user_id']);
 
                 //是否有openid
@@ -889,14 +915,14 @@ class Vehiclemanagement extends Backend
                     $time = date('Y-m-d', time());
                     $details = json_decode($value['orderdetails']['violation_details'], true);
                     $count = count($details);
-                    
+
                     $temp_msg = array(
                         'touser' => "{$openid}",
                         'template_id' => "hTlWqtgPyt6wr1KNdctpFkilUZbc0f9lDNtosGaH1-4",
                         'data' => array(
                             'first' => array(
                                 "value" => "{$first}",
-                                "color"=>'#1E9FFF'
+                                "color" => '#1E9FFF'
                             ),
                             'keyword1' => array(
                                 "value" => "{$value['orderdetails']['licensenumber']}",
@@ -919,16 +945,16 @@ class Vehiclemanagement extends Backend
                             "remark" => array(
                                 "value" => "点击查看违章详情，（公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书）",
                             )
-                            
+
                         ),
                     );
-                    
+
                     $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
-                   
+
                 }
-    
+
             }
-            
+
             $this->success();
         }
 
@@ -943,20 +969,20 @@ class Vehiclemanagement extends Backend
         if ($this->request->isAjax()) {
 
             $ids = $this->request->post();
-            $id= $ids['id'];
+            $id = $ids['id'];
             // pr($id);
             // die;
             $detail = Collection($this->model->field('username,phone,wx_public_user_id,models_name')
-            ->with(['orderdetails' => function ($q) use ($id) {
-                $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations', 'order_id' => $id]);
-            }])->select())->toArray();
+                ->with(['orderdetails' => function ($q) use ($id) {
+                    $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations', 'order_id' => $id]);
+                }])->select())->toArray();
             // pr($detail);
             // die;
             //是否存在数据
             if ($detail) {
-                    
+
                 $openid = $this->getOpenid($detail[0]['wx_public_user_id']);
-            
+
                 //是否有openid
                 if ($openid) {
 
@@ -964,14 +990,14 @@ class Vehiclemanagement extends Backend
                     $time = date('Y-m-d', time());
                     $details = json_decode($detail[0]['orderdetails']['violation_details'], true);
                     $count = count($details);
-                        
+
                     $temp_msg = array(
                         'touser' => "{$openid}",
                         'template_id' => "hTlWqtgPyt6wr1KNdctpFkilUZbc0f9lDNtosGaH1-4",
                         'data' => array(
                             'first' => array(
                                 "value" => "{$first}",
-                                "color"=>'#1E9FFF'
+                                "color" => '#1E9FFF'
                             ),
                             'keyword1' => array(
                                 "value" => "{$detail[0]['orderdetails']['licensenumber']}",
@@ -994,31 +1020,46 @@ class Vehiclemanagement extends Backend
                             "remark" => array(
                                 "value" => "点击查看违章详情，（公司户处理违章需要到公司拿：营业执照副本（盖鲜章）、委托书）",
                             )
-                                
+
                         ),
                     );
-                        
+
                     $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
-                    
-                    if ($res['errcode']  == 0) {
+
+                    if ($res['errcode'] == 0) {
                         $this->success('操作成功');
                     }
-                    
-                }
-                else {
+
+                } else {
                     $this->success('未认证，请前往君忆之家公众号进行认证');
                 }
-        
-            }
-            else {
+
+            } else {
                 $this->success('没有违章可推送');
             }
         }
     }
 
 
-    public function exportOrderExcel($data)
+    /**
+     * 导出excel
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
+     * @throws \PHPExcel_Writer_Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    function exportOrderExcel()
     {
+        $ids = $this->request->post('ids');
+
+        $info = collection(Order::field('id,createtime,username,phone,models_name')
+            ->with(['admin' => function ($q) {
+                $q->withField('nickname');
+            }, 'orderdetails' => function ($q) {
+                $q->withField('file_coding,licensenumber,frame_number,engine_number,is_it_illegal,total_deduction,total_fine,update_violation_time,annual_inspection_time,traffic_force_insurance_time');
+            }])->select($ids == 'all' ? null : $ids))->toArray();
 
         // 新建一个excel对象 大神已经加入了PHPExcel 不用引了 直接用！
         $objPHPExcel = new \PHPExcel();  //在vendor目录下 \不能少 否则报错
@@ -1030,64 +1071,92 @@ class Vehiclemanagement extends Backend
         ->setDescription("楼主666")/*描述*/
         ->setKeywords("楼主666")/*关键词*/
         ->setCategory("楼主666");/*类别*/
+
         $objPHPExcel->getDefaultStyle()->getFont()->setName('微软雅黑');//字体
         /*设置表头*/
         $objPHPExcel->getActiveSheet()->mergeCells('A1:P1');//合并第一行的单元格
-        $objPHPExcel->getActiveSheet()->mergeCells('A2:P2');//合并第二行的单元格
+//        $objPHPExcel->getActiveSheet()->mergeCells('A2:P2');//合并第二行的单元格
         $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', '楼主教我导出EXcel666');//标题
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', '客户信息表');//标题
         $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);      // 第一行的默认高度
+
         //第二行的内容和格式
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A2', '楼主真的666');
-        $objPHPExcel->getActiveSheet()->getRowDimension('2')->setRowHeight(20);/*设置行高*/
-        $myrow = 3;/*表头所需要行数的变量，方便以后修改*/
+//        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A2', '');
+        $objPHPExcel->getActiveSheet()->getRowDimension('2')->setRowHeight(30);/*设置行高*/
+        $myrow = 2;/*表头所需要行数的变量，方便以后修改*/
+
         /*表头数据填充*/
-        $objPHPExcel->getActiveSheet()->getRowDimension('3')->setRowHeight(30);/*设置行高*/
-        $objPHPExcel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息
+//        $objPHPExcel->getActiveSheet()->getRowDimension('2')->setRowHeight(30);/*设置行高*/
+        $objPHPExcel->setActiveSheetIndex(0)//设置一张sheet为活动表 添加表头信息
+
         ->setCellValue('A' . $myrow, '序号')
-            ->setCellValue('B' . $myrow, '日期')
-            ->setCellValue('C' . $myrow, '物资名称')
-            ->setCellValue('D' . $myrow, '规格')
-            ->setCellValue('E' . $myrow, '单位')
-            ->setCellValue('F' . $myrow, '数量')
-            ->setCellValue('G' . $myrow, '出厂单价(元)')
-            ->setCellValue('H' . $myrow, '运杂费(元)')
-            ->setCellValue('I' . $myrow, '税率')
-            ->setCellValue('J' . $myrow, '税额(元)')
-            ->setCellValue('K' . $myrow, '价税合计(元)')
-            ->setCellValue('L' . $myrow, '金额(元)')
-            ->setCellValue('M' . $myrow, '使用单位')
-            ->setCellValue('N' . $myrow, '卸车地点')
-            ->setCellValue('O' . $myrow, '生产厂家')
-            ->setCellValue('P' . $myrow, '备注');
+            ->setCellValue('B' . $myrow, '订单创建时间')
+            ->setCellValue('C' . $myrow, '档案编码')
+            ->setCellValue('D' . $myrow, '客户姓名')
+            ->setCellValue('E' . $myrow, '联系方式')
+            ->setCellValue('F' . $myrow, '车牌号')
+            ->setCellValue('G' . $myrow, '车架号')
+            ->setCellValue('H' . $myrow, '发动机号')
+            ->setCellValue('I' . $myrow, '所属销售')
+            ->setCellValue('J' . $myrow, '规格型号')
+            ->setCellValue('K' . $myrow, '违章状态')
+            ->setCellValue('L' . $myrow, '总扣分')
+            ->setCellValue('M' . $myrow, '总罚款')
+            ->setCellValue('N' . $myrow, '最后查询违章时间')
+            ->setCellValue('O' . $myrow, '年检截至日期')
+            ->setCellValue('P' . $myrow, '保险截至日期');
+
         // 关键数据
-        $data = json_decode($data, true);
         $myrow = $myrow + 1; //刚刚设置的行变量
         $mynum = 1;//序号
+
         //遍历接收的数据，并写入到对应的单元格内
-        foreach ($data as $key => $value) {
+        foreach ($info as $key => $value) {
+
+            $value['createtime'] = $value['createtime'] ? date('Y-m-d', $value['createtime']) : '';
+
+            $value['orderdetails']['update_violation_time'] = $value['orderdetails']['update_violation_time'] ? date('Y-m-d', $value['orderdetails']['update_violation_time']) : '';
+            $value['orderdetails']['annual_inspection_time'] = $value['orderdetails']['annual_inspection_time'] ? date('Y-m-d', $value['orderdetails']['annual_inspection_time']) : '';
+            $value['orderdetails']['traffic_force_insurance_time'] = $value['orderdetails']['traffic_force_insurance_time'] ? date('Y-m-d', $value['orderdetails']['traffic_force_insurance_time']) : '';
+
+            switch ($value['orderdetails']['is_it_illegal']) {
+                case 'no_violation':
+                    $value['orderdetails']['is_it_illegal'] = '无违章';
+                    break;
+                case 'violation_of_regulations':
+                    $value['orderdetails']['is_it_illegal'] = '有违章';
+                    break;
+                case 'query_failed':
+                    $value['orderdetails']['is_it_illegal'] = '查询违章信息失败';
+                    break;
+                default:
+                    $value['orderdetails']['is_it_illegal'] = '';
+                    break;
+            }
+
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A' . $myrow, $mynum)
-                ->setCellValue('B' . $myrow, $value['buyTime'])
-                ->setCellValue('C' . $myrow, $value['proName'])
-                ->setCellValue('D' . $myrow, $value['spec'])
-                ->setCellValue('E' . $myrow, $value['unit'])
-                ->setCellValue('F' . $myrow, $value['num'])
-                ->setCellValue('G' . $myrow, $value['sellPrice'])
-                ->setCellValue('H' . $myrow, '0')
-                ->setCellValue('I' . $myrow, $value['sellTaxRate'])
-                ->setCellValue('J' . $myrow, $value['sellTax'])
-                ->setCellValue('K' . $myrow, $value['sellSumTax'])
-                ->setCellValue('L' . $myrow, $value['sellSum'])
-                ->setCellValue('M' . $myrow, '')
-                ->setCellValue('N' . $myrow, '')
-                ->setCellValue('O' . $myrow, '')
-                ->setCellValue('P' . $myrow, '');
+                ->setCellValue('B' . $myrow, $value['createtime'])
+                ->setCellValue('C' . $myrow, $value['orderdetails']['file_coding'])
+                ->setCellValue('D' . $myrow, $value['username'])
+                ->setCellValue('E' . $myrow, $value['phone'])
+                ->setCellValue('F' . $myrow, $value['orderdetails']['licensenumber'])
+                ->setCellValue('G' . $myrow, $value['orderdetails']['frame_number'])
+                ->setCellValue('H' . $myrow, $value['orderdetails']['engine_number'])
+                ->setCellValue('I' . $myrow, $value['admin']['nickname'])
+                ->setCellValue('J' . $myrow, $value['models_name'])
+                ->setCellValue('K' . $myrow, $value['orderdetails']['is_it_illegal'])
+                ->setCellValue('L' . $myrow, $value['orderdetails']['total_deduction'])
+                ->setCellValue('M' . $myrow, $value['orderdetails']['total_fine'])
+                ->setCellValue('N' . $myrow, $value['orderdetails']['update_violation_time'])
+                ->setCellValue('O' . $myrow, $value['orderdetails']['annual_inspection_time'])
+                ->setCellValue('P' . $myrow, $value['orderdetails']['traffic_force_insurance_time']);
             $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高 不能批量的设置 这种感觉 if（has（蛋）！=0）{疼();}*/
             $myrow++;
             $mynum++;
         }
-        $mynumdata=$myrow-1; //获取主要数据结束的行号
+
+        $mynumdata = $myrow - 1; //获取主要数据结束的行号
         $objPHPExcel->setActiveSheetIndex(0)->getstyle('A3:P' . $mynumdata)->getAlignment()->setHorizontal(\PHPExcel_style_Alignment::HORIZONTAL_CENTER);/*设置格式 水平居中*/
         /*设置数据的边框 手册上写的方法只显示竖线 非常坑爹 所以采用网上搜来的方法*/
         $style_array = array(
@@ -1096,52 +1165,53 @@ class Vehiclemanagement extends Backend
                     'style' => \PHPExcel_Style_Border::BORDER_THIN
                 )
             ));
-        $objPHPExcel->getActiveSheet()->getStyle('A3:P' . $mynumdata)->applyFromArray($style_array);
-        /*设置数据的格式*/
-        $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
-        $objPHPExcel->getActiveSheet()->mergeCells('A'.$myrow.':P'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A' . $myrow,'供应单位：'.$name);
-        $myrow++; $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
-        $objPHPExcel->getActiveSheet()->mergeCells('A'.$myrow.':C'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A' . $myrow,'收料员：');
-        $objPHPExcel->getActiveSheet()->mergeCells('D'.$myrow.':J'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('D' . $myrow,'复核：');
-        $objPHPExcel->getActiveSheet()->mergeCells('K'.$myrow.':P'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('K' . $myrow,'确认签字：');
-        $myrow++; $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
-        $objPHPExcel->getActiveSheet()->mergeCells('I'.$myrow.':K'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('I' . $myrow,'日期：');
-        $objPHPExcel->getActiveSheet()->getStyle('A1:P' . $myrow)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);/*垂直居中*/
+//
+//        $objPHPExcel->getActiveSheet()->getStyle('A3:P' . $mynumdata)->applyFromArray($style_array);
+//        /*设置数据的格式*/
+//        $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
+//        $objPHPExcel->getActiveSheet()->mergeCells('A'.$myrow.':P'.$myrow);//合并下一行的单元格
+//        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A' . $myrow,'供应单位：'.$name);
+//        $myrow++; $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
+//        $objPHPExcel->getActiveSheet()->mergeCells('A'.$myrow.':C'.$myrow);//合并下一行的单元格
+//        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A' . $myrow,'收料员：');
+//        $objPHPExcel->getActiveSheet()->mergeCells('D'.$myrow.':J'.$myrow);//合并下一行的单元格
+//        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('D' . $myrow,'复核：');
+//        $objPHPExcel->getActiveSheet()->mergeCells('K'.$myrow.':P'.$myrow);//合并下一行的单元格
+//        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('K' . $myrow,'确认签字：');
+//        $myrow++; $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
+//        $objPHPExcel->getActiveSheet()->mergeCells('I'.$myrow.':K'.$myrow);//合并下一行的单元格
+//        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('I' . $myrow,'日期：');
+//        $objPHPExcel->getActiveSheet()->getStyle('A1:P' . $myrow)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);/*垂直居中*/
         //关键数据结束
 
 
         //设置宽width 由于自适应宽度对中文的支持是个BUG因此坑爹的手动设置了每一列的宽度 这种感觉 if（has（蛋）！=0）{碎();}
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(8.5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(8);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(8);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(8.5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(7);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(5);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getStyle('A3:P' . $myrow)->getAlignment()->setWrapText(true);//设置单元格允许自动换行
         /*设置表相关的信息*/
-        $objPHPExcel->getActiveSheet()->setTitle($buytime); //活动表的名称
+        $objPHPExcel->getActiveSheet()->setTitle('第一张表'); //活动表的名称
         $objPHPExcel->setActiveSheetIndex(0);//设置第一张表为活动表
         //纸张方向和大小 为A4横向
         $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(\PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
         $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(\PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
         //浏览器交互 导出
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="楼主教我的导出excel这弄得真是666.xlsx"');
+        header('Content-Disposition: attachment;filename="客户信息数据.xlsx"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
@@ -1155,6 +1225,126 @@ class Vehiclemanagement extends Backend
         $objWriter->save('php://output');
         exit;
 
+    }
+
+
+    public function export()
+    {
+        $this->model = new Order();
+        if ($this->request->isPost()) {
+            set_time_limit(0);
+            $search = $this->request->post('search');
+            $ids = $this->request->post('ids');
+            $filter = $this->request->post('filter');
+            $op = $this->request->post('op');
+            $columns = $this->request->post('columns');
+
+            $excel = new \PHPExcel();
+
+            $excel->getProperties()
+                ->setCreator("FastAdmin")
+                ->setLastModifiedBy("FastAdmin")
+                ->setTitle("客户信息")
+                ->setSubject("Subject");
+            $excel->getDefaultStyle()->getFont()->setName('Microsoft Yahei');
+            $excel->getDefaultStyle()->getFont()->setSize(12);
+
+            $this->sharedStyle = new \PHPExcel_Style();
+            $this->sharedStyle->applyFromArray(
+                array(
+                    'fill' => array(
+                        'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => '000000')
+                    ),
+                    'font' => array(
+                        'color' => array('rgb' => "000000"),
+                    ),
+                    'alignment' => array(
+                        'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'indent' => 1
+                    ),
+                    'borders' => array(
+                        'allborders' => array('style' => \PHPExcel_Style_Border::BORDER_THIN),
+                    )
+                ));
+
+            $worksheet = $excel->setActiveSheetIndex(0);
+            $worksheet->setTitle('扣款失败客户');
+
+            $whereIds = $ids == 'all' ? '1=1' : ['id' => ['in', explode(',', $ids)]];
+            $this->request->get(['search' => $search, 'ids' => $ids, 'filter' => $filter, 'op' => $op]);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $whereIds['jyzj_order.id'] = $whereIds['id'];
+            unset($whereIds['id']);
+//pr($whereIds);die;
+//            pr($where);die;
+            $line = 1;
+            $list = [];
+
+            Db::name('order')
+                ->alias('a')
+                ->join('admin b', 'a.admin_id = b.id')
+                ->join('order_details c', 'a.id = c.order_id', 'LEFT')
+                ->field('a.id,a.username,b.nickname,c.file_coding')
+//                ->where('monthly_status','has_been_sent')
+//                ->where($where)
+//                ->where($whereIds)
+                ->chunk(100, function ($items) use (&$list, &$line, &$worksheet) {
+                    $styleArray = array(
+                        'font' => array(
+
+                            'color' => array('color' => '#222'),
+                            'size' => 11,
+                            'name' => 'Verdana'
+                        ));
+
+                    $list = $items = collection($items)->toArray();
+                    foreach ($items as $index => $item) {
+                        //                        $item['monthly_card_number'] =   ' '.$item['monthly_card_number'];
+//                        $item['monthly_phone_number'] =   ' '.$item['monthly_phone_number'];
+//                        $item['monthly_data'] = '失败';
+//                        unset($item['monthly_data_text']);
+                        $line++;
+                        $col = 0;
+
+                        foreach ($item as $field => $value) {
+
+
+                            $worksheet->setCellValueByColumnAndRow($col, $line, $value);
+
+                            $worksheet->getStyleByColumnAndRow($col, $line)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+                            $worksheet->getCellByColumnAndRow($col, $line)->getStyle()->applyFromArray($styleArray);
+                            $col++;
+                        }
+                    }
+
+                });
+
+            $first = array_keys($list[0]);
+            foreach ($first as $index => $item) {
+                $worksheet->setCellValueByColumnAndRow($index, 1, __($item));
+            }
+
+            $excel->createSheet();
+            // Redirect output to a client’s web browser (Excel2007)
+            $title = date("YmdHis");
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $title . '.xlsx"');
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+
+            // If you're serving to IE over SSL, then the following may be needed
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header('Pragma: public'); // HTTP/1.0
+
+            $objWriter = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+            $objWriter->save('php://output');
+            return;
+        }
     }
 
 

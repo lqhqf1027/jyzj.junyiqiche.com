@@ -406,12 +406,67 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(this).parent().addClass('hide');
             });
 
-            $('.btn-myexcel-export').on('click',function () {
-                var myexceldata=table.bootstrapTable('getSelections');//获取选中的项目的数据 格式是json
-                myexceldata=JSON.stringify(myexceldata);//数据转成字符串作为参数
-                // alert(myexceldata);
-                //直接url访问，不能使用ajax，因为ajax要求返回数据，和PHPExcel一会浏览器输出冲突！将数据作为参数
-                window.location.href="index/exportOrderExcel?data="+myexceldata;
+            //导出新客户的信息
+            var submitForm = function (ids, layero) {
+                var options = table.bootstrapTable('getOptions');
+                var columns = [];
+                $.each(options.columns[0], function (i, j) {
+                    if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
+                        columns.push(j.field);
+                    }
+                });
+                var search = options.queryParams({});
+                $("input[name=search]", layero).val(options.searchText);
+                $("input[name=ids]", layero).val(ids);
+                $("input[name=filter]", layero).val(search.filter);
+                $("input[name=op]", layero).val(search.op);
+                $("input[name=columns]", layero).val(columns.join(','));
+                $("form", layero).submit();
+            };
+
+            /**
+             * 批量导出客户信息
+             * @param ids
+             * @param layero
+             */
+            $('.btn-export').on("click", function () {
+                // var myexceldata=table.bootstrapTable('getSelections');//获取选中的项目的数据 格式是json
+                // myexceldata=JSON.stringify(myexceldata);//数据转成字符串作为参数
+                // //直接url访问，不能使用ajax，因为ajax要求返回数据，和PHPExcel一会浏览器输出冲突！将数据作为参数
+                // top.location.href="vehiclemanagement/exportOrderExcel?data="+myexceldata;
+                var ids = Table.api.selectedids(table);
+                var page = table.bootstrapTable('getData');
+                var all = table.bootstrapTable('getOptions').totalRows;
+                Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("vehicle/vehiclemanagement/exportOrderExcel") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
+                    title: '导出数据',
+                    btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)",  "<span class='text-danger'>全部(" + all + "条)</span>"],
+                    success: function (layero, index) {
+                        $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                    }
+                    ,
+                    yes: function (index, layero) {
+                        if (ids.length < 1) {
+                            Layer.alert('请先选择要导出的数据!', {icon: 5})
+                            return false;
+                        }
+                        submitForm(ids.join(","), layero);
+                        // return false;
+                    }
+                    ,
+                    btn2: function (index, layero) {
+                        var ids = [];
+                        $.each(page, function (i, j) {
+                            ids.push(j.id);
+                        });
+                        submitForm(ids.join(","), layero);
+                        // return false;
+                    }
+                    ,
+                    btn3: function (index, layero) {
+                        submitForm("all", layero);
+                        // return false;
+                    }
+                });
             });
 
             /**
