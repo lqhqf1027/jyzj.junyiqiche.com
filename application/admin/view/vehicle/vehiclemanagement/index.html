@@ -306,10 +306,12 @@
                             class="fa fa-send"></i> {:__('公众号可以推送违章的客户信息展示')}</a>
                         <a href="javascript:;" class="btn btn-default btn-search-result hide" ><i
                                 class="fa fa-search"></i> {:__('已筛选条件：')} <span class="search-info" style="padding:0  5px;font-weight: bold;color: red">kjhkjh</span><span id="reset">重置</span></a>
-                        <a class="btn btn-success btn-myexcel-export  btn-disabled disabled {:$auth->check('lvtotals1/exportOrderExcel')?'':'hide'}" href="javascript:;"><i class="fa fa-user"></i> 导出</a><!--添加一个类名称btn-myexcel-export给监听事件用，检查下当前登录的选手有没有控制中对应导出方法 exportOrderExcel的权限，没有就隐藏-->
-                    
+
+                        <a href="javascript:;" class="btn btn-danger btn-export " title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>                    </div>
+
                         <a class="btn btn-info btn-disabled disabled btn-batch" href="javascript:;" ><i class="fa fa-share"></i> 批量分配客服</a>
                     </div>
+
                     <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
                            data-operate-edit="{:$auth->check('vehicle/vehiclemanagement/edit')}" 
                            data-operate-del="{:$auth->check('vehicle/vehiclemanagement/del')}" 
