@@ -65,7 +65,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 searchFormVisible: true,
                 columns: [
                     [
-                        {checkbox: true},
+                        {
+                            checkbox: true, formatter: function (v, r, i) {
+                                return r.service_id ? {disabled: true} : {disabled: false};
+                            }
+                        },
                         {field: 'id', title: __('Id'),operate:false},
                         {
                             field: 'createtime',
@@ -82,6 +86,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber')},
                         {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
                         {field: 'orderdetails.engine_number', title: __('Orderdetails.engine_number')},
+                        {
+                            field: 'service.nickname', title: __('所属客服'), formatter: function (value, row, index) {
+
+                                return value ? "<img src=" + Config.cdn + row.service.avatar + " style='height:20px;width:25px'></img>" + '&nbsp;' + value : value;
+                            },operate:false
+                        }, 
                         {
                             field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
 
@@ -365,6 +375,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
                                     }
                                 },
+                                {
+                                    name: 'allocation',
+                                    text: '分配客服',
+                                    title: __('分配客服'),
+                                    icon: 'fa fa-share',
+                                    classname: 'btn btn-xs btn-info btn-allocation',
+                                    visible: function (row) {
+                                        return !row.service_id ? true : false;
+                                    }
+                                },
+                                {
+                                    name: '',
+                                    text: '已分配客服',
+                                    title: __('已分配客服'),
+                                    icon: 'fa fa-check',
+                                    classname: 'text-info',
+                                    visible: function (row) {
+                                        return row.service_id ? true : false;
+                                    }
+                                },
 
                             ]
                         }
@@ -556,6 +586,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
            
             });
 
+            //批量分配客服
+            batch_share('.btn-batch', table);
+
+
             // 为表格绑定事件
             Table.api.bindevent(table);
         },
@@ -737,6 +771,45 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         view_information: function () {
             Controller.api.bindevent();
+        },
+        //单个分配客服
+        allocation: function () {
+
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+
+              
+                Fast.api.close(data);//这里是重点
+
+                // Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+
+        },
+        //批量分配客服
+        batch: function () {
+
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+
+                Fast.api.close(data);//这里是重点
+
+                // Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+
         },
 
         api: {
@@ -1065,6 +1138,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         );
                     },
+                    /**
+                     * 分配给客服
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-allocation': function (e, value, row, index) {
+                        $(".btn-allocation").data("area", ["30%", "30%"]);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'vehicle/vehiclemanagement/allocation';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('分配客服'), $(this).data() || {});
+                    },
 
 
 
@@ -1261,5 +1352,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             }
         }
     };
+
+
+    /**
+     * 批量分配客服
+     * @param clickname
+     * @param table
+     */
+    function batch_share(clickname, table) {
+        var num = 0;
+        $(document).on("click", clickname, function () {
+            var ids = Table.api.selectedids(table);
+            num = parseInt(ids.length);
+            var url = 'vehicle/vehiclemanagement/batch?ids=' + ids;
+            var options = {
+                shadeClose: false,
+                shade: [0.3, '#393D49'],
+                area: ['30%', '30%'],
+                callback: function (value) {
+
+                }
+            }
+            Fast.api.open(url, '批量分配', options)
+        })
+    }
+
+
     return Controller;
 });
