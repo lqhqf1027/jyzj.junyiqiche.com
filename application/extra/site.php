@@ -48,6 +48,7 @@ return array (
     'message7' => '销售经理',
     'message8' => '车管',
     'message9' => '档案管理',
+    'message10' => '客服',
   ),
   'invite_bg_img' => '/jyzj.junyiqiche.com/uploads/20190417/50c0d3bf5e7bedcb8fcd81fc80c6ab61.jpg',
   'card_share_title' => '',

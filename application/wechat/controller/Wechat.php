@@ -66,11 +66,13 @@ class Wechat extends Controller
             Cache::rm('Token');
             $token = $this->Wxapis->getWxtoken()['access_token'];
             $r = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid=" . $userInfo['openid']);
+
             if (!$r['subscribe']) {
                 alert('请先关注公众号，点击logo头像即可关注！关注成功后回复数字1即可', 'jump', 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIyODAyNjE3NA==&scene=126&bizpsid=0&subscene=0#wechat_redirect');
 //                header('Location:https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIyODAyNjE3NA==&scene=126&bizpsid=0&subscene=0#wechat_redirect');
             }
             $res = WxPublicUser::create($userInfo)->getData();
+
             if ($res) {
                 $res['nickname'] = emoji_decode($res['nickname']);//表情解密,存入session
                 Session::set('MEMBER', $res);
