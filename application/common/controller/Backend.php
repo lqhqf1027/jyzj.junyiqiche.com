@@ -218,7 +218,6 @@ class Backend extends Controller
 
         //渲染配置信息
         $this->assign('config', $config);
-
         //渲染配置信息到js
         $this->assignconfig('cdn',   $config['upload']['cdnurl']);
         //渲染权限对象

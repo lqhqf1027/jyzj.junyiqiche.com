@@ -18,7 +18,7 @@ use think\Session;
 use Endroid\QrCode\QrCode;
 use wechat\Wx;
 use think\Env;
-
+use app\common\library\Auth;
 use PHPExcel_IOFactory;
 use PHPExcel_Shared_Date;
 use PHPExcel_Style;
