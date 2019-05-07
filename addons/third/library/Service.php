@@ -58,6 +58,7 @@ class Service
                 // 默认注册一个会员
                 $result = $auth->register($username, $password, $username . '@fastadmin.net', '', $extend, $keeptime);
                 if (!$result) {
+
                     return FALSE;
                 }
                 $user = $auth->getUser();

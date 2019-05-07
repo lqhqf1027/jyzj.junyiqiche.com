@@ -59,6 +59,7 @@ class User extends Base
             'grant_type' => 'authorization_code'
         ];
         $result = Http::sendRequest("https://api.weixin.qq.com/sns/jscode2session", $params, 'GET');
+
         if ($result['ret']) {
 
             $json = (array)json_decode($result['msg'], true);
@@ -72,7 +73,7 @@ class User extends Base
                         $third = Third::where(['openid' => $json['openid'], 'platform' => 'wxapp'])->find();
 
                         if ($third && $third['user_id'] == $this->auth->id) {
-                            $this->success("登录成功", ['userInfo' => $this->auth->getUserinfo(),'admin_id'=>\addons\cms\model\User::get($this->auth->id)->admin_id]);
+                            $this->success("登录成功", ['userInfo' => $this->auth->getUserinfo()]);
                         }
                     }
                 }
@@ -88,13 +89,15 @@ class User extends Base
                     'expires_in'    => isset($json['expires_in']) ? $json['expires_in'] : 0,
                 ];
                 $extend = ['gender' => $userInfo['gender'], 'nickname' => $userInfo['nickName'], 'avatar' => $userInfo['avatarUrl']];
+
                 $ret = Service::connect($platform, $result, $extend);
+
                 if ($ret) {
                     $auth = Auth::instance();
                     $users = $auth->getUserinfo();
 
                     $users['nickname'] = emoji_decode($users['nickname']);
-                    $this->success("登录成功", ['userInfo' => $users, 'openid' => $json['openid'], 'session_key' => $json['session_key'],'admin_id'=>\addons\cms\model\User::get($auth->getUserinfo()['id'])->admin_id]);
+                    $this->success("登录成功", ['userInfo' => $users, 'openid' => $json['openid'], 'session_key' => $json['session_key']]);
                 } else {
                     $this->error("连接失败");
                 }

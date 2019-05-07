@@ -60,6 +60,10 @@ class Sales extends Base
                 throw new Exception('密码输入错误');
             }
 
+            if ($admin->rule_message != 'message6') {
+                throw new Exception('该账户不是销售账号！');
+            }
+
             $user = \app\admin\model\User::get($user_id);
 
             $admin_id = \app\admin\model\User::getByAdmin_id($admin->id);
@@ -68,7 +72,7 @@ class Sales extends Base
                 $user->admin_id = $admin->id;
 
                 $user->save();
-            }else{
+            } else {
                 throw new Exception('该账户已被授权');
             }
 

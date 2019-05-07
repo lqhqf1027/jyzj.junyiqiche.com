@@ -118,9 +118,9 @@ class Auth
      *
      * @param string $username 用户名
      * @param string $password 密码
-     * @param string $email 邮箱
-     * @param string $mobile 手机号
-     * @param array $extend 扩展参数
+     * @param string $email    邮箱
+     * @param string $mobile   手机号
+     * @param array  $extend   扩展参数
      * @return boolean
      */
     public function register($username, $password, $email = '', $mobile = '', $extend = [])
@@ -145,22 +145,22 @@ class Auth
         $data = [
             'username' => $username,
             'password' => $password,
-            'email' => $email,
-            'mobile' => $mobile,
-            'level' => 0,
-            'score' => 0,
-            'avatar' => '',
+            'email'    => $email,
+            'mobile'   => $mobile,
+            'level'    => 0,
+            'score'    => 0,
+            'avatar'   => '',
         ];
         $params = array_merge($data, [
-            'nickname' => $username,
-            'salt' => Random::alnum(),
-            'jointime' => $time,
-            'joinip' => $ip,
+            'nickname'  => $username,
+            'salt'      => Random::alnum(),
+            'jointime'  => $time,
+            'joinip'    => $ip,
             'logintime' => $time,
-            'loginip' => $ip,
-            'prevtime' => $time,
-            'status' => 'normal',
-            'invite_code' => Random::invite_code()  //邀请码
+            'loginip'   => $ip,
+            'prevtime'  => $time,
+            'status'    => 'normal',
+            'invite_code'=>Random::invite_code()  //邀请码
         ]);
         $params['password'] = $this->getEncryptPassword($password, $params['salt']);
         $params = array_merge($params, $extend);
@@ -190,7 +190,7 @@ class Auth
     /**
      * 用户登录
      *
-     * @param string $account 账号,用户名、邮箱、手机号
+     * @param string $account  账号,用户名、邮箱、手机号
      * @param string $password 密码
      * @return boolean
      */
@@ -240,9 +240,9 @@ class Auth
 
     /**
      * 修改密码
-     * @param string $newpassword 新密码
-     * @param string $oldpassword 旧密码
-     * @param bool $ignoreoldpassword 忽略旧密码
+     * @param string $newpassword       新密码
+     * @param string $oldpassword       旧密码
+     * @param bool   $ignoreoldpassword 忽略旧密码
      * @return boolean
      */
     public function changepwd($newpassword, $oldpassword = '', $ignoreoldpassword = false)
@@ -325,7 +325,7 @@ class Auth
 
     /**
      * 检测是否是否有对应权限
-     * @param string $path 控制器/方法
+     * @param string $path   控制器/方法
      * @param string $module 模块 默认为当前模块
      * @return boolean
      */
@@ -373,11 +373,8 @@ class Auth
     {
         $data = $this->_user->toArray();
         $allowFields = $this->getAllowFields();
-
         $userinfo = array_intersect_key($data, array_flip($allowFields));
-
         $userinfo = array_merge($userinfo, Token::get($this->_token));
-
         return $userinfo;
     }
 
@@ -466,7 +463,7 @@ class Auth
     /**
      * 获取密码加密后的字符串
      * @param string $password 密码
-     * @param string $salt 密码盐
+     * @param string $salt     密码盐
      * @return string
      */
     public function getEncryptPassword($password, $salt = '')
@@ -508,9 +505,9 @@ class Auth
 
     /**
      * 渲染用户数据
-     * @param array $datalist 二维数组
-     * @param mixed $fields 加载的字段列表
-     * @param string $fieldkey 渲染的字段
+     * @param array  $datalist  二维数组
+     * @param mixed  $fields    加载的字段列表
+     * @param string $fieldkey  渲染的字段
      * @param string $renderkey 结果字段
      * @return array
      */

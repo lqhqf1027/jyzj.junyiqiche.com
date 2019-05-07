@@ -54,6 +54,35 @@ class Vehiclemanagement extends Backend
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("liftCarStatusList", $this->model->getLiftCarStatusList());
 
+        $customer_service = Admin::field('id,nickname,avatar')
+        ->withCount(['violationCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('is_it_illegal','violation_of_regulations');
+            }]);
+        },'soonYearCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('annual_inspection_status','soon');
+            }]);
+        },'overdueYearCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('annual_inspection_status','overdue');
+            }]);
+        },'soonInsuranceCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('traffic_force_insurance_status','soon');
+            }]);
+        },'overdueInsuranceCount'=>function ($q){
+            $q->with(['orderdetails'=>function ($details){
+                $details->where('traffic_force_insurance_status','overdue');
+            }]);
+        }])
+            ->where('rule_message','message10')
+            ->select();
+
+//        die;
+        $customer_service = collection($customer_service)->toArray();
+
+//        pr($customer_service);die;
         if (!Cache::get('statistics')) {
 
             Cache::set('statistics', self::statistics(), 43200);
@@ -85,7 +114,6 @@ class Vehiclemanagement extends Backend
                     }
                 });
 
-
         }
 
         if (!Cache::get('statistics_total_violation')) {
@@ -94,7 +122,10 @@ class Vehiclemanagement extends Backend
 
         $this->view->assign([
             'statistics' => Cache::get('statistics'),
-            'statistics_total_violation' => Cache::get('statistics_total_violation')
+            'statistics_total_violation' => Cache::get('statistics_total_violation'),
+            'customer_service' => $customer_service,
+            'total_fine' => OrderDetails::where('is_it_illegal','violation_of_regulations')->sum('total_fine'),
+            'total_points' => OrderDetails::where('is_it_illegal','violation_of_regulations')->sum('total_deduction')
         ]);
 
     }
