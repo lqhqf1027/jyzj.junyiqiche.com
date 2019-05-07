@@ -5,6 +5,7 @@ namespace app\admin\controller\vehicle;
 use app\admin\model\Order;
 use app\admin\model\OrderDetails;
 use app\admin\model\OrderImg;
+use app\admin\model\Admin;
 use app\common\controller\Backend;
 use fast\Date;
 use think\Cache;
@@ -158,20 +159,21 @@ class Vehiclemanagement extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                ->with(['orderdetails', 'admin'])
+                ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
-                ->with(['orderdetails', 'admin'])
+                ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id']);
+
+                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id','wx_public_user_id','service_id']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
@@ -181,6 +183,8 @@ class Vehiclemanagement extends Backend
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
+                $row->visible(['service']);
+                $row->getRelation('service')->visible(['nickname', 'avatar']);
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list, 'else' => array_merge(Cache::get('statistics'), ['statistics_total_violation' => Cache::get('statistics_total_violation')]));
@@ -268,6 +272,21 @@ class Vehiclemanagement extends Backend
     {
 
         $row = $this->model->get($ids);
+        //提车时，查询一次违章信息
+        $detail = $this->model->field('username')
+            ->with(['orderdetails' => function ($q) use ($ids) {
+                $q->withField('order_id,licensenumber,frame_number,engine_number')->where('order_id', $ids);
+            }])->find();
+        $data[] = [
+            'hphm' => mb_substr($detail['orderdetails']['licensenumber'], 0, 2),
+            'hphms' => $detail['orderdetails']['licensenumber'],
+            'engineno' => $detail['orderdetails']['engine_number'],
+            'classno' => $detail['orderdetails']['frame_number'],
+            'order_id' => $detail['orderdetails']['order_id'],
+            'username' => $detail['username'],
+        ];
+        // pr($data);
+        // die;
         if (!$row) {
             $this->error(__('No Results were found'));
         }
@@ -294,6 +313,7 @@ class Vehiclemanagement extends Backend
                     $order_details->allowField(true)->save($params, ['id' => OrderDetails::getByOrder_id($ids)->id]);
                     $row->lift_car_status = 'yes';
                     $result = $row->save();
+                    self::illegal($data);
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
@@ -1225,6 +1245,102 @@ class Vehiclemanagement extends Backend
         $objWriter->save('php://output');
         exit;
 
+    }
+
+    /**单个分配给客服
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function allocation($ids = NULL)
+    {
+        $serviceList = $this->getService();
+        // pr($serviceList);
+        // die;
+        $this->view->assign([
+            'serviceList'=> $serviceList
+        ]);
+
+        if ($this->request->isPost()) {
+
+            $params = $this->request->post('row/a');
+            $result = $this->model->save($params, function ($query) use ($ids) {
+                $query->where('id', $ids);
+            });
+            if ($result) {
+                
+                $this->success();
+               
+            } else {
+                $this->error();
+            }
+        }
+
+        return $this->view->fetch();
+    }
+
+
+    /**批量分配给客服
+     * @param string $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function batch($ids = '')
+    {
+        $serviceList = $this->getService();
+
+        $this->view->assign([
+            'serviceList'=> $serviceList
+        ]);
+
+        if ($this->request->isPost()) {
+
+            $params = $this->request->post('row/a');
+            $result = $this->model->save($params, function ($query) use ($ids) {
+                $query->where('id', 'in', $ids);
+            });
+            if ($result) {
+
+                $this->success();
+                
+            } else {
+
+                $this->error();
+            }
+        }
+        return $this->view->fetch();
+    }
+
+    /**
+     * 获取所有的客服
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getService()
+    {
+        $service = collection(Admin::field('id,nickname,rule_message')->where(function ($query) {
+            $query->where([
+                'rule_message' => 'message10',
+                'status' => 'normal'
+            ]);
+        })->select())->toArray();
+
+        $serviceList = array();
+        foreach ($service as $k => $v) {
+
+            $serviceList[] = ['nickname' => $v['nickname'], 'id' => $v['id']];
+            
+        }
+
+        return $serviceList;
     }
 
 
