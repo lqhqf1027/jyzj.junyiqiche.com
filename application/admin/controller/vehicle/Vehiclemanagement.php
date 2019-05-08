@@ -421,6 +421,7 @@ class Vehiclemanagement extends Backend
     public function modifying_data($ids = null)
     {
         $row = OrderDetails::getByOrder_id($ids);
+        $row['phone'] = Order::where('id', $ids)->find()['phone'];
 
         if (!$row) {
             $this->error(__('No Results were found'));
@@ -448,6 +449,7 @@ class Vehiclemanagement extends Backend
                     $params['traffic_force_insurance_time'] = $params['traffic_force_insurance_time'] ? strtotime($params['traffic_force_insurance_time']) : null;
                     $params['business_insurance_time'] = $params['business_insurance_time'] ? strtotime($params['business_insurance_time']) : null;
                     $result = $row->allowField(true)->save($params);
+                    $res = Order::where('id', $ids)->update(['phone' => $params['phone']]);
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
@@ -1530,6 +1532,73 @@ class Vehiclemanagement extends Backend
             $objWriter->save('php://output');
             return;
         }
+    }
+
+    //查看客服反馈信息
+    public function feedback($ids = null)
+    {
+        $detail = $this->model->field('id,username,phone')
+            ->with(['orderdetails' => function ($q) {
+                $q->withField('feedback');
+            },'service' => function ($q) {
+                $q->withField('nickname');
+            }])->find($ids);
+
+        $feedback = json_decode($detail['orderdetails']['feedback'], true);
+
+        // pr($feedback);
+        // die;
+        $this->view->assign([
+            'detail' => $detail,
+            'feedback' => $feedback,
+        ]);
+
+        return $this->view->fetch();
+    }
+
+    //新增客服反馈记录
+    public function saveinfo()
+    {
+        
+        if ($this->request->isAjax()) {
+            $params = $this->request->post();
+
+            $result = OrderDetails::where('order_id', $params['id'])->find()['feedback'];
+
+            if ($result) {
+
+                $feedback = [
+                    'message' => $params['text'],
+                    'date' => date('Y-m-d H:i:s', time())
+                ];
+
+                $res = json_decode($result, true);
+    
+                array_push($res, $feedback);
+               
+                $feedback = json_encode($res);
+            }
+            else {
+
+                $feedback = [[
+                    'message' => $params['text'],
+                    'date' => date('Y-m-d H:i:s', time())
+                ]];
+
+                $feedback = json_encode($feedback);
+            }
+
+            $r = OrderDetails::where('order_id', $params['id'])->update(['feedback' => $feedback]);
+
+            if ($r) {
+                $this->success('','',json_decode($feedback));
+            }
+            else {
+                $this->error();
+            }
+
+        }
+
     }
 
 
