@@ -120,7 +120,11 @@ class Vehiclemanagement extends Backend
             Cache::set('statistics_total_violation', OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'), 43200);
         }
 
+        //判断是否是客服
+        $rule_message = Admin::where('id', $this->auth->id)->find()['rule_message'];         
+
         $this->view->assign([
+            'rule_message' => $rule_message,
             'statistics' => Cache::get('statistics'),
             'statistics_total_violation' => Cache::get('statistics_total_violation'),
             'customer_service' => $customer_service,
@@ -232,9 +236,9 @@ class Vehiclemanagement extends Backend
                 ->limit($offset, $limit)
                 ->select();
 
-            foreach ($list as $row) {
+            foreach ($list as $key => $row) {
 
-                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id','wx_public_user_id','service_id']);
+                $row->visible(['kefu','id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id','wx_public_user_id','service_id']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
@@ -246,8 +250,10 @@ class Vehiclemanagement extends Backend
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
                 $row->visible(['service']);
                 $row->getRelation('service')->visible(['nickname', 'avatar']);
+                $list[$key]['kefu'] = $authId == $list[$key]['service_id'] ? 1 : 0;
             }
             $list = collection($list)->toArray();
+            
             $result = array("total" => $total, "rows" => $list, 'else' => array_merge(Cache::get('statistics'), ['statistics_total_violation' => Cache::get('statistics_total_violation')]));
 
             return json($result);
