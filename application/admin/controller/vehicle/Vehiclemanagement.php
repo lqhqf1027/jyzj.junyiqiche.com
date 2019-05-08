@@ -54,41 +54,38 @@ class Vehiclemanagement extends Backend
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("liftCarStatusList", $this->model->getLiftCarStatusList());
 
-//        dump($this->model->getTypeList());die;
-
         $customer_service = Admin::field('id,nickname,avatar')
-        ->withCount(['violationCount'=>function ($q){
-            $q->with(['orderdetails'=>function ($details){
-                $details->where('is_it_illegal','violation_of_regulations');
-            }]);
-        },'soonYearCount'=>function ($q){
-            $q->with(['orderdetails'=>function ($details){
-                $details->where('annual_inspection_status','soon');
-            }]);
-        },'overdueYearCount'=>function ($q){
-            $q->with(['orderdetails'=>function ($details){
-                $details->where('annual_inspection_status','overdue');
-            }]);
-        },'soonInsuranceCount'=>function ($q){
-            $q->with(['orderdetails'=>function ($details){
-                $details->where('traffic_force_insurance_status','soon');
-            }]);
-        },'overdueInsuranceCount'=>function ($q){
-            $q->with(['orderdetails'=>function ($details){
-                $details->where('traffic_force_insurance_status','overdue');
-            }]);
-        }])
-            ->where('rule_message','message10')
+            ->withCount(['violationCount' => function ($q) {
+                $q->with(['orderdetails' => function ($details) {
+                    $details->where('is_it_illegal', 'violation_of_regulations');
+                }]);
+            }, 'soonYearCount' => function ($q) {
+                $q->with(['orderdetails' => function ($details) {
+                    $details->where('annual_inspection_status', 'soon');
+                }]);
+            }, 'overdueYearCount' => function ($q) {
+                $q->with(['orderdetails' => function ($details) {
+                    $details->where('annual_inspection_status', 'overdue');
+                }]);
+            }, 'soonInsuranceCount' => function ($q) {
+                $q->with(['orderdetails' => function ($details) {
+                    $details->where('traffic_force_insurance_status', 'soon');
+                }]);
+            }, 'overdueInsuranceCount' => function ($q) {
+                $q->with(['orderdetails' => function ($details) {
+                    $details->where('traffic_force_insurance_status', 'overdue');
+                }]);
+            }, 'allCount'])
+            ->where('rule_message', 'message10')
             ->select();
 
-//        die;
         $customer_service = collection($customer_service)->toArray();
 
 //        pr($customer_service);die;
+
         if (!Cache::get('statistics')) {
 
             Cache::set('statistics', self::statistics(), 43200);
-
 
             OrderDetails::field('id,annual_inspection_time,traffic_force_insurance_time,business_insurance_time,annual_inspection_status,traffic_force_insurance_status,business_insurance_status')
                 ->where('annual_inspection_status|traffic_force_insurance_status|business_insurance_status', 'neq', 'no_queries')
@@ -118,18 +115,48 @@ class Vehiclemanagement extends Backend
 
         }
 
+
         if (!Cache::get('statistics_total_violation')) {
-            Cache::set('statistics_total_violation', OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'), 43200);
+            Cache::set('statistics_total_violation', self::statistics_violation(), 43200);
         }
 
         $this->view->assign([
-            'statistics' => Cache::get('statistics'),
-            'statistics_total_violation' => Cache::get('statistics_total_violation'),
+            'statistics' => $this->auth->rule_message == 'message10' ? self::statistics(['service_id' => $this->auth->id]) : Cache::get('statistics'),
+            'statistics_total_violation' => $this->auth->rule_message == 'message10' ? self::statistics_violation(['service_id' => $this->auth->id]) : Cache::get('statistics_total_violation'),
             'customer_service' => $customer_service,
-            'total_fine' => OrderDetails::where('is_it_illegal','violation_of_regulations')->sum('total_fine'),
-            'total_points' => OrderDetails::where('is_it_illegal','violation_of_regulations')->sum('total_deduction')
+            'total_fine' => $this->auth->rule_message == 'message10' ?self::sum_violation(['service_id' => $this->auth->id],'total_fine'):self::sum_violation(null,'total_fine'),
+            'total_points' => $this->auth->rule_message == 'message10' ?self::sum_violation(['service_id' => $this->auth->id],'total_deduction'):self::sum_violation(null,'total_deduction'),
+            'total_vehicle' => Order::count('id'),
+            'assigned_customer_service' => Order::where('service_id','not null')->count('id'),
+            'unassigned_customer_service' => Order::where('service_id','null')->count('id')
         ]);
 
+    }
+
+    /**
+     * 违章求和
+     * @param null $where
+     * @param $sum
+     * @return float|int
+     */
+    protected static function sum_violation($where = null,$sum)
+    {
+        return OrderDetails::with(['order' => function ($q) use ($where) {
+            $q->where($where == null ? null : $where);
+        }])->where('is_it_illegal', 'violation_of_regulations')->sum('order_details.'.$sum);
+    }
+
+    /**
+     * 统计违章
+     * @param null $where
+     * @return int|string
+     * @throws Exception
+     */
+    protected static function statistics_violation($where = null)
+    {
+        return OrderDetails::with(['order' => function ($q) use ($where) {
+            $q->where($where == null ? null : $where);
+        }])->where('is_it_illegal', 'violation_of_regulations')->count('order_details.id');
     }
 
     /**
@@ -137,16 +164,28 @@ class Vehiclemanagement extends Backend
      * @return array
      * @throws Exception
      */
-    protected static function statistics()
+    protected static function statistics($where = null)
     {
         return [
 //            'total_violation' => OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'),
-            'soon_year' => OrderDetails::where('annual_inspection_status', 'soon')->count('id'),
-            'year_overdue' => OrderDetails::where('annual_inspection_status', 'overdue')->count('id'),
-            'soon_traffic' => OrderDetails::where('traffic_force_insurance_status', 'soon')->count('id'),
-            'traffic_overdue' => OrderDetails::where('traffic_force_insurance_status', 'overdue')->count('id'),
-            'soon_business' => OrderDetails::where('business_insurance_status', 'soon')->count('id'),
-            'business_overdue' => OrderDetails::where('business_insurance_status', 'overdue')->count('id'),
+            'soon_year' => OrderDetails::with(['order' => function ($q) use ($where) {
+                $q->where($where == null ? null : $where);
+            }])->where('annual_inspection_status', 'soon')->count('order_details.id'),
+            'year_overdue' => OrderDetails::with(['order' => function ($q) use ($where) {
+                $q->where($where == null ? null : $where);
+            }])->where('annual_inspection_status', 'overdue')->count('order_details.id'),
+            'soon_traffic' => OrderDetails::with(['order' => function ($q) use ($where) {
+                $q->where($where == null ? null : $where);
+            }])->where('traffic_force_insurance_status', 'soon')->count('order_details.id'),
+            'traffic_overdue' => OrderDetails::with(['order' => function ($q) use ($where) {
+                $q->where($where == null ? null : $where);
+            }])->where('traffic_force_insurance_status', 'overdue')->count('order_details.id'),
+//            'soon_business' => OrderDetails::with(['order' => function ($q) use ($where) {
+//                $q->where($where == null ? null : $where);
+//            }])->where('business_insurance_status', 'soon')->count('order_details.id'),
+//            'business_overdue' => OrderDetails::with(['order' => function ($q) use ($where) {
+//                $q->where($where == null ? null : $where);
+//            }])->where('business_insurance_status', 'overdue')->count('order_details.id'),
         ];
     }
 
@@ -196,18 +235,18 @@ class Vehiclemanagement extends Backend
                 ->where($where)
                 ->where(function ($query) use ($authId, $getUserId) {
 
-                    
-                        //超级管理员
-                        if (in_array($authId, $getUserId['sale'])) {
-                            
-                            $query->where(['service_id' => $authId]);
-    
-                        } else {
-    
-                            
-                        }
-                 
-    
+
+                    //超级管理员
+                    if (in_array($authId, $getUserId['sale'])) {
+
+                        $query->where(['service_id' => $authId]);
+
+                    } else {
+
+
+                    }
+
+
                 })
                 ->order($sort, $order)
                 ->count();
@@ -217,17 +256,17 @@ class Vehiclemanagement extends Backend
                 ->where($where)
                 ->where(function ($query) use ($authId, $getUserId) {
 
-                    
+
                     //超级管理员
                     if (in_array($authId, $getUserId['sale'])) {
-                        
+
                         $query->where(['service_id' => $authId]);
 
                     } else {
 
-                        
+
                     }
-             
+
 
                 })
                 ->order($sort, $order)
@@ -236,7 +275,7 @@ class Vehiclemanagement extends Backend
 
             foreach ($list as $row) {
 
-                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id','wx_public_user_id','service_id']);
+                $row->visible(['id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id', 'service_id']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
@@ -250,7 +289,7 @@ class Vehiclemanagement extends Backend
                 $row->getRelation('service')->visible(['nickname', 'avatar']);
             }
             $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list, 'else' => array_merge(Cache::get('statistics'), ['statistics_total_violation' => Cache::get('statistics_total_violation')]));
+            $result = array("total" => $total, "rows" => $list, 'else' => array_merge($this->auth->rule_message == 'message10' ? self::statistics(['service_id' => $this->auth->id]) : Cache::get('statistics'), ['statistics_total_violation' => $this->auth->rule_message == 'message10' ? self::statistics_violation(['service_id' => $this->auth->id]) : Cache::get('statistics_total_violation')]));
 
             return json($result);
         }
@@ -1324,7 +1363,7 @@ class Vehiclemanagement extends Backend
         // pr($serviceList);
         // die;
         $this->view->assign([
-            'serviceList'=> $serviceList
+            'serviceList' => $serviceList
         ]);
 
         if ($this->request->isPost()) {
@@ -1334,9 +1373,9 @@ class Vehiclemanagement extends Backend
                 $query->where('id', $ids);
             });
             if ($result) {
-                
+
                 $this->success();
-               
+
             } else {
                 $this->error();
             }
@@ -1359,7 +1398,7 @@ class Vehiclemanagement extends Backend
         $serviceList = $this->getService();
 
         $this->view->assign([
-            'serviceList'=> $serviceList
+            'serviceList' => $serviceList
         ]);
 
         if ($this->request->isPost()) {
@@ -1371,7 +1410,7 @@ class Vehiclemanagement extends Backend
             if ($result) {
 
                 $this->success();
-                
+
             } else {
 
                 $this->error();
@@ -1400,7 +1439,7 @@ class Vehiclemanagement extends Backend
         foreach ($service as $k => $v) {
 
             $serviceList[] = ['nickname' => $v['nickname'], 'id' => $v['id']];
-            
+
         }
 
         return $serviceList;

@@ -61,5 +61,10 @@ class Admin extends Model
         return $this->hasMany('Order', 'service_id', 'id');
     }
 
+    //关联客服
+    public function allCount()
+    {
+        return $this->hasMany('Order', 'service_id', 'id');
+    }
 
 }

@@ -192,7 +192,7 @@
 
     <div class="panel-heading">
         <div class="row">
-            <div class="col-sm-3 col-xs-6 col-md-2">
+            <div class="col-sm-3 col-xs-6 {$admin.rule_message=='message10'?'col-md-4':'col-md-2'}">
                 <div class="sm-st clearfix" >
 
                     <div class="row">
@@ -212,7 +212,7 @@
 
                 </div>
             </div>
-            <div class="col-sm-3 col-xs-6 col-md-2">
+            <div class="col-sm-3 col-xs-6 {$admin.rule_message=='message10'?'col-md-4':'col-md-2'}">
                 <div class="sm-st clearfix">
                     <div class="row">
                         <div class="col-sm-12 col-xs-6 col-md-12 text-center" >
@@ -249,7 +249,7 @@
 
                 </div>
             </div>
-            <div class="col-sm-3 col-xs-6 col-md-2">
+            <div class="col-sm-3 col-xs-6 {$admin.rule_message=='message10'?'col-md-4':'col-md-2'}">
                 <div class="sm-st clearfix">
                     <div class="row">
                         <div class="col-sm-12 col-xs-6 col-md-12 text-center" >
@@ -279,11 +279,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3 col-xs-6 col-md-6">
+            <div class="col-sm-3 col-xs-6 col-md-6 {$admin.rule_message=='message10'? 'hide':''}">
                 <div class="sm-st clearfix" style="height: 138px;overflow-y: auto;overflow-x: hidden">
 
                     <div class="row">
                         <div class="col-sm-12 col-xs-6 col-md-12 services" >
+                            <div style="position: absolute;right: 28%">
+                                <h4 style="display: inline-block;padding: 10px;box-sizing: border-box">车辆总数：{$total_vehicle}</h4>
+                                <h4 style="display: inline-block;padding: 10px;box-sizing: border-box">已分配：{$assigned_customer_service}</h4>
+                                <h4 style="display: inline-block;padding: 10px;box-sizing: border-box">未分配：{$unassigned_customer_service}</h4>
+                            </div>
 
                             <div class="sm-st-info ">
                                 <span class="text-warning" id=""></span>
@@ -295,21 +300,21 @@
                                 <li>
 
                                     <img src="{$config.upload.cdnurl}{$vo.avatar}" alt="" width="25">
-                                    【客服】<span class="customer-service">{$vo.nickname}</span> <span class="hide">{$vo.id}</span>
+                                    【客服】<span class="customer-service">{$vo.nickname}</span> <span>（{$vo.all_count_count}）</span>台 <span class="hide">{$vo.id}</span>
                                     <span class="search-status">
-                                    &nbsp;|&nbsp;<u>违章：<span class="text-danger" mark="peccancy"><strong>{$vo.violation_count_count} 台</strong></span></u>
+                                    &nbsp;|&nbsp;<u>违章：<span class="text-danger" mark="peccancy"><strong>{$vo.violation_count_count} </strong></span>台</u>
                                     </span>
                                     <span class="search-status">
-                                    &nbsp;|&nbsp;<u>即将年检：<span class="text-danger" mark="year_inspect"><strong>{$vo.soon_year_count_count} 台</strong></span></u>
+                                    &nbsp;|&nbsp;<u>即将年检：<span class="text-danger" mark="year_inspect"><strong>{$vo.soon_year_count_count} </strong></span>台</u>
                                     </span>
                                     <span class="search-status">
-                                    &nbsp;|&nbsp;<u>年检过期：<span class="text-danger" mark="year_overdue"><strong>{$vo.overdue_year_count_count} 台</strong></span></u>
+                                    &nbsp;|&nbsp;<u>年检过期：<span class="text-danger" mark="year_overdue"><strong>{$vo.overdue_year_count_count} </strong></span>台</u>
                                     </span>
                                     <span class="search-status">
-                                    &nbsp;|&nbsp;<u>即将续保：<span class="text-danger" mark="strong"><strong>{$vo.soon_insurance_count_count} 台</strong></span></u>
+                                    &nbsp;|&nbsp;<u>即将续保：<span class="text-danger" mark="strong"><strong>{$vo.soon_insurance_count_count} </strong></span>台</u>
                                     </span>
                                     <span class="search-status">
-                                    &nbsp;|&nbsp;<u>保险过期：<span class="text-danger" mark="strong_overdue"><strong>{$vo.overdue_insurance_count_count} 台</strong></span></u>
+                                    &nbsp;|&nbsp;<u>保险过期：<span class="text-danger" mark="strong_overdue"><strong>{$vo.overdue_insurance_count_count} </strong></span>台</u>
                                     </span>
                                 </li>
 
