@@ -66,9 +66,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {
-                            checkbox: true, formatter: function (v, r, i) {
-                                return r.service_id ? {disabled: true} : {disabled: false};
-                            }
+                            checkbox: true
                         },
                         {field: 'id', title: __('Id'),operate:false},
                         {
@@ -393,7 +391,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     icon: 'fa fa-share',
                                     classname: 'btn btn-xs btn-info btn-allocation',
                                     visible: function (row) {
-                                        return !row.service_id ? true : false;
+                                        return !row.service_id && row.kefu == 0 ? true : false;
                                     }
                                 },
                                 {
@@ -403,7 +401,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     icon: 'fa fa-check',
                                     classname: 'text-info',
                                     visible: function (row) {
-                                        return row.service_id ? true : false;
+                                        return row.service_id && row.kefu == 0  ? true : false;
                                     }
                                 },
 
