@@ -54,6 +54,8 @@ class Vehiclemanagement extends Backend
         $this->view->assign("typeList", $this->model->getTypeList());
         $this->view->assign("liftCarStatusList", $this->model->getLiftCarStatusList());
 
+//        dump($this->model->getTypeList());die;
+
         $customer_service = Admin::field('id,nickname,avatar')
         ->withCount(['violationCount'=>function ($q){
             $q->with(['orderdetails'=>function ($details){
