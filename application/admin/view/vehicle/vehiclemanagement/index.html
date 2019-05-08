@@ -378,9 +378,10 @@
                             class="fa fa-send"></i> {:__('公众号可以推送违章的客户信息展示')}</a>
 
                         <a href="javascript:;" class="btn btn-danger btn-export " title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>               
-
+                        {if $rule_message eq 'message10'}
+                        {else /}
                         <a class="btn btn-info btn-disabled disabled btn-batch" href="javascript:;" ><i class="fa fa-share"></i> 批量分配客服</a>
-
+                        {/if}
                         <a href="javascript:;" class="btn btn-default btn-search-result hide" ><i
                                 class="fa fa-search"></i> {:__('已筛选条件：')} <span class="search-info" style="padding:0  5px;font-weight: bold;color: red">kjhkjh</span><span id="reset">重置</span></a>
                     </div>
