@@ -204,6 +204,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             visible: false
                         },
+                        {
+                            field: 'type',
+                            title: '购车类型',
+                            searchList: {
+                                "mortgage": __('按揭（新车）'),
+                                "used_car_mortgage": __('按揭（二手车）'),
+                                "full_new_car": __('全款（新车）'),
+                                "full_used_car": __('全款（二手车）')
+                            },
+                            visible: false
+                        },
                         // {
                         //     field: 'orderdetails.business_insurance_status',
                         //     title: '商业险状态',
