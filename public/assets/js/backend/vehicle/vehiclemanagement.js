@@ -404,6 +404,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return row.service_id && row.kefu == 0  ? true : false;
                                     }
                                 },
+                                {
+                                    name: 'feedback',
+                                    icon: 'fa fa-eye',
+                                    title: __('查看客服反馈信息'),
+                                    text: '查看客服反馈信息',
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-success btn-feedback',
+                                    visible: function (row) {
+                                        return row.service_id ? true : false;
+                                    }
+                                },
 
                             ]
                         }
@@ -979,6 +990,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'vehicle/vehiclemanagement/view_information';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看提车资料'), $(this).data() || {});
                     },
+                    /**
+                     * 违章信息查看
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-violation_details': function (e, value, row, index) {
                         $(".btn-violation_details").data("area", ["80%", "80%"]);
                         e.stopPropagation();
@@ -989,6 +1007,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'vehicle/vehiclemanagement/violation_details';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看未处理违章详情'), $(this).data() || {});
+                    },
+                    /**
+                     * 客服反馈信息
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-feedback': function (e, value, row, index) {
+                        $(".btn-feedback").data("area", ["80%", "80%"]);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'vehicle/vehiclemanagement/feedback';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看客服反馈信息'), $(this).data() || {});
                     },
                     /**
                      * 查询违章
@@ -1219,7 +1255,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param index
                      */
                     'click .btn-allocation': function (e, value, row, index) {
-                        $(".btn-allocation").data("area", ["30%", "30%"]);
+                        $(".btn-allocation").data("area", ["40%", "50%"]);
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -1438,7 +1474,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             var options = {
                 shadeClose: false,
                 shade: [0.3, '#393D49'],
-                area: ['30%', '30%'],
+                area: ['40%', '50%'],
                 callback: function (value) {
 
                 }

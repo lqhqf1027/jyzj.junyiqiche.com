@@ -1,0 +1,96 @@
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    .text-center span{
+        margin-left: 15px;
+    }
+</style>
+<form id="saveinfo-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+<h3 class="text-center">
+
+    <span>司机姓名：{$detail.username}</span>
+    <span>司机电话：{$detail.phone}</span>
+    <span>专属客服：{$detail.service.nickname}</span>
+    
+</h3>
+<p></p>
+<table class="table table-bordered table-striped table-hover" style="max-width: 1103px;max-height: 700px;margin: auto">
+    <thead>
+
+    <tr>
+
+        <th>反馈内容</th>
+        <th>反馈时间</th>
+
+
+    </tr>
+    </thead>
+    <tbody class="infos">
+        {foreach name="feedback" item="vo"}
+        <tr>
+
+            <td>{$vo.message}</td>
+            <td>{$vo.date}</td>
+
+        </tr>
+        {/foreach}
+
+    </tbody>
+</table>
+
+    <input type="hidden" name="hidden1" id="hidden1" value="{$detail.id}" />
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+
+            <button type="button" class="btn btn-success btn-embossed" id="btn-saveinfo">反馈</button>
+
+        </div>
+    </div>
+
+</form>
+
+<script>
+
+    var id = $('#hidden1').val();
+    $('#btn-saveinfo').on('click',function () {
+        var prompt = Layer.prompt(
+            {title: '输入反馈内容，并确认', shadeClose: true},
+
+            function (text, index) {
+                // console.log(text);
+                Fast.api.ajax({
+                    url: 'vehicle/vehiclemanagement/saveinfo',
+                    data: {id: id, text: text}
+                }, function (data, ret) {
+
+                    parent.$('#toolbar1 .btn-refresh', parent.document).trigger('click')
+
+                    Toastr.success('反馈成功');
+                    Layer.close(prompt);
+
+                    $('.infos').html('');
+                    var h = '';
+                    for (var i in data) {
+                                
+                        h += '<tr><td>' + data[i]['message'] + '</td><td>' + data[i]['date'] + '</td></tr>';
+
+                    }
+                    $('.infos').html('').append(h)
+
+                    // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    // parent.layer.close(index);
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+
+                    return false;
+                });
+
+
+            }
+        );
+    })
+</script>
