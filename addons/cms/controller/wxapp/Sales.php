@@ -37,6 +37,10 @@ class Sales extends Base
         $password = $this->request->post('password');
         $user_id = $this->request->post('user_id');
 
+        if(!$user_id || !$username || !$password){
+            $this->error('缺少参数');
+        }
+
         try {
             $validate = new Validate([
                 'username' => 'require|length:3,30',
@@ -67,6 +71,8 @@ class Sales extends Base
             $user = \app\admin\model\User::get($user_id);
 
             $admin_id = \app\admin\model\User::getByAdmin_id($admin->id);
+
+//            $this->success($admin_id);
 
             if (!$user->admin_id && !$admin_id) {
                 $user->admin_id = $admin->id;
