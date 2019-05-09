@@ -5,12 +5,12 @@
         margin: 0 auto;
     }
 
-    .profile-avatar-container .profile-user-img {
+    .profile-avatar-container .profile-user-img,.profile-server-sexclusive-img {
         width: 100px;
         height: 100px;
     }
 
-    .profile-avatar-container .profile-avatar-text {
+    .profile-avatar-container .profile-avatar-text,.server-sexclusiver-text {
         display: none;
     }
 
@@ -27,6 +27,19 @@
         line-height: 100px;
         text-align: center;
     }
+    .profile-avatar-container:hover .server-sexclusiver-text {
+        display: block;
+        position: absolute;
+        height: 100px;
+        width: 100px;
+        background: #444;
+        opacity: .6;
+        color: #fff;
+        top: 26px;
+        left: 0;
+        line-height: 100px;
+        text-align: center;
+    }
 
     .profile-avatar-container button {
         position: absolute;
@@ -35,6 +48,11 @@
         width: 100px;
         height: 100px;
         opacity: 0;
+    }
+    .server_sexclusive{
+        position: absolute;
+        top: 20px;
+        right: 20px;
     }
 </style>
 <div class="row animated fadeInRight">
@@ -58,6 +76,14 @@
                         <h3 class="profile-username text-center">{$admin.username}</h3>
 
                         <p class="text-muted text-center">{$admin.email}</p>
+                        <!--客服专属二维码-->
+                        <div class="profile-avatar-container server_sexclusive">
+                            <p>客服专属二维码</p>
+                            <img class="profile-server-sexclusive-img img-responsive   plupload" src="{$admin.server_sexclusive|cdnurl}" alt="">
+                            <div class="server-sexclusiver-text  ">{:__('Click to edit')}</div>
+                            <button id="plupload-server_sexclusive" class="plupload" data-input-id="c-server_sexclusive"><i class="fa fa-upload"></i> {:__('Upload')}</button>
+                        </div>
+
                         <div class="form-group">
                             <label for="username" class="control-label">{:__('Username')}:</label>
                             <input type="text" class="form-control" id="username" name="row[username]" value="{$admin.username}" disabled/>
@@ -78,6 +104,9 @@
                             <label for="password" class="control-label">{:__('Password')}:</label>
                             <input type="password" class="form-control" id="password" placeholder="{:__('Leave password blank if dont want to change')}" autocomplete="new-password" name="row[password]" value="" data-rule="password"/>
                         </div>
+
+                            <input type="hidden" class="form-control"  name="row[server_sexclusive]" value="{$admin.server_sexclusive}"  />
+
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">{:__('Submit')}</button>
                             <button type="reset" class="btn btn-default">{:__('Reset')}</button>

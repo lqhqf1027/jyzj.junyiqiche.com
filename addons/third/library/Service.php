@@ -24,7 +24,7 @@ class Service
      * @param int $keeptime 有效时长
      * @return boolean
      */
-    public static function connect($platform, $params = [], $extend = [], $keeptime = 0)
+    public static function connect($platform, $params = [], $extend = [], $keeptime = 0,$platformType='')
     {
         $time = time();
         $values = [
