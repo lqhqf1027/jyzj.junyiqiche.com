@@ -32,7 +32,7 @@
         <tr>
 
             <td>{$vo.message}</td>
-            <td>{$vo.date}</td>
+            <td><span class='text-gray'>{$vo.date|strtotime|format_date=###}</span>（{$vo.date}）</td>
 
         </tr>
         {/foreach}
@@ -55,9 +55,38 @@
 <script>
 
     var id = $('#hidden1').val();
+    var format_date = function(time) {
+         
+            var nowtime = Date.parse(new Date());
+            var difference = nowtime - time;
+            var msg = '';
+            
+            if (difference <= '60000') {
+                msg = '刚刚';
+            }
+            else if (difference > '60000' && difference <= '3600000' ) {
+                msg = Math.round(difference / 60000) + '分钟前';
+            }
+            else if (difference > '3600000' && difference <= '86400000' ) {
+                msg = Math.round(difference / 3600000) + '小时前';
+            }
+            else if (difference > '86400000' && difference <= '2592000000' ) {
+                msg = Math.round(difference / 86400000) + '天前';
+            }
+            else if (difference > '2592000000' && difference <= '31536000000' ) {
+                msg = Math.round(difference / 2592000000) + '个月前';
+            }
+            else {
+                msg = Math.round(difference / 31104000000) + '年前';
+            }
+
+            return msg;
+        }
+
+
     $('#btn-saveinfo').on('click',function () {
         var prompt = Layer.prompt(
-            {title: '输入反馈内容，并确认', shadeClose: true},
+            {title: '输入反馈内容，并确认', shadeClose: true, formType: 2},
 
             function (text, index) {
                 // console.log(text);
@@ -75,7 +104,7 @@
                     var h = '';
                     for (var i in data) {
                                 
-                        h += '<tr><td>' + data[i]['message'] + '</td><td>' + data[i]['date'] + '</td></tr>';
+                        h += '<tr><td>' + data[i]['message'] + '</td><td><span class="text-gray">' + format_date(Date.parse(new Date(data[i]['date']))) + '</span>（' + data[i]['date'] + '）' + '</td></tr>';
 
                     }
                     $('.infos').html('').append(h)

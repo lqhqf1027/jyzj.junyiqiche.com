@@ -221,10 +221,6 @@ class Order extends Backend
 
                     $params['order_id'] = $this->model->id;
 
-                    $order_details = new OrderDetails();
-
-                    $order_details->allowField(true)->save($params);
-
                     $order_img = new OrderImg();
 
                     $order_img->allowField(true)->save($params);
@@ -344,10 +340,6 @@ class Order extends Backend
                     $result = $row->allowField(true)->save($params);
 
                     $params['order_id'] = $row->id;
-
-                    $order_details = new OrderDetails();
-
-                    $order_details->allowField(true)->save($params, ['order_id' => $row->id]);
 
                     $order_img = new OrderImg();
 

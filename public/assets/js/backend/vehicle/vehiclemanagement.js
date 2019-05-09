@@ -391,24 +391,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     icon: 'fa fa-share',
                                     classname: 'btn btn-xs btn-info btn-allocation',
                                     visible: function (row) {
-                                        return !row.service_id && row.kefu == 0 ? true : false;
-                                    }
-                                },
-                                {
-                                    name: '',
-                                    text: '已分配客服',
-                                    title: __('已分配客服'),
-                                    icon: 'fa fa-check',
-                                    classname: 'text-info',
-                                    visible: function (row) {
-                                        return row.service_id && row.kefu == 0  ? true : false;
+                                        return !row.service_id && row.kefu == 0 && row.lift_car_status == 'yes'? true : false;
                                     }
                                 },
                                 {
                                     name: 'feedback',
                                     icon: 'fa fa-eye',
-                                    title: __('查看客服反馈信息'),
-                                    text: '查看客服反馈信息',
+                                    title: __('客服反馈'),
+                                    text: '客服反馈',
                                     extend: 'data-toggle="tooltip"',
                                     classname: 'btn btn-xs btn-success btn-feedback',
                                     visible: function (row) {
@@ -1024,7 +1014,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'vehicle/vehiclemanagement/feedback';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看客服反馈信息'), $(this).data() || {});
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('客服反馈'), $(this).data() || {});
                     },
                     /**
                      * 查询违章
@@ -1314,7 +1304,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 html += '</tbody></table>';
                 html += '<div class="form-group layer-footer">';
                 html += '<div style="text-align: center;vertical-align: middle !important;">'
-                html += '<button  type="submit" class="btn btn-success btn-embossed btn-sendoneviolation">推送违章信息</button>';
+                let color = data['wx_public_user_id'] == 1 ? '#00FA9A' : 'gary';
+                let text = data['wx_public_user_id']  == 1 ? '推送违章信息' : '暂未认证微信公众号';
+                let disable = data['wx_public_user_id']  == 1 ? ' ' : 'disable';
+                html += '<button  type="submit" class="btn btn-embossed btn-sendoneviolation' + disable +'" style="background: ' + color + '">' + text + '</button>';
                 html += '<script>';
                 html += '$(".btn-sendoneviolation").on("click", function () {\n' + 
                     'var confirm = layer.confirm(\n' + 
