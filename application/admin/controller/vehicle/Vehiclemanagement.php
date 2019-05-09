@@ -42,7 +42,7 @@ class Vehiclemanagement extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
-    protected $noNeedLogin = ['sendviolation'];
+    protected $noNeedLogin = ['ceshi','sendallviolation'];
 
     public function _initialize()
     {
@@ -618,10 +618,13 @@ class Vehiclemanagement extends Backend
 
             $params = $this->request->post()['ids'];
 
-//            pr($params);die;
+            // pr($params);die;
             $illegal = self::illegal($params);
 
-            $this->success('', '', ['error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
+            $wx_public_user_id = Order::where('id', $params[0]['order_id'])->find()['wx_public_user_id'] ? 1 : 0;
+            // pr($wx_public_user_id);
+            // die;
+            $this->success('', '', ['wx_public_user_id' => $wx_public_user_id,'error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
         }
     }
 
@@ -870,7 +873,6 @@ class Vehiclemanagement extends Backend
 
     public static function sendXcxTemplateMsg($data = '')
     {
-        Cache::rm('access_token');
         $appid = Env::get('wx_public.appid');
         $secret = Env::get('wx_public.secret');
         $wx = new wx($appid, $secret);
@@ -1029,21 +1031,22 @@ class Vehiclemanagement extends Backend
      */
     public function sendallviolation()
     {
-        $detail = Collection($this->model->where('wx_public_user_id', 'not NULL')->field('username,phone,wx_public_user_id,models_name')
+        $detail = Collection($this->model->where('wx_public_user_id', 'not null')->field('username,phone,wx_public_user_id,models_name')
             ->with(['orderdetails' => function ($q) {
                 $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations']);
             }])->select())->toArray();
+            
         //是否存在数据
         if ($detail) {
             foreach ($detail as $key => $value) {
-
+                
                 $openid = $this->getOpenid($value['wx_public_user_id']);
 
                 //是否有openid
                 if ($openid) {
-
-                    $first = $value['username'] . '您好，您车型为：' . $value['models_name'] . '，车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有未处理的违章信息';
                     $time = date('Y-m-d', time());
+                    $first = $value['username'] . '师傅您好，截止到' . $time . '，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有以下未处理的违章信息';
+                    
                     $details = json_decode($value['orderdetails']['violation_details'], true);
                     $count = count($details);
 
@@ -1085,8 +1088,7 @@ class Vehiclemanagement extends Backend
                 }
 
             }
-
-            $this->success();
+            die;
         }
 
     }
@@ -1116,9 +1118,9 @@ class Vehiclemanagement extends Backend
 
                 //是否有openid
                 if ($openid) {
-
-                    $first = $value['username'] . '您好，您车型为：' . $detail[0]['models_name'] . '，车牌号为＂' . $detail[0]['orderdetails']['licensenumber'] . '＂的车辆有未处理的违章信息';
                     $time = date('Y-m-d', time());
+                    $first = $value['username'] . '师傅您好，截止到' . $time . '，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有以下未处理的违章信息';
+                    
                     $details = json_decode($detail[0]['orderdetails']['violation_details'], true);
                     $count = count($details);
 
@@ -1639,6 +1641,14 @@ class Vehiclemanagement extends Backend
 
         }
 
+    }
+
+    //测试方法
+    public function ceshi()
+    {
+        $result = Admin::where('id', 1)->update(['status' => 'hidden']);
+
+        
     }
 
 

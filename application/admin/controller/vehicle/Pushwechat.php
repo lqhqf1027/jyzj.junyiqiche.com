@@ -34,6 +34,7 @@ class Pushwechat extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
+    protected $noNeedLogin = ['sendannual','sendtrafficforce'];
     public function _initialize()
     {
         parent::_initialize();
