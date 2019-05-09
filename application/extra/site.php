@@ -4,7 +4,7 @@ return array (
   'name' => '君忆之家',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.5.0',
+  'version' => '1.5.3',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
@@ -29,6 +29,7 @@ return array (
     'example' => 'Example',
     'message' => '员工权限配置',
     'shares' => '分享配置',
+    'server_sexclusive' => '客服配置',
   ),
   'mail_type' => '1',
   'mail_smtp_host' => 'smtp.qq.com',
@@ -62,4 +63,5 @@ return array (
   'share_body' => '邀请你来认证君忆司机，获取更多便捷车辆服务！',
   'share_img' => '/jyzj.junyiqiche.com/uploads/20190424/726058d409e8b54c950393fce76ce0a7.jpg',
   'follow_after_sendMsg' => '**_欢迎来到君忆之家！_**',
+  'public_qrocde' => '/jyzj.junyiqiche.com/uploads/20190508/628b48a1929b83005bbebb5d9135381d.png',
 );

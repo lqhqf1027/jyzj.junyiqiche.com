@@ -34,7 +34,8 @@ class Pushwechat extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
-    protected $noNeedLogin = ['timing_violation','test'];
+
+    protected $noNeedLogin = ['sendannual','sendtrafficforce','timing_violation'];
 
     public function _initialize()
     {

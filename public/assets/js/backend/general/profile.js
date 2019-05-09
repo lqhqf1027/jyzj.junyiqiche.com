@@ -43,6 +43,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'upload'], function (
                 $(".profile-user-img").prop("src", url);
                 Toastr.success("上传成功！");
             });
+            // 给上传客服二维码添加上传成功事件
+            $("#plupload-server_sexclusive").data("upload-success", function (data) {
+                var url = Backend.api.cdnurl(data.url);
+                $("input[name='row[server_sexclusive]']").val(data.url);
+                $(".profile-server-sexclusive-img").prop("src", url);
+                Toastr.success("上传成功！");
+            });
             
             // 给表单绑定事件
             Form.api.bindevent($("#update-form"), function () {
