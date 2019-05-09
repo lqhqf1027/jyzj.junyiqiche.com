@@ -155,7 +155,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Table.api.formatter.datetime,
-                            datetimeFormat: "YYYY-MM-DD",operate:false
+                            // datetimeFormat: "YYYY-MM-DD",
+                            operate:false
                         },
                         {
                             field: 'orderdetails.annual_inspection_time',

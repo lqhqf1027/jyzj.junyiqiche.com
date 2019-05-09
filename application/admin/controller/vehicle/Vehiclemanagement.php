@@ -121,18 +121,18 @@ class Vehiclemanagement extends Backend
         }
 
         //判断是否是客服
-        $rule_message = Admin::where('id', $this->auth->id)->find()['rule_message'];         
+        $rule_message = Admin::where('id', $this->auth->id)->find()['rule_message'];
 
         $this->view->assign([
 
             'statistics' => $this->auth->rule_message == 'message10' ? self::statistics(['service_id' => $this->auth->id]) : Cache::get('statistics'),
             'statistics_total_violation' => $this->auth->rule_message == 'message10' ? self::statistics_violation(['service_id' => $this->auth->id]) : Cache::get('statistics_total_violation'),
             'customer_service' => $customer_service,
-            'total_fine' => $this->auth->rule_message == 'message10' ?self::sum_violation(['service_id' => $this->auth->id],'total_fine'):self::sum_violation(null,'total_fine'),
-            'total_points' => $this->auth->rule_message == 'message10' ?self::sum_violation(['service_id' => $this->auth->id],'total_deduction'):self::sum_violation(null,'total_deduction'),
+            'total_fine' => $this->auth->rule_message == 'message10' ? self::sum_violation(['service_id' => $this->auth->id], 'total_fine') : self::sum_violation(null, 'total_fine'),
+            'total_points' => $this->auth->rule_message == 'message10' ? self::sum_violation(['service_id' => $this->auth->id], 'total_deduction') : self::sum_violation(null, 'total_deduction'),
             'total_vehicle' => Order::count('id'),
-            'assigned_customer_service' => Order::where('service_id','not null')->count('id'),
-            'unassigned_customer_service' => Order::where('service_id','null')->count('id')
+            'assigned_customer_service' => Order::where('service_id', 'not null')->count('id'),
+            'unassigned_customer_service' => Order::where('service_id', 'null')->count('id')
         ]);
 
     }
@@ -143,11 +143,11 @@ class Vehiclemanagement extends Backend
      * @param $sum
      * @return float|int
      */
-    protected static function sum_violation($where = null,$sum)
+    protected static function sum_violation($where = null, $sum)
     {
         return OrderDetails::with(['order' => function ($q) use ($where) {
             $q->where($where == null ? null : $where);
-        }])->where('is_it_illegal', 'violation_of_regulations')->sum('order_details.'.$sum);
+        }])->where('is_it_illegal', 'violation_of_regulations')->sum('order_details.' . $sum);
     }
 
     /**
@@ -280,7 +280,7 @@ class Vehiclemanagement extends Backend
             foreach ($list as $key => $row) {
 
 
-                $row->visible(['kefu','id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id','wx_public_user_id','service_id']);
+                $row->visible(['kefu', 'id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id', 'service_id']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
@@ -382,20 +382,13 @@ class Vehiclemanagement extends Backend
 
         $row = $this->model->get($ids);
         //提车时，查询一次违章信息
-        $detail = $this->model->field('username')
-            ->with(['orderdetails' => function ($q) use ($ids) {
-                $q->withField('order_id,licensenumber,frame_number,engine_number')->where('order_id', $ids);
-            }])->find();
-        $data[] = [
-            'hphm' => mb_substr($detail['orderdetails']['licensenumber'], 0, 2),
-            'hphms' => $detail['orderdetails']['licensenumber'],
-            'engineno' => $detail['orderdetails']['engine_number'],
-            'classno' => $detail['orderdetails']['frame_number'],
-            'order_id' => $detail['orderdetails']['order_id'],
-            'username' => $detail['username'],
-        ];
-        // pr($data);
-        // die;
+//        $detail = $this->model->field('username')
+//            ->with(['orderdetails' => function ($q) use ($ids) {
+//                $q->withField('order_id,licensenumber,frame_number,engine_number')->where('order_id', $ids);
+//            }])->find();
+
+//         pr($data);
+//         die;
         if (!$row) {
             $this->error(__('No Results were found'));
         }
@@ -409,6 +402,12 @@ class Vehiclemanagement extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
                 $params = $this->preExcludeFields($params);
+                $params['order_id'] = $ids;
+                $params['admin_id'] = $this->auth->id;
+                if($params['annual_inspection_time']) $params['annual_inspection_time'] = strtotime($params['annual_inspection_time']);
+
+                if($params['traffic_force_insurance_time']) $params['traffic_force_insurance_time'] = strtotime($params['traffic_force_insurance_time']);
+
                 $result = false;
                 Db::startTrans();
                 try {
@@ -419,10 +418,21 @@ class Vehiclemanagement extends Backend
                         $row->validate($validate);
                     }
                     $order_details = new OrderDetails();
-                    $order_details->allowField(true)->save($params, ['id' => OrderDetails::getByOrder_id($ids)->id]);
+                    $order_details->allowField(true)->save($params);
+
+                    $data[] = [
+                        'hphm' => mb_substr($params['licensenumber'], 0, 2),
+                        'hphms' => $params['licensenumber'],
+                        'engineno' => $params['engine_number'],
+                        'classno' => $params['frame_number'],
+                        'order_id' => $ids,
+                        'username' => $row->username,
+                    ];
+
                     $row->lift_car_status = 'yes';
                     $result = $row->save();
-                    self::illegal($data);
+                    illegal($data);
+//                    self::illegal($data);
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
@@ -618,8 +628,7 @@ class Vehiclemanagement extends Backend
 
             $params = $this->request->post()['ids'];
 
-            // pr($params);die;
-            $illegal = self::illegal($params);
+            $illegal = illegal($params);
 
             $wx_public_user_id = Order::where('id', $params[0]['order_id'])->find()['wx_public_user_id'] ? 1 : 0;
             // pr($wx_public_user_id);
@@ -1582,7 +1591,7 @@ class Vehiclemanagement extends Backend
         $detail = $this->model->field('id,username,phone')
             ->with(['orderdetails' => function ($q) {
                 $q->withField('feedback');
-            },'service' => function ($q) {
+            }, 'service' => function ($q) {
                 $q->withField('nickname');
             }])->find($ids);
 
@@ -1601,7 +1610,7 @@ class Vehiclemanagement extends Backend
     //新增客服反馈记录
     public function saveinfo()
     {
-        
+
         if ($this->request->isAjax()) {
             $params = $this->request->post();
 
@@ -1615,12 +1624,11 @@ class Vehiclemanagement extends Backend
                 ];
 
                 $res = json_decode($result, true);
-    
+
                 array_push($res, $feedback);
-               
+
                 $feedback = json_encode($res);
-            }
-            else {
+            } else {
 
                 $feedback = [[
                     'message' => $params['text'],
@@ -1633,9 +1641,8 @@ class Vehiclemanagement extends Backend
             $r = OrderDetails::where('order_id', $params['id'])->update(['feedback' => $feedback]);
 
             if ($r) {
-                $this->success('','',json_decode($feedback));
-            }
-            else {
+                $this->success('', '', json_decode($feedback));
+            } else {
                 $this->error();
             }
 
