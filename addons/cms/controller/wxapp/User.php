@@ -5,9 +5,11 @@ namespace addons\cms\controller\wxapp;
 use addons\third\library\Service;
 use addons\third\model\Third;
 use app\admin\model\Admin;
+use app\admin\model\WxPublicUser;
 use app\common\library\Auth;
 use fast\Http;
 use think\Config;
+use think\Env;
 use think\Validate;
 
 /**
@@ -45,6 +47,7 @@ class User extends Base
         $config = get_addon_config('cms');
         $code = $this->request->post("code");
         $rawData = $this->request->post("rawData");
+        $platformType = $this->request->post("platform");
         if (!$code || !$rawData) {
             $this->error("参数不正确");
         }
@@ -52,17 +55,26 @@ class User extends Base
         if ($userInfo['nickName']) {
             $userInfo['nickName'] = emoji_encode($userInfo['nickName']);
         }
+
         $params = [
-            'appid'      => $config['wxappid'],
-            'secret'     => $config['wxappsecret'],
-            'js_code'    => $code,
+            'appid' => $platformType == 'platform-jyzj-sales' ? $config['wxappid'] : Env::get('jyzj.appid'),
+            'secret' => $platformType == 'platform-jyzj-sales' ? $config['wxappsecret'] : Env::get('jyzj.secret'),
+            'js_code' => $code,
             'grant_type' => 'authorization_code'
         ];
         $result = Http::sendRequest("https://api.weixin.qq.com/sns/jscode2session", $params, 'GET');
 
+//        pr($result);
+//        die;
         if ($result['ret']) {
 
             $json = (array)json_decode($result['msg'], true);
+//            $session_key =$json['session_key'];
+//            //判断是否有关注公众号，where条件unionid
+//            return $json;
+//            pr(WxPublicUser::get(['unionid' => $json['unionid']]));die;
+
+//            if (!WxPublicUser::get(['unionid' => $json['unionid']])->id)   $this->error('请先关注公众号', \addons\cms\model\Config::getByname('public_qrocde')->value);
 
             if (isset($json['openid'])) {
                 //如果有传Token
@@ -73,31 +85,30 @@ class User extends Base
                         $third = Third::where(['openid' => $json['openid'], 'platform' => 'wxapp'])->find();
 
                         if ($third && $third['user_id'] == $this->auth->id) {
-                            $this->success("登录成功", ['userInfo' => $this->auth->getUserinfo()]);
+                            $this->success("登录成功up", ['userInfo' => $this->auth->getUserinfo()]);
                         }
                     }
                 }
 
                 $platform = 'wxapp';
                 $result = [
-                    'openid'        => $json['openid'],
-                    'userinfo'      => [
+                    'openid' => $json['openid'],
+                    'userinfo' => [
                         'nickname' => $userInfo['nickName'],
                     ],
-                    'access_token'  => $json['session_key'],
+                    'access_token' => $json['session_key'],
                     'refresh_token' => '',
-                    'expires_in'    => isset($json['expires_in']) ? $json['expires_in'] : 0,
+                    'expires_in' => isset($json['expires_in']) ? $json['expires_in'] : 0,
                 ];
                 $extend = ['gender' => $userInfo['gender'], 'nickname' => $userInfo['nickName'], 'avatar' => $userInfo['avatarUrl']];
 
-                $ret = Service::connect($platform, $result, $extend);
-
+                $ret = Service::connect($platform, $result, $extend, $keeptime = 0, $platformType = '');
                 if ($ret) {
                     $auth = Auth::instance();
                     $users = $auth->getUserinfo();
 
                     $users['nickname'] = emoji_decode($users['nickname']);
-                    $this->success("登录成功", ['userInfo' => $users, 'openid' => $json['openid'], 'session_key' => $json['session_key']]);
+                    $this->success("登录成功insert", ['userInfo' => $users, 'openid' => $json['openid'], 'session_key' => $json['session_key']]);
                 } else {
                     $this->error("连接失败");
                 }
@@ -107,6 +118,11 @@ class User extends Base
         }
 
         return;
+    }
+
+    public function checkSubscribePublic($uid)
+    {
+
     }
 
     /**
@@ -123,18 +139,18 @@ class User extends Base
         $account = $this->request->post('account');
         $password = $this->request->post('password');
         $rule = [
-            'account'  => 'require|length:3,50',
+            'account' => 'require|length:3,50',
             'password' => 'require|length:6,30',
         ];
 
         $msg = [
-            'account.require'  => 'Account can not be empty',
-            'account.length'   => 'Account must be 3 to 50 characters',
+            'account.require' => 'Account can not be empty',
+            'account.length' => 'Account must be 3 to 50 characters',
             'password.require' => 'Password can not be empty',
-            'password.length'  => 'Password must be 6 to 30 characters',
+            'password.length' => 'Password must be 6 to 30 characters',
         ];
         $data = [
-            'account'  => $account,
+            'account' => $account,
             'password' => $password,
         ];
         $validate = new Validate($rule, $msg);

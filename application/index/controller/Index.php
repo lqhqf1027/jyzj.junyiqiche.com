@@ -66,7 +66,9 @@ class Index extends Frontend
         }
 
 
-        $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();
+//        $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();oPsVnwFRMglD2zBaBwtoX5PjwhLE
+        $userinfo = WxPublicUser::get(['openid' => 'oPsVnwFRMglD2zBaBwtoX5PjwhLE'])->getData();
+
         //最后一次查询时间是否在本周内,新用户
 //        if ($userinfo['query_time']) {
 //
@@ -85,7 +87,7 @@ class Index extends Frontend
             $order_details = $value;
         }
         if ($order_details) $detail = json_decode($order_details['orderdetails']['violation_details'], true);
-
+        $service = self::serverSexclusive($uid['id']);
 //用户头像,用户的查询次数
         $this->view->assign([
             'order_details' => $order_details,
@@ -94,11 +96,18 @@ class Index extends Frontend
             'count' => $detail ? count($detail) : 0,
             'userinfo' => $userinfo,
             'id' => $order_details['orderdetails']['id'],
-            'licensenumber' => $order_details['orderdetails']['licensenumber']
+            'licensenumber' => $order_details['orderdetails']['licensenumber'],
+            'server' => $service//专属客服二维码
         ]);
 
-        return Order::get(['wx_public_user_id' => $uid['id']]) ? $this->view->fetch('apply') : $this->view->fetch();
+        return Order::get(['wx_public_user_id' => $uid]) ? $this->view->fetch('apply') : $this->view->fetch();
 
+    }
+
+    public static function serverSexclusive($uid)
+    {
+//        $service_id = Order::get(['wx_public_user_id']);
+        return collection(Order::field('id,service_id')->with(['service'])->where(['wx_public_user_id' => $uid])->select())->toArray()[0]['service']['server_sexclusive'];
     }
 
     /**
