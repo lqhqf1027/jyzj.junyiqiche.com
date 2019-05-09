@@ -34,13 +34,15 @@ class Pushwechat extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
+    protected $noNeedLogin = ['timing_violation','test'];
+
     public function _initialize()
     {
         parent::_initialize();
         $this->model = new \app\admin\model\Order();
 
     }
-    
+
     /**
      * 发送微信公众号模板消息
      * @param $data
@@ -51,7 +53,7 @@ class Pushwechat extends Backend
         Cache::rm('access_token');
         $appid = Env::get('wx_public.appid');
         $secret = Env::get('wx_public.secret');
-        $wx = new wx($appid,$secret);
+        $wx = new wx($appid, $secret);
         $access_token = $wx->getWxtoken()['access_token'];
         // pr($access_token);
         // die;
@@ -80,13 +82,13 @@ class Pushwechat extends Backend
     {
         $detail = Collection($this->model->field('username,phone,wx_public_user_id,models_name')
             ->with(['orderdetails' => function ($q) use ($ids) {
-                $q->withField('licensenumber,frame_number,annual_inspection_time,annual_inspection_status')->where('annual_inspection_status', 'in', ['soon','overdue'])->where('order_id', 1877);
+                $q->withField('licensenumber,frame_number,annual_inspection_time,annual_inspection_status')->where('annual_inspection_status', 'in', ['soon', 'overdue'])->where('order_id', 1877);
             }])->select())->toArray();
-       
+
         //是否存在数据
         if ($detail) {
             foreach ($detail as $key => $value) {
-                
+
                 $openid = $this->getOpenid($value['wx_public_user_id']);
 
                 //是否有openid
@@ -95,7 +97,7 @@ class Pushwechat extends Backend
                     $type = $value['orderdetails']['annual_inspection_status'] == 'soon' ? '即将到期' : '已到期';
                     $first = $value['username'] . '您好，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂车辆的年检' . $type;
                     $time = date('Y-m-d', $value['orderdetails']['annual_inspection_time']);
-                    
+
                     $temp_msg = array(
                         'touser' => "{$openid}",
                         'template_id' => "aBEssxm7rNQKj_j0gDimieBcbjR1NbNrqvG8SV0wjSE",
@@ -116,16 +118,16 @@ class Pushwechat extends Backend
                             "remark" => array(
                                 "value" => "请及时处理",
                             )
-                            
+
                         ),
                     );
-                    
+
                     $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
-                   
+
                 }
-    
+
             }
-            
+
             $this->success();
         }
 
@@ -139,13 +141,13 @@ class Pushwechat extends Backend
     {
         $detail = Collection($this->model->field('username,phone,wx_public_user_id,models_name')
             ->with(['orderdetails' => function ($q) use ($ids) {
-                $q->withField('licensenumber,frame_number,traffic_force_insurance_time,traffic_force_insurance_status')->where('traffic_force_insurance_status', 'in', ['soon','overdue'])->where('order_id', 1864);
+                $q->withField('licensenumber,frame_number,traffic_force_insurance_time,traffic_force_insurance_status')->where('traffic_force_insurance_status', 'in', ['soon', 'overdue'])->where('order_id', 1864);
             }])->select())->toArray();
-       
+
         //是否存在数据
         if ($detail) {
             foreach ($detail as $key => $value) {
-                
+
                 $openid = $this->getOpenid($value['wx_public_user_id']);
 
                 //是否有openid
@@ -154,7 +156,7 @@ class Pushwechat extends Backend
                     $type = $value['orderdetails']['traffic_force_insurance_status'] == 'soon' ? '即将到期' : '已到期';
                     $first = $value['username'] . '您好，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂车辆的保险' . $type;
                     $time = date('Y-m-d', $value['orderdetails']['traffic_force_insurance_time']);
-                    
+
                     $temp_msg = array(
                         'touser' => "{$openid}",
                         'template_id' => "xYsJcFIfIGaS6PX1EnSpqJ68xp-ENHTT6IWzDX7HrCo",
@@ -179,28 +181,28 @@ class Pushwechat extends Backend
                             "remark" => array(
                                 "value" => "请及时处理",
                             )
-                            
+
                         ),
                     );
-                    
+
                     $res = $this->sendXcxTemplateMsg(json_encode($temp_msg));
-                   
+
                 }
-    
+
             }
-            
+
             $this->success();
         }
 
     }
 
     //更新unionid
-    public function wechat() 
+    public function wechat()
     {
         Cache::rm('access_token');
         $appid = Env::get('wx_public.appid');
         $secret = Env::get('wx_public.secret');
-        $wx = new wx($appid,$secret);
+        $wx = new wx($appid, $secret);
         $access_token = $wx->getWxtoken()['access_token'];
         $result = WxPublicUser::where('id', '>', 99)->select();
 
@@ -210,12 +212,12 @@ class Pushwechat extends Backend
             ]
         ];
         foreach ($result as $k => $v) {
-            
+
             $openid = [
                 'openid' => $v['openid']
             ];
             array_push($data['user_list'], $openid);
-            
+
         }
         $data = json_encode($data);
         // pr($data);
@@ -229,7 +231,43 @@ class Pushwechat extends Backend
 
         }
 
-        
+
+    }
+
+    public function timing_violation()
+    {
+        try {
+
+            $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
+                ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
+                ->distinct(true)->field('licensenumber')
+
+                ->chunk(25, function ($item) {
+                    $item = collection($item)->toArray();
+                    $data = array();
+                    foreach ($item as $k => $v) {
+
+                        $data[] = [
+                            'hphm' => mb_substr($v['licensenumber'], 0, 2),
+                            'hphms' => $v['licensenumber'],
+                            'engineno' => $v['engine_number'],
+                            'classno' => $v['frame_number'],
+                            'order_id' => $v['order_id'],
+                            'username' => '123',
+                        ];
+
+//
+
+
+                    }
+                    pr(illegal($data));
+                    return false;
+                },null,'desc');
+
+        } catch (Exception $e) {
+            pr($e->getMessage());
+        }
+
     }
 
 

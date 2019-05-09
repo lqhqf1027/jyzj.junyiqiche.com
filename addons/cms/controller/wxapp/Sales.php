@@ -163,11 +163,11 @@ class Sales extends Base
                 if ($params['customer_source'] === 'turn_to_introduce') {
                     $rule['turn_to_introduce_name'] = 'require';
                     $rule['turn_to_introduce_phone'] = 'require';
-                    $rule['turn_to_introduce_card'] = 'require';
+//                    $rule['turn_to_introduce_card'] = 'require';
 
                     $check['turn_to_introduce_name'] = $params['turn_to_introduce_name'];
                     $check['turn_to_introduce_phone'] = $params['turn_to_introduce_phone'];
-                    $check['turn_to_introduce_card'] = $params['turn_to_introduce_card'];
+//                    $check['turn_to_introduce_card'] = $params['turn_to_introduce_card'];
 
                 }
 
