@@ -1188,12 +1188,29 @@ class Vehiclemanagement extends Backend
     {
         $ids = $this->request->post('ids');
 
+        $authId = $this->auth->id;
+
+        $rule_message = Admin::field('rule_message')->where('id', $authId)->find()['rule_message'];
+
+        if ($ids == 'all' && $rule_message == 'message10') {
+
+            $result = Order::field('id')->where('service_id', $authId)->select();
+
+            foreach ($result as $k => $v) {
+                $service_ids .= $v['id'] . ',';
+            }
+
+        } 
+        else if ($ids == 'all') {
+            $service_ids = null;
+        }
+
         $info = collection(Order::field('id,createtime,username,phone,models_name')
             ->with(['admin' => function ($q) {
                 $q->withField('nickname');
             }, 'orderdetails' => function ($q) {
                 $q->withField('file_coding,licensenumber,frame_number,engine_number,is_it_illegal,total_deduction,total_fine,update_violation_time,annual_inspection_time,traffic_force_insurance_time');
-            }])->select($ids == 'all' ? null : $ids))->toArray();
+            }])->select($ids == 'all' ? $service_ids : $ids))->toArray();
 
         // 新建一个excel对象 大神已经加入了PHPExcel 不用引了 直接用！
         $objPHPExcel = new \PHPExcel();  //在vendor目录下 \不能少 否则报错
