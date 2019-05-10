@@ -238,7 +238,6 @@ class Pushwechat extends Backend
     public function timing_violation()
     {
         try {
-
             $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
                 ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
                 ->distinct(true)->field('licensenumber')
