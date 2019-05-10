@@ -121,7 +121,7 @@ class Vehiclemanagement extends Backend
         }
 
         //判断是否是客服
-        $rule_message = Admin::where('id', $this->auth->id)->find()['rule_message'];
+//        $rule_message = Admin::where('id', $this->auth->id)->find()['rule_message'];
 
         $this->view->assign([
 
@@ -171,7 +171,6 @@ class Vehiclemanagement extends Backend
     protected static function statistics($where = null)
     {
         return [
-//            'total_violation' => OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'),
             'soon_year' => OrderDetails::with(['order' => function ($q) use ($where) {
                 $q->where($where == null ? null : $where);
             }])->where('annual_inspection_status', 'soon')->count('order_details.id'),
@@ -184,12 +183,6 @@ class Vehiclemanagement extends Backend
             'traffic_overdue' => OrderDetails::with(['order' => function ($q) use ($where) {
                 $q->where($where == null ? null : $where);
             }])->where('traffic_force_insurance_status', 'overdue')->count('order_details.id'),
-//            'soon_business' => OrderDetails::with(['order' => function ($q) use ($where) {
-//                $q->where($where == null ? null : $where);
-//            }])->where('business_insurance_status', 'soon')->count('order_details.id'),
-//            'business_overdue' => OrderDetails::with(['order' => function ($q) use ($where) {
-//                $q->where($where == null ? null : $where);
-//            }])->where('business_insurance_status', 'overdue')->count('order_details.id'),
         ];
     }
 
@@ -631,8 +624,7 @@ class Vehiclemanagement extends Backend
             $illegal = illegal($params);
 
             $wx_public_user_id = Order::where('id', $params[0]['order_id'])->find()['wx_public_user_id'] ? 1 : 0;
-            // pr($wx_public_user_id);
-            // die;
+
             $this->success('', '', ['wx_public_user_id' => $wx_public_user_id,'error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
         }
     }

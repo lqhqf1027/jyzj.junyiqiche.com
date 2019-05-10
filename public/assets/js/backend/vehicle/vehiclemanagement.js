@@ -593,6 +593,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ,
                     //本页
                     btn2: function (index, layero) {
+                        // console.log(page);return;
                         ids = [];
                         for (var i in page) {
 

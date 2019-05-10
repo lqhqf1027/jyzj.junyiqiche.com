@@ -332,25 +332,21 @@ class Index extends Frontend
         // if ($order_details['orderdetails']['is_it_illegal'] == 'no_queries') {
 
         $plate_no = array(
-            'key' => '217fb8552303cb6074f88dbbb5329be7',
+            'key' => 'd91da2fdf9834922d28a10565afef31a',
             'hphm' => urlencode(mb_substr($order_details['orderdetails']['licensenumber'], 0, 2, "UTF-8"))
         );
 
-        //聚合查询城市前缀
-        $car_city_name = gets("http://v.juhe.cn/sweizhang/carPre?key=217fb8552303cb6074f88dbbb5329be7&hphm={$plate_no['hphm']}");
-
-        if ($car_city_name['error_code'] == 0) {
             ##如果返回的错误码不等于0，就返回官方的错误信息
             // return json(array('state' =>$car_city_name['result']['city_code']));
 
             //根据需要的查询条件，查询车辆的违章信息
-            $city = $car_city_name['result']['city_code']; //城市代码，必传
+//            $city = $car_city_name['result']['city_code']; //城市代码，必传
 
-            $carno = $order_details['orderdetails']['licensenumber']; //车牌号，必传
+            $carno = urlencode($order_details['orderdetails']['licensenumber']); //车牌号，必传
             $engineno = $order_details['orderdetails']['engine_number']; //发动机号，需要的城市必传
             $classno = $order_details['orderdetails']['frame_number']; //车架号，需要的城市必传
             $s = strlen($carno) == 9 ? '' : '&hpzl=52';
-            $data = gets("http://v.juhe.cn/sweizhang/query?city={$city}&hphm={$carno}{$s}&&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7");
+            $data = gets("http://v.juhe.cn/wz/query?hphm={$carno}&hpzl=02&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7");
 
             if ($data['resultcode'] == 200) {
                 $total_fraction = 0;     //总扣分
@@ -381,7 +377,6 @@ class Index extends Frontend
 
                     }
 
-
                     OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
                     Db::commit();
                 } catch (\Exception $e) {
@@ -401,7 +396,7 @@ class Index extends Frontend
             } else $this->error($data['reason']);
 
             $this->error('暂不支持此车型');
-        }
+
         // }
         $this->error($car_city_name['reason']);
     }
