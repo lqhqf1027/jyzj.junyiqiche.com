@@ -66,8 +66,8 @@ class Index extends Frontend
         }
 
 
-//        $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();oPsVnwFRMglD2zBaBwtoX5PjwhLE
-        $userinfo = WxPublicUser::get(['openid' => 'oPsVnwFRMglD2zBaBwtoX5PjwhLE'])->getData();
+        $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();
+//        $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();
 
         //最后一次查询时间是否在本周内,新用户
 //        if ($userinfo['query_time']) {
@@ -100,14 +100,22 @@ class Index extends Frontend
             'server' => $service//专属客服二维码
         ]);
 
-        return Order::get(['wx_public_user_id' => $uid]) ? $this->view->fetch('apply') : $this->view->fetch();
+        return Order::get(['wx_public_user_id' => $uid['id']]) ? $this->view->fetch('apply') : $this->view->fetch();
 
     }
 
+    /**
+     * 司机专属客服二维码
+     * @param $uid
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public static function serverSexclusive($uid)
     {
 //        $service_id = Order::get(['wx_public_user_id']);
-        return collection(Order::field('id,service_id')->with(['service'])->where(['wx_public_user_id' => $uid])->select())->toArray()[0]['service']['server_sexclusive'];
+        return collection(Order::field('id,service_id')->with(['service'])->where(['wx_public_user_id' => $uid])->select())->toArray()[0]['service'];
     }
 
     /**

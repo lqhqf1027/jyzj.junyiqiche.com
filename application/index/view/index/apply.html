@@ -95,7 +95,7 @@
                 <!--<img src="{$config.upload.cdnurl}/jyzj.junyiqiche.com/imgs/car2.png" />-->
                 <div class="mui-media-body">
                     <strong>{$order_details.orderdetails.licensenumber}
-                        &nbsp;&nbsp;{$order_details.models_name}</strong>
+                        &nbsp;&nbsp;{$order_details.username}</strong>
                     <!--{$licensenumber}-->
                     <p > 车架号 :<span class="frame">{$order_details.orderdetails.frame_number}</span>&nbsp;&nbsp; <span class="text-info frame_number"> 修改</span>
                     </p>
@@ -229,7 +229,11 @@
 
 </div>
 <div id="serverSexclusive" class="mui-control-content ">
-    <img src="{$config.upload.cdnurl}{$server}" alt="" width="100%">
+    <h3 style="text-align: center"></h3>
+    <img src="{$config.upload.cdnurl}{$server.server_sexclusive}" alt="" width="100%" >
+    <h5 style="text-align: center">长按二维码识别添加客服微信</h5>
+    <p ><h4 style="text-align: center">您的专属客服电话（微信同号）</h4></p>
+    <p style="text-align: center">君忆客服：小{$server.nickname|mb_substr=0,1,'utf-8'} &nbsp;<strong><u><a href="tel:{$server.phone}">{$server.phone}</a></u></strong></p>
     <!--<ul class="mui-table-view mui-table-view-chevron">-->
     <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 1</a></li>-->
     <!--<li class="mui-table-view-cell"><a href="" class="mui-navigate-right">Item 2</a></li>-->
