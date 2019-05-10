@@ -353,8 +353,10 @@ class Index extends Frontend
             $carno = urlencode($order_details['orderdetails']['licensenumber']); //车牌号，必传
             $engineno = $order_details['orderdetails']['engine_number']; //发动机号，需要的城市必传
             $classno = $order_details['orderdetails']['frame_number']; //车架号，需要的城市必传
-            $s = strlen($carno) == 9 ? '' : '&hpzl=52';
-            $data = gets("http://v.juhe.cn/wz/query?hphm={$carno}&hpzl=02&engineno={$engineno}&classno={$classno}&key=217fb8552303cb6074f88dbbb5329be7");
+//            $s = strlen($carno) == 9 ? '' : '&hpzl=52';
+        $data = gets("http://v.juhe.cn/wz/query?hphm=" . urlencode($carno) . "&engineno=" . $engineno . "&classno=" .$classno. "&hpzl=02&key=d91da2fdf9834922d28a10565afef31a");
+
+//        $data = gets("http://v.juhe.cn/wz/query?hphm={$carno}&hpzl=02&engineno={$engineno}&classno={$classno}&key=d91da2fdf9834922d28a10565afef31a");
 
             if ($data['resultcode'] == 200) {
                 $total_fraction = 0;     //总扣分
@@ -406,7 +408,7 @@ class Index extends Frontend
             $this->error('暂不支持此车型');
 
         // }
-        $this->error($car_city_name['reason']);
+//        $this->error($car_city_name['reason']);
     }
 
 
