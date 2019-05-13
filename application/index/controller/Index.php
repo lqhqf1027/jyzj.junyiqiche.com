@@ -381,7 +381,6 @@ class Index extends Frontend
 
         } else $this->error($result['query_record'][0]['msg']);
 
-        
     }
 
     /**

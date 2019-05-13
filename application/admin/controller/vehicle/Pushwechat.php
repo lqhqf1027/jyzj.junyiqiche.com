@@ -20,6 +20,8 @@ use wechat\Wx;
 use think\Env;
 use app\admin\model\WxPublicUser;
 
+use fast\Http;
+
 /**
  *
  *
@@ -35,7 +37,7 @@ class Pushwechat extends Backend
     protected $model = null;
     protected $noNeedRight = ['*'];
 
-    protected $noNeedLogin = ['sendannual','sendtrafficforce','timing_violation'];
+    protected $noNeedLogin = ['sendannual', 'sendtrafficforce', 'timing_violation'];
 
     public function _initialize()
     {
@@ -235,14 +237,62 @@ class Pushwechat extends Backend
 
     }
 
+    /**
+     * 定时推送违章查询
+     */
     public function timing_violation()
     {
+        $redis = new \Redis();
+
+        $redis->connect('120.78.135.109', '6379');
+
+        $redis->auth('654321');
+
+        $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
+            ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
+            ->distinct(true)
+            ->field('licensenumber')
+            ->limit(100)
+            ->select();
+
+//        foreach ($info as $k => $v){
+//            $redis->hMSet('test',array('id'=>$v['id'],'order_id'=>$v['order_id'],'licensenumber'=>$v['licensenumber']));
+//        }
+
+        dump($redis->hGetAll('test'));
+
+        die;
+
+//        $page = $this->request->get('page');
+//
+//        $res = OrderDetails::where('licensenumber', 'not null')
+//            ->order('id desc')
+//            ->page($page . ',10')
+//            ->field('id,licensenumber')
+//            ->select();
+//
+//        pr(collection($res)->toArray());
+//        die;
+
+//        $data = \fast\Http::sendRequest('http://v.juhe.cn/carInfo/querySimple.php', [
+//            'number' => '川XF009U',
+//            'key' => 'c4069179480d70096a37a8e9d11a3d0b',
+//        ], 'GET');
+//
+//
+//        pr(json_decode($data['msg'], true));
+//
+//        die;
+
+
         try {
+            set_time_limit(300);
             $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
                 ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
                 ->distinct(true)->field('licensenumber')
 
-                ->chunk(25, function ($item) {
+                ->chunk(100, function ($item) {
+
                     $item = collection($item)->toArray();
                     $data = array();
                     foreach ($item as $k => $v) {
@@ -260,9 +310,10 @@ class Pushwechat extends Backend
 
 
                     }
+//                    pr($data);
                     pr(illegal($data));
                     return false;
-                },null,'desc');
+                }, null, 'desc');
 
         } catch (Exception $e) {
             pr($e->getMessage());

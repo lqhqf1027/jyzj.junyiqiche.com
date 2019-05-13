@@ -388,6 +388,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }
                                 },
                                 {
+                                    name: '',
+                                    icon: 'fa fa-search',
+                                    title: __('更新年检日期'),
+                                    text: '更新年检日期',
+                                    extend: 'data-toggle="tooltip"',
+                                    dropdown: '更多',
+                                    classname: 'btn btn-xs update-year',
+                                    visible: function (row) {
+                                        return true;
+                                    }
+                                },
+                                {
                                     name: 'allocation',
                                     text: '分配客服',
                                     title: __('分配客服'),
@@ -944,7 +956,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if (value) {
                         return "<span class='text-danger'>" + value + "</span>";
                     }
-                    return value == null ? '-' : "<span class='text-success'><strong>" + value + "</strong></span>";
+                    return value == null ? '-' : value ;
 
                 },
             },
@@ -1259,6 +1271,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'vehicle/vehiclemanagement/allocation';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('分配客服'), $(this).data() || {});
                     },
+
+                    'click .update-year': function (e, value, row, index){
+                        if(!row.orderdetails || !row.orderdetails.licensenumber){
+                              Layer.alert('请填写车牌号！');
+
+                              return;
+                        }
+
+                        $.post('');
+
+
+                        console.log(row);
+                    }
 
 
 

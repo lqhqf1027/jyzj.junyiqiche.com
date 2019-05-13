@@ -1097,7 +1097,17 @@ if (!function_exists('hsv2rgb')) {
 
                 $field = array();
 
-                $data = gets("http://v.juhe.cn/wz/query?hphm=" . urlencode($v['hphms']) . "&engineno=" . $v['engineno'] . "&classno=" . $v['classno'] . "&hpzl=02&key=d91da2fdf9834922d28a10565afef31a");
+                $data = Http::sendRequest('http://v.juhe.cn/wz/query', [
+                    'hphm' => urlencode($v['hphms']),
+                    'engineno' => $v['engineno'],
+                    'classno' => $v['classno'],
+                    'hpzl' => 02,
+                    'key' => 'd91da2fdf9834922d28a10565afef31a'
+                ],'GET');
+//
+                $data = json_decode($data['msg'],true);
+
+//                $data = gets("http://v.juhe.cn/wz/query?hphm=" . urlencode($v['hphms']) . "&engineno=" . $v['engineno'] . "&classno=" . $v['classno'] . "&hpzl=02&key=d91da2fdf9834922d28a10565afef31a");
 
                 if ($data['error_code'] == 0) {
 
