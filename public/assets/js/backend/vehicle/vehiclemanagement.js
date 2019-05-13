@@ -154,8 +154,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             title: __('最后查询违章时间'),
                             operate: 'RANGE',
                             addclass: 'datetimerange',
-                            formatter: Table.api.formatter.datetime,
-                            // datetimeFormat: "YYYY-MM-DD",
+                            formatter: function (value, row, index) {
+
+                                return value ? Controller.api.Format_time(value): value;
+                            },
                             operate:false
                         },
                         {
@@ -1475,7 +1477,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 };
                 table.bootstrapTable('refresh', {});
                 return text;
-            }
+            },
+            /**
+             * 格式化时间 几天前 时 分 秒
+             * @param dateTimeStamp
+             * @returns {*|string}
+             */
+            Format_time: function (timestamp) {
+                var mistiming = Math.round(new Date() / 1000) - timestamp;
+                var postfix = mistiming > 0 ? '前' : '后'
+                mistiming = Math.abs(mistiming)
+                var arrr = ['年', '个月', '星期', '天', '小时', '分钟', '秒'];
+                var arrn = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+
+                for (var i = 0; i < 7; i++) {
+                    var inm = Math.floor(mistiming / arrn[i])
+                    if (inm != 0) {
+                        return inm + arrr[i] + postfix
+                    }
+                }
+            },
         }
     };
 

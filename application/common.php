@@ -1156,7 +1156,7 @@ if (!function_exists('hsv2rgb')) {
 
                     $details->save();
 
-                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
+                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $details->is_it_illegal == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
                     $success_num++;
 
                 } else {
@@ -1173,7 +1173,8 @@ if (!function_exists('hsv2rgb')) {
             return [
                 'error_num' => $error_num,
                 'success_num' => $success_num,
-                'query_record' => $query_record
+                'query_record' => $query_record,
+                'lists' => $record
             ];
         }
     }

@@ -100,7 +100,7 @@ class Index extends Frontend
             'server' => $service//专属客服二维码
         ]);
 
-        return Order::get(['wx_public_user_id' => $uid['id']]) ? $this->view->fetch('apply') : $this->view->fetch();
+        return Order::get(['wx_public_user_id' => '187']) ? $this->view->fetch('apply') : $this->view->fetch();
 
     }
 
@@ -189,30 +189,53 @@ class Index extends Frontend
      */
     public function applyDriverInfo()
     {
+        $uid = Session::get('MEMBER');
+
+        $this->model = new \app\admin\model\Order();
 
         if ($this->request->isAjax()) {
 
             $params = $this->request->post('');
 
-            Db::startTrans();
-            try {
-                if (self::isApplyDriver($params['order_id'])['wx_public_user_id']) throw new Exception('该车型已被认证过');
-                WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => $params['is_apply']]);
-                Order::update(['id' => $params['order_id'], 'wx_public_user_id' => Session::get('MEMBER')['id']]);
-                // //认证--第一次查询
-                // $this->queryViolation();
-                Db::commit();
-            } catch (Exception $e) {
-                Db::rollback();
-                $this->error($e->getMessage(), '', '');
-            }
-            //认证--第一次查询
-            $this->queryViolation();
-            $this->success('认证成功', '', '');
+            $order_details = $this->model->field('username,phone,wx_public_user_id,models_name')
+                ->with(['orderdetails' => function ($q) {
+                    $q->withField('id,licensenumber,frame_number,engine_number,total_deduction,total_fine,violation_details,is_it_illegal');
+            }])->find($params['order_id']);
 
+            $data[] = [
+                'hphm' => mb_substr($order_details['orderdetails']['licensenumber'], 0, 2),
+                'hphms' => $order_details['orderdetails']['licensenumber'],//车牌号，必传
+                'engineno' => $order_details['orderdetails']['engine_number'],//发动机号，需要的城市必传
+                'classno' => $order_details['orderdetails']['frame_number'],//车架号，需要的城市必传
+                'order_id' => $params['order_id'],
+                'username' => $order_details['username'],
+            ];
+            // pr($data);
+            // die;
+            $result = illegal($data);
 
-            $this->error('非法请求', '', '');
+            // pr($result);
+            // die;
 
+            if ($result['query_record'][0]['status'] == 'success') {
+
+                Db::startTrans();
+                try {
+                    if (self::isApplyDriver($params['order_id'])['wx_public_user_id']) throw new Exception('该车型已被认证过');
+                    WxPublicUser::update(['id' => Session::get('MEMBER')['id'], 'is_apply' => $params['is_apply']]);
+                    Order::update(['id' => $params['order_id'], 'wx_public_user_id' => Session::get('MEMBER')['id']]);
+                   
+                    Db::commit();
+                } catch (Exception $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage(), '', '');
+                }
+                $this->success('认证成功', '', '');
+    
+    
+                $this->error('非法请求', '', '');
+                
+            } else $this->error($result['query_record'][0]['msg']);
 
         }
         $this->error('非法请求', '', '');
@@ -317,100 +340,48 @@ class Index extends Frontend
      */
     public function selCarInfo()
     {
-
-        $this->queryViolation();
-    }
-
-    //查询违章
-    public function queryViolation()
-    {
-
         $uid = Session::get('MEMBER');
-
 
         $userinfo = WxPublicUser::get(['openid' => $uid['openid']])->getData();
         if ($userinfo['query_number'] == 0) $this->error('请于下周再来更新！');
+
         $this->model = new \app\admin\model\Order();
         $order_details = $this->model->where(['wx_public_user_id' => $uid['id']])->field('username,phone,wx_public_user_id,models_name')
             ->with(['orderdetails' => function ($q) {
-                $q->withField('id,licensenumber,frame_number,engine_number,total_deduction,total_fine,violation_details,is_it_illegal');
+                $q->withField('id,licensenumber,frame_number,engine_number,total_deduction,total_fine,violation_details,is_it_illegal,order_id');
             }])->find();
 
-        // $car_city_name_arr =  json_decode($car_city_name,true);
-        // if ($order_details['orderdetails']['is_it_illegal'] == 'no_queries') {
+        $data[] = [
+            'hphm' => mb_substr($order_details['orderdetails']['licensenumber'], 0, 2),
+            'hphms' => $order_details['orderdetails']['licensenumber'],//车牌号，必传
+            'engineno' => $order_details['orderdetails']['engine_number'],//发动机号，需要的城市必传
+            'classno' => $order_details['orderdetails']['frame_number'],//车架号，需要的城市必传
+            'order_id' => $order_details['orderdetails']['order_id'],
+            'username' => $order_details['username'],
+        ];
+        $result = illegal($data);
 
-        $plate_no = array(
-            'key' => 'd91da2fdf9834922d28a10565afef31a',
-            'hphm' => urlencode(mb_substr($order_details['orderdetails']['licensenumber'], 0, 2, "UTF-8"))
-        );
+        // pr($result);
+        // die;
 
-        ##如果返回的错误码不等于0，就返回官方的错误信息
-        // return json(array('state' =>$car_city_name['result']['city_code']));
+        if ($result['query_record'][0]['status'] == 'success') {
 
-        //根据需要的查询条件，查询车辆的违章信息
-//            $city = $car_city_name['result']['city_code']; //城市代码，必传
-
-        $carno = urlencode($order_details['orderdetails']['licensenumber']); //车牌号，必传
-        $engineno = $order_details['orderdetails']['engine_number']; //发动机号，需要的城市必传
-        $classno = $order_details['orderdetails']['frame_number']; //车架号，需要的城市必传
-//            $s = strlen($carno) == 9 ? '' : '&hpzl=52';
-        $data = gets("http://v.juhe.cn/wz/query?hphm=" . urlencode($carno) . "&engineno=" . $engineno . "&classno=" . $classno . "&hpzl=02&key=d91da2fdf9834922d28a10565afef31a");
-
-//        $data = gets("http://v.juhe.cn/wz/query?hphm={$carno}&hpzl=02&engineno={$engineno}&classno={$classno}&key=d91da2fdf9834922d28a10565afef31a");
-
-        if ($data['resultcode'] == 200) {
-            $total_fraction = 0;     //总扣分
-            $total_money = 0;        //总罚款
-            $flag = -1;
-
-            Db::startTrans();
-            try {
-                $lists = [];
-                if ($data['result']['lists']) {
-                    foreach ($data['result']['lists'] as $k => $v) {
-                        if ($v['handled'] == 0) {
-                            $flag = -2;
-                        } else if ($v['handled'] == 1) {
-                            continue;
-                        }
-                        if ($v['fen']) $total_fraction += floatval($v['fen']);
-                        if ($v['money']) $total_money += floatval($v['money']); //总罚款
-                        array_push($lists, $v);
-                    }
-                    $is_it_illegal = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
-                } else {
-                    $is_it_illegal = 'no_violation';
-                }
-
-                if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
-                    WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
-
-                }
-
-                OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
-                Db::commit();
-            } catch (\Exception $e) {
-                Db::rollback();
-                $this->error($e->getMessage());
-            }
-            $this->success($data['reason'], '',
+            WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
+                
+            $this->success('查询成功', '',
                 [
-                    'lists' => $data['result']['lists'],
-                    'total_fraction' => $total_fraction,
-                    'total_money' => $total_money,
-                    'counts' => count($data['result']['lists']),
-                    'upTime' => '上一次更新时间：' . date('Y-m-d H:i:s', time())]
+                    'lists' => $result['lists'],
+                    'total_fraction' => $result['query_record'][0]['total_deduction'],
+                    'total_money' => $result['query_record'][0]['total_fine'],
+                    'counts' => count($result['lists']),
+                    'upTime' => '上一次更新时间：' . date('Y-m-d H:i:s', time())
+                ]
 
             );
 
-        } else $this->error($data['reason']);
+        } else $this->error($result['query_record'][0]['msg']);
 
-        $this->error('暂不支持此车型');
-
-        // }
-//        $this->error($car_city_name['reason']);
     }
-
 
     /**
      *
