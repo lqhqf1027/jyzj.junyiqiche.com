@@ -237,6 +237,9 @@ class Pushwechat extends Backend
 
     }
 
+    /**
+     * 定时推送违章查询
+     */
     public function timing_violation()
     {
         $redis = new \Redis();
@@ -283,10 +286,13 @@ class Pushwechat extends Backend
 
 
         try {
+            set_time_limit(300);
             $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
                 ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
                 ->distinct(true)->field('licensenumber')
+
                 ->chunk(100, function ($item) {
+
                     $item = collection($item)->toArray();
                     $data = array();
                     foreach ($item as $k => $v) {

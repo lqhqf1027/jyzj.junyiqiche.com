@@ -954,7 +954,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if (value) {
                         return "<span class='text-danger'>" + value + "</span>";
                     }
-                    return value == null ? '-' : "<span class='text-success'><strong>" + value + "</strong></span>";
+                    return value == null ? '-' : value ;
 
                 },
             },

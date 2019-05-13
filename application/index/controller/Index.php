@@ -344,68 +344,68 @@ class Index extends Frontend
             'hphm' => urlencode(mb_substr($order_details['orderdetails']['licensenumber'], 0, 2, "UTF-8"))
         );
 
-            ##如果返回的错误码不等于0，就返回官方的错误信息
-            // return json(array('state' =>$car_city_name['result']['city_code']));
+        ##如果返回的错误码不等于0，就返回官方的错误信息
+        // return json(array('state' =>$car_city_name['result']['city_code']));
 
-            //根据需要的查询条件，查询车辆的违章信息
+        //根据需要的查询条件，查询车辆的违章信息
 //            $city = $car_city_name['result']['city_code']; //城市代码，必传
 
-            $carno = urlencode($order_details['orderdetails']['licensenumber']); //车牌号，必传
-            $engineno = $order_details['orderdetails']['engine_number']; //发动机号，需要的城市必传
-            $classno = $order_details['orderdetails']['frame_number']; //车架号，需要的城市必传
+        $carno = urlencode($order_details['orderdetails']['licensenumber']); //车牌号，必传
+        $engineno = $order_details['orderdetails']['engine_number']; //发动机号，需要的城市必传
+        $classno = $order_details['orderdetails']['frame_number']; //车架号，需要的城市必传
 //            $s = strlen($carno) == 9 ? '' : '&hpzl=52';
-        $data = gets("http://v.juhe.cn/wz/query?hphm=" . urlencode($carno) . "&engineno=" . $engineno . "&classno=" .$classno. "&hpzl=02&key=d91da2fdf9834922d28a10565afef31a");
+        $data = gets("http://v.juhe.cn/wz/query?hphm=" . urlencode($carno) . "&engineno=" . $engineno . "&classno=" . $classno . "&hpzl=02&key=d91da2fdf9834922d28a10565afef31a");
 
 //        $data = gets("http://v.juhe.cn/wz/query?hphm={$carno}&hpzl=02&engineno={$engineno}&classno={$classno}&key=d91da2fdf9834922d28a10565afef31a");
 
-            if ($data['resultcode'] == 200) {
-                $total_fraction = 0;     //总扣分
-                $total_money = 0;        //总罚款
-                $flag = -1;
+        if ($data['resultcode'] == 200) {
+            $total_fraction = 0;     //总扣分
+            $total_money = 0;        //总罚款
+            $flag = -1;
 
-                Db::startTrans();
-                try {
-                    $lists = [];
-                    if ($data['result']['lists']) {
-                        foreach ($data['result']['lists'] as $k => $v) {
-                            if ($v['handled'] == 0) {
-                                $flag = -2;
-                            } else if ($v['handled'] == 1) {
-                                continue;
-                            }
-                            if ($v['fen']) $total_fraction += floatval($v['fen']);
-                            if ($v['money']) $total_money += floatval($v['money']); //总罚款
-                            array_push($lists, $v);
+            Db::startTrans();
+            try {
+                $lists = [];
+                if ($data['result']['lists']) {
+                    foreach ($data['result']['lists'] as $k => $v) {
+                        if ($v['handled'] == 0) {
+                            $flag = -2;
+                        } else if ($v['handled'] == 1) {
+                            continue;
                         }
-                        $is_it_illegal = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
-                    } else {
-                        $is_it_illegal = 'no_violation';
+                        if ($v['fen']) $total_fraction += floatval($v['fen']);
+                        if ($v['money']) $total_money += floatval($v['money']); //总罚款
+                        array_push($lists, $v);
                     }
-
-                    if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
-                        WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
-
-                    }
-
-                    OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
-                    Db::commit();
-                } catch (\Exception $e) {
-                    Db::rollback();
-                    $this->error($e->getMessage());
+                    $is_it_illegal = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
+                } else {
+                    $is_it_illegal = 'no_violation';
                 }
-                $this->success($data['reason'], '',
-                    [
-                        'lists' => $data['result']['lists'],
-                        'total_fraction' => $total_fraction,
-                        'total_money' => $total_money,
-                        'counts' => count($data['result']['lists']),
-                        'upTime' => '上一次更新时间：' . date('Y-m-d H:i:s', time())]
 
-                );
+                if ($order_details['orderdetails']['is_it_illegal'] != 'no_queries') {
+                    WxPublicUser::update(['id' => $uid['id'], 'query_number' => 0, 'query_time' => time()]);
 
-            } else $this->error($data['reason']);
+                }
 
-            $this->error('暂不支持此车型');
+                OrderDetails::update(['id' => $order_details['orderdetails']['id'], 'violation_details' => $lists ? json_encode($lists) : null, 'total_deduction' => $total_fraction, 'total_fine' => $total_money, 'is_it_illegal' => $is_it_illegal]);
+                Db::commit();
+            } catch (\Exception $e) {
+                Db::rollback();
+                $this->error($e->getMessage());
+            }
+            $this->success($data['reason'], '',
+                [
+                    'lists' => $data['result']['lists'],
+                    'total_fraction' => $total_fraction,
+                    'total_money' => $total_money,
+                    'counts' => count($data['result']['lists']),
+                    'upTime' => '上一次更新时间：' . date('Y-m-d H:i:s', time())]
+
+            );
+
+        } else $this->error($data['reason']);
+
+        $this->error('暂不支持此车型');
 
         // }
 //        $this->error($car_city_name['reason']);
