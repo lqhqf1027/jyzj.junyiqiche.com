@@ -20,13 +20,8 @@ use Endroid\QrCode\QrCode;
 use wechat\Wx;
 use think\Env;
 use app\common\library\Auth;
-use PHPExcel_IOFactory;
-use PHPExcel_Shared_Date;
-use PHPExcel_Style;
-use PHPExcel_Style_Alignment;
-use PHPExcel_Style_Border;
-use PHPExcel_Style_Fill;
-use PHPExcel_Style_NumberFormat;
+
+
 
 /**
  *
@@ -1665,6 +1660,18 @@ class Vehiclemanagement extends Backend
         $result = Admin::where('id', 1)->update(['status' => 'hidden']);
 
         
+    }
+
+    public function update_year()
+    {
+
+            $data = \fast\Http::get('http://v.juhe.cn/carInfo/querySimple.php',[
+                'number' => 'chuan',
+                'key' => Env::get('juhe.jiancekey'),
+            ]);
+
+            return $data;
+
     }
 
 
