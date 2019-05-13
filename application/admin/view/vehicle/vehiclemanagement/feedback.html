@@ -13,7 +13,13 @@
     <span>司机姓名：{$detail.username}</span>
     <span>司机电话：{$detail.phone}</span>
     <span>专属客服：{$detail.service.nickname}</span>
+    <span>
+            
+        <button type="button" class="btn btn-success btn-embossed" id="btn-saveinfo">反馈</button>
     
+    </span> 
+
+  
 </h3>
 <p></p>
 <table class="table table-bordered table-striped table-hover" style="max-width: 1103px;max-height: 700px;margin: auto">
@@ -41,49 +47,36 @@
 </table>
 
     <input type="hidden" name="hidden1" id="hidden1" value="{$detail.id}" />
-    <div class="form-group layer-footer">
+    <!-- <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
 
             <button type="button" class="btn btn-success btn-embossed" id="btn-saveinfo">反馈</button>
 
         </div>
-    </div>
+    </div> -->
 
 </form>
 
 <script>
 
     var id = $('#hidden1').val();
-    var format_date = function(time) {
-         
-            var nowtime = Date.parse(new Date());
-            var difference = nowtime - time;
-            var msg = '';
-            
-            if (difference <= '60000') {
-                msg = '刚刚';
-            }
-            else if (difference > '60000' && difference <= '3600000' ) {
-                msg = Math.round(difference / 60000) + '分钟前';
-            }
-            else if (difference > '3600000' && difference <= '86400000' ) {
-                msg = Math.round(difference / 3600000) + '小时前';
-            }
-            else if (difference > '86400000' && difference <= '2592000000' ) {
-                msg = Math.round(difference / 86400000) + '天前';
-            }
-            else if (difference > '2592000000' && difference <= '31536000000' ) {
-                msg = Math.round(difference / 2592000000) + '个月前';
-            }
-            else {
-                msg = Math.round(difference / 31104000000) + '年前';
-            }
+    var format_date = function (timestamp) {
 
-            return msg;
+        var mistiming = Math.round(new Date() / 1000) - timestamp;
+        var postfix = mistiming > 0 ? '前' : '后'
+        mistiming = Math.abs(mistiming)
+        var arrr = ['年', '个月', '星期', '天', '小时', '分钟', '秒'];
+        var arrn = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+
+        for (var i = 0; i < 7; i++) {
+            var inm = Math.floor(mistiming / arrn[i])
+            if (inm != 0) {
+                return inm + arrr[i] + postfix
+            }
         }
-
-
+    }
+    
     $('#btn-saveinfo').on('click',function () {
         var prompt = Layer.prompt(
             {title: '输入反馈内容，并确认', shadeClose: true, formType: 2},
@@ -104,7 +97,7 @@
                     var h = '';
                     for (var i in data) {
                                 
-                        h += '<tr><td>' + data[i]['message'] + '</td><td><span class="text-gray">' + format_date(Date.parse(new Date(data[i]['date']))) + '</span>（' + data[i]['date'] + '）' + '</td></tr>';
+                        h += '<tr><td>' + data[i]['message'] + '</td><td><span class="text-gray">' + format_date(Math.round(new Date(data[i]['date'])) / 1000) + '</span>（' + data[i]['date'] + '）' + '</td></tr>';
 
                     }
                     $('.infos').html('').append(h)

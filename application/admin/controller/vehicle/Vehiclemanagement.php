@@ -755,7 +755,7 @@ class Vehiclemanagement extends Backend
 
         $detail = $this->model->field('username,phone')
             ->with(['orderdetails' => function ($q) {
-                $q->withField('total_deduction,total_fine,violation_details');
+                $q->withField('licensenumber,total_deduction,total_fine,violation_details');
             }])->find($ids);
 
         $details = json_decode($detail['orderdetails']['violation_details'], true);
@@ -781,6 +781,7 @@ class Vehiclemanagement extends Backend
         $this->view->assign([
             'detail' => $details,
             'phone' => $detail['phone'],
+            'licensenumber' => $detail['orderdetails']['licensenumber'],
             'username' => $detail['username'],
             'total_fine' => $detail['orderdetails']['total_fine'],
             'total_deduction' => $detail['orderdetails']['total_deduction']
