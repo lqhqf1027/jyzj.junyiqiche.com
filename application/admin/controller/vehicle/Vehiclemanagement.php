@@ -962,6 +962,19 @@ class Vehiclemanagement extends Backend
 
     }
 
+    /**得到可操作的ID
+     * 客服---管理员
+     * @return array
+     */
+    public function getSeiviceId()
+    {
+        $this->model = model("Admin");
+        $seivice = $this->model->where("rule_message", 'message10')
+            ->column('id');
+
+        return $seivice;
+    }
+
 
     /**
      * 可以发送的违章客户信息展示
@@ -980,12 +993,29 @@ class Vehiclemanagement extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $authId = $this->auth->id; // 当前操作员id
+            $getSeiviceId = $this->getSeiviceId();
+            // pr($getSeiviceId);
+            // die;
+            $this->model = new \app\admin\model\Order();
             $total = $this->model
                 ->with(['orderdetails' => function ($q) {
                     $q->where(['is_it_illegal' => 'violation_of_regulations']);
                 }, 'admin'])
                 ->where($where)
-                ->where('wx_public_user_id', 'not NULL')
+                ->where(function ($query) use ($authId,$getSeiviceId) {
+
+                    if (in_array($authId, $getSeiviceId)) {
+                        
+                        $query->where(['wx_public_user_id' => ['neq','null'], 'service_id' =>  $authId]);
+                        
+                    } else {
+                       
+                        $query->where(['wx_public_user_id' => ['neq','null']]);
+                        
+                    }
+    
+                })
                 ->order($sort, $order)
                 ->count();
 
@@ -994,7 +1024,19 @@ class Vehiclemanagement extends Backend
                     $q->where(['is_it_illegal' => 'violation_of_regulations']);
                 }, 'admin'])
                 ->where($where)
-                ->where('wx_public_user_id', 'not NULL')
+                ->where(function ($query) use ($authId,$getSeiviceId) {
+
+                    if (in_array($authId, $getSeiviceId)) {
+                        
+                        $query->where(['wx_public_user_id' => ['neq','null'], 'service_id' =>  $authId]);
+                        
+                    } else {
+                       
+                        $query->where(['wx_public_user_id' => ['neq','null']]);
+                        
+                    }
+    
+                })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();

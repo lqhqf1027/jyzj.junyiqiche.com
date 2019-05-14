@@ -362,19 +362,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }
 
                                 },
-                                {
-                                    name: 'wechat',
-                                    icon: 'fa fa-eye',
-                                    title: __('微信公众号授权'),
-                                    text: '微信公众号授权',
-                                    extend: 'data-toggle="tooltip"',
-                                    dropdown: '更多',
-                                    classname: 'btn btn-xs btn-wechat',
-                                    visible:function (row) {
-                                        return !row.wx_public_user_id?true:false;
-                                    }
+                                // {
+                                //     name: 'wechat',
+                                //     icon: 'fa fa-eye',
+                                //     title: __('微信公众号授权'),
+                                //     text: '微信公众号授权',
+                                //     extend: 'data-toggle="tooltip"',
+                                //     dropdown: '更多',
+                                //     classname: 'btn btn-xs btn-wechat',
+                                //     visible:function (row) {
+                                //         return !row.wx_public_user_id?true:false;
+                                //     }
 
-                                },
+                                // },
                                 {
                                     name: '',
                                     icon: 'fa fa-send',
@@ -384,7 +384,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     dropdown: '更多',
                                     classname: 'btn btn-xs btn-push_violation',
                                     visible: function (row) {
-                                        return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
+                                        return row.wx_public_user_id && row.orderdetails && row.orderdetails.is_it_illegal  == 'violation_of_regulations' ? true : false;
                                     }
                                 },
                                 {
