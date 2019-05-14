@@ -108,29 +108,38 @@
             }
             return false;
         })
-        $('.formDemo2').on('click', function () {
-            var load = layer.load(2);
-            $.post("{:url('index/applyDriverInfo')}", {
-                order_id: $('input[type="hidden"]').val(),
-                is_apply: 1
-            }, function (res) {
-                if (res.code == 1) {
-                    layer.close(load);
-                    layer.msg(res.msg);
-                    window.location.href = "{:url('index')}";
-                }
-                else {
-                    layer.msg(res.msg);
-                    layer.close(load);
-                }
-                ;
+        var isclick = true;
 
-            }).fail(function () {
-                layer.close(load);
-            });
-            return false;
+        if (isclick) {
+            isclick = false;
+            $('.formDemo2').on('click', function () {
+                var load = layer.load(2);
+                $.post("{:url('index/applyDriverInfo')}", {
+                    order_id: $('input[type="hidden"]').val(),
+                    is_apply: 1
+                }, function (res) {
+                    if (res.code == 1) {
+                        layer.close(load);
+                        layer.msg(res.msg);
+                        window.location.href = "{:url('index')}";
+                    }
+                    else {
+                        layer.msg(res.msg);
+                        layer.close(load);
+                    }
+                    ;
 
-        })
+                }).fail(function () {
+                    layer.close(load);
+                });
+                return false;
+
+            })
+            //定时器
+            setTimeout(function () {
+                isclick = true;
+            }, 1000);
+        }
         /*layer弹出一个示例*/
         // layer.msg('Hello World');
     });
