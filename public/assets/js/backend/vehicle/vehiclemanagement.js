@@ -152,7 +152,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 //     }
 
                                 // },
-                                {
+
                                     name: '',
                                     icon: 'fa fa-send',
                                     title: __('公众号推送违章信息'),
@@ -165,7 +165,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }
 
                                 },
-                            },
+
                             {
                                 field: 'orderdetails.total_deduction',
                                 title: __('总扣分'),
