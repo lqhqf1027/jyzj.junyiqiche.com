@@ -127,6 +127,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return '<span class=\'label label-' + color + '\' style=\'cursor: pointer\'>' + content + '</span>';
                                     }
 
+
                                     return '<span class=\'label label-' + color + '\' style=\'cursor: pointer\'>' + content + '</span><span class="text-danger" style="font-size: smaller;display: block;margin-top: 5px">' + row.orderdetails.reson_query_fail + '</span>';
 
 
@@ -136,6 +137,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     "violation_of_regulations": __('有违章'),
                                     "no_queries": __('未查询违章'),
                                     "query_failed": __('违章查询失败')
+
+                                },
+                                // {
+                                //     name: 'wechat',
+                                //     icon: 'fa fa-eye',
+                                //     title: __('微信公众号授权'),
+                                //     text: '微信公众号授权',
+                                //     extend: 'data-toggle="tooltip"',
+                                //     dropdown: '更多',
+                                //     classname: 'btn btn-xs btn-wechat',
+                                //     visible:function (row) {
+                                //         return !row.wx_public_user_id?true:false;
+                                //     }
+
+                                // },
+                                {
+                                    name: '',
+                                    icon: 'fa fa-send',
+                                    title: __('公众号推送违章信息'),
+                                    text: '公众号推送违章信息',
+                                    extend: 'data-toggle="tooltip"',
+                                    dropdown: '更多',
+                                    classname: 'btn btn-xs btn-push_violation',
+                                    visible: function (row) {
+                                        return row.wx_public_user_id && row.orderdetails && row.orderdetails.is_it_illegal  == 'violation_of_regulations' ? true : false;
+                                    }
+
                                 },
                             },
                             {

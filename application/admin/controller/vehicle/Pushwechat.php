@@ -242,6 +242,22 @@ class Pushwechat extends Backend
      */
     public function timing_violation()
     {
+
+
+
+
+
+        set_time_limit(300);
+
+
+        while ($i<=10)
+        {
+            echo "i=$i ";
+            sleep(100);
+            $i++;
+        }
+
+        die;
         $redis = new \Redis();
 
         $redis->connect('120.78.135.109', '6379');
