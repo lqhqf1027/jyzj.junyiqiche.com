@@ -94,7 +94,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
 
                                     return "<img src=" + Config.cdn + row.admin.avatar + " style='height:20px;width:25px'></img>" + '&nbsp;' + value;
-                                }, operate: false
+                                }
                             },
                             {field: 'models_name', title: __('Models_name'), operate: false},
                             {
@@ -246,6 +246,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     "full_new_car": __('全款（新车）'),
                                     "full_used_car": __('全款（二手车）')
                                 },
+                                visible: false
+                            },
+                            {
+                                field: 'service.nickname',
+                                title: '所属客服',
                                 visible: false
                             },
                             // {
@@ -417,18 +422,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
                                         }
                                     },
-                                    {
-                                        name: '',
-                                        icon: 'fa fa-search',
-                                        title: __('更新年检日期'),
-                                        text: '更新年检日期',
-                                        extend: 'data-toggle="tooltip"',
-                                        dropdown: '更多',
-                                        classname: 'btn btn-xs update-year',
-                                        visible: function (row) {
-                                            return true;
-                                        }
-                                    },
+
                                     {
                                         name: 'allocation',
                                         text: '分配客服',
@@ -454,7 +448,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 ]
                             }
                         ]
-                    ]
+                    ],
                 });
 
                 table.on('load-success.bs.table', function (e, data) {
@@ -470,35 +464,79 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
+                $('div.form-group').each(function () {
+                    if($(this).find('label[for="service.nickname"]').length>0){
+                        $(this).addClass('hide');
+                    }
+                });
+
                 /**
                  * 指定搜索条件
                  */
                 $('.search-status').each(function () {
-                    $(this).on('click', function () {
-                        // $(this).siblings('img').length;
-                        // $(this).siblings('span.hide').text();
-                        // alert($(this).find('span').attr('mark'));
-                        let result = Controller.api.specified_conditions($(this).find('span').attr('mark'), table, $(this).siblings('img').length > 0 ? $(this).siblings('span.hide').text() : null);
+                    $(this).on('click', function (e) {
+                        e.stopPropagation();
+                        var container = $("#table").data("bootstrap.table").$container;
+                        var options = $("#table").bootstrapTable('getOptions');
 
-                        let str = $(this).find('span').text();
+                        var arr = [];
 
-                        str = str.replace(/台/, '');
+                        options.columns[0].forEach((k)=>{
+                            if(k.operate && k.operate !== false){
+                                arr.push(k.field);
+                            }
 
-                        result = $(this).siblings('img').length > 0 ? $(this).siblings('span.customer-service').text() + '：' + result : result;
-                        $('a.btn-search-result').children('span.search-info').text(result + '（' + str + '台）');
-                        $('a.btn-search-result').removeClass('hide');
+                        });
+
+                        for (let i in arr){
+                            $("form.form-commonsearch [name='"+arr[i]+"']", container).val('');
+                        }
+
+                        var key = '';
+                        var value = '';
+                        switch ($(this).find('span').attr('mark')) {
+                            case 'year_inspect':
+                                key = 'orderdetails.annual_inspection_status';
+                                value = 'soon';
+                                break;
+                            case 'year_overdue':
+                                key = 'orderdetails.annual_inspection_status';
+                                value = 'overdue';
+                                break;
+                            case 'strong':
+                                key = 'orderdetails.traffic_force_insurance_status';
+                                value = 'soon';
+                                break;
+                            case 'strong_overdue':
+                                key = 'orderdetails.traffic_force_insurance_status';
+                                value = 'overdue';
+                                break;
+                            case 'peccancy':
+                                key = 'orderdetails.is_it_illegal';
+                                value = 'violation_of_regulations';
+                                break;
+                        }
+
+                        if($(this).siblings('img').length>0){
+                            if(key){
+                                var customer = $(this).siblings('span.customer-service').text();
+                            }else{
+                                var customer = $(this).text();
+                            }
+
+                            $("form.form-commonsearch [name='service.nickname']", container).val(customer);
+                        }
+
+                        //这里我们手动将数据填充到表单然后提交
+                        if(key){
+                            $("form.form-commonsearch [name='"+key+"']", container).val(value);
+                        }
+                        $("form.form-commonsearch", container).trigger('submit');
+
                     });
 
                 });
 
-                /**
-                 * 重置指定搜索条件
-                 */
-                $('#reset').on('click', function () {
-                    Controller.api.specified_conditions('', table);
-
-                    $(this).parent().addClass('hide');
-                });
 
                 //导出新客户的信息
                 var submitForm = function (ids, layero) {
@@ -1311,20 +1349,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             Fast.api.open(Table.api.replaceurl(url, row, table), __('分配客服'), $(this).data() || {});
                         },
 
-                        'click .update-year': function (e, value, row, index) {
-                            if (!row.orderdetails || !row.orderdetails.licensenumber) {
-                                Layer.alert('请填写车牌号！');
-
-                                return;
-                            }
-
-                            $.post('');
-
-
-                            console.log(row);
-                        }
-
-
                     }
                 },
                 layer_violation: function (data, id = '') {
@@ -1451,79 +1475,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     for (var i in data) {
                         table.bootstrapTable(types, data[i]);
                     }
-                },
-                specified_conditions: function (obj = '', table, service_id = null) {
-                    var key = '';
-                    var value = '';
-                    var text = '';
-                    switch (obj) {
-                        case 'year_inspect':
-                            key = 'orderdetails.annual_inspection_status';
-                            value = 'soon';
-                            text = '即需年检车辆';
-                            break;
-                        case 'year_overdue':
-                            key = 'orderdetails.annual_inspection_status';
-                            value = 'overdue';
-                            text = '年检已过期车辆';
-                            break;
-                        case 'strong':
-                            key = 'orderdetails.traffic_force_insurance_status';
-                            value = 'soon';
-                            text = '即需续保车辆';
-                            break;
-                        case 'strong_overdue':
-                            key = 'orderdetails.traffic_force_insurance_status';
-                            value = 'overdue';
-                            text = '保险已过期车辆';
-                            break;
-                        case 'peccancy':
-                            key = 'orderdetails.is_it_illegal';
-                            value = 'violation_of_regulations';
-                            text = '有违章车辆';
-                            break;
-
-                    }
-                    var options = table.bootstrapTable('getOptions');
-                    var queryParams = options.queryParams;
-                    options.pageNumber = 1;
-                    options.queryParams = function (params) {
-                        //这一行必须要存在,否则在点击下一页时会丢失搜索栏数据
-                        params = queryParams(params);
-                        //如果希望追加搜索条件,可使用
-                        // var filter = {};
-                        // var op = {};
-
-                        var filter = params.filter ? JSON.parse(params.filter) : {};
-                        var op = params.op ? JSON.parse(params.op) : {};
-
-                        // if (obj) {
-                        //     filter[key] = value;
-                        //     op[key] = '=';
-                        //
-                        //     if (service_id) {
-                        //         filter['service_id'] = service_id;
-                        //         op['service_id'] = '=';
-                        //     }
-                        //
-                        // }
-                        //
-                        params.filter = JSON.stringify(filter);
-                        params.op = JSON.stringify(op);
-                        // console.log(params.filter);
-                        if(!obj){
-                            params.filter = {};
-                            params.op = {};
-                        }
-
-
-                        //如果希望忽略搜索栏搜索条件,可使用
-                        //params.filter = JSON.stringify({url: 'login'});
-                        //params.op = JSON.stringify({url: 'like'});
-                        return params;
-                    };
-                    table.bootstrapTable('refresh', {});
-                    return text;
                 },
                 /**
                  * 格式化时间 几天前 时 分 秒
