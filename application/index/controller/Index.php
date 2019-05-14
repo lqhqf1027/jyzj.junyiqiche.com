@@ -100,7 +100,7 @@ class Index extends Frontend
             'server' => $service//专属客服二维码
         ]);
 
-        return Order::get(['wx_public_user_id' => '187']) ? $this->view->fetch('apply') : $this->view->fetch();
+        return Order::get(['wx_public_user_id' => $uid['id']]) ? $this->view->fetch('apply') : $this->view->fetch();
 
     }
 
