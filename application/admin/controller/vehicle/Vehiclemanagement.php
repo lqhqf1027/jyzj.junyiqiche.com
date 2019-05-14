@@ -22,7 +22,6 @@ use think\Env;
 use app\common\library\Auth;
 
 
-
 /**
  *
  *
@@ -37,7 +36,7 @@ class Vehiclemanagement extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
-    protected $noNeedLogin = ['ceshi','sendallviolation'];
+    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year'];
 
     public function _initialize()
     {
@@ -88,7 +87,8 @@ class Vehiclemanagement extends Backend
                     foreach ($item as $key => $value) {
                         $year_status = $traffic_force_status = $business_status = 'no_queries';
                         if ($value['annual_inspection_status'] != 'no_queries') {
-                            $year_status = self::check_state($value['annual_inspection_time']);
+
+                            $year_status = is_numeric($value['annual_inspection_time']) ? self::check_state($value['annual_inspection_time']) : 'no_queries';
                         }
 
                         if ($value['traffic_force_insurance_status'] != 'no_queries') {
@@ -392,9 +392,9 @@ class Vehiclemanagement extends Backend
                 $params = $this->preExcludeFields($params);
                 $params['order_id'] = $ids;
                 $params['admin_id'] = $this->auth->id;
-                if($params['annual_inspection_time']) $params['annual_inspection_time'] = strtotime($params['annual_inspection_time']);
+                if ($params['annual_inspection_time']) $params['annual_inspection_time'] = strtotime($params['annual_inspection_time']);
 
-                if($params['traffic_force_insurance_time']) $params['traffic_force_insurance_time'] = strtotime($params['traffic_force_insurance_time']);
+                if ($params['traffic_force_insurance_time']) $params['traffic_force_insurance_time'] = strtotime($params['traffic_force_insurance_time']);
 
                 $result = false;
                 Db::startTrans();
@@ -503,7 +503,7 @@ class Vehiclemanagement extends Backend
                 //修改各种日期的状态
                 $year_status = $traffic_force_status = $business_status = 'no_queries';
                 if ($params['annual_inspection_time']) {
-                    $year_status = self::check_state($params['annual_inspection_time']);
+                    $year_status = is_numeric($params['annual_inspection_time']) ? self::check_state($params['annual_inspection_time']) : 'no_queries';
                 }
                 if ($params['traffic_force_insurance_time']) {
                     $traffic_force_status = self::check_state($params['traffic_force_insurance_time']);
@@ -620,7 +620,7 @@ class Vehiclemanagement extends Backend
 
             $wx_public_user_id = Order::where('id', $params[0]['order_id'])->find()['wx_public_user_id'] ? 1 : 0;
 
-            $this->success('', '', ['wx_public_user_id' => $wx_public_user_id,'error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
+            $this->success('', '', ['wx_public_user_id' => $wx_public_user_id, 'error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
         }
     }
 
@@ -1074,18 +1074,18 @@ class Vehiclemanagement extends Backend
             ->with(['orderdetails' => function ($q) {
                 $q->withField('licensenumber,total_deduction,total_fine,violation_details')->where(['is_it_illegal' => 'violation_of_regulations']);
             }])->select())->toArray();
-            
+
         //是否存在数据
         if ($detail) {
             foreach ($detail as $key => $value) {
-                
+
                 $openid = $this->getOpenid($value['wx_public_user_id']);
 
                 //是否有openid
                 if ($openid) {
                     $time = date('Y-m-d', time());
                     $first = $value['username'] . '师傅您好，截止到' . $time . '，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有以下未处理的违章信息';
-                    
+
                     $details = json_decode($value['orderdetails']['violation_details'], true);
                     $count = count($details);
 
@@ -1159,7 +1159,7 @@ class Vehiclemanagement extends Backend
                 if ($openid) {
                     $time = date('Y-m-d', time());
                     $first = $value['username'] . '师傅您好，截止到' . $time . '，您车牌号为＂' . $value['orderdetails']['licensenumber'] . '＂的车辆有以下未处理的违章信息';
-                    
+
                     $details = json_decode($detail[0]['orderdetails']['violation_details'], true);
                     $count = count($details);
 
@@ -1238,8 +1238,7 @@ class Vehiclemanagement extends Backend
                 $service_ids .= $v['id'] . ',';
             }
 
-        } 
-        else if ($ids == 'all') {
+        } else if ($ids == 'all') {
             $service_ids = null;
         }
 
@@ -1702,18 +1701,67 @@ class Vehiclemanagement extends Backend
     {
         $result = Admin::where('id', 1)->update(['status' => 'hidden']);
 
-        
+
     }
 
     public function update_year()
     {
+//        echo date('Y-m-d',OrderDetails::get(1799)->annual_inspection_time);
 
-            $data = \fast\Http::get('http://v.juhe.cn/carInfo/querySimple.php',[
-                'number' => 'chuan',
-                'key' => Env::get('juhe.jiancekey'),
-            ]);
+//        die;
 
-            return $data;
+        if ($this->request->isGet()) {
+            ini_set('max_execution_time', 0);
+
+            $page = $this->request->get('page');
+
+            $res = OrderDetails::where('licensenumber', 'not in', ['null', ''])
+                ->order('id desc')
+                ->page($page . ',50')
+                ->field('id,licensenumber,annual_inspection_time')
+                ->select();
+
+//            pr(collection($res)->toArray());
+//
+//            die;
+
+
+            $record = [];
+            foreach ($res as $k => $v) {
+
+
+                $data = \fast\Http::get('http://v.juhe.cn/carInfo/querySimple.php', [
+                    'number' => $v->licensenumber,
+                    'key' => Env::get('juhe.jiancekey'),
+                ]);
+
+                $data = json_decode($data, true);
+
+                if ($data['error_code'] == 0) {
+                    $v->annual_inspection_time = strtotime($data['result']['jianCheTime']);
+
+                    $v->annual_inspection_status = self::check_state(strtotime($data['result']['jianCheTime']));
+                    $v->save();
+
+                    $record[] = ['status' => 'success', 'res' => 'ID:' . $v->id . ',' . $data['reason']];
+
+                    continue;
+                }
+
+                $v->annual_inspection_time = $data['reason'];
+
+                $v->annual_inspection_status = 'query_failed';
+                $v->save();
+
+                $record[] = ['status' => 'error', 'res' => 'ID:' . $v->id . ',' . $data['reason']];
+            }
+
+
+            pr($record);
+
+
+        }
+
 
     }
 
