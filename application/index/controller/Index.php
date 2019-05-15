@@ -165,7 +165,7 @@ class Index extends Frontend
 
                 $licensenumber = OrderDetails::get(['licensenumber' => trim($params['licensenumber'])]);
 
-                if (!$id_card->getData() || !$licensenumber->getData()) {
+                if (!$id_card || !$licensenumber) {
                     $this->error('未查询到客户信息');
                 };
                 if ($licensenumber->order_id !== $id_card->id) {
