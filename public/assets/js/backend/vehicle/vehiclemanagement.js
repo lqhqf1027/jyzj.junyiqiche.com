@@ -920,6 +920,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // Controller.api.bindevent();
 
             },
+            // qrcode:function (){
+            //     $('button').on('click',function () {
+            //         alert(1);
+            //     })
+            // },
 
             api: {
                 bindevent: function () {
@@ -1210,12 +1215,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }, function (data, ret) {
 
                                 // console.log('https://jyzj.junyiqiche.com' + data);
-                                layer.open({
-                                    title: '公众号授权', //页面标题
-                                    type: 2,
-                                    area: ['280px', '330px'],  //弹出层页面比例
-                                    content: ['https://jyzj.junyiqiche.com' + data, 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                                });
+                                // layer.open({
+                                //     title: '公众号授权', //页面标题
+                                //     type: 2,
+                                //     area: ['280px', '330px'],  //弹出层页面比例
+                                //     content:'vehiclemanagement/first'
+                                //     // content: ['https://jyzj.junyiqiche.com' + data, 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                                // });
+                                var table = $(this).closest('table');
+                                Fast.api.open(Table.api.replaceurl('vehicle/vehiclemanagement/qrcode/?url='+data, row, table), __('二维码'), $(this).data() || {});
 
                                 //goeasy关闭弹框
                                 // goeasy.subscribe({

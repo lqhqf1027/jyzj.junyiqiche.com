@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="height: 400px;width: 400px;background: url({$url}) no-repeat;background-size:contain;margin: auto;margin-top: 5%;"
+     mark="{$url}">
+</div>
+<div style="margin-top: 3%">
+    <button class="btn btn-success" style="display:block;margin: auto" onclick="download($(this))" mark="{$username}">下载图片</button>
+</div>
+</body>
+</html>
+<script>
+    //浏览器单个下载图片
+    function download(src) {
+
+        let mark = src.parent().siblings('div').attr('mark');
+
+        var $a = document.createElement('a');
+        $a.setAttribute("href", mark);
+        $a.setAttribute("download", src.attr('mark')+'-公众号授权二维码.png');
+
+        var evObj = document.createEvent('MouseEvents');
+        evObj.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, true, true, true, true, 0, null);
+        $a.dispatchEvent(evObj);
+    };
+</script>

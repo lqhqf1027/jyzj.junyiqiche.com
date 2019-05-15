@@ -8,6 +8,7 @@ use app\admin\model\OrderImg;
 use app\admin\model\Admin;
 use app\common\controller\Backend;
 use fast\Date;
+use fast\Http;
 use think\Cache;
 use think\Db;
 use think\Config;
@@ -36,7 +37,7 @@ class Vehiclemanagement extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
-    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year'];
+    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year','test'];
 
     public function _initialize()
     {
@@ -1766,6 +1767,60 @@ class Vehiclemanagement extends Backend
         }
 
 
+    }
+
+    public function qrcode($ids)
+    {
+        $url = $this->request->get('url');
+
+        $this->view->assign([
+            'url'=>'https://jyzj.junyiqiche.com'.$url,
+            'username' => $this->model->get($ids)->username
+        ]);
+//        pr(Http::get('http://cars.ruyitech.net/api/queries_dev/成都/川A60RW1'));
+        return $this->view->fetch();
+    }
+
+    public function test()
+    {
+       $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/川AV717Q');
+
+//       $str ="<!doctype html>
+//<html lang='zh-CN'>
+//    <head>
+//        <meta charset='utf-8'>
+//        <meta name='viewport' content='width=device-width, initial-scale=1'>
+//
+//        <title></title>
+//    </head>
+//    <body>
+//        <table>
+//            <tr>
+//                <th>状态</th>
+//                <th>车辆信息</th>
+//                <th>保险信息</th>
+//            </tr>
+//            <tr>
+//                <td width='20%'>续保成功</td>
+//                <td><br/>使用性质:家庭自用车<br/>车牌号:川AV717Q<br/>车主姓名:权薇<br/>被保险人:权薇<br/>投保人:权薇<br/>证件类型:身份证<br/>证件号码(车主本人):511529198509100029<br/>城市:成都<br/>发动机号:A8381494N20B20A<br/>品牌型号:宝马BMW X3 20i越野车<br/>车辆识别代号:WBAWX3101H0B72944<br/>车辆注册日期:2016-11-11<br/>交强险到期时间:2019-11-10<br/>商业险到期时间:2019-11-10<br/>下年的交强起保日期:2019-11-11<br/>下年的商业险起保日期:2019-11-11<br/>新车购置价格:435000<br/>座位数量:5<br/>燃料种类:<br/>条款种类:<br/>号牌底色:蓝<br/>条款类型:法院调解书<br/>行驶区域:<br/>被保人证件号:511529198509100029<br/>被保人证件类型:身份证<br/>投保人联系方式:<br/>投保人证件号:511529198509100029<br/>投保人证件类型:身份证<br/>被保人手机号:<br/>费率系数1（无赔款系数）:0<br/>费率系数2（自主渠道系数）:0<br/>费率系数3（自主核保系数）:0<br/>费率系数4（交通违法浮动系数）:0<br/>公/私:私车</td>
+//                <td><br/>Source:4<br/>车损保额:372360<br/>第三方责任险保额:1000000<br/>全车盗抢保险保额:372360<br/>车上人员责任险（司机）保额:50000<br/>车上人员责任险（乘客）保额:50000<br/>玻璃单独破碎险保额:2<br/>车身划痕损失险保额:0<br/>涉水行驶损失险保额:0<br/>自燃损失险保额:0<br/>不计免赔险（车损）保额:1<br/>不计免赔险（三者）保额:1<br/>不计免赔险（盗抢）保额:1<br/>不计免乘客保额:1<br/>不计免司机保额:1<br/>不计免涉水保额:0<br/>不计免划痕保额:0<br/>不计免自燃保额:0<br/>不计免精神损失保额:0<br/>机动车无法找到三方特约险保额:1<br/>精神损失险保额:0<br/>指定修理厂险:0<br/>指定专修厂类型:没有</td>
+//            </tr>
+//        </table>
+//    </body>
+//</html>
+//";
+
+//       echo strpos($str,'交强险到期时间:');
+//       $str = substr($data,strpos($data,'交强险到期时间:'),strlen($data));
+//       echo $str;
+//       echo '<br />';
+//       echo '<br />';
+////       echo strpos($str,'<');
+//       echo substr($str,strpos($str,':') +1,strpos($str,'<') - (strpos($str,':')+1));
+//       echo strpos($str,':');
+//       pr(gettype($data));
+//       pr($data);
+       dump($data);
     }
 
 
