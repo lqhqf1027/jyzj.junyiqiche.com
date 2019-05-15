@@ -396,7 +396,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         dropdown: '更多',
                                         classname: 'btn btn-xs btn-push_violation',
                                         visible: function (row) {
-                                            return row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
+                                            return row.wx_public_user_id && row.orderdetails && row.orderdetails.is_it_illegal == 'violation_of_regulations' ? true : false;
                                         }
                                     },
 
