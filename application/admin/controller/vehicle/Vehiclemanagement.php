@@ -339,13 +339,14 @@ class Vehiclemanagement extends Backend
             if ($public_img) $this->success('创建成功', '', $public_img);
             $time = date('YmdHis');
             $qrCode = new QrCode();
-            $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/index/index/index.html/order_id/' . $params['order_id'])
+            $qrCode->setText($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/index/index/index/order_id/' . $params['order_id'])
                 ->setSize(250)
                 ->setPadding(10)
                 ->setErrorCorrection('high')
-                ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+                ->setForegroundColor(array('r' => 108, 'g' => 182, 'b' => 229, 'a' => 0))
                 ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
-                ->setLabel('需由客户 ' . $params['username'] . ' 扫码授权')
+                ->setLabel(htmlspecialchars_decode ('需由客户：'.$params['username'].' 扫码授权'))
+
                 ->setLabelFontPath(VENDOR_PATH . 'endroid/qr-code/assets/font/MSYHBD.TTC')
                 ->setLabelFontSize(10)
                 ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
@@ -459,8 +460,9 @@ class Vehiclemanagement extends Backend
     public function modifying_data($ids = null)
     {
         $row = OrderDetails::getByOrder_id($ids);
-        $row['phone'] = Order::where('id', $ids)->find()['phone'];
-
+        $order = Order::where('id', $ids)->find();
+        $row['phone'] =$order['phone'];
+        $row['username'] =$order['username'];
         if (!$row) {
             $this->error(__('No Results were found'));
         }
@@ -487,7 +489,7 @@ class Vehiclemanagement extends Backend
                     $params['traffic_force_insurance_time'] = $params['traffic_force_insurance_time'] ? strtotime($params['traffic_force_insurance_time']) : null;
                     $params['business_insurance_time'] = $params['business_insurance_time'] ? strtotime($params['business_insurance_time']) : null;
                     $result = $row->allowField(true)->save($params);
-                    $res = Order::where('id', $ids)->update(['phone' => $params['phone']]);
+                    $res = Order::where('id', $ids)->update(['phone' => $params['phone'],'username'=>$params['username']]);
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
@@ -529,6 +531,7 @@ class Vehiclemanagement extends Backend
             'type' => Order::get($ids)->type,
             'mortgageList' => ['是' => '是', '否' => '否']
         ]);
+
         return $this->view->fetch();
     }
 
