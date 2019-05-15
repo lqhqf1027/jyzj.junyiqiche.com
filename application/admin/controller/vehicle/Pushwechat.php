@@ -242,20 +242,23 @@ class Pushwechat extends Backend
      */
     public function timing_violation()
     {
+//        $http = new swoole_http_server();
+        swoole_timer_tick();
+        new \swoole_http_server();
+        Swoole\Timer::tick();
+echo phpinfo();die;
 
 
 
-
-
-        set_time_limit(300);
-
-
-        while ($i<=10)
-        {
-            echo "i=$i ";
-            sleep(100);
-            $i++;
-        }
+//        set_time_limit(300);
+//
+//
+//        while ($i<=10)
+//        {
+//            echo "i=$i ";
+//            sleep(100);
+//            $i++;
+//        }
 
         die;
         $redis = new \Redis();
