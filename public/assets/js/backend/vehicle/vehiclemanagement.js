@@ -23,34 +23,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
                 var table = $("#table");
-                // 绑定TAB事件
-                $('.panel-heading ul[data-field] li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                    switch (e.currentTarget.innerHTML) {
-                        case '按揭（新车）':
-                            Controller.api.show_and_hide_table(table, 'show', ['payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin']);
-                            Controller.api.show_and_hide_table(table, 'hide', ['orderdetails.subordinate_branch']);
-                            break;
-                        case '按揭（二手车）':
-                            break;
-                        case '纯租':
-                            break;
-                        case '全款（新车）':
-                            table.bootstrapTable('showColumn', 'orderdetails.subordinate_branch');
-                            Controller.api.show_and_hide_table(table, 'show', ['orderdetails.subordinate_branch']);
-                            Controller.api.show_and_hide_table(table, 'hide', ['payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin']);
-                            break;
-                        case '全款（二手车）':
-                            break;
-                        case '转租':
-                            break;
-                        case '挂靠':
-                            break;
-                        case '全部':
-                            Controller.api.show_and_hide_table(table, 'show', ['orderdetails.subordinate_branch', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin']);
-                            break;
-                    }
-
-                });
 
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索：客户姓名,车牌号";
@@ -88,7 +60,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'service.nickname', title: __('所属客服'), formatter: function (value, row, index) {
 
                                     return value ? "<img src=" + Config.cdn + row.service.avatar + " style='height:20px;width:25px'></img>" + '&nbsp;' + value : value;
-                                }, operate: false
+                                }
                             },
                             {
                                 field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
@@ -222,12 +194,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             //         "full_used_car": __('全款（二手车）')
                             //     },
                             //     visible: false
-                            // },     
-                            {
-                                field: 'service.nickname',
-                                title: '所属客服',
-                                visible: false
-                            },
+                            // },
 
                             // {
                             //     field: 'orderdetails.business_insurance_status',
@@ -452,22 +419,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  */
                 $('.search-status').each(function () {
                     $(this).on('click', function (e) {
+
                         e.stopPropagation();
+
                         var container = $("#table").data("bootstrap.table").$container;
                         var options = $("#table").bootstrapTable('getOptions');
 
-                        var arr = [];
+                        // var arr = [];
+                        //
+                        // options.columns[0].forEach((k)=>{
+                        //     if(k.operate && k.operate !== false){
+                        //         arr.push(k.field);
+                        //     }
+                        //
+                        // });
+                        //
+                        // for (let i in arr){
+                        //     $("form.form-commonsearch [name='"+arr[i]+"']", container).val('');
+                        // }
 
-                        options.columns[0].forEach((k)=>{
-                            if(k.operate && k.operate !== false){
-                                arr.push(k.field);
-                            }
-
-                        });
-
-                        for (let i in arr){
-                            $("form.form-commonsearch [name='"+arr[i]+"']", container).val('');
-                        }
+                        $("form.form-commonsearch", container).trigger('reset');
 
                         var key = '';
                         var value = '';
@@ -495,10 +466,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
 
                         if($(this).siblings('img').length>0){
+                            var customer = '';
                             if(key){
-                                var customer = $(this).siblings('span.customer-service').text();
+                                customer = $(this).siblings('span.customer-service').text();
                             }else{
-                                var customer = $(this).text();
+                                customer = $(this).text();
                             }
 
                             $("form.form-commonsearch [name='service.nickname']", container).val(customer);
