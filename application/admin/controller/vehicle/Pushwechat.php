@@ -242,7 +242,12 @@ class Pushwechat extends Backend
      */
     public function timing_violation()
     {
-        echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?order_id=';
+
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1', 6379);
+        $redis->set("name", "redis3.1");
+        echo $redis->get("name");
+//        echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?order_id=';
 //        $http = new swoole_http_server();
         echo phpinfo();die;
         swoole_timer_tick();

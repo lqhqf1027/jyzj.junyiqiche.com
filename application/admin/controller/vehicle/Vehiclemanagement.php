@@ -464,6 +464,8 @@ class Vehiclemanagement extends Backend
         $order = Order::where('id', $ids)->find();
         $row['phone'] =$order['phone'];
         $row['username'] =$order['username'];
+        $row['id_card'] =$order['id_card'];
+
         if (!$row) {
             $this->error(__('No Results were found'));
         }
@@ -490,7 +492,7 @@ class Vehiclemanagement extends Backend
                     $params['traffic_force_insurance_time'] = $params['traffic_force_insurance_time'] ? strtotime($params['traffic_force_insurance_time']) : null;
                     $params['business_insurance_time'] = $params['business_insurance_time'] ? strtotime($params['business_insurance_time']) : null;
                     $result = $row->allowField(true)->save($params);
-                    $res = Order::where('id', $ids)->update(['phone' => $params['phone'],'username'=>$params['username']]);
+                    $res = Order::where('id', $ids)->update(['phone' => $params['phone'],'username'=>$params['username'],'id_card'=>$params['id_card']]);
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
