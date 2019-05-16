@@ -27,7 +27,8 @@
         "phpoffice/phpspreadsheet": "^1.6",
         "upyun/sdk": "^3.3",
         "phpoffice/phpexcel": "^1.8",
-        "easyswoole/easyswoole": "2.x-dev"
+        "easyswoole/easyswoole": "2.x-dev",
+        "topthink/think-queue": "1.1.4"
 
     },
     "config": {

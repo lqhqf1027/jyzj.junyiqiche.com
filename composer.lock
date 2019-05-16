@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac064bfc5e59063157a6cb4ddd3c9610",
+    "content-hash": "6c901c8b49ae241f340fbeb0407ea45e",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -2202,6 +2202,51 @@
                 }
             ],
             "time": "2017-05-27T06:58:09+00:00"
+        },
+        {
+            "name": "topthink/think-queue",
+            "version": "v1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-queue.git",
+                "reference": "ad709611d516e13d6760234bc98e91faa901cae8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github-api-proxy.cnpkg.org/repos/top-think/think-queue/zipball/ad709611d516e13d6760234bc98e91faa901cae8",
+                "reference": "ad709611d516e13d6760234bc98e91faa901cae8",
+                "shasum": ""
+            },
+            "require": {
+                "topthink/think-helper": ">=1.0.4",
+                "topthink/think-installer": ">=1.0.10"
+            },
+            "type": "think-extend",
+            "extra": {
+                "think-config": {
+                    "queue": "src/config.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\": "src"
+                },
+                "files": [
+                    "src/common.php"
+                ]
+            },
+            "notification-url": "https://repo.packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "yunwuxin",
+                    "email": "448901948@qq.com"
+                }
+            ],
+            "description": "The ThinkPHP5 Queue Package",
+            "time": "2017-06-25T00:49:56+00:00"
         },
         {
             "name": "upyun/sdk",

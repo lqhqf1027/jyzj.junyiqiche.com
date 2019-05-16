@@ -47,7 +47,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: 'RANGE',
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
-                                datetimeFormat: 'YYYY-MM-DD'
+                                datetimeFormat: 'YYYY-MM-DD',
+                                operate:false
                             },
                             {field: 'orderdetails.file_coding', title: __('Orderdetails.file_coding')},
                             {field: 'username', title: __('Username')},
