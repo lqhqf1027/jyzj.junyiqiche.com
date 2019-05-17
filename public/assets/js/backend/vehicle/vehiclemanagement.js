@@ -56,7 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'phone', title: __('Phone')},
                             {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber'), formatter: function (value, row, index) {
 
-                                    return row.orderdetails.is_repeat == 1 ? value + "<storng class='text-danger'>（有重复）</storng>" : value;
+                                    return row.orderdetails.is_repeat == 1 ? value + "<span class='label label-danger'>有重复</span>" : value;
                                 }
                             },
                             {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
