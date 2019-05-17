@@ -273,7 +273,7 @@ class Vehiclemanagement extends Backend
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine','is_repeat']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
@@ -1830,6 +1830,88 @@ class Vehiclemanagement extends Backend
             return $ret;
         }
         return $this->error('job类 '.$job_name.'不存在');
+    }
+
+
+    public function insurance()
+    {
+
+        if ($this->request->isAjax()) {
+
+            $params = $this->request->post();
+
+            // pr($params['id']);
+            // die;
+            $this->model = new \app\admin\model\Order();
+
+            $result = $this->model->field('username,phone,wx_public_user_id,models_name')
+                ->with(['orderdetails' => function ($q) use ($ids) {
+                    $q->withField('licensenumber,total_deduction,total_fine,violation_details');
+                }])->find($params['id']);
+
+            // pr($result['orderdetails']['licensenumber']);
+            // die;
+
+            $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/' . $result['orderdetails']['licensenumber']);
+
+            // if ($data['status'] == 'success') {
+
+            //     pr($data['data']);
+            //     die;
+            // }
+
+            pr($data);
+
+
+        }
+
+    }
+
+    //查看重复数据
+    public function repeat()
+    {
+        OrderDetails::field('id,licensenumber,frame_number,engine_number')
+            ->chunk(200, function ($item) {
+                foreach ($item as $key => $value) {
+
+                    $licensenumber .= $value['licensenumber'] . ',';
+                    $frame_number .= $value['frame_number'] . ',';
+                    $engine_number .= $value['engine_number'] . ',';
+
+
+                }
+
+                // pr($licensenumber);
+                // pr($frame_number);
+                // pr($engine_number);
+                // die;
+                foreach ($item as $key => $value) {
+
+                    // pr(substr_count($frame_number, $value['frame_number']));
+                    // die;
+                    if ($value['licensenumber'] && substr_count($licensenumber, $value['licensenumber']) >= 2) {
+
+                        OrderDetails::where(['licensenumber' => $value['licensenumber']])->update(['is_repeat' => 1]);
+
+                    }
+
+                    if ($value['frame_number'] && substr_count($frame_number, $value['frame_number']) >= 2) {
+
+                        OrderDetails::where(['frame_number' => $value['frame_number']])->update(['is_repeat' => 1]);
+
+                        
+                    }
+
+                    if ($value['engine_number'] && substr_count($engine_number, $value['engine_number']) >= 2) {
+
+                        OrderDetails::where(['engine_number' => $value['engine_number']])->update(['is_repeat' => 1]);
+
+                    }
+                   
+                }
+
+
+            });
     }
 
 
