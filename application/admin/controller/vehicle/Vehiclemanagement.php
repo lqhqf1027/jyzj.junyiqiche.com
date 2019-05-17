@@ -37,7 +37,7 @@ class Vehiclemanagement extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
-    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year','test'];
+    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year', 'test'];
 
     public function _initialize()
     {
@@ -76,8 +76,6 @@ class Vehiclemanagement extends Backend
 
         $customer_service = collection($customer_service)->toArray();
 
-//        pr($customer_service);die;
-
         if (!Cache::get('statistics')) {
 
             Cache::set('statistics', self::statistics(), 43200);
@@ -96,9 +94,9 @@ class Vehiclemanagement extends Backend
                             $traffic_force_status = self::check_state($value['traffic_force_insurance_time']);
                         }
 
-                        if ($value['business_insurance_status'] != 'no_queries') {
-                            $business_status = self::check_state($value['business_insurance_time']);
-                        }
+//                        if ($value['business_insurance_status'] != 'no_queries') {
+//                            $business_status = self::check_state($value['business_insurance_time']);
+//                        }
 
                         OrderDetails::update([
                             'id' => $value['id'],
@@ -252,8 +250,8 @@ class Vehiclemanagement extends Backend
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
-                    'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine']); 
+                    'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status', 
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine','is_repeat']); 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
                 $row->visible(['service']);
@@ -323,8 +321,7 @@ class Vehiclemanagement extends Backend
                 ->setErrorCorrection('high')
                 ->setForegroundColor(array('r' => 108, 'g' => 182, 'b' => 229, 'a' => 0))
                 ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
-                ->setLabel(htmlspecialchars_decode ('需由客户：'.$params['username'].' 扫码授权'))
-
+                ->setLabel(htmlspecialchars_decode('需由客户：' . $params['username'] . ' 扫码授权'))
                 ->setLabelFontPath(VENDOR_PATH . 'endroid/qr-code/assets/font/MSYHBD.TTC')
                 ->setLabelFontSize(10)
                 ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
@@ -439,10 +436,11 @@ class Vehiclemanagement extends Backend
     {
         $row = OrderDetails::getByOrder_id($ids);
         $order = Order::where('id', $ids)->find();
-        $row['phone'] =$order['phone'];
-        $row['username'] =$order['username'];
+
         $row['id_card'] =$order['id_card'];
 
+        $row['phone'] = $order['phone'];
+        $row['username'] = $order['username'];
         if (!$row) {
             $this->error(__('No Results were found'));
         }
@@ -524,7 +522,7 @@ class Vehiclemanagement extends Backend
     {
         $time = time();
         $last_month = date('Y-m-d', $checktime);
-        $last_month = strtotime("{$last_month} -1 month");
+        $last_month = strtotime("{$last_month} -2 month");
         $status_year = '';
         if ($time < $last_month) {
             $status_year = 'normal';
@@ -986,18 +984,18 @@ class Vehiclemanagement extends Backend
                     $q->where(['is_it_illegal' => 'violation_of_regulations']);
                 }, 'admin'])
                 ->where($where)
-                ->where(function ($query) use ($authId,$getSeiviceId) {
+                ->where(function ($query) use ($authId, $getSeiviceId) {
 
                     if (in_array($authId, $getSeiviceId)) {
-                        
-                        $query->where(['wx_public_user_id' => ['neq','null'], 'service_id' =>  $authId]);
-                        
+
+                        $query->where(['wx_public_user_id' => ['neq', 'null'], 'service_id' => $authId]);
+
                     } else {
-                       
-                        $query->where(['wx_public_user_id' => ['neq','null']]);
-                        
+
+                        $query->where(['wx_public_user_id' => ['neq', 'null']]);
+
                     }
-    
+
                 })
                 ->order($sort, $order)
                 ->count();
@@ -1007,18 +1005,18 @@ class Vehiclemanagement extends Backend
                     $q->where(['is_it_illegal' => 'violation_of_regulations']);
                 }, 'admin'])
                 ->where($where)
-                ->where(function ($query) use ($authId,$getSeiviceId) {
+                ->where(function ($query) use ($authId, $getSeiviceId) {
 
                     if (in_array($authId, $getSeiviceId)) {
-                        
-                        $query->where(['wx_public_user_id' => ['neq','null'], 'service_id' =>  $authId]);
-                        
+
+                        $query->where(['wx_public_user_id' => ['neq', 'null'], 'service_id' => $authId]);
+
                     } else {
-                       
-                        $query->where(['wx_public_user_id' => ['neq','null']]);
-                        
+
+                        $query->where(['wx_public_user_id' => ['neq', 'null']]);
+
                     }
-    
+
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -1748,58 +1746,149 @@ class Vehiclemanagement extends Backend
 
     }
 
+    /**
+     * 展示二维码图片
+     * @param $ids
+     * @return string
+     * @throws Exception
+     * @throws \think\exception\DbException
+     */
     public function qrcode($ids)
     {
         $url = $this->request->get('url');
 
         $this->view->assign([
-            'url'=>'https://jyzj.junyiqiche.com'.$url,
+            'url' => 'https://jyzj.junyiqiche.com' . $url,
             'username' => $this->model->get($ids)->username
         ]);
-//        pr(Http::get('http://cars.ruyitech.net/api/queries_dev/成都/川A60RW1'));
         return $this->view->fetch();
     }
 
     public function test()
     {
-       $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/川AV717Q');
+//        $a = OrderDetails::field('id,annual_inspection_time')
+//        ->where([
+//            'annual_inspection_time' =>['not in',['当前可请求的次数不足','null','','内部错误，数据异常']],
+//            'annual_inspection_status' => 'no_queries'
+//        ])->select();
 
-//       $str ="<!doctype html>
-//<html lang='zh-CN'>
-//    <head>
-//        <meta charset='utf-8'>
-//        <meta name='viewport' content='width=device-width, initial-scale=1'>
-//
-//        <title></title>
-//    </head>
-//    <body>
-//        <table>
-//            <tr>
-//                <th>状态</th>
-//                <th>车辆信息</th>
-//                <th>保险信息</th>
-//            </tr>
-//            <tr>
-//                <td width='20%'>续保成功</td>
-//                <td><br/>使用性质:家庭自用车<br/>车牌号:川AV717Q<br/>车主姓名:权薇<br/>被保险人:权薇<br/>投保人:权薇<br/>证件类型:身份证<br/>证件号码(车主本人):511529198509100029<br/>城市:成都<br/>发动机号:A8381494N20B20A<br/>品牌型号:宝马BMW X3 20i越野车<br/>车辆识别代号:WBAWX3101H0B72944<br/>车辆注册日期:2016-11-11<br/>交强险到期时间:2019-11-10<br/>商业险到期时间:2019-11-10<br/>下年的交强起保日期:2019-11-11<br/>下年的商业险起保日期:2019-11-11<br/>新车购置价格:435000<br/>座位数量:5<br/>燃料种类:<br/>条款种类:<br/>号牌底色:蓝<br/>条款类型:法院调解书<br/>行驶区域:<br/>被保人证件号:511529198509100029<br/>被保人证件类型:身份证<br/>投保人联系方式:<br/>投保人证件号:511529198509100029<br/>投保人证件类型:身份证<br/>被保人手机号:<br/>费率系数1（无赔款系数）:0<br/>费率系数2（自主渠道系数）:0<br/>费率系数3（自主核保系数）:0<br/>费率系数4（交通违法浮动系数）:0<br/>公/私:私车</td>
-//                <td><br/>Source:4<br/>车损保额:372360<br/>第三方责任险保额:1000000<br/>全车盗抢保险保额:372360<br/>车上人员责任险（司机）保额:50000<br/>车上人员责任险（乘客）保额:50000<br/>玻璃单独破碎险保额:2<br/>车身划痕损失险保额:0<br/>涉水行驶损失险保额:0<br/>自燃损失险保额:0<br/>不计免赔险（车损）保额:1<br/>不计免赔险（三者）保额:1<br/>不计免赔险（盗抢）保额:1<br/>不计免乘客保额:1<br/>不计免司机保额:1<br/>不计免涉水保额:0<br/>不计免划痕保额:0<br/>不计免自燃保额:0<br/>不计免精神损失保额:0<br/>机动车无法找到三方特约险保额:1<br/>精神损失险保额:0<br/>指定修理厂险:0<br/>指定专修厂类型:没有</td>
-//            </tr>
-//        </table>
-//    </body>
-//</html>
-//";
+//       $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/川AC42R9');
 
-//       echo strpos($str,'交强险到期时间:');
-//       $str = substr($data,strpos($data,'交强险到期时间:'),strlen($data));
-//       echo $str;
-//       echo '<br />';
-//       echo '<br />';
-////       echo strpos($str,'<');
-//       echo substr($str,strpos($str,':') +1,strpos($str,'<') - (strpos($str,':')+1));
-//       echo strpos($str,':');
-//       pr(gettype($data));
-//       pr($data);
-       dump($data);
+
+//        $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/川AC42R9', [
+//        'car_vin' => 'LFV2A11K1J4002371',
+//        'engine_no' => 'KD0003'
+//        ]);
+//        $data = json_decode($data, true);
+
+    }
+
+    /**
+     * 添加队列任务
+     *
+     * @param string $job_name 队列执行的类路径 不带走类fire方法 带@方法 走类@的方法
+     * @param array $data 传入数据
+     * @param mixed $queue_name 队列名 null 或字符串
+     * @param integer $delay  延迟执行的时间  单位秒
+     * @return void
+     */
+    public function push_job($job_name, $data, $queue_name = null, $delay = 0){
+        trace($queue_name);
+        config('default_return_type', 'json');
+        $class_name = \strstr($job_name, '@', true);
+        if(class_exists($class_name)){
+            if($delay > 0){
+                $ret = \think\Queue::later($delay, $job_name, $data, $queue_name);
+            }else{
+                trace($job_name);
+                $ret = \think\Queue::push($job_name, $data, $queue_name);
+            }
+            trace(sprintf("加入任务%s, 时间%s", $job_name, datetime()));
+            return $ret;
+        }
+        return $this->error('job类 '.$job_name.'不存在');
+    }
+
+
+    public function insurance()
+    {
+
+        if ($this->request->isAjax()) {
+
+            $params = $this->request->post();
+
+            // pr($params['id']);
+            // die;
+            $this->model = new \app\admin\model\Order();
+
+            $result = $this->model->field('username,phone,wx_public_user_id,models_name')
+                ->with(['orderdetails' => function ($q) use ($ids) {
+                    $q->withField('licensenumber,total_deduction,total_fine,violation_details');
+                }])->find($params['id']);
+
+            // pr($result['orderdetails']['licensenumber']);
+            // die;
+
+            $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/' . $result['orderdetails']['licensenumber']);
+
+            // if ($data['status'] == 'success') {
+
+            //     pr($data['data']);
+            //     die;
+            // }
+
+            pr($data);
+
+
+        }
+
+    }
+
+    //查看重复数据
+    public function repeat()
+    {
+        OrderDetails::field('id,licensenumber,frame_number,engine_number')
+            ->chunk(200, function ($item) {
+                foreach ($item as $key => $value) {
+
+                    $licensenumber .= $value['licensenumber'] . ',';
+                    $frame_number .= $value['frame_number'] . ',';
+                    $engine_number .= $value['engine_number'] . ',';
+
+
+                }
+
+                // pr($licensenumber);
+                // pr($frame_number);
+                // pr($engine_number);
+                // die;
+                foreach ($item as $key => $value) {
+
+                    // pr(substr_count($frame_number, $value['frame_number']));
+                    // die;
+                    if ($value['licensenumber'] && substr_count($licensenumber, $value['licensenumber']) >= 2) {
+
+                        OrderDetails::where(['licensenumber' => $value['licensenumber']])->update(['is_repeat' => 1]);
+
+                    }
+
+                    if ($value['frame_number'] && substr_count($frame_number, $value['frame_number']) >= 2) {
+
+                        OrderDetails::where(['frame_number' => $value['frame_number']])->update(['is_repeat' => 1]);
+
+                        
+                    }
+
+                    if ($value['engine_number'] && substr_count($engine_number, $value['engine_number']) >= 2) {
+
+                        OrderDetails::where(['engine_number' => $value['engine_number']])->update(['is_repeat' => 1]);
+
+                    }
+                   
+                }
+
+
+            });
     }
 
 
