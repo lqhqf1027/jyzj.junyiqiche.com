@@ -445,20 +445,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         e.stopPropagation();
 
                         var container = $("#table").data("bootstrap.table").$container;
-                        var options = $("#table").bootstrapTable('getOptions');
-
-                        // var arr = [];
-                        //
-                        // options.columns[0].forEach((k)=>{
-                        //     if(k.operate && k.operate !== false){
-                        //         arr.push(k.field);
-                        //     }
-                        //
-                        // });
-                        //
-                        // for (let i in arr){
-                        //     $("form.form-commonsearch [name='"+arr[i]+"']", container).val('');
-                        // }
 
                         $("form.form-commonsearch", container).trigger('reset');
 

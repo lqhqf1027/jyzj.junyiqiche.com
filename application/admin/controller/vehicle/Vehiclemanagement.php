@@ -15,6 +15,7 @@ use think\Config;
 use think\Exception;
 use think\exception\PDOException;
 use think\exception\ValidateException;
+use think\Queue;
 use think\response\Json;
 use think\Session;
 use Endroid\QrCode\QrCode;
@@ -37,7 +38,7 @@ class Vehiclemanagement extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
-    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year', 'test'];
+    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year', 'test','actionWithHelloJob'];
 
     public function _initialize()
     {
@@ -108,7 +109,6 @@ class Vehiclemanagement extends Backend
                 });
 
         }
-
 
         if (!Cache::get('statistics_total_violation')) {
             Cache::set('statistics_total_violation', self::statistics_violation(), 43200);
@@ -1702,12 +1702,22 @@ class Vehiclemanagement extends Backend
 
             $page = $this->request->get('page');
 
-            $res = OrderDetails::where('licensenumber', 'not in', ['null', ''])
+            $res = OrderDetails
+                ::where('licensenumber', 'not in', ['null', ''])
+                ->where([
+//                    'annual_inspection_time' => '',
+                    'id'=>['ELT',349],
+//                'id'=>['in',[1694,1690,1697,1686,1685,1684,1683,1680,1623,1538,1526,1466,1292,
+//                    1165,1064,989,898,869,677,665]]
+                'reson_query_fail' => null
+                ])
                 ->order('id desc')
                 ->page($page . ',50')
-                ->field('id,licensenumber,annual_inspection_time')
+                ->field('id,licensenumber,annual_inspection_time,reson_query_fail')
+//                ->fetchSql(true)
                 ->select();
-
+//pr($res);
+//die;
 //            pr(collection($res)->toArray());
 //
 //            die;
@@ -1780,40 +1790,44 @@ class Vehiclemanagement extends Backend
 
 //       $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/川AC42R9');
 
-
 //        $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/川AC42R9', [
 //        'car_vin' => 'LFV2A11K1J4002371',
 //        'engine_no' => 'KD0003'
 //        ]);
 //        $data = json_decode($data, true);
 
+
+        $redis = new \Redis;
+
+        $redis->connect('120.78.135.109', '6379');
+
+        $redis->auth('aicheyide');
     }
 
-    /**
-     * 添加队列任务
-     *
-     * @param string $job_name 队列执行的类路径 不带走类fire方法 带@方法 走类@的方法
-     * @param array $data 传入数据
-     * @param mixed $queue_name 队列名 null 或字符串
-     * @param integer $delay  延迟执行的时间  单位秒
-     * @return void
-     */
-    public function push_job($job_name, $data, $queue_name = null, $delay = 0){
-        trace($queue_name);
-        config('default_return_type', 'json');
-        $class_name = \strstr($job_name, '@', true);
-        if(class_exists($class_name)){
-            if($delay > 0){
-                $ret = \think\Queue::later($delay, $job_name, $data, $queue_name);
-            }else{
-                trace($job_name);
-                $ret = \think\Queue::push($job_name, $data, $queue_name);
-            }
-            trace(sprintf("加入任务%s, 时间%s", $job_name, datetime()));
-            return $ret;
+    public function actionWithHelloJob(){
+
+        // 1.当前任务将由哪个类来负责处理。
+        //   当轮到该任务时，系统将生成一个该类的实例，并调用其 fire 方法
+        $jobHandlerClassName  = 'app\admin\job\Hello';
+
+        // 2.当前任务归属的队列名称，如果为新队列，会自动创建
+        $jobQueueName  	  = "helloJobQueue";
+
+        // 3.当前任务所需的业务数据 . 不能为 resource 类型，其他类型最终将转化为json形式的字符串
+        //   ( jobData 为对象时，存储其public属性的键值对 )
+        $jobData       	  = [ 'ts' => time(), 'bizId' => uniqid() , 'a' => 1 ] ;
+
+        // 4.将该任务推送到消息队列，等待对应的消费者去执行
+        $isPushed = Queue::push( $jobHandlerClassName , $jobData , $jobQueueName );
+
+        // database 驱动时，返回值为 1|false  ;   redis 驱动时，返回值为 随机字符串|false
+        if( $isPushed !== false ){
+            echo date('Y-m-d H:i:s') . " a new Hello Job is Pushed to the MQ"."<br>";
+        }else{
+            echo 'Oops, something went wrong.';
         }
-        return $this->error('job类 '.$job_name.'不存在');
     }
+
 
 
     public function insurance()
@@ -1896,6 +1910,7 @@ class Vehiclemanagement extends Backend
 
             });
     }
+
 
 
 }
