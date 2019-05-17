@@ -53,7 +53,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'username', title: __('Username')},
                             // {field: 'id_card', title: __('Id_card')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber')},
+                            {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber'), formatter: function (value, row, index) {
+
+                                    return row.orderdetails.is_repeat == 1 ? value + "<storng class='text-danger'>（有重复）</storng>" : value;
+                                }
+                            },
                             {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
                             {field: 'orderdetails.engine_number', title: __('Orderdetails.engine_number')},
                             {
@@ -386,6 +390,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         classname: 'btn btn-xs btn-success btn-feedback',
                                         visible: function (row) {
                                             return row.service_id ? true : false;
+                                        }
+                                    },
+                                    {
+                                        name: '',
+                                        icon: 'fa fa-search',
+                                        title: __('查询保险'),
+                                        text: '查询保险',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-danger btn-insurance',
+                                        visible: function (row) {
+                                            return !row.orderdetails.traffic_force_insurance_time ? true : false;
                                         }
                                     },
 
@@ -1304,6 +1319,58 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             row = $.extend({}, row ? row : {}, {ids: ids});
                             var url = 'vehicle/vehiclemanagement/allocation';
                             Fast.api.open(Table.api.replaceurl(url, row, table), __('分配客服'), $(this).data() || {});
+                        },
+                        /**
+                         * 查询保险
+                         * @param e
+                         * @param value
+                         * @param row
+                         * @param index
+                         */
+                        'click .btn-insurance': function (e, value, row, index) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            var that = this;
+                            var top = $(that).offset().top - $(window).scrollTop();
+                            var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                            if (top + 154 > $(window).height()) {
+                                top = top - 154;
+                            }
+                            if ($(window).width() < 480) {
+                                top = left = undefined;
+                            }
+
+                            Layer.confirm('是否查询保险?', {
+                                icon: 3,
+                                offset: [top, left],
+                                shadeClose: true,
+                                title: '提示'
+                            }, function (index) {
+
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Fast.api.ajax({
+
+                                    url: 'vehicle/vehiclemanagement/insurance',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success('操作成功');
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
+                            });
+
+
                         },
 
                     }
