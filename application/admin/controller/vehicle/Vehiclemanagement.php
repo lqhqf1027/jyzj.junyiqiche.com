@@ -225,19 +225,8 @@ class Vehiclemanagement extends Backend
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
                 ->where(function ($query) use ($authId, $getUserId) {
-
-
                     //超级管理员
-                    if (in_array($authId, $getUserId['sale'])) {
-
-                        $query->where(['service_id' => $authId]);
-
-                    } else {
-
-
-                    }
-
-
+                    if (in_array($authId, $getUserId['sale']))  $query->where(['service_id' => $authId]);
                 })
                 ->order($sort, $order)
                 ->count();
@@ -246,19 +235,8 @@ class Vehiclemanagement extends Backend
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
                 ->where(function ($query) use ($authId, $getUserId) {
-
-
                     //超级管理员
-                    if (in_array($authId, $getUserId['sale'])) {
-
-                        $query->where(['service_id' => $authId]);
-
-                    } else {
-
-
-                    }
-
-
+                    if (in_array($authId, $getUserId['sale']))  $query->where(['service_id' => $authId]);
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -272,9 +250,8 @@ class Vehiclemanagement extends Backend
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
-                    'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine','is_repeat']);
-
+                    'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status', 
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine','is_repeat']); 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
                 $row->visible(['service']);
