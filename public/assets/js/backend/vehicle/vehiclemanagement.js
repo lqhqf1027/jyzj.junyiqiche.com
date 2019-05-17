@@ -54,13 +54,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'username', title: __('Username')},
                             // {field: 'id_card', title: __('Id_card')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber')},
+                            {field: 'orderdetails.licensenumber', title: __('Orderdetails.licensenumber'), formatter: function (value, row, index) {
+
+                                    return row.orderdetails.is_repeat == 1 ? value + "<span class='label label-danger'>有重复</span>" : value;
+                                }
+                            },
                             {field: 'orderdetails.frame_number', title: __('Orderdetails.frame_number')},
                             {field: 'orderdetails.engine_number', title: __('Orderdetails.engine_number')},
                             {
                                 field: 'service.nickname', title: __('所属客服'), formatter: function (value, row, index) {
 
                                     return value ? "<img src=" + Config.cdn + row.service.avatar + " style='height:20px;width:25px'></img>" + '&nbsp;' + value : value;
+                                }
+                            },
+                            {
+                                field: 'feedback', title: __('客服反馈内容'), formatter: function (v, r, i) {
+
+                                    return Controller.feedFun(v);
                                 }
                             },
                             {
@@ -387,6 +397,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         classname: 'btn btn-xs btn-success btn-feedback',
                                         visible: function (row) {
                                             return row.service_id ? true : false;
+                                        }
+                                    },
+                                    {
+                                        name: '',
+                                        icon: 'fa fa-search',
+                                        title: __('查询保险'),
+                                        text: '查询保险',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-danger btn-insurance',
+                                        visible: function (row) {
+                                            return !row.orderdetails.traffic_force_insurance_time ? true : false;
                                         }
                                     },
 
@@ -913,6 +934,67 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //     })
             // },
 
+            /**
+             * 记录反馈内容
+             * @param v 时间戳
+             * @returns {string}
+             */
+            feedFun:function(v){
+                var feedHtml = '';
+                if (v != null) {
+                    var length = v.length;
+                    // console.log(length);
+                    if(length > 4){
+                        var arr = [];
+    
+                        for (var i in v){
+                            if((length - i) < 4){
+                                arr.push(v[i]);
+                            }
+    
+                        }
+                        // console.log(arr);
+                        for (var i in arr) {
+                            if(arr[i]['message'].length>=12){
+                                arr[i]['message'] = arr[i]['message'].substr(0,12) + '...';
+                            }
+                            
+                            feedHtml += "<span class='text-gray'>" + '（' + Controller.getDateDiff(arr[i]["date"]) + '）' + '&nbsp;' + "</span>" + arr[i]['message']  + '<br>';
+                        }
+    
+                    }else{
+                        for (var i in v) {
+                            if(v[i]['message'].length>=12){
+                                v[i]['message'] = v[i]['message'].substr(0, 12) +'...';
+                            }
+                            
+                            feedHtml += "<span class='text-gray'>" + '（' + Controller.getDateDiff(v[i]["date"])  + '）' + '&nbsp;' + "</span>" + v[i]['message'] + '<br>';
+                        }
+                    }
+    
+                }
+                return feedHtml ? feedHtml : '-';
+            },
+            /**
+             * 格式化时间 几天前 时 分 秒
+             * @param dateTimeStamp
+             * @returns {*|string}
+             */
+            getDateDiff: function (date) {
+                var timestamp = Math.round(new Date(date) / 1000);
+                var mistiming = Math.round(new Date() / 1000) - timestamp;
+                var postfix = mistiming > 0 ? '前' : '后'
+                mistiming = Math.abs(mistiming)
+                var arrr = ['年', '个月', '星期', '天', '小时', '分钟', '秒'];
+                var arrn = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+
+                for (var i = 0; i < 7; i++) {
+                    var inm = Math.floor(mistiming / arrn[i])
+                    if (inm != 0) {
+                        return inm + arrr[i] + postfix
+                    }
+                }
+            },
             api: {
                 bindevent: function () {
                     Form.api.bindevent($("form[role=form]"));
@@ -1291,6 +1373,58 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             row = $.extend({}, row ? row : {}, {ids: ids});
                             var url = 'vehicle/vehiclemanagement/allocation';
                             Fast.api.open(Table.api.replaceurl(url, row, table), __('分配客服'), $(this).data() || {});
+                        },
+                        /**
+                         * 查询保险
+                         * @param e
+                         * @param value
+                         * @param row
+                         * @param index
+                         */
+                        'click .btn-insurance': function (e, value, row, index) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            var that = this;
+                            var top = $(that).offset().top - $(window).scrollTop();
+                            var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                            if (top + 154 > $(window).height()) {
+                                top = top - 154;
+                            }
+                            if ($(window).width() < 480) {
+                                top = left = undefined;
+                            }
+
+                            Layer.confirm('是否查询保险?', {
+                                icon: 3,
+                                offset: [top, left],
+                                shadeClose: true,
+                                title: '提示'
+                            }, function (index) {
+
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Fast.api.ajax({
+
+                                    url: 'vehicle/vehiclemanagement/insurance',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success('操作成功');
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
+                            });
+
+
                         },
 
                     }

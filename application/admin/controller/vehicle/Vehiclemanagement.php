@@ -225,19 +225,8 @@ class Vehiclemanagement extends Backend
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
                 ->where(function ($query) use ($authId, $getUserId) {
-
-
                     //超级管理员
-                    if (in_array($authId, $getUserId['sale'])) {
-
-                        $query->where(['service_id' => $authId]);
-
-                    } else {
-
-
-                    }
-
-
+                    if (in_array($authId, $getUserId['sale']))  $query->where(['service_id' => $authId]);
                 })
                 ->order($sort, $order)
                 ->count();
@@ -246,19 +235,8 @@ class Vehiclemanagement extends Backend
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
                 ->where(function ($query) use ($authId, $getUserId) {
-
-
                     //超级管理员
-                    if (in_array($authId, $getUserId['sale'])) {
-
-                        $query->where(['service_id' => $authId]);
-
-                    } else {
-
-
-                    }
-
-
+                    if (in_array($authId, $getUserId['sale']))  $query->where(['service_id' => $authId]);
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -267,21 +245,26 @@ class Vehiclemanagement extends Backend
             foreach ($list as $key => $row) {
 
 
-                $row->visible(['kefu', 'id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id', 'service_id']);
+                $row->visible(['feedback','kefu', 'id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id', 'service_id']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
+
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine','is_repeat','feedback']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
                 $row->visible(['service']);
                 $row->getRelation('service')->visible(['nickname', 'avatar']);
                 $list[$key]['kefu'] = $authId == $list[$key]['service_id'] ? 1 : 0;
+                //客服反馈信息
+                $list[$key]['feedback'] = json_decode($list[$key]['orderdetails']['feedback'], true);
+
             }
             $list = collection($list)->toArray();
+           
             $result = array("total" => $total, "rows" => $list, 'else' => array_merge($this->auth->rule_message == 'message10' ? self::statistics(['service_id' => $this->auth->id]) : Cache::get('statistics'), ['statistics_total_violation' => $this->auth->rule_message == 'message10' ? self::statistics_violation(['service_id' => $this->auth->id]) : Cache::get('statistics_total_violation')]));
 
 
@@ -1843,6 +1826,89 @@ class Vehiclemanagement extends Backend
         }else{
             echo 'Oops, something went wrong.';
         }
+    }
+
+
+
+    public function insurance()
+    {
+
+        if ($this->request->isAjax()) {
+
+            $params = $this->request->post();
+
+            // pr($params['id']);
+            // die;
+            $this->model = new \app\admin\model\Order();
+
+            $result = $this->model->field('username,phone,wx_public_user_id,models_name')
+                ->with(['orderdetails' => function ($q) use ($ids) {
+                    $q->withField('licensenumber,total_deduction,total_fine,violation_details');
+                }])->find($params['id']);
+
+            // pr($result['orderdetails']['licensenumber']);
+            // die;
+
+            $data = Http::get('http://cars.ruyitech.net/api/queries_dev/成都/' . $result['orderdetails']['licensenumber']);
+
+            // if ($data['status'] == 'success') {
+
+            //     pr($data['data']);
+            //     die;
+            // }
+
+            pr($data);
+
+
+        }
+
+    }
+
+    //查看重复数据
+    public function repeat()
+    {
+        OrderDetails::field('id,licensenumber,frame_number,engine_number')
+            ->chunk(200, function ($item) {
+                foreach ($item as $key => $value) {
+
+                    $licensenumber .= $value['licensenumber'] . ',';
+                    $frame_number .= $value['frame_number'] . ',';
+                    $engine_number .= $value['engine_number'] . ',';
+
+
+                }
+
+                // pr($licensenumber);
+                // pr($frame_number);
+                // pr($engine_number);
+                // die;
+                foreach ($item as $key => $value) {
+
+                    // pr(substr_count($frame_number, $value['frame_number']));
+                    // die;
+                    if ($value['licensenumber'] && substr_count($licensenumber, $value['licensenumber']) >= 2) {
+
+                        OrderDetails::where(['licensenumber' => $value['licensenumber']])->update(['is_repeat' => 1]);
+
+                    }
+
+                    if ($value['frame_number'] && substr_count($frame_number, $value['frame_number']) >= 2) {
+
+                        OrderDetails::where(['frame_number' => $value['frame_number']])->update(['is_repeat' => 1]);
+
+                        
+                    }
+
+                    if ($value['engine_number'] && substr_count($engine_number, $value['engine_number']) >= 2) {
+
+                        OrderDetails::where(['engine_number' => $value['engine_number']])->update(['is_repeat' => 1]);
+
+                    }
+                   
+                }
+
+
+            });
     }
 
 
