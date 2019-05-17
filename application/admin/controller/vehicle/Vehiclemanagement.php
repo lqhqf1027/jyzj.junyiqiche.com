@@ -267,21 +267,25 @@ class Vehiclemanagement extends Backend
             foreach ($list as $key => $row) {
 
 
-                $row->visible(['kefu', 'id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id', 'service_id']);
+                $row->visible(['feedback','kefu', 'id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id', 'service_id']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine','is_repeat']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine','is_repeat','feedback']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
                 $row->visible(['service']);
                 $row->getRelation('service')->visible(['nickname', 'avatar']);
                 $list[$key]['kefu'] = $authId == $list[$key]['service_id'] ? 1 : 0;
+                //客服反馈信息
+                $list[$key]['feedback'] = json_decode($list[$key]['orderdetails']['feedback'], true);
+
             }
             $list = collection($list)->toArray();
+           
             $result = array("total" => $total, "rows" => $list, 'else' => array_merge($this->auth->rule_message == 'message10' ? self::statistics(['service_id' => $this->auth->id]) : Cache::get('statistics'), ['statistics_total_violation' => $this->auth->rule_message == 'message10' ? self::statistics_violation(['service_id' => $this->auth->id]) : Cache::get('statistics_total_violation')]));
 
 

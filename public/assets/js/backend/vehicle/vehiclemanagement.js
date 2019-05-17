@@ -68,6 +68,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             },
                             {
+                                field: 'feedback', title: __('客服反馈内容'), formatter: function (v, r, i) {
+
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {
                                 field: 'admin.nickname', title: __('所属销售'), formatter: function (value, row, index) {
 
                                     return "<img src=" + Config.cdn + row.admin.avatar + " style='height:20px;width:25px'></img>" + '&nbsp;' + value;
@@ -942,6 +948,67 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //     })
             // },
 
+            /**
+             * 记录反馈内容
+             * @param v 时间戳
+             * @returns {string}
+             */
+            feedFun:function(v){
+                var feedHtml = '';
+                if (v != null) {
+                    var length = v.length;
+                    // console.log(length);
+                    if(length > 4){
+                        var arr = [];
+    
+                        for (var i in v){
+                            if((length - i) < 4){
+                                arr.push(v[i]);
+                            }
+    
+                        }
+                        // console.log(arr);
+                        for (var i in arr) {
+                            if(arr[i]['message'].length>=12){
+                                arr[i]['message'] = arr[i]['message'].substr(0,12) + '...';
+                            }
+                            
+                            feedHtml += "<span class='text-gray'>" + '（' + Controller.getDateDiff(arr[i]["date"]) + '）' + '&nbsp;' + "</span>" + arr[i]['message']  + '<br>';
+                        }
+    
+                    }else{
+                        for (var i in v) {
+                            if(v[i]['message'].length>=12){
+                                v[i]['message'] = v[i]['message'].substr(0, 12) +'...';
+                            }
+                            
+                            feedHtml += "<span class='text-gray'>" + '（' + Controller.getDateDiff(v[i]["date"])  + '）' + '&nbsp;' + "</span>" + v[i]['message'] + '<br>';
+                        }
+                    }
+    
+                }
+                return feedHtml ? feedHtml : '-';
+            },
+            /**
+             * 格式化时间 几天前 时 分 秒
+             * @param dateTimeStamp
+             * @returns {*|string}
+             */
+            getDateDiff: function (date) {
+                var timestamp = Math.round(new Date(date) / 1000);
+                var mistiming = Math.round(new Date() / 1000) - timestamp;
+                var postfix = mistiming > 0 ? '前' : '后'
+                mistiming = Math.abs(mistiming)
+                var arrr = ['年', '个月', '星期', '天', '小时', '分钟', '秒'];
+                var arrn = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+
+                for (var i = 0; i < 7; i++) {
+                    var inm = Math.floor(mistiming / arrn[i])
+                    if (inm != 0) {
+                        return inm + arrr[i] + postfix
+                    }
+                }
+            },
             api: {
                 bindevent: function () {
                     Form.api.bindevent($("form[role=form]"));
