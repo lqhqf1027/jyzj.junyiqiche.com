@@ -224,7 +224,7 @@ class Vehiclemanagement extends Backend
             $total = $this->model
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
-                ->where(function ($query) use ($authId, $getUserId) {
+                ->where(function ($query) use ($authId, $getUserId) { 
                     //超级管理员
                     if (in_array($authId, $getUserId['sale']))  $query->where(['service_id' => $authId]);
                 })
@@ -234,7 +234,7 @@ class Vehiclemanagement extends Backend
             $list = $this->model
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
-                ->where(function ($query) use ($authId, $getUserId) {
+                ->where(function ($query) use ($authId, $getUserId) { 
                     //超级管理员
                     if (in_array($authId, $getUserId['sale']))  $query->where(['service_id' => $authId]);
                 })

@@ -536,6 +536,7 @@ class Order extends Backend
                 $fieldArr[$v['COLUMN_NAME']] = $v['COLUMN_NAME'];
             }
         }
+
         $auth = Auth::instance();
         //加载文件
         $insert = $insertOrder = [];
@@ -566,44 +567,30 @@ class Order extends Backend
                 $temp = array_combine($fields, $values);
 
                 foreach ($temp as $k => $v) {
-                    if (isset($fieldArr[$k]) && $k !== '') {
-                        $row[$fieldArr[$k]] = $v;
-                    }
+                    if (isset($fieldArr[$k]) && $k !== '') $row[$fieldArr[$k]] = $v;
+
                 }
                 if ($row && $row['username']) {
-                    $row['total_contract'] = $row['total_contract'] ? $row['total_contract'] : 0;
-                    if (isset($row['payment'])) {
-                        $row['payment'] = $row['payment'] ? $row['payment'] : 0;
-                    }
-                    if (isset($row['monthly'])) {
-                        $row['monthly'] = $row['monthly'] ? $row['monthly'] : 0;
-                    }
-                    if (isset($row['nperlist'])) {
-                        $row['nperlist'] = $row['nperlist'] ? $row['nperlist'] : 0;
-                    }
-                    if (isset($row['end_money'])) {
-                        $row['end_money'] = $row['end_money'] ? $row['end_money'] : 0;
-                    }
+                    $row['total_contract'] = $row['total_contract'] ?? 0;
+                    if (isset($row['payment'])) $row['payment'] = $row['payment'] ?? 0;
+                    if (isset($row['monthly'])) $row['monthly'] = $row['monthly'] ?? 0;
+                    if (isset($row['nperlist'])) $row['nperlist'] = $row['nperlist'] ?? 0;
 
-                    if (isset($row['tail_money'])) {
-                        $row['tail_money'] = $row['tail_money'] ? $row['tail_money'] : 0;
-                    }
+                    if (isset($row['end_money'])) $row['end_money'] = $row['end_money'] ?? 0;
 
-                    if (isset($row['margin'])) {
-                        $row['margin'] = $row['margin'] ? $row['margin'] : 0;
-                    }
+                    if (isset($row['tail_money'])) $row['tail_money'] = $row['tail_money'] ?? 0;
+                    if (isset($row['margin'])) $row['margin'] = $row['margin'] ?? 0;
 
-                    $row['tax_amount'] = $row['tax_amount'] ? $row['tax_amount'] : 0;
-                    $row['no_tax_amount'] = $row['no_tax_amount'] ? $row['no_tax_amount'] : 0;
-                    $row['purchase_of_taxes'] = $row['purchase_of_taxes'] ? $row['purchase_of_taxes'] : 0;
-                    $row['house_fee'] = $row['house_fee'] ? $row['house_fee'] : 0;
-                    $row['luqiao_fee'] = $row['luqiao_fee'] ? $row['luqiao_fee'] : 0;
-                    $row['insurance'] = $row['insurance'] ? $row['insurance'] : 0;
-                    $row['car_boat_tax'] = $row['car_boat_tax'] ? $row['car_boat_tax'] : 0;
-                    $row['business_risks'] = $row['business_risks'] ? $row['business_risks'] : 0;
+                    $row['tax_amount'] = $row['tax_amount'] ?? 0;
+                    $row['no_tax_amount'] = $row['no_tax_amount'] ?? 0;
+                    $row['purchase_of_taxes'] = $row['purchase_of_taxes'] ?? 0;
+                    $row['house_fee'] = $row['house_fee'] ?? 0;
+                    $row['luqiao_fee'] = $row['luqiao_fee'] ?? 0;
+                    $row['insurance'] = $row['insurance'] ?? 0;
+                    $row['car_boat_tax'] = $row['car_boat_tax'] ?? 0;
+                    $row['business_risks'] = $row['business_risks'] ?? 0;
                     $row['is_mortgage'] = $row['is_mortgage'] == '是' ? '是' : '否';
-
-                    $row['admin_id'] = empty($row['admin_id'])?$auth->id:Admin::getByNickname($row['admin_id'])->id;
+                    $row['admin_id'] = empty($row['admin_id']) ? $auth->id : Admin::getByNickname($row['admin_id'])->id;
 
                     if ($row['type']) {
                         switch ($row['type']) {
@@ -629,7 +616,7 @@ class Order extends Backend
                                 $row['type'] = 'affiliated';
                                 break;
                             default:
-                                throw new Exception($row['username'].'用户的购车类型填写有误');
+                                throw new Exception($row['username'] . '用户的购车类型填写有误');
                         }
                     }
 
