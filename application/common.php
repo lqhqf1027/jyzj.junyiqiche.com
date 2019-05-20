@@ -1160,7 +1160,7 @@ if (!function_exists('hsv2rgb')) {
                     $success_num++;
 
                 } else {
-                    $order_details->allowField(true)->save(['is_it_illegal' => 'query_failed', 'reson_query_fail' => $data['reason']], ['id' => $order_details_id]);
+                    $order_details->allowField(true)->save(['is_it_illegal' => 'query_failed', 'reson_query_fail' => $data['reason'],'update_violation_time'=>time()], ['id' => $order_details_id]);
                     $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $data['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
                     $error_num++;
                 }
