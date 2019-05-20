@@ -1291,7 +1291,7 @@ class Vehiclemanagement extends Backend
             $value['createtime'] = $value['createtime'] ? date('Y-m-d', $value['createtime']) : '';
 
             $value['orderdetails']['update_violation_time'] = $value['orderdetails']['update_violation_time'] ? date('Y-m-d', $value['orderdetails']['update_violation_time']) : '';
-            $value['orderdetails']['annual_inspection_time'] = $value['orderdetails']['annual_inspection_time'] ? date('Y-m-d', $value['orderdetails']['annual_inspection_time']) : '';
+            $value['orderdetails']['annual_inspection_time'] = is_numeric($value['orderdetails']['annual_inspection_time'])? date('Y-m-d', $value['orderdetails']['annual_inspection_time']) : $value['orderdetails']['annual_inspection_time'];
             $value['orderdetails']['traffic_force_insurance_time'] = $value['orderdetails']['traffic_force_insurance_time'] ? date('Y-m-d', $value['orderdetails']['traffic_force_insurance_time']) : '';
 
             switch ($value['orderdetails']['is_it_illegal']) {
