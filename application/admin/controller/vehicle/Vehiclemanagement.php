@@ -219,14 +219,18 @@ class Vehiclemanagement extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $authId = $this->auth->id; // 当前操作员id
-            $getUserId = $this->getUserId();//获取当前可操作权限的id
+//            $getUserId = $this->getUserId();//获取当前可操作权限的id
             $this->model = new \app\admin\model\Order();
             $total = $this->model
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
-                ->where(function ($query) use ($authId, $getUserId) {
+
+                ->where(function ($query) use ($authId) {
                     //超级管理员
-                    if (in_array($authId, $getUserId['sale'])) $query->where(['service_id' => $authId]);
+                    if ($this->auth->rule_message == 'message10')  $query->where(['service_id' => $authId]);
+
+                    if($this->auth->rule_message == 'message6') $query->where(['sales_id' => $authId]);
+
                 })
                 ->order($sort, $order)
                 ->count();
@@ -234,9 +238,13 @@ class Vehiclemanagement extends Backend
             $list = $this->model
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
-                ->where(function ($query) use ($authId, $getUserId) {
+
+                ->where(function ($query) use ($authId) {
                     //超级管理员
-                    if (in_array($authId, $getUserId['sale'])) $query->where(['service_id' => $authId]);
+                    if ($this->auth->rule_message == 'message10')  $query->where(['service_id' => $authId]);
+
+                    if($this->auth->rule_message == 'message6') $query->where(['sales_id' => $authId]);
+
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -400,6 +408,7 @@ class Vehiclemanagement extends Backend
                     ];
 
                     $row->lift_car_status = 'yes';
+                    $row->sales_id = $row->admin_id;
                     $result = $row->save();
                     illegal($data);
 //                    self::illegal($data);
@@ -1730,6 +1739,8 @@ class Vehiclemanagement extends Backend
         $redis->connect('120.78.135.109', '6379');
 
         $redis->auth('aicheyide');
+
+
     }
 
     public function actionWithHelloJob()
@@ -1806,14 +1817,10 @@ class Vehiclemanagement extends Backend
 
                 }
 
-                // pr($licensenumber);
-                // pr($frame_number);
-                // pr($engine_number);
-                // die;
+
                 foreach ($item as $key => $value) {
 
-                    // pr(substr_count($frame_number, $value['frame_number']));
-                    // die;
+
                     if ($value['licensenumber'] && substr_count($licensenumber, $value['licensenumber']) >= 2) {
 
                         OrderDetails::where(['licensenumber' => $value['licensenumber']])->update(['is_repeat' => 1]);
