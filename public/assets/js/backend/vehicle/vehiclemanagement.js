@@ -445,12 +445,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         for (var i in options['data']){
                             console.log(options['data'][i]);
 
-                            if (options['data'][i][0] == true) {
+                            if (options['data'][i][0] == true && options['data'][i]['feedback']) {
 
                                 // var content = options['data'][i]['feedback'];
                                 let ids = options['data'][i]['id'];
                                 console.log(ids);
-                                let html = '';
                                 Fast.api.ajax({
                                     url: "vehicle/vehiclemanagement/feedbackMessage",
                                     data: {id: ids}
@@ -1019,7 +1018,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 if (v != null) {
                     var length = v.length;
                     // console.log(length);
-                    if(length > 4){
+                    if(length >= 4){
                         var arr = [];
     
                         for (var i in v){
@@ -1056,11 +1055,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
              * @returns {string}
              */
             feedbackMessage:function(v){
-                var feedHtml = '';
+                var feedHtml = "<div style='padding: 20px;border-radius:10px;background-color:rgb(245,245,245)'>";
                 if (v != null) {
                     var length = v.length;
                     // console.log(length);
-                    if(length > 4){
+                    if(length >= 4){
                         var arr = [];
     
                         for (var i in v){
@@ -1083,6 +1082,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
     
                 }
+                feedHtml += "</div>";
                 return feedHtml ? feedHtml : '-';
             },
             /**
