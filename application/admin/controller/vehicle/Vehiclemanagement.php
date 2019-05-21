@@ -1912,5 +1912,28 @@ class Vehiclemanagement extends Backend
     }
 
 
+    //点击表格中客服反馈记录
+    public function feedbackMessage()
+    {
+
+        if ($this->request->isAjax()) {
+            $params = $this->request->post();
+
+            $result = OrderDetails::where('order_id', $params['id'])->find()['feedback'];
+
+            if ($result) {
+
+                $this->success('', '', json_decode($result, true));
+            } else {
+
+                $this->error();
+              
+            }
+
+        }
+
+    }
+
+
 
 }
