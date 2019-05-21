@@ -28,6 +28,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return "快速搜索：客户姓名,车牌号";
                 };
 
+                table.on('load-success.bs.table', function (e, data) {
+    
+                    var td = $("#table td:nth-child(11)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
+    
+                });
+    
+
 
                 // 初始化表格
                 table.bootstrapTable({
@@ -399,17 +412,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             return row.service_id ? true : false;
                                         }
                                     },
-                                    {
-                                        name: '',
-                                        icon: 'fa fa-search',
-                                        title: __('查询保险'),
-                                        text: '查询保险',
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-danger btn-insurance',
-                                        visible: function (row) {
-                                            return !row.orderdetails.traffic_force_insurance_time ? true : false;
-                                        }
-                                    },
 
                                 ]
                             }
@@ -428,6 +430,65 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // $('#business').text(data.else.soon_business);
                         // $('#business_overdue').text(data.else.business_overdue);
                     }
+
+                    /**
+                     * 点击反馈内容
+                     */
+                    $("#table td:nth-child(11)").on("click", function () {
+
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                 
+                        // row = $.extend({}, row ? row : {}, {ids: ids});
+                        console.log(options['data']);
+
+                        for (var i in options['data']){
+                            console.log(options['data'][i]);
+
+                            if (options['data'][i][0] == true) {
+
+                                // var content = options['data'][i]['feedback'];
+                                let ids = options['data'][i]['id'];
+                                console.log(ids);
+                                let html = '';
+                                Fast.api.ajax({
+                                    url: "vehicle/vehiclemanagement/feedbackMessage",
+                                    data: {id: ids}
+                                }, function (data, ret) {
+                                    console.log(data);
+
+                                    html += '<ul>';
+
+                                    let content = Controller.feedbackMessage(data);
+
+                                    console.log(content);
+
+                                    //捕获页
+                                    layer.open({
+                                        type: 1,
+                                        shade: false,
+                                        title: false, //不显示标题
+                                        content: content, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+                                        cancel: function(){
+                                            table.bootstrapTable('refresh');
+                                        }
+
+                                    });
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success('暂无反馈信息');
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                });
+
+                            }
+        
+                        }
+                            
+                    });
+                    
+
                 });
 
                 $('div.form-group').each(function () {
@@ -445,6 +506,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         e.stopPropagation();
 
                         var container = $("#table").data("bootstrap.table").$container;
+                        var options = $("#table").bootstrapTable('getOptions');
+
+                        // var arr = [];
+                        //
+                        // options.columns[0].forEach((k)=>{
+                        //     if(k.operate && k.operate !== false){
+                        //         arr.push(k.field);
+                        //     }
+                        //
+                        // });
+                        //
+                        // for (let i in arr){
+                        //     $("form.form-commonsearch [name='"+arr[i]+"']", container).val('');
+                        // }
 
                         $("form.form-commonsearch", container).trigger('reset');
 
@@ -976,6 +1051,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 return feedHtml ? feedHtml : '-';
             },
             /**
+             * 记录反馈内容---点击
+             * @param v 时间戳
+             * @returns {string}
+             */
+            feedbackMessage:function(v){
+                var feedHtml = '';
+                if (v != null) {
+                    var length = v.length;
+                    // console.log(length);
+                    if(length > 4){
+                        var arr = [];
+    
+                        for (var i in v){
+                            if((length - i) < 4){
+                                arr.push(v[i]);
+                            }
+    
+                        }
+                        // console.log(arr);
+                        for (var i in arr) {
+                            
+                            feedHtml += (parseInt(i)+1) + ".<span class='text-gray'>" + '（' + Controller.getDateDiff(arr[i]["date"]) + '）' + '&nbsp;' + "</span>" + arr[i]['message']  + '<br>';
+                        }
+    
+                    }else{
+                        for (var i in v) {
+                            
+                            feedHtml += (parseInt(i)+1) +  ".<span class='text-gray'>" + '（' + Controller.getDateDiff(v[i]["date"])  + '）' + '&nbsp;' + "</span>" + v[i]['message'] + '<br>';
+                        }
+                    }
+    
+                }
+                return feedHtml ? feedHtml : '-';
+            },
+            /**
              * 格式化时间 几天前 时 分 秒
              * @param dateTimeStamp
              * @returns {*|string}
@@ -1374,59 +1484,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             var url = 'vehicle/vehiclemanagement/allocation';
                             Fast.api.open(Table.api.replaceurl(url, row, table), __('分配客服'), $(this).data() || {});
                         },
-                        /**
-                         * 查询保险
-                         * @param e
-                         * @param value
-                         * @param row
-                         * @param index
-                         */
-                        'click .btn-insurance': function (e, value, row, index) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            var that = this;
-                            var top = $(that).offset().top - $(window).scrollTop();
-                            var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                            if (top + 154 > $(window).height()) {
-                                top = top - 154;
-                            }
-                            if ($(window).width() < 480) {
-                                top = left = undefined;
-                            }
-
-                            Layer.confirm('是否查询保险?', {
-                                icon: 3,
-                                offset: [top, left],
-                                shadeClose: true,
-                                title: '提示'
-                            }, function (index) {
-
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-                                Fast.api.ajax({
-
-                                    url: 'vehicle/vehiclemanagement/insurance',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
-
-                                    Toastr.success('操作成功');
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
-
-                                    return false;
-                                });
-
-
-                            });
-
-
-                        },
-
+                        
                     }
                 },
                 layer_violation: function (data, id = '') {
