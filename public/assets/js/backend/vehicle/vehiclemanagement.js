@@ -435,19 +435,59 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * 点击反馈内容
                      */
                     $("#table td:nth-child(11)").on("click", function () {
-                    
-                        //捕获页
-                        layer.open({
-                            type: 1,
-                            shade: false,
-                            title: false, //不显示标题
-                            content: '捕获就是从页面已经存在的元素上，包裹layer的结构', //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
-                            
-                        });
+
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                 
+                        // row = $.extend({}, row ? row : {}, {ids: ids});
+                        console.log(options['data']);
+
+                        for (var i in options['data']){
+                            console.log(options['data'][i]);
+
+                            if (options['data'][i][0] == true) {
+
+                                // var content = options['data'][i]['feedback'];
+                                let ids = options['data'][i]['id'];
+                                console.log(ids);
+                                let html = '';
+                                Fast.api.ajax({
+                                    url: "vehicle/vehiclemanagement/feedbackMessage",
+                                    data: {id: ids}
+                                }, function (data, ret) {
+                                    console.log(data);
+
+                                    html += '<ul>';
+
+                                    let content = Controller.feedbackMessage(data);
+
+                                    console.log(content);
+
+                                    //捕获页
+                                    layer.open({
+                                        type: 1,
+                                        shade: false,
+                                        title: false, //不显示标题
+                                        content: content, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+                                        cancel: function(){
+                                            table.bootstrapTable('refresh');
+                                        }
+
+                                    });
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success('暂无反馈信息');
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                });
+
+                            }
+        
+                        }
                             
                     });
                     
-
 
                 });
 
@@ -1004,6 +1044,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                             
                             feedHtml += "<span class='text-gray'>" + '（' + Controller.getDateDiff(v[i]["date"])  + '）' + '&nbsp;' + "</span>" + v[i]['message'] + '<br>';
+                        }
+                    }
+    
+                }
+                return feedHtml ? feedHtml : '-';
+            },
+            /**
+             * 记录反馈内容---点击
+             * @param v 时间戳
+             * @returns {string}
+             */
+            feedbackMessage:function(v){
+                var feedHtml = '';
+                if (v != null) {
+                    var length = v.length;
+                    // console.log(length);
+                    if(length > 4){
+                        var arr = [];
+    
+                        for (var i in v){
+                            if((length - i) < 4){
+                                arr.push(v[i]);
+                            }
+    
+                        }
+                        // console.log(arr);
+                        for (var i in arr) {
+                            
+                            feedHtml += (parseInt(i)+1) + ".<span class='text-gray'>" + '（' + Controller.getDateDiff(arr[i]["date"]) + '）' + '&nbsp;' + "</span>" + arr[i]['message']  + '<br>';
+                        }
+    
+                    }else{
+                        for (var i in v) {
+                            
+                            feedHtml += (parseInt(i)+1) +  ".<span class='text-gray'>" + '（' + Controller.getDateDiff(v[i]["date"])  + '）' + '&nbsp;' + "</span>" + v[i]['message'] + '<br>';
                         }
                     }
     
