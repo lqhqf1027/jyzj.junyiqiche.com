@@ -7,20 +7,29 @@
  */
 
 namespace app\job;
+
 use think\queue\Job;
 use think\Db;
 use think\Controller;
 
-class Job1 extends Controller
+class CommonJob extends Controller
 {
-    public function fire(Job $job, $data)
+    /**
+     * 获取违章信息(单个、批量)
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function sendMessagePerson(Job $job, $data)
     {
-        print("<info>Hello Job has been done and deleted" . "</info>\n");
+
         //....这里执行具体的任务
-        $data = json_decode($data, true);
+
         if ($this->jobDone($data)) {
             $job->delete();
-            print("<info>Hello Job has been done and deleted" . "</info>\n");
+//            print("<info>var_export($data,true)" . "</info>\n");
         } else {
             $job->release(3); //$delay为延迟时间
         }
@@ -41,8 +50,11 @@ class Job1 extends Controller
 
     public function jobDone($data)
     {
-        print("<info>Job is Done status!" . "</info> \n");
-//        return 1;
+        illegal($data);
+        print("<info> ".var_export($data,true)."</info> \n");
+//        illegal(json_decode($data, true));
+//        print("<info>Job is Done status!" . "</info> \n");
+        return true;
 
 //        return Db::name('tp5_test')->where(['order_no' => $data['order_no']])->update(['status' => 1]);
     }

@@ -38,7 +38,7 @@ class Vehiclemanagement extends Backend
      */
     protected $model = null;
     protected $noNeedRight = ['*'];
-    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year', 'test','actionWithHelloJob'];
+    protected $noNeedLogin = ['ceshi', 'sendallviolation', 'update_year', 'test', 'actionWithHelloJob'];
 
     public function _initialize()
     {
@@ -224,9 +224,9 @@ class Vehiclemanagement extends Backend
             $total = $this->model
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
-                ->where(function ($query) use ($authId, $getUserId) { 
+                ->where(function ($query) use ($authId, $getUserId) {
                     //超级管理员
-                    if (in_array($authId, $getUserId['sale']))  $query->where(['service_id' => $authId]);
+                    if (in_array($authId, $getUserId['sale'])) $query->where(['service_id' => $authId]);
                 })
                 ->order($sort, $order)
                 ->count();
@@ -234,9 +234,9 @@ class Vehiclemanagement extends Backend
             $list = $this->model
                 ->with(['orderdetails', 'admin', 'service'])
                 ->where($where)
-                ->where(function ($query) use ($authId, $getUserId) { 
+                ->where(function ($query) use ($authId, $getUserId) {
                     //超级管理员
-                    if (in_array($authId, $getUserId['sale']))  $query->where(['service_id' => $authId]);
+                    if (in_array($authId, $getUserId['sale'])) $query->where(['service_id' => $authId]);
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -245,14 +245,14 @@ class Vehiclemanagement extends Backend
             foreach ($list as $key => $row) {
 
 
-                $row->visible(['feedback','kefu', 'id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id', 'service_id']);
+                $row->visible(['feedback', 'kefu', 'id', 'username', 'avatar', 'phone', 'id_card', 'models_name', 'payment', 'monthly', 'nperlist', 'end_money', 'tail_money', 'margin', 'createtime', 'type', 'lift_car_status', 'user_id', 'wx_public_user_id', 'service_id']);
                 $row->visible(['orderdetails']);
                 $row->getRelation('orderdetails')->visible(['total_deduction', 'file_coding', 'signdate', 'total_contract', 'hostdate', 'licensenumber', 'frame_number', 'engine_number', 'is_mortgage', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate',
                     'purchase_of_taxes', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'insurance_policy', 'insurance', 'car_boat_tax', 'commercial_insurance_policy',
                     'business_risks', 'subordinate_branch', 'transfer_time', 'is_it_illegal', 'annual_inspection_time',
 
                     'traffic_force_insurance_time', 'business_insurance_time', 'annual_inspection_status',
-                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine','is_repeat','feedback']);
+                    'traffic_force_insurance_status', 'business_insurance_status', 'reson_query_fail', 'update_violation_time', 'total_fine', 'is_repeat', 'feedback']);
 
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar']);
@@ -264,7 +264,7 @@ class Vehiclemanagement extends Backend
 
             }
             $list = collection($list)->toArray();
-           
+
             $result = array("total" => $total, "rows" => $list, 'else' => array_merge($this->auth->rule_message == 'message10' ? self::statistics(['service_id' => $this->auth->id]) : Cache::get('statistics'), ['statistics_total_violation' => $this->auth->rule_message == 'message10' ? self::statistics_violation(['service_id' => $this->auth->id]) : Cache::get('statistics_total_violation')]));
 
 
@@ -443,7 +443,7 @@ class Vehiclemanagement extends Backend
         $row = OrderDetails::getByOrder_id($ids);
         $order = Order::where('id', $ids)->find();
 
-        $row['id_card'] =$order['id_card'];
+        $row['id_card'] = $order['id_card'];
 
         $row['phone'] = $order['phone'];
         $row['username'] = $order['username'];
@@ -473,7 +473,7 @@ class Vehiclemanagement extends Backend
                     $params['traffic_force_insurance_time'] = $params['traffic_force_insurance_time'] ? strtotime($params['traffic_force_insurance_time']) : null;
                     $params['business_insurance_time'] = $params['business_insurance_time'] ? strtotime($params['business_insurance_time']) : null;
                     $result = $row->allowField(true)->save($params);
-                    $res = Order::where('id', $ids)->update(['phone' => $params['phone'],'username'=>$params['username'],'id_card'=>$params['id_card']]);
+                    $res = Order::where('id', $ids)->update(['phone' => $params['phone'], 'username' => $params['username'], 'id_card' => $params['id_card']]);
                     Db::commit();
                 } catch (ValidateException $e) {
                     Db::rollback();
@@ -588,9 +588,8 @@ class Vehiclemanagement extends Backend
     {
         return ['12' => __('12'), '24' => __('24'), '36' => __('36'), '48' => __('48'), '60' => __('60')];
     }
-
     /**
-     * 请求第三方接口获取违章信息
+     * 获取违章信息(单个、批量)
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -610,123 +609,52 @@ class Vehiclemanagement extends Backend
             $this->success('', '', ['wx_public_user_id' => $wx_public_user_id, 'error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
         }
     }
-
-    /**
-     * 查询违章
-     * @param $params
-     * @return array
-     * @throws Exception
-     */
-    public static function illegal($params, $is_number = false)
-    {
-        $keys = '217fb8552303cb6074f88dbbb5329be7';
-        $order_details = new OrderDetails();
-        $query_record = [];
-        $error_num = $success_num = 0;
-        foreach ($params as $k => $v) {
-            $order_details_id = OrderDetails::getByOrder_id($v['order_id'])->id;
-            //获取城市前缀接口
-            $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($v['hphm']));
-            if ($result['error_code'] == 0) {
-
-                $field = array();
-
-                $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($v['hphms']) . "&engineno=" . $v['engineno'] . "&classno=" . $v['classno'] . "&key=" . $keys);
-
-                if ($data['error_code'] == 0) {
-
-                    $total_fraction = 0;     //总扣分
-                    $total_money = 0;        //总罚款
-                    $flag = -1;
-                    if ($data['result']['lists']) {
-                        $record = [];
-                        foreach ($data['result']['lists'] as $key => $value) {
-                            if ($value['handled'] == 0) {
-                                $flag = -2;
-                            } else if ($value['handled'] == 1) {
-                                continue;
-                            }
-                            if ($value['fen']) {
-                                $value['fen'] = floatval($value['fen']);
-
-                                $total_fraction += $value['fen'];
-                            }
-
-                            if ($value['money']) {
-                                $value['money'] = floatval($value['money']);
-
-                                $total_money += $value['money'];
-                            }
-
-                            $record[] = $value;
-
-                        }
-                        $field['violation_details'] = $record ? json_encode($record) : null;
-
-                        $field['is_it_illegal'] = $flag == -2 ? 'violation_of_regulations' : 'no_violation';
-
-                    } else {
-                        $field['is_it_illegal'] = 'no_violation';
-                    }
-
-                    $field['total_deduction'] = $total_fraction;
-                    $field['total_fine'] = $total_money;
-                    $field['update_violation_time'] = time();
-
-                    $change_num = OrderDetails::whereTime('update_violation_time', 'w')->where('id', $order_details_id)->value('id');
-
-                    if (!$change_num) {
-                        $field['number_of_queries'] = 0;
-                    }
-
-                    $order_details->allowField(true)->save($field, ['id' => $order_details_id]);
-                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'success', 'msg' => '-', 'is_it_illegal' => $field['is_it_illegal'] == 'violation_of_regulations' ? '有' : '无', 'total_deduction' => $total_fraction, 'total_fine' => $total_money];
-                    $success_num++;
-
-                    if ($is_number) {
-                        $nums = OrderDetails::whereTime('update_violation_time', 'w')->where('order_id', $v['order_id'])->value('number_of_queries');
-
-                        if ($nums != 2) {
-                            $update_time = time();
-
-                            if (!$nums) {
-                                $nums = 0;
-                            }
-                            $nums++;
-
-                            OrderDetails::update([
-                                'id' => $order_details_id,
-                                'number_of_queries' => $nums,
-                                'update_violation_time' => $update_time
-                            ]);
-
-                        }
-
-                    }
-
-                } else {
-                    $order_details->allowField(true)->save(['is_it_illegal' => 'query_failed', 'reson_query_fail' => $data['reason']], ['id' => $order_details_id]);
-                    $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $data['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
-                    $error_num++;
-                }
-            } else {
-                $order_details->allowField(true)->save(['is_it_illegal' => 'query_failed', 'reson_query_fail' => $result['reason']], ['id' => $order_details_id]);
-                $query_record[] = ['username' => $v['username'], 'license_plate_number' => $v['hphms'], 'status' => 'error', 'msg' => $result['reason'], 'is_it_illegal' => '-', 'total_deduction' => '-', 'total_fine' => '-'];
-                $error_num++;
-            }
-
-        }
-
-        Cache::rm('statistics_total_violation');
-        Cache::set('statistics_total_violation', OrderDetails::where('is_it_illegal', 'violation_of_regulations')->count('id'), 43200);
-
-        return [
-            'error_num' => $error_num,
-            'success_num' => $success_num,
-            'query_record' => $query_record
-        ];
-    }
-
+//    /**
+//     * 获取违章信息(单个、批量)
+//     * @throws \think\Exception
+//     * @throws \think\db\exception\DataNotFoundException
+//     * @throws \think\db\exception\ModelNotFoundException
+//     * @throws \think\exception\DbException
+//     * @throws \think\exception\PDOException
+//     */
+//    public function sendMessagePerson()
+//    {
+//        if ($this->request->isAjax()) {
+//
+//            $params = $this->request->post()['ids'];
+//            // 1.当前任务将由哪个类来负责处理。
+//            //   当轮到该任务时，系统将生成一个该类的实例，并调用其 fire 方法
+//            $jobHandlerClassName = 'app\job\CommonJob@sendMessagePerson';
+//
+//            // 2.当前任务归属的队列名称，如果为新队列，会自动创建
+//            $jobQueueName = "sendMessagePerson";
+//
+//            // 3.当前任务所需的业务数据 . 不能为 resource 类型，其他类型最终将转化为json形式的字符串
+//            //   ( jobData 为对象时，存储其public属性的键值对 )
+////        $jobData       	  = [ 'ts' => time(), 'bizId' => uniqid() , 'a' => 1 ] ;
+//
+//            // 4.将该任务推送到消息队列，等待对应的消费者去执行
+//            $isPushed = Queue::push($jobHandlerClassName, $params, $jobQueueName);
+//
+//            // database 驱动时，返回值为 1|false  ;   redis 驱动时，返回值为 随机字符串|false
+//            if ($isPushed !== false) {
+//                $this->success('1');
+////                $illegal = illegal($params);
+////
+////                $wx_public_user_id = Order::where('id', $params[0]['order_id'])->find()['wx_public_user_id'] ? 1 : 0;
+////
+////                $this->success('', '', ['wx_public_user_id' => $wx_public_user_id, 'error_num' => $illegal['error_num'], 'success_num' => $illegal['success_num'], 'query_record' => $illegal['query_record']]);
+//
+//
+//                echo date('Y-m-d H:i:s') . " a new Hello Job is Pushed to the MQ" . "<br>";
+//            } else {
+//                $this->error('Oops, something went wrong.');
+//
+//            }
+//
+//        }
+//        return;
+//    }
 
     public function violation_details($ids = null)
     {
@@ -1706,10 +1634,10 @@ class Vehiclemanagement extends Backend
                 ::where('licensenumber', 'not in', ['null', ''])
                 ->where([
 //                    'annual_inspection_time' => '',
-                    'id'=>['ELT',349],
+                    'id' => ['ELT', 349],
 //                'id'=>['in',[1694,1690,1697,1686,1685,1684,1683,1680,1623,1538,1526,1466,1292,
 //                    1165,1064,989,898,869,677,665]]
-                'reson_query_fail' => null
+                    'reson_query_fail' => null
                 ])
                 ->order('id desc')
                 ->page($page . ',50')
@@ -1804,30 +1732,30 @@ class Vehiclemanagement extends Backend
         $redis->auth('aicheyide');
     }
 
-    public function actionWithHelloJob(){
+    public function actionWithHelloJob()
+    {
 
         // 1.当前任务将由哪个类来负责处理。
         //   当轮到该任务时，系统将生成一个该类的实例，并调用其 fire 方法
-        $jobHandlerClassName  = 'app\admin\job\Hello';
+        $jobHandlerClassName = 'app\admin\job\Hello';
 
         // 2.当前任务归属的队列名称，如果为新队列，会自动创建
-        $jobQueueName  	  = "helloJobQueue";
+        $jobQueueName = "helloJobQueue";
 
         // 3.当前任务所需的业务数据 . 不能为 resource 类型，其他类型最终将转化为json形式的字符串
         //   ( jobData 为对象时，存储其public属性的键值对 )
-        $jobData       	  = [ 'ts' => time(), 'bizId' => uniqid() , 'a' => 1 ] ;
+        $jobData = ['ts' => time(), 'bizId' => uniqid(), 'a' => 1];
 
         // 4.将该任务推送到消息队列，等待对应的消费者去执行
-        $isPushed = Queue::push( $jobHandlerClassName , $jobData , $jobQueueName );
+        $isPushed = Queue::push($jobHandlerClassName, $jobData, $jobQueueName);
 
         // database 驱动时，返回值为 1|false  ;   redis 驱动时，返回值为 随机字符串|false
-        if( $isPushed !== false ){
-            echo date('Y-m-d H:i:s') . " a new Hello Job is Pushed to the MQ"."<br>";
-        }else{
+        if ($isPushed !== false) {
+            echo date('Y-m-d H:i:s') . " a new Hello Job is Pushed to the MQ" . "<br>";
+        } else {
             echo 'Oops, something went wrong.';
         }
     }
-
 
 
     public function insurance()
@@ -1896,7 +1824,7 @@ class Vehiclemanagement extends Backend
 
                         OrderDetails::where(['frame_number' => $value['frame_number']])->update(['is_repeat' => 1]);
 
-                        
+
                     }
 
                     if ($value['engine_number'] && substr_count($engine_number, $value['engine_number']) >= 2) {
@@ -1904,7 +1832,7 @@ class Vehiclemanagement extends Backend
                         OrderDetails::where(['engine_number' => $value['engine_number']])->update(['is_repeat' => 1]);
 
                     }
-                   
+
                 }
 
 
@@ -1933,7 +1861,6 @@ class Vehiclemanagement extends Backend
         }
 
     }
-
 
 
 }

@@ -228,10 +228,8 @@ class Pushwechat extends Backend
         $r = posts("https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token={$access_token}", $data);
 
         foreach ($r['user_info_list'] as $k => $v) {
-
             // 更新当前用户信息
             WxPublicUser::where(['openid' => $v['openid']])->update(['unionid' => $v['unionid']]);
-
         }
 
 
@@ -242,108 +240,111 @@ class Pushwechat extends Backend
      */
     public function timing_violation()
     {
-
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1', 6379);
-        $redis->set("name", "redis3.1");
-        echo $redis->get("name");
-//        echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?order_id=';
-//        $http = new swoole_http_server();
         echo phpinfo();die;
-        swoole_timer_tick();
-        new \swoole_http_server();
-        Swoole\Timer::tick();
-echo phpinfo();die;
+        ini_set('memory_limit','3072M');    // 临时设置最大内存占用为3G
+        set_time_limit(0);   // 设置脚本最大执行时间 为0 永不过期
+
+        $i = 0;
+        while ($i <= 10) {
+            echo "i=$i ";
+            sleep(100);
+            $i++;
+        }
 
 
-
-//        set_time_limit(300);
+//        $redis = new \Redis();
+//        $redis->connect('127.0.0.1', 6379);
+//        $redis->set("name", "redis3.1");
+//        echo $redis->get("name");
+////        echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/?order_id=';
+////        $http = new swoole_http_server();
+//        echo phpinfo();die;
+//        swoole_timer_tick();
+//        new \swoole_http_server();
+//        Swoole\Timer::tick();
+//echo phpinfo();die;
 //
 //
-//        while ($i<=10)
-//        {
-//            echo "i=$i ";
-//            sleep(100);
-//            $i++;
-//        }
-
-        die;
-        $redis = new \Redis();
-
-        $redis->connect('120.78.135.109', '6379');
-
-        $redis->auth('654321');
-
-        $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
-            ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
-            ->distinct(true)
-            ->field('licensenumber')
-            ->limit(100)
-            ->select();
-
-//        foreach ($info as $k => $v){
-//            $redis->hMSet('test',array('id'=>$v['id'],'order_id'=>$v['order_id'],'licensenumber'=>$v['licensenumber']));
-//        }
-
-        dump($redis->hGetAll('test'));
-
-        die;
-
-//        $page = $this->request->get('page');
 //
-//        $res = OrderDetails::where('licensenumber', 'not null')
-//            ->order('id desc')
-//            ->page($page . ',10')
-//            ->field('id,licensenumber')
+//
+//
+//        die;
+//        $redis = new \Redis();
+//
+//        $redis->connect('120.78.135.109', '6379');
+//
+//        $redis->auth('654321');
+//
+//        $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
+//            ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
+//            ->distinct(true)
+//            ->field('licensenumber')
+//            ->limit(100)
 //            ->select();
 //
-//        pr(collection($res)->toArray());
-//        die;
-
-//        $data = \fast\Http::sendRequest('http://v.juhe.cn/carInfo/querySimple.php', [
-//            'number' => '川XF009U',
-//            'key' => 'c4069179480d70096a37a8e9d11a3d0b',
-//        ], 'GET');
+////        foreach ($info as $k => $v){
+////            $redis->hMSet('test',array('id'=>$v['id'],'order_id'=>$v['order_id'],'licensenumber'=>$v['licensenumber']));
+////        }
 //
-//
-//        pr(json_decode($data['msg'], true));
+//        dump($redis->hGetAll('test'));
 //
 //        die;
-
-
-        try {
-            set_time_limit(300);
-            $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
-                ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
-                ->distinct(true)->field('licensenumber')
-
-                ->chunk(100, function ($item) {
-
-                    $item = collection($item)->toArray();
-                    $data = array();
-                    foreach ($item as $k => $v) {
-
-                        $data[] = [
-                            'hphm' => mb_substr($v['licensenumber'], 0, 2),
-                            'hphms' => $v['licensenumber'],
-                            'engineno' => $v['engine_number'],
-                            'classno' => $v['frame_number'],
-                            'order_id' => $v['order_id'],
-                            'username' => '123',
-                        ];
-
 //
-
-
-                    }
-//                    pr($data);
-                    pr(illegal($data));
-                    return false;
-                }, null, 'desc');
-
-        } catch (Exception $e) {
-            pr($e->getMessage());
-        }
+////        $page = $this->request->get('page');
+////
+////        $res = OrderDetails::where('licensenumber', 'not null')
+////            ->order('id desc')
+////            ->page($page . ',10')
+////            ->field('id,licensenumber')
+////            ->select();
+////
+////        pr(collection($res)->toArray());
+////        die;
+//
+////        $data = \fast\Http::sendRequest('http://v.juhe.cn/carInfo/querySimple.php', [
+////            'number' => '川XF009U',
+////            'key' => 'c4069179480d70096a37a8e9d11a3d0b',
+////        ], 'GET');
+////
+////
+////        pr(json_decode($data['msg'], true));
+////
+////        die;
+//
+//
+//        try {
+//            set_time_limit(300);
+//            $info = OrderDetails::field('id,order_id,licensenumber,engine_number,frame_number')
+//                ->where('licensenumber&engine_number&frame_number', 'not in', ['null', ''])
+//                ->distinct(true)->field('licensenumber')
+//
+//                ->chunk(100, function ($item) {
+//
+//                    $item = collection($item)->toArray();
+//                    $data = array();
+//                    foreach ($item as $k => $v) {
+//
+//                        $data[] = [
+//                            'hphm' => mb_substr($v['licensenumber'], 0, 2),
+//                            'hphms' => $v['licensenumber'],
+//                            'engineno' => $v['engine_number'],
+//                            'classno' => $v['frame_number'],
+//                            'order_id' => $v['order_id'],
+//                            'username' => '123',
+//                        ];
+//
+////
+//
+//
+//                    }
+////                    pr($data);
+//                    pr(illegal($data));
+//                    return false;
+//                }, null, 'desc');
+//
+//        } catch (Exception $e) {
+//            pr($e->getMessage());
+//        }
 
     }
 
